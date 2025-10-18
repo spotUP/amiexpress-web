@@ -185,12 +185,21 @@ function App() {
       handleFileUpload(options, ws, term);
     });
 
+    // Handle login prompt request from backend
+    ws.on('request-login', () => {
+      console.log('🔐 Backend requested login prompt');
+      loginState.current = 'username';
+      username.current = '';
+      password.current = '';
+    });
+
     // Handle terminal input
     term.onData((data: string) => {
       if (loginState.current === 'username' || loginState.current === 'password') {
         // Handle login input (has its own echo logic)
         handleLoginInput(data, ws, term);
       } else {
+        // 'connected' or 'loggedin' state - send all input to backend
         // LOCAL ECHO: Display character immediately for instant feedback
         // Only echo printable characters and backspace, not control sequences
         if (data.length === 1) {
@@ -236,15 +245,19 @@ function App() {
         // Set login state to prevent manual login prompt
         loginState.current = 'loggedin';
 
-        // If auto-login fails, show login prompt
+        // If auto-login fails, reconnect to get fresh session
         const failHandler = (reason: string) => {
           console.log('🔐 Auto-login failed:', reason);
           localStorage.removeItem('bbs_auth_token');
-          loginState.current = 'username';
-          term.write('\r\n\x1b[33mSession expired. Please login again.\x1b[0m\r\n\r\n');
-          term.write('Username: ');
-          term.focus();
+          term.write('\r\n\x1b[33mSession expired. Reconnecting...\x1b[0m\r\n');
+
+          // Disconnect and reconnect to get fresh connection screen + graphics prompt
           ws.off('login-failed', failHandler);
+
+          // Wait a moment then reload page for clean session
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         };
 
         ws.once('login-failed', failHandler);
@@ -254,10 +267,9 @@ function App() {
           ws.off('login-failed', failHandler);
         });
       } else {
-        // No token, show normal login prompt
-        term.write('\r\n\x1b[32mWelcome to AmiExpress Web BBS!\x1b[0m\r\n');
-        term.write('Please login with your username and password.\r\n\r\n');
-        term.write('Username: ');
+        // No token - wait for backend to display connection screen and login prompt
+        // Backend will control the entire flow (connection screen → graphics selection → login)
+        loginState.current = 'connected';
         term.focus();
       }
     };
@@ -290,7 +302,8 @@ function App() {
 }
 
 // Global refs for login state (accessible from handleLoginInput)
-const loginState = { current: 'username' as 'username' | 'password' | 'loggedin' };
+// Start in 'connected' state - backend will control when to show login prompt
+const loginState = { current: 'connected' as 'username' | 'password' | 'loggedin' | 'connected' };
 const username = { current: '' };
 const password = { current: '' };
 

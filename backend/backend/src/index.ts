@@ -304,8 +304,10 @@ io.on('connection', async (socket) => {
         });
       }
 
-      // Start the proper AmiExpress flow: bulletins first
-      displaySystemBulletins(socket, session);
+      // Start the proper AmiExpress flow: set to DISPLAY_LOGON and let state machine progress
+      session.subState = LoggedOnSubState.DISPLAY_LOGON;
+      displayScreen(socket, session, 'LOGON');
+      socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
     } catch (error) {
       console.error('Socket login error:', error);
       socket.emit('login-failed', 'Invalid credentials');
@@ -662,9 +664,65 @@ async function getUserStats(userId: string): Promise<any> {
   }
 }
 
+// Perform mail scan - check for messages addressed to user (express.e:28066-28120 confScan)
+async function performMailScan(socket: any, session: BBSSession) {
+  const username = session.user!.username.toLowerCase();
+
+  // Display MAILSCAN screen (express.e:28073)
+  displayScreen(socket, session, 'MAILSCAN');
+
+  // Output mail scan message
+  socket.emit('ansi-output', '\r\n\x1b[0mScanning conferences for mail...\r\n\r\n');
+
+  let totalMailCount = 0;
+
+  // Scan each conference for mail addressed to user (express.e:28090-28097)
+  for (const conference of conferences) {
+    // Check each message base in this conference
+    const confMessageBases = messageBases.filter(mb => mb.conferenceId === conference.id);
+
+    for (const messageBase of confMessageBases) {
+      // Query for unread messages addressed to this user (express.e:8854, 11706)
+      // Messages can be addressed to: username, 'all', or 'eall' (everyone all)
+      const mailQuery = await db.pool.query(
+        `SELECT COUNT(*) as mail_count
+         FROM messages
+         WHERE message_base_id = $1
+         AND (
+           LOWER(to_user) = $2 OR
+           LOWER(to_user) = 'all' OR
+           LOWER(to_user) = 'eall'
+         )
+         AND id > $3`,
+        [messageBase.id, username, session.lastMsgReadConf || 0]
+      );
+
+      const mailCount = parseInt(mailQuery.rows[0]?.mail_count || '0');
+
+      if (mailCount > 0) {
+        totalMailCount += mailCount;
+        // Display conference with mail (express.e shows conference name when mail found)
+        socket.emit('ansi-output', `\x1b[32m  ${conference.name}\x1b[0m - \x1b[33m${mailCount} message${mailCount > 1 ? 's' : ''}\x1b[0m\r\n`);
+      }
+    }
+  }
+
+  if (totalMailCount === 0) {
+    socket.emit('ansi-output', '\r\n\x1b[33mNo mail found.\x1b[0m\r\n');
+  } else {
+    socket.emit('ansi-output', `\r\n\x1b[36mTotal: ${totalMailCount} message${totalMailCount > 1 ? 's' : ''} waiting for you.\x1b[0m\r\n`);
+  }
+
+  socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+}
+
 // Display conference bulletins and trigger conference scan (SCREEN_NODE_BULL + confScan equivalent)
 async function displayConferenceBulletins(socket: any, session: BBSSession) {
   // Phase 8: Use authentic screen file system
+  // Express.e:28555 - displayScreen(SCREEN_LOGON) after login
+  displayScreen(socket, session, 'LOGON');
+  doPause(socket, session);
+
   // Express.e:28566 - displayScreen(SCREEN_BULL)
   displayScreen(socket, session, SCREEN_BULL);
   doPause(socket, session);
@@ -673,36 +731,8 @@ async function displayConferenceBulletins(socket: any, session: BBSSession) {
   displayScreen(socket, session, SCREEN_NODE_BULL);
   doPause(socket, session);
 
-  // Conference scan (confScan equivalent - express.e:28066)
-  socket.emit('ansi-output', '\r\n\x1b[32mScanning conferences for new messages...\x1b[0m\r\n');
-
-  // Get user's last scan time (use last login if no scan time stored)
-  const lastScanTime = session.user!.lastScanTime || session.user!.lastLogin || new Date(0);
-
-  // Query for new messages per conference since last scan
-  const newMessagesQuery = await db.query(
-    `SELECT c.id, c.name, COUNT(m.id) as new_count
-     FROM conferences c
-     LEFT JOIN messages m ON m.conference_id = c.id AND m.timestamp > $1
-     GROUP BY c.id, c.name
-     HAVING COUNT(m.id) > 0
-     ORDER BY c.id`,
-    [lastScanTime]
-  );
-
-  if (newMessagesQuery.rows.length > 0) {
-    socket.emit('ansi-output', '\x1b[32mFound new messages in:\x1b[0m\r\n');
-    newMessagesQuery.rows.forEach((row: any) => {
-      socket.emit('ansi-output', `- ${row.name} conference (${row.new_count} new)\r\n`);
-    });
-  } else {
-    socket.emit('ansi-output', '\x1b[33mNo new messages found.\x1b[0m\r\n');
-  }
-
-  // Update last scan time
-  await db.updateUser(session.user!.id, { lastScanTime: new Date() });
-
-  socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+  // Conference scan for mail (confScan equivalent - express.e:28066-28120)
+  await performMailScan(socket, session);
 
   // Join default conference (joinConf equivalent)
   await joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
@@ -2151,7 +2181,13 @@ async function handleCommand(socket: any, session: BBSSession, data: string) {
 
     // Continue to login screen
     session.state = BBSState.LOGON;
-    socket.emit('ansi-output', '\r\n');
+
+    // Display BBSTITLE screen (express.e:29550)
+    displayScreen(socket, session, 'BBSTITLE');
+
+    // Show login prompt and request frontend to enter username collection mode
+    socket.emit('ansi-output', '\r\nUsername: ');
+    socket.emit('request-login');
     return;
   }
 
@@ -2161,14 +2197,32 @@ async function handleCommand(socket: any, session: BBSSession, data: string) {
   }
 
   // Handle substate-specific input
-  if (session.subState === LoggedOnSubState.DISPLAY_BULL ||
+  if (session.subState === LoggedOnSubState.DISPLAY_LOGON ||
+      session.subState === LoggedOnSubState.DISPLAY_BULL ||
+      session.subState === LoggedOnSubState.DISPLAY_NODE_BULL ||
+      session.subState === LoggedOnSubState.MAILSCAN ||
       session.subState === LoggedOnSubState.DISPLAY_CONF_BULL ||
       session.subState === LoggedOnSubState.FILE_LIST) {
     console.log('📋 In display state, continuing to next state');
     try {
       // Any key continues to next state
-      if (session.subState === LoggedOnSubState.DISPLAY_BULL) {
-        await displayConferenceBulletins(socket, session);
+      if (session.subState === LoggedOnSubState.DISPLAY_LOGON) {
+        // Move to BULL screen
+        session.subState = LoggedOnSubState.DISPLAY_BULL;
+        displayScreen(socket, session, SCREEN_BULL);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+      } else if (session.subState === LoggedOnSubState.DISPLAY_BULL) {
+        // Move to NODE_BULL screen
+        session.subState = LoggedOnSubState.DISPLAY_NODE_BULL;
+        displayScreen(socket, session, SCREEN_NODE_BULL);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+      } else if (session.subState === LoggedOnSubState.DISPLAY_NODE_BULL) {
+        // Move to MAILSCAN
+        session.subState = LoggedOnSubState.MAILSCAN;
+        await performMailScan(socket, session);
+      } else if (session.subState === LoggedOnSubState.MAILSCAN) {
+        // After mailscan, join conference
+        await joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
       } else if (session.subState === LoggedOnSubState.DISPLAY_CONF_BULL) {
         // Like AmiExpress: after command completes, set menuPause=TRUE and display menu
         session.menuPause = true;
