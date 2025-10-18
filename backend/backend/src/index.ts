@@ -843,7 +843,8 @@ async function displayConnectionScreen(socket: any, nodeId: number) {
   const bbsName = config.get('bbsName');
   const bbsLocation = config.get('location') || '';
   const version = '4.0.0-web'; // AmiExpress Web version
-  const registration = 'Unregistered'; // TODO: Add registration support
+  // Registration status - for open source web version, always registered
+  const registration = config.get('registration') || 'Open Source';
   const baudRate = 'FULL SPEED'; // Web connection
 
   // Get current date/time
@@ -883,7 +884,14 @@ async function displayConnectionScreen(socket: any, nodeId: number) {
       if (nodeSession.socketId === socket.id) {
         status = 'You';
       } else if (nodeSession.userId) {
-        status = nodeSession.userId; // TODO: Get actual username from database
+        // Get actual username from database
+        try {
+          const user = await db.getUserById(nodeSession.userId);
+          status = user ? user.username : nodeSession.userId;
+        } catch (error) {
+          console.error('Error fetching username for node status:', error);
+          status = nodeSession.userId;
+        }
       } else {
         status = 'Somebody';
       }
@@ -2392,7 +2400,9 @@ function displayMainMenu(socket: any, session: BBSSession) {
     // CRITICAL FIX: Correct condition from express.e:28583
     // Express.e:28583 - IF ((loggedOnUser.expert="N") AND (doorExpertMode=FALSE)) OR (checkToolTypeExists(TOOLTYPE_CONF,currentConf,'FORCE_MENUS'))
     // Note: Database stores expert as BOOLEAN (true/false), not string ("Y"/"N")
-    if ((session.user?.expert === false && !session.doorExpertMode) /* TODO: || FORCE_MENUS check */) {
+    const currentConf = conferences.find(c => c.id === session.currentConf);
+    const forceMenus = currentConf?.forceMenus || false;
+    if ((session.user?.expert === false && !session.doorExpertMode) || forceMenus) {
       console.log('Displaying menu screen file');
       // Phase 8: Use authentic screen file system (express.e:28586 - displayScreen(SCREEN_MENU))
       displayScreen(socket, session, SCREEN_MENU);
