@@ -673,30 +673,13 @@ function parseMciCodes(content: string, session: BBSSession, bbsName: string = '
   const user = session.user;
   const now = new Date();
 
-  // %B - BBS Name
-  parsed = parsed.replace(/%B/g, bbsName);
+  // IMPORTANT: Replace variables from longest to shortest to avoid partial matches!
+  // For example: %LD must be replaced BEFORE %D, %LT before %T, %TC before %T, etc.
 
-  // %U - Username
-  parsed = parsed.replace(/%U/g, user?.username || 'Guest');
-
-  // %N - Node Number
-  parsed = parsed.replace(/%N/g, (session.nodeId || 0).toString());
-
-  // %CF - Current Conference Name
+  // %CF - Current Conference Name (2 chars)
   parsed = parsed.replace(/%CF/g, session.currentConfName || 'Unknown');
 
-  // %R - Time Remaining (in minutes)
-  parsed = parsed.replace(/%R/g, Math.floor(session.timeRemaining / 60).toString());
-
-  // %D - Current Date (MM/DD/YY)
-  const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-  parsed = parsed.replace(/%D/g, dateStr);
-
-  // %T - Current Time (HH:MM)
-  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-  parsed = parsed.replace(/%T/g, timeStr);
-
-  // %LD - Last Login Date
+  // %LD - Last Login Date (2 chars) - MUST come before %D
   if (user?.lastLogin) {
     const lastDate = new Date(user.lastLogin);
     const lastDateStr = lastDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
@@ -705,7 +688,7 @@ function parseMciCodes(content: string, session: BBSSession, bbsName: string = '
     parsed = parsed.replace(/%LD/g, 'Never');
   }
 
-  // %LT - Last Login Time
+  // %LT - Last Login Time (2 chars) - MUST come before %T
   if (user?.lastLogin) {
     const lastDate = new Date(user.lastLogin);
     const lastTimeStr = lastDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -714,32 +697,54 @@ function parseMciCodes(content: string, session: BBSSession, bbsName: string = '
     parsed = parsed.replace(/%LT/g, '--:--');
   }
 
-  // %TC - Total Calls
+  // %TC - Total Calls (2 chars) - MUST come before %T
   parsed = parsed.replace(/%TC/g, (user?.calls || 0).toString());
 
-  // %MP - Messages Posted
+  // %MP - Messages Posted (2 chars) - MUST come before %M
   parsed = parsed.replace(/%MP/g, (user?.messagesPosted || 0).toString());
 
-  // %FU - Files Uploaded
-  parsed = parsed.replace(/%FU/g, (user?.files_uploaded || 0).toString());
+  // %UF - Files Uploaded (2 chars) - MUST come before %U and %F
+  parsed = parsed.replace(/%UF/g, (user?.uploads || 0).toString());
 
-  // %FD - Files Downloaded
-  parsed = parsed.replace(/%FD/g, (user?.files_downloaded || 0).toString());
+  // %DF - Files Downloaded (2 chars) - MUST come before %D and %F
+  parsed = parsed.replace(/%DF/g, (user?.downloads || 0).toString());
 
-  // %M - New Messages (placeholder - would need to calculate)
-  parsed = parsed.replace(/%M/g, '0');
+  // %NM - New Messages (2 chars) - MUST come before %N and %M
+  parsed = parsed.replace(/%NM/g, '0');
 
-  // %F - New Files (placeholder - would need to calculate)
-  parsed = parsed.replace(/%F/g, '0');
+  // %NF - New Files (2 chars) - MUST come before %N and %F
+  parsed = parsed.replace(/%NF/g, '0');
 
-  // %SL - Security Level
+  // %SL - Security Level (2 chars)
   parsed = parsed.replace(/%SL/g, (user?.secLevel || 0).toString());
 
-  // %UL - Upload/Download Ratio
-  const uploads = user?.files_uploaded || 0;
-  const downloads = user?.files_downloaded || 0;
+  // %UL - Upload/Download Ratio (2 chars)
+  const uploads = user?.uploads || 0;
+  const downloads = user?.downloads || 0;
   const ratio = downloads > 0 ? (uploads / downloads).toFixed(2) : uploads.toString();
   parsed = parsed.replace(/%UL/g, ratio);
+
+  // NOW safe to replace single-character variables
+
+  // %B - BBS Name (1 char)
+  parsed = parsed.replace(/%B/g, bbsName);
+
+  // %U - Username (1 char)
+  parsed = parsed.replace(/%U/g, user?.username || 'Guest');
+
+  // %N - Node Number (1 char)
+  parsed = parsed.replace(/%N/g, (session.nodeId || 0).toString());
+
+  // %R - Time Remaining (1 char)
+  parsed = parsed.replace(/%R/g, Math.floor(session.timeRemaining / 60).toString());
+
+  // %D - Current Date (1 char)
+  const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+  parsed = parsed.replace(/%D/g, dateStr);
+
+  // %T - Current Time (1 char)
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  parsed = parsed.replace(/%T/g, timeStr);
 
   return parsed;
 }
