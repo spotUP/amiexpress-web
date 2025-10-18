@@ -183,6 +183,9 @@ io.on('connection', async (socket) => {
     currentConfName: 'General', // Current conference name (matches ID 4)
     cmdShortcuts: false, // Like AmiExpress - default to line input mode, not hotkeys
     doorExpertMode: false, // Like AmiExpress - doors can force menu display (express.e:28583)
+    ansiMode: true, // Default to ANSI mode
+    ripMode: false, // RIP graphics mode
+    quickLogon: false, // Quick logon flag
 
     // Phase 9: Initialize security fields (express.e:447-455)
     acsLevel: -1, // Will be set on login
@@ -573,6 +576,9 @@ async function displayConnectionScreen(socket: any, nodeId: number) {
   output += '\r\n';
 
   socket.emit('ansi-output', output);
+
+  // Prompt for graphics mode (express.e:29528-29545)
+  socket.emit('ansi-output', 'ANSI, RIP or No graphics (A/r/n)? ');
 }
 
 // Log caller activity (express.e:9493 callersLog)
