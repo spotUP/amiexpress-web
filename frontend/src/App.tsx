@@ -167,6 +167,10 @@ function App() {
         console.log('🔐 Auth token stored in localStorage');
       }
 
+      // CRITICAL: Set login state to 'loggedin' to prevent signup events
+      loginState.current = 'loggedin';
+      console.log('✓ Login state set to: loggedin');
+
       // Focus terminal after login so user can interact immediately
       term.focus();
     });
