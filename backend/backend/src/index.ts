@@ -202,6 +202,9 @@ io.on('connection', async (socket) => {
   };
   sessions.set(socket.id, session);
 
+  // Display connection screen (express.e:29507-29524)
+  await displayConnectionScreen(socket, nodeSession.nodeId);
+
   // Execute login trigger for AREXX scripts
   await arexxEngine.executeTrigger('login', {
     userId: undefined,
@@ -512,6 +515,65 @@ function doPause(socket: any, session: BBSSession) {
 }
 
 // ===== END SCREEN FILE SYSTEM =====
+
+// Display connection screen (express.e:29507-29524 processLogon)
+async function displayConnectionScreen(socket: any, nodeId: number) {
+  const bbsName = config.get('bbsName');
+  const bbsLocation = config.get('location') || '';
+  const version = '4.0.0-web'; // AmiExpress Web version
+  const registration = 'Unregistered'; // TODO: Add registration support
+  const baudRate = 'FULL SPEED'; // Web connection
+
+  // Get current date/time
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+  const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+  const fullDateTime = `${dateStr} ${timeStr}`;
+
+  // Build connection screen (matches express.e:29507-29524)
+  let output = '\r\n';
+
+  // Welcome message
+  if (bbsLocation) {
+    output += `\x1b[0mWelcome to ${bbsName}, located in ${bbsLocation}\r\n`;
+  } else {
+    output += `\x1b[0mWelcome to ${bbsName}.\r\n`;
+  }
+
+  output += '\r\n';
+  output += `Running AmiExpress ${version} Copyright ©2018-2025 Darren Coles\r\n`;
+  output += `Registration ${registration}. You are connected to Node ${nodeId} at ${baudRate}\r\n`;
+  output += `Connection occured at ${fullDateTime}.\r\n`;
+  output += '\r\n';
+
+  // Get all node sessions and display status
+  const allNodes = nodeManager.getAllNodeSessions();
+  for (let i = 0; i < 8; i++) { // Display 8 nodes like original AmiExpress
+    const nodeSession = allNodes.find(n => n.nodeId === i);
+    let status = 'Waiting';
+
+    if (nodeSession) {
+      if (nodeSession.socketId === socket.id) {
+        status = 'You';
+      } else if (nodeSession.userId) {
+        status = nodeSession.userId; // TODO: Get actual username from database
+      } else {
+        status = 'Somebody';
+      }
+    }
+
+    output += `Node ${i}:  ${status}\r\n`;
+  }
+
+  output += '\r\n';
+
+  socket.emit('ansi-output', output);
+}
 
 // Log caller activity (express.e:9493 callersLog)
 // Logs to database like express.e logs to BBS:Node{X}/CallersLog file

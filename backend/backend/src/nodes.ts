@@ -16,7 +16,7 @@ export class NodeManager {
   private async initializeNodes(): Promise<void> {
     // Load nodes from database
     // For now, create default nodes if they don't exist
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 0; i <= 7; i++) {
       if (!this.nodes.has(i)) {
         const nodeInfo: NodeInfo = {
           id: i,
@@ -93,6 +93,11 @@ export class NodeManager {
   // Get active sessions for node
   async getNodeSessions(nodeId: number): Promise<NodeSession[]> {
     return await db.getNodeSessions(nodeId);
+  }
+
+  // Get all active sessions across all nodes
+  getAllNodeSessions(): NodeSession[] {
+    return Array.from(this.sessions.values());
   }
 
   // Release session from node
