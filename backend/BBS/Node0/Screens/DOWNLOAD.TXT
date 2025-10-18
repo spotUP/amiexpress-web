@@ -1,0 +1,22 @@
+[2J[H[36m──────────────────────────────────────────────────────────────────────────────
+    _____         .__
+   /  _  \   _____|__| _________    [33mExpress[0m
+  /  /_\  \ /     \  |/ ___\__  \   [35mFile Download[0m
+ /    |    \  Y Y  \  / /_/  > __ \_
+ \____|__  /__|_|  /__\___  (____  /
+         \/      \/  /_____/     \/
+[36m──────────────────────────────────────────────────────────────────────────────[0m
+
+[33mDOWNLOAD FILES FROM THE BBS[0m
+
+[36mYour download will begin shortly...[0m
+
+[32mProtocols available:[0m
+  • ZModem
+  • YModem
+  • XModem
+  • ASCII
+
+[33mPlease select your transfer protocol when prompted.[0m
+
+[36mThank you for using AmiExpress![0m

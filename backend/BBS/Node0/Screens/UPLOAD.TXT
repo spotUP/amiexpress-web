@@ -1,0 +1,25 @@
+[2J[H[36m──────────────────────────────────────────────────────────────────────────────
+    _____         .__
+   /  _  \   _____|__| _________    [33mExpress[0m
+  /  /_\  \ /     \  |/ ___\__  \   [35mFile Upload[0m
+ /    |    \  Y Y  \  / /_/  > __ \_
+ \____|__  /__|_|  /__\___  (____  /
+         \/      \/  /_____/     \/
+[36m──────────────────────────────────────────────────────────────────────────────[0m
+
+[33mUPLOAD FILES TO THE BBS[0m
+
+[36mPlease ensure that:[0m
+  [32m•[0m Files are virus-free
+  [32m•[0m Files are properly described
+  [32m•[0m No duplicate uploads
+  [32m•[0m No copyrighted material without permission
+
+[33mSupported formats:[0m LHA, LZX, ZIP, ARC
+
+[36mAfter upload, your files will be:[0m
+  1. Scanned for viruses
+  2. Checked for duplicates
+  3. Made available to other users
+
+[33mThank you for contributing to the BBS![0m
