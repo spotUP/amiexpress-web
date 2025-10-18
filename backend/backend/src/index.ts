@@ -217,6 +217,13 @@ io.on('connection', async (socket) => {
 
   socket.on('login', async (data: { token?: string; username?: string; password?: string }) => {
     try {
+      // Wait for graphics mode selection before allowing login
+      if (session.state === BBSState.GRAPHICS_SELECT) {
+        console.log('⏸️  Login blocked - waiting for graphics mode selection');
+        socket.emit('login-failed', 'Please select graphics mode first');
+        return;
+      }
+
       let user;
 
       // Check if login is with JWT token or username/password
@@ -579,6 +586,12 @@ async function displayConnectionScreen(socket: any, nodeId: number) {
 
   // Prompt for graphics mode (express.e:29528-29545)
   socket.emit('ansi-output', 'ANSI, RIP or No graphics (A/r/n)? ');
+
+  // Set state to wait for graphics mode input
+  const session = sessions.get(socket.id);
+  if (session) {
+    session.state = BBSState.GRAPHICS_SELECT;
+  }
 }
 
 // Log caller activity (express.e:9493 callersLog)
@@ -2115,6 +2128,32 @@ async function handleCommand(socket: any, session: BBSSession, data: string) {
   console.log('session.state:', session.state);
   console.log('session.subState:', session.subState);
   console.log('session id:', sessions.has(socket.id) ? 'found' : 'NOT FOUND');
+
+  // Handle graphics mode selection (express.e:29528-29545)
+  if (session.state === BBSState.GRAPHICS_SELECT) {
+    const input = data.trim().toUpperCase();
+    console.log('🎨 Graphics mode selection, input:', input);
+
+    // Parse graphics mode flags (express.e:29536-29545)
+    if (input.includes('N')) {
+      session.ansiMode = false; // No graphics mode
+      console.log('Graphics mode: NO GRAPHICS');
+    }
+    if (input.includes('R')) {
+      session.ripMode = true; // RIP mode
+      console.log('Graphics mode: RIP');
+    }
+    if (input.includes('Q')) {
+      session.quickLogon = true; // Quick logon
+      console.log('Quick logon enabled');
+    }
+    // Default is ANSI mode (already set to true)
+
+    // Continue to login screen
+    session.state = BBSState.LOGON;
+    socket.emit('ansi-output', '\r\n');
+    return;
+  }
 
   if (session.state !== BBSState.LOGGEDON) {
     console.log('❌ Not in LOGGEDON state, ignoring command');

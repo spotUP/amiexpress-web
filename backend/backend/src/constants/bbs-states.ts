@@ -4,6 +4,7 @@
 
 export enum BBSState {
   AWAIT = 'await',
+  GRAPHICS_SELECT = 'graphics_select', // Select ANSI/RIP/No graphics (express.e:29528)
   LOGON = 'logon',
   LOGGEDON = 'loggedon'
 }
