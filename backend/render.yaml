@@ -5,7 +5,7 @@ services:
     buildCommand: npm run build
     startCommand: npm start
     port: 3001
-    autoDeploy: false
+    autoDeploy: true
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
