@@ -75,6 +75,24 @@ interface BBSSession {
   // Phase 10: Message Pointer System (express.e:199-200, 4882-4973)
   lastMsgReadConf: number; // Last message manually read (confBase.confYM) - express.e:199
   lastNewReadConf: number; // Last message auto-scanned (confBase.confRead) - express.e:200
+
+  // Login tracking (express.e:29140-29220, 29627-29641)
+  loginRetries: number; // Number of login attempts (max 5 for username, 3 for password)
+  passwordRetries: number; // Number of password attempts (max 3)
+  attemptedUsername?: string; // Username being attempted for login
+  ansiMode: boolean; // ANSI graphics mode enabled
+  ripMode: boolean; // RIP graphics mode enabled
+  quickLogon: boolean; // Quick logon flag
+
+  // New user signup tracking (express.e:30128-30320)
+  newUserSubState?: string; // Current step in new user signup flow
+  signupData?: {
+    username: string;
+    password: string;
+    location: string;
+    phone: string;
+    email: string;
+  };
 }
 
 // Conference and Message Base data structures (simplified)
@@ -201,7 +219,11 @@ io.on('connection', async (socket) => {
 
     // Phase 10: Initialize message pointers (express.e:199-200)
     lastMsgReadConf: 0, // Last message manually read
-    lastNewReadConf: 0 // Last message auto-scanned
+    lastNewReadConf: 0, // Last message auto-scanned
+
+    // Initialize login tracking (express.e:29140-29220, 29627-29641)
+    loginRetries: 0, // Number of login attempts (max 5 for username)
+    passwordRetries: 0 // Number of password attempts (max 3)
   };
   sessions.set(socket.id, session);
 
@@ -213,6 +235,217 @@ io.on('connection', async (socket) => {
     userId: undefined,
     sessionId: socket.id,
     environment: { nodeId: nodeSession.nodeId }
+  });
+
+  // Handle username validation (express.e:29618-29641)
+  socket.on('validate-username', async (data: { username: string }) => {
+    try {
+      const username = data.username.trim();
+
+      if (!username) {
+        socket.emit('ansi-output', '\r\nUsername cannot be empty.\r\n');
+        socket.emit('username-invalid');
+        return;
+      }
+
+      // Store attempted username for tracking (express.e:29627)
+      session.attemptedUsername = username;
+
+      // Check if username exists (express.e:29618-29641)
+      const existingUser = await db.getUserByUsername(username);
+
+      if (!existingUser) {
+        // Username not found (express.e:29627-29641)
+        console.log('Username not found:', username);
+        session.loginRetries++;
+
+        if (session.loginRetries >= 5) {
+          // Too many errors (express.e:29643)
+          socket.emit('ansi-output', '\r\n\x1b[31mToo Many Errors, Goodbye!\x1b[0m\r\n');
+          setTimeout(() => socket.disconnect(), 2000);
+          return;
+        }
+
+        // Offer new user signup (express.e:29627-29641)
+        socket.emit('ansi-output', `\r\n\x1b[31mThe name ${username} is not used on this BBS.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\x1b[36m[R]etry your name or [C]ontinue as a new user?\x1b[0m ');
+        socket.emit('username-not-found', { username });
+        return;
+      }
+
+      // Username exists - request password (express.e:29640)
+      console.log('Username found, requesting password:', username);
+      socket.emit('username-valid', { username });
+      socket.emit('ansi-output', 'Password: ');
+    } catch (error) {
+      console.error('Username validation error:', error);
+      socket.emit('ansi-output', '\r\n\x1b[31mError validating username\x1b[0m\r\n');
+      socket.emit('username-invalid');
+    }
+  });
+
+  // Handle new user signup (express.e:30128-30320)
+  socket.on('start-new-user-signup', async (data: { username: string }) => {
+    try {
+      console.log('📝 Starting new user signup for:', data.username);
+
+      // Initialize signup data in session
+      session.signupData = {
+        username: data.username.trim(),
+        password: '',
+        location: '',
+        phone: '',
+        email: ''
+      };
+
+      session.state = BBSState.NEW_USER_SIGNUP as any;
+      session.newUserSubState = 'ENTER_LOCATION' as any;
+
+      socket.emit('ansi-output', `\x1b[36mWelcome, ${data.username}!\x1b[0m\r\n\r\n`);
+      socket.emit('ansi-output', 'City, State: ');
+      socket.emit('signup-prompt', { field: 'location' });
+    } catch (error) {
+      console.error('Signup start error:', error);
+      socket.emit('ansi-output', '\r\n\x1b[31mError starting signup\x1b[0m\r\n');
+    }
+  });
+
+  // Handle signup field input
+  socket.on('signup-field', async (data: { field: string; value: string }) => {
+    try {
+      const value = data.value.trim();
+      console.log(`📝 Signup field ${data.field}:`, value);
+
+      if (!session.signupData) {
+        socket.emit('ansi-output', '\r\n\x1b[31mError: Signup session not found\x1b[0m\r\n');
+        return;
+      }
+
+      // Store the field value
+      if (data.field === 'location') {
+        session.signupData.location = value;
+        socket.emit('ansi-output', 'Phone Number: ');
+        socket.emit('signup-prompt', { field: 'phone' });
+      } else if (data.field === 'phone') {
+        session.signupData.phone = value;
+        socket.emit('ansi-output', 'E-Mail Address: ');
+        socket.emit('signup-prompt', { field: 'email' });
+      } else if (data.field === 'email') {
+        session.signupData.email = value;
+        socket.emit('ansi-output', 'Enter a PassWord: ');
+        socket.emit('signup-prompt', { field: 'password' });
+      } else if (data.field === 'password') {
+        session.signupData.password = value;
+
+        // Create the new user account
+        console.log('📝 Creating new user account:', session.signupData.username);
+
+        // Hash the password
+        const bcrypt = require('bcrypt');
+        const passwordHash = await bcrypt.hash(session.signupData.password, 10);
+
+        const now = new Date();
+        const newUser = await db.createUser({
+          username: session.signupData.username,
+          passwordHash: passwordHash,
+          realname: session.signupData.username,
+          location: session.signupData.location,
+          phone: session.signupData.phone,
+          email: session.signupData.email,
+          secLevel: 10, // New user security level
+          uploads: 0,
+          downloads: 0,
+          bytesUpload: 0,
+          bytesDownload: 0,
+          ratio: 0,
+          ratioType: 0,
+          timeTotal: 60, // 60 minutes default
+          timeLimit: 60,
+          timeUsed: 0,
+          chatLimit: 0,
+          chatUsed: 0,
+          lastLogin: now,
+          firstLogin: now,
+          calls: 0,
+          callsToday: 0,
+          newUser: true,
+          expert: false,
+          ansi: session.ansiMode,
+          linesPerScreen: 24,
+          computer: 'Unknown',
+          screenType: 'ANSI',
+          protocol: 'Z',
+          editor: 'Line',
+          zoomType: '',
+          availableForChat: true,
+          quietNode: false,
+          autoRejoin: 1,
+          confAccess: '',
+          areaName: '',
+          uuCP: false,
+          topUploadCPS: 0,
+          topDownloadCPS: 0,
+          byteLimit: 0
+        });
+
+        // Get the created user
+        const userId = newUser;
+        const createdUser = await db.getUserById(userId);
+
+        if (!createdUser) {
+          socket.emit('ansi-output', '\r\n\x1b[31mError: Could not load user account\x1b[0m\r\n');
+          return;
+        }
+
+        socket.emit('ansi-output', `\r\n\r\n\x1b[32mAccount created successfully!\x1b[0m\r\n`);
+        socket.emit('ansi-output', `\x1b[36mLogging you in...\x1b[0m\r\n\r\n`);
+
+        // Auto-login the new user
+        session.state = BBSState.LOGGEDON as any;
+        session.user = createdUser;
+        session.loginRetries = 0;
+        session.passwordRetries = 0;
+
+        // Update last login
+        await db.updateUser(createdUser.id, { lastLogin: new Date(), calls: createdUser.calls + 1, callsToday: createdUser.callsToday + 1 });
+
+        // Initialize security system
+        initializeSecurity(session);
+
+        // Log successful signup and login
+        await callersLog(createdUser.id, createdUser.username, 'New user signup and login');
+
+        // Set user preferences
+        session.confRJoin = 4; // Default to General conference
+        session.msgBaseRJoin = 7; // Default to Main message base
+        session.cmdShortcuts = !createdUser.expert;
+
+        // Generate JWT tokens
+        const accessToken = await db.generateAccessToken(createdUser);
+        const refreshToken = await db.generateRefreshToken(createdUser);
+
+        socket.emit('login-success', {
+          user: {
+            id: createdUser.id,
+            username: createdUser.username,
+            realname: createdUser.realname,
+            secLevel: createdUser.secLevel,
+            expert: createdUser.expert,
+            ansi: createdUser.ansi
+          },
+          token: accessToken,
+          refreshToken: refreshToken
+        });
+
+        // Start the proper AmiExpress flow
+        session.subState = LoggedOnSubState.DISPLAY_LOGON as any;
+        displayScreen(socket, session, 'LOGON');
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+      }
+    } catch (error) {
+      console.error('Signup field error:', error);
+      socket.emit('ansi-output', '\r\n\x1b[31mError during signup\x1b[0m\r\n');
+    }
   });
 
   socket.on('login', async (data: { token?: string; username?: string; password?: string }) => {
@@ -242,12 +475,32 @@ io.on('connection', async (socket) => {
       } else if (data.username && data.password) {
         console.log('Socket login attempt with username/password:', data.username);
 
-        // Authenticate with username/password
+        // Username should already be validated, just check password (express.e:29140-29220)
         user = await db.authenticateUser(data.username, data.password);
+
         if (!user) {
-          socket.emit('login-failed', 'Invalid username or password');
+          // Password incorrect (express.e:29209)
+          console.log('Invalid password for user:', data.username);
+          session.passwordRetries++;
+
+          socket.emit('ansi-output', '\r\n\x1b[31mInvalid PassWord\x1b[0m\r\n');
+
+          if (session.passwordRetries >= 3) {
+            // Excessive password failures (express.e:29152)
+            socket.emit('ansi-output', '\r\n\x1b[31mExcessive Password Failure\x1b[0m\r\n');
+            setTimeout(() => socket.disconnect(), 2000);
+            return;
+          }
+
+          // Prompt for password again
+          socket.emit('ansi-output', 'Password: ');
+          socket.emit('login-failed', 'Invalid password');
           return;
         }
+
+        // Reset retry counters on successful login
+        session.loginRetries = 0;
+        session.passwordRetries = 0;
 
         // Generate JWT tokens for this session
         const accessToken = await db.generateAccessToken(user);
@@ -416,8 +669,18 @@ const SCREEN_JOINMSGBASE = 'JoinMsgBase';
 function parseMciCodes(content: string, session: BBSSession, bbsName: string = 'AmiExpress-Web'): string {
   let parsed = content;
 
+  // Get user data safely
+  const user = session.user;
+  const now = new Date();
+
   // %B - BBS Name
   parsed = parsed.replace(/%B/g, bbsName);
+
+  // %U - Username
+  parsed = parsed.replace(/%U/g, user?.username || 'Guest');
+
+  // %N - Node Number
+  parsed = parsed.replace(/%N/g, (session.nodeId || 0).toString());
 
   // %CF - Current Conference Name
   parsed = parsed.replace(/%CF/g, session.currentConfName || 'Unknown');
@@ -425,16 +688,58 @@ function parseMciCodes(content: string, session: BBSSession, bbsName: string = '
   // %R - Time Remaining (in minutes)
   parsed = parsed.replace(/%R/g, Math.floor(session.timeRemaining / 60).toString());
 
-  // %D - Current Date
-  const now = new Date();
+  // %D - Current Date (MM/DD/YY)
   const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
   parsed = parsed.replace(/%D/g, dateStr);
 
-  // %U - Username
-  parsed = parsed.replace(/%U/g, session.user?.username || 'Guest');
+  // %T - Current Time (HH:MM)
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  parsed = parsed.replace(/%T/g, timeStr);
 
-  // %N - Node Number (always 1 in web version)
-  parsed = parsed.replace(/%N/g, '1');
+  // %LD - Last Login Date
+  if (user?.lastLogin) {
+    const lastDate = new Date(user.lastLogin);
+    const lastDateStr = lastDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+    parsed = parsed.replace(/%LD/g, lastDateStr);
+  } else {
+    parsed = parsed.replace(/%LD/g, 'Never');
+  }
+
+  // %LT - Last Login Time
+  if (user?.lastLogin) {
+    const lastDate = new Date(user.lastLogin);
+    const lastTimeStr = lastDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    parsed = parsed.replace(/%LT/g, lastTimeStr);
+  } else {
+    parsed = parsed.replace(/%LT/g, '--:--');
+  }
+
+  // %TC - Total Calls
+  parsed = parsed.replace(/%TC/g, (user?.calls || 0).toString());
+
+  // %MP - Messages Posted
+  parsed = parsed.replace(/%MP/g, (user?.messagesPosted || 0).toString());
+
+  // %FU - Files Uploaded
+  parsed = parsed.replace(/%FU/g, (user?.files_uploaded || 0).toString());
+
+  // %FD - Files Downloaded
+  parsed = parsed.replace(/%FD/g, (user?.files_downloaded || 0).toString());
+
+  // %M - New Messages (placeholder - would need to calculate)
+  parsed = parsed.replace(/%M/g, '0');
+
+  // %F - New Files (placeholder - would need to calculate)
+  parsed = parsed.replace(/%F/g, '0');
+
+  // %SL - Security Level
+  parsed = parsed.replace(/%SL/g, (user?.secLevel || 0).toString());
+
+  // %UL - Upload/Download Ratio
+  const uploads = user?.files_uploaded || 0;
+  const downloads = user?.files_downloaded || 0;
+  const ratio = downloads > 0 ? (uploads / downloads).toFixed(2) : uploads.toString();
+  parsed = parsed.replace(/%UL/g, ratio);
 
   return parsed;
 }
@@ -687,11 +992,11 @@ async function performMailScan(socket: any, session: BBSSession) {
       const mailQuery = await db.pool.query(
         `SELECT COUNT(*) as mail_count
          FROM messages
-         WHERE message_base_id = $1
+         WHERE messagebaseid = $1
          AND (
-           LOWER(to_user) = $2 OR
-           LOWER(to_user) = 'all' OR
-           LOWER(to_user) = 'eall'
+           LOWER(touser) = $2 OR
+           LOWER(touser) = 'all' OR
+           LOWER(touser) = 'eall'
          )
          AND id > $3`,
         [messageBase.id, username, session.lastMsgReadConf || 0]

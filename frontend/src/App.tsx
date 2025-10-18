@@ -177,6 +177,50 @@ function App() {
 
       // Clear token on failed login
       localStorage.removeItem('bbs_auth_token');
+
+      // If password failed, prompt for password again
+      if (reason === 'Invalid password') {
+        loginState.current = 'password';
+        password.current = '';
+      }
+    });
+
+    // Handle username validation results
+    ws.on('username-valid', (data: { username: string }) => {
+      console.log('Username valid, requesting password');
+      loginState.current = 'password';
+      username.current = data.username;
+      password.current = '';
+    });
+
+    ws.on('username-invalid', () => {
+      console.log('Username invalid, retry');
+      loginState.current = 'username';
+      username.current = '';
+      password.current = '';
+    });
+
+    ws.on('username-not-found', (data: { username: string }) => {
+      console.log('Username not found:', data.username);
+      loginState.current = 'username-choice';
+      username.current = data.username;
+    });
+
+    // Handle signup prompts
+    ws.on('signup-prompt', (data: { field: string }) => {
+      console.log('📝 Signup prompt for field:', data.field);
+      if (!signupData.current) {
+        signupData.current = { field: '', value: '' };
+      }
+      signupData.current.field = data.field;
+      signupData.current.value = '';
+
+      // Handle password masking
+      if (data.field === 'password') {
+        loginState.current = 'signup-password';
+      } else {
+        loginState.current = 'signup';
+      }
     });
 
     // Handle file upload request from server
@@ -195,8 +239,8 @@ function App() {
 
     // Handle terminal input
     term.onData((data: string) => {
-      if (loginState.current === 'username' || loginState.current === 'password') {
-        // Handle login input (has its own echo logic)
+      if (loginState.current === 'username' || loginState.current === 'password' || loginState.current === 'username-choice' || loginState.current === 'signup' || loginState.current === 'signup-password') {
+        // Handle login/signup input (has its own echo logic)
         handleLoginInput(data, ws, term);
       } else {
         // 'connected' or 'loggedin' state - send all input to backend
@@ -303,9 +347,10 @@ function App() {
 
 // Global refs for login state (accessible from handleLoginInput)
 // Start in 'connected' state - backend will control when to show login prompt
-const loginState = { current: 'connected' as 'username' | 'password' | 'loggedin' | 'connected' };
+const loginState = { current: 'connected' as 'username' | 'password' | 'loggedin' | 'connected' | 'username-choice' | 'signup' | 'signup-password' };
 const username = { current: '' };
 const password = { current: '' };
+const signupData = { current: { field: '', value: '' } };
 
 // Handle file upload
 function handleFileUpload(options: { accept: string; maxSize: number; uploadUrl: string; fieldName: string }, ws: Socket, term: Terminal) {
@@ -390,6 +435,27 @@ function handleFileUpload(options: { accept: string; maxSize: number; uploadUrl:
 // Handle login input (username/password collection)
 function handleLoginInput(data: string, ws: Socket, term: Terminal) {
   console.log('🔐 Login input received:', JSON.stringify(data), 'state:', loginState.current);
+
+  // Handle username choice (R for retry, C for new user)
+  if (loginState.current === 'username-choice') {
+    const choice = data.toUpperCase();
+    if (choice === 'R') {
+      term.write('R\r\n\r\nUsername: ');
+      loginState.current = 'username';
+      username.current = '';
+      password.current = '';
+      return;
+    } else if (choice === 'C') {
+      term.write('C\r\n\r\n');
+      // Start new user signup flow (express.e:30128)
+      ws.emit('start-new-user-signup', { username: username.current });
+      loginState.current = 'signup';
+      return;
+    }
+    // Ignore other characters and wait for R or C
+    return;
+  }
+
   if (data === '\r' || data === '\n') {
     console.log('🔐 ENTER pressed in login state:', loginState.current);
     // Enter pressed - process current input
@@ -398,8 +464,11 @@ function handleLoginInput(data: string, ws: Socket, term: Terminal) {
         term.write('\r\nUsername cannot be empty. Username: ');
         return;
       }
-      loginState.current = 'password';
-      term.write('\r\nPassword: ');
+      // Validate username with backend before asking for password
+      console.log('🔐 Validating username:', username.current);
+      term.write('\r\n');
+      ws.emit('validate-username', { username: username.current });
+      // Wait for backend response (username-valid, username-not-found, or username-invalid)
     } else if (loginState.current === 'password') {
       const pwd = password.current;
       if (pwd.trim().length === 0) {
@@ -442,6 +511,14 @@ function handleLoginInput(data: string, ws: Socket, term: Terminal) {
       console.log('🔐 Socket connected:', ws.connected, 'readyState:', ws.io?.engine?.readyState);
       ws.emit('login', { username: username.current, password: pwd });
       loginState.current = 'loggedin';
+    } else if (loginState.current === 'signup' || loginState.current === 'signup-password') {
+      // Handle signup field submission
+      const value = signupData.current.value.trim();
+      const field = signupData.current.field;
+
+      console.log(`📝 Submitting signup field ${field}:`, value);
+      term.write('\r\n');
+      ws.emit('signup-field', { field, value });
     }
   } else if (data === '\x7f' || data === '\b') {
     // Backspace
@@ -451,6 +528,12 @@ function handleLoginInput(data: string, ws: Socket, term: Terminal) {
     } else if (loginState.current === 'password' && password.current.length > 0) {
       password.current = password.current.slice(0, -1);
       term.write('\b \b'); // Erase character
+    } else if (loginState.current === 'signup' && signupData.current.value.length > 0) {
+      signupData.current.value = signupData.current.value.slice(0, -1);
+      term.write('\b \b'); // Erase character
+    } else if (loginState.current === 'signup-password' && signupData.current.value.length > 0) {
+      signupData.current.value = signupData.current.value.slice(0, -1);
+      term.write('\b \b'); // Erase character
     }
   } else if (data.length === 1 && data >= ' ' && data <= '~') {
     // Regular character
@@ -459,6 +542,12 @@ function handleLoginInput(data: string, ws: Socket, term: Terminal) {
       term.write(data);
     } else if (loginState.current === 'password') {
       password.current += data;
+      term.write('*'); // Show asterisk for password
+    } else if (loginState.current === 'signup') {
+      signupData.current.value += data;
+      term.write(data); // Echo character
+    } else if (loginState.current === 'signup-password') {
+      signupData.current.value += data;
       term.write('*'); // Show asterisk for password
     }
   }

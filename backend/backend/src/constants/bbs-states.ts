@@ -6,7 +6,22 @@ export enum BBSState {
   AWAIT = 'await',
   GRAPHICS_SELECT = 'graphics_select', // Select ANSI/RIP/No graphics (express.e:29528)
   LOGON = 'logon',
+  NEW_USER_SIGNUP = 'new_user_signup', // New user account creation (express.e:30128-30320)
   LOGGEDON = 'loggedon'
+}
+
+// New user signup substates (express.e:30128-30320)
+export enum NewUserSubState {
+  ENTER_NAME = 'enter_name',
+  ENTER_LOCATION = 'enter_location',
+  ENTER_PHONE = 'enter_phone',
+  ENTER_EMAIL = 'enter_email',
+  ENTER_PASSWORD = 'enter_password',
+  CONFIRM_PASSWORD = 'confirm_password',
+  SCREEN_LINES = 'screen_lines',
+  COMPUTER_TYPE = 'computer_type',
+  SCREEN_CLEAR = 'screen_clear',
+  CONFIRM_INFO = 'confirm_info'
 }
 
 export enum LoggedOnSubState {
