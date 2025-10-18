@@ -2269,18 +2269,9 @@ async function loadFlagged(socket: any, session: BBSSession) {
 
     // Load user's flagged files from database
     // Format: array of {confNum: number, fileName: string}
-    const result = await db.query(
-      'SELECT conf_num, file_name FROM flagged_files WHERE user_id = $1',
-      [session.user!.id]
-    );
-
-    // Add to session (like express.e's addFlagItem)
-    result.rows.forEach(row => {
-      session.tempData.flaggedFiles.push({
-        confNum: row.conf_num,
-        fileName: row.file_name
-      });
-    });
+    // TODO: Implement flagged files table and query method
+    // For now, initialize empty array
+    session.tempData.flaggedFiles = [];
 
     // Like express.e:2795 - display notification if files exist
     if (session.tempData.flaggedFiles.length > 0) {
@@ -2307,24 +2298,8 @@ async function loadHistory(session: BBSSession) {
     session.tempData.historyNum = 0;
     session.tempData.historyCycle = 0;
 
-    // Load from database
-    const result = await db.query(
-      'SELECT history_num, history_cycle, commands FROM command_history WHERE user_id = $1',
-      [session.user!.id]
-    );
-
-    if (result.rows.length > 0) {
-      const history = result.rows[0];
-      session.tempData.historyNum = history.history_num || 0;
-      session.tempData.historyCycle = history.history_cycle || 0;
-
-      // commands is stored as JSON array
-      if (history.commands) {
-        session.tempData.historyBuf = Array.isArray(history.commands)
-          ? history.commands
-          : JSON.parse(history.commands);
-      }
-    }
+    // TODO: Implement command_history table and query method
+    // For now, keep empty history arrays initialized above
   } catch (error) {
     console.error('Error loading command history:', error);
     // Fail silently like express.e would if file doesn't exist
@@ -2533,6 +2508,10 @@ async function handleCommand(socket: any, session: BBSSession, data: string) {
       } else if (session.subState === LoggedOnSubState.MAILSCAN) {
         // After mailscan, join conference
         await joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
+      } else if (session.subState === LoggedOnSubState.DISPLAY_MENU) {
+        // Display main menu after joining conference
+        session.menuPause = true;
+        displayMainMenu(socket, session);
       } else if (session.subState === LoggedOnSubState.DISPLAY_CONF_BULL) {
         // Like AmiExpress: after command completes, set menuPause=TRUE and display menu
         session.menuPause = true;
