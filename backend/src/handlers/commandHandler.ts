@@ -404,13 +404,21 @@ export async function handleCommand(
     return;
   }
 
-  // Check for hotkeys first
-  const hotkeyHandled = await handleHotkey(socket, session, data, chatState,
-    (s, sess, cmd, params) => processBBSCommand(s, sess, cmd, params || '',
-      sessions, io, chatState, conferences, messageBases, fileAreas, doors, messages));
-  if (hotkeyHandled) {
-    console.log('🔥 Hotkey handled, skipping normal command processing');
-    return;
+  // Check for hotkeys first, but skip when in text input modes
+  const isInTextInputMode = session.subState === LoggedOnSubState.POST_MESSAGE_SUBJECT ||
+                           session.subState === LoggedOnSubState.POST_MESSAGE_BODY ||
+                           session.subState === LoggedOnSubState.READ_COMMAND ||
+                           session.subState === LoggedOnSubState.READ_SHORTCUTS ||
+                           (session.subState === LoggedOnSubState.FILE_AREA_SELECT && session.tempData?.chatUserSelection);
+
+  if (!isInTextInputMode) {
+    const hotkeyHandled = await handleHotkey(socket, session, data, chatState,
+      (s, sess, cmd, params) => processBBSCommand(s, sess, cmd, params || '',
+        sessions, io, chatState));
+    if (hotkeyHandled) {
+      console.log('🔥 Hotkey handled, skipping normal command processing');
+      return;
+    }
   }
 
   if (session.state !== BBSState.LOGGEDON) {
@@ -971,7 +979,7 @@ export async function handleCommand(
         conferences, messageBases, fileAreas, doors, messages);
     } else {
       // First entry to DISPLAY_CONF_BULL - join conference
-      const joinSuccess = joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
+      const joinSuccess = await joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
       console.log('📋 joinConference result:', joinSuccess);
 
       // If join failed, still move to menu to avoid infinite loop
@@ -982,6 +990,9 @@ export async function handleCommand(
         return handleCommand(socket, session, ' ', sessions, io, chatState,
           conferences, messageBases, fileAreas, doors, messages);
       }
+
+      // Set confBullPause to wait for user input after conference join
+      session.tempData = { ...session.tempData, confBullPause: true };
     }
     return;
   }
@@ -991,8 +1002,7 @@ export async function handleCommand(
     // Return to file area selection
     session.subState = LoggedOnSubState.FILE_AREA_SELECT;
     // Re-trigger F command to show file areas again
-    await processBBSCommand(socket, session, 'F', '', sessions, io, chatState,
-      conferences, messageBases, fileAreas, doors, messages);
+    await processBBSCommand(socket, session, 'F', '', sessions, io, chatState);
     return;
   }
 
@@ -1005,6 +1015,86 @@ export async function handleCommand(
     if (input === '' || (isNaN(areaNumber) && input !== '0')) {
       // Empty input or invalid - return to menu
       socket.emit('ansi-output', '\r\nReturning to main menu...\r\n');
+      session.subState = LoggedOnSubState.DISPLAY_MENU;
+      displayMainMenu(socket, session);
+      return;
+    }
+
+    // Handle chat user selection
+    if (session.tempData?.chatUserSelection) {
+      const availableUsers = session.tempData.availableUsers;
+      const inputValue = input.trim();
+
+      if (inputValue.length === 0) {
+        // Empty input - cancel chat selection
+        socket.emit('ansi-output', '\r\nChat selection cancelled.\r\n');
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      let selectedUser;
+
+      // First try to parse as node number
+      const nodeNumber = parseInt(inputValue);
+      if (!isNaN(nodeNumber)) {
+        selectedUser = availableUsers.find(user => user.nodeId === nodeNumber);
+      }
+
+      // If not a valid node number, try to find by username (case-insensitive)
+      if (!selectedUser) {
+        selectedUser = availableUsers.find(user =>
+          user.username.toLowerCase() === inputValue.toLowerCase()
+        );
+      }
+
+      if (!selectedUser) {
+        socket.emit('ansi-output', `\r\n\x1b[31mUser '${inputValue}' not found in the online list.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      socket.emit('ansi-output', `\r\n\x1b[32mAttempting to chat with ${selectedUser.username}...\x1b[0m\r\n`);
+
+      // Check if user is available for chat
+      if (!selectedUser.availableForChat) {
+        socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is not available for chat.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\x1b[33mUse OLM TOGGLE to enable chat availability.\x1b[0m\r\n');
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Check if user is already in a chat
+      if (selectedUser.chatSessionId) {
+        socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is already in a chat session.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Check if we're trying to chat with ourselves
+      if (selectedUser.id === session.user?.id) {
+        socket.emit('ansi-output', '\x1b[33mYou cannot chat with yourself.\x1b[0m\r\n');
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Send chat request
+      socket.emit('chat:request', {
+        targetUsername: selectedUser.username,
+        targetUserId: selectedUser.id
+      });
+
+      // Clear temp data and return to menu
+      session.tempData = undefined;
       session.subState = LoggedOnSubState.DISPLAY_MENU;
       displayMainMenu(socket, session);
       return;
@@ -1319,8 +1409,7 @@ export async function handleCommand(
         const command = parts[0].toUpperCase();
         const params = parts.slice(1).join(' ');
         // Uncomment for debugging: console.log('🚀 Processing command:', command, 'with params:', params);
-        await processBBSCommand(socket, session, command, params, sessions, io, chatState,
-          conferences, messageBases, fileAreas, doors, messages);
+        await processBBSCommand(socket, session, command, params, sessions, io, chatState);
       }
 
       // Clear the input buffer after processing
@@ -1351,8 +1440,7 @@ export async function handleCommand(
         const command = parts[0].toUpperCase();
         const params = parts.slice(1).join(' ');
         // Uncomment for debugging: console.log('🚀 SHORTCUTS Processing command:', command, 'with params:', params);
-        await processBBSCommand(socket, session, command, params, sessions, io, chatState,
-          conferences, messageBases, fileAreas, doors, messages);
+        await processBBSCommand(socket, session, command, params, sessions, io, chatState);
       }
 
       // Clear the input buffer after processing
@@ -1414,14 +1502,19 @@ export async function processBBSCommand(
   params: string = '',
   sessions: any,
   io: any,
-  chatState: ChatState,
-  conferences: any[],
-  messageBases: any[],
-  fileAreas: any[],
-  doors: any[],
-  messages: any[]
+  chatState: ChatState
 ) {
+  // Import current data from dataStore
+  const { conferences, messageBases, fileAreas, doors, messages } = await import('../server/dataStore');
   console.log('processBBSCommand called with command:', JSON.stringify(command));
+
+  // Handle empty command (user pressed Enter without typing anything)
+  if (!command || command.trim() === '') {
+    console.log('Empty command - redisplaying menu');
+    session.subState = LoggedOnSubState.DISPLAY_MENU;
+    displayMainMenu(socket, session);
+    return;
+  }
 
   // Clear screen before showing command output (authentic BBS behavior)
   console.log('Command processing: clearing screen for command output');
@@ -1796,6 +1889,14 @@ export async function processBBSCommand(
 
     case 'OLM': // Online Message System
       socket.emit('ansi-output', '\x1b[36m-= Online Message System =-\x1b[0m\r\n\r\n');
+
+      // Check if OLM is blocked for this user (like original AmiExpress)
+      if (session.blockOLM) {
+        socket.emit('ansi-output', '\x1b[31mOLM messages are currently blocked.\x1b[0m\r\n');
+        socket.emit('ansi-output', '\x1b[36mUse OLM TOGGLE to enable OLM messages.\x1b[0m\r\n\r\n');
+        break;
+      }
+
       socket.emit('ansi-output', 'Commands:\r\n');
       socket.emit('ansi-output', '  OLM SEND <username> <message>  - Send a message to another user\r\n');
       socket.emit('ansi-output', '  OLM READ                        - Read your unread messages\r\n');
@@ -1921,17 +2022,22 @@ export async function processBBSCommand(
 
           case 'TOGGLE':
             try {
-              const currentStatus = session.user!.availableForChat;
-              const newStatus = !currentStatus;
+              // Toggle blockOLM flag (like original AmiExpress)
+              const currentBlockOLM = session.blockOLM || false;
+              const newBlockOLM = !currentBlockOLM;
 
-              await db.updateUser(session.user!.id, { availableForChat: newStatus });
-              session.user!.availableForChat = newStatus;
+              // Update session
+              session.blockOLM = newBlockOLM;
 
-              const statusText = newStatus ? '\x1b[32mENABLED\x1b[0m' : '\x1b[31mDISABLED\x1b[0m';
-              socket.emit('ansi-output', `OLM availability ${statusText}\r\n\r\n`);
+              const statusText = newBlockOLM ? '\x1b[31mBLOCKED\x1b[0m' : '\x1b[32mALLOWED\x1b[0m';
+              socket.emit('ansi-output', `OLM messages ${statusText}\r\n\r\n`);
+              // Return to menu after toggle (like original AmiExpress)
+              session.subState = LoggedOnSubState.DISPLAY_MENU;
+              displayMainMenu(socket, session);
+              return;
             } catch (error) {
               console.error('OLM TOGGLE error:', error);
-              socket.emit('ansi-output', '\x1b[31mError toggling OLM availability.\x1b[0m\r\n\r\n');
+              socket.emit('ansi-output', '\x1b[31mError toggling OLM blocking.\x1b[0m\r\n\r\n');
             }
             break;
 
