@@ -2297,7 +2297,7 @@ export class Database {
             'sysop-user-id', 'sysop', hashedPassword, 'System Operator', 'Server Room', '', '',
             255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, new Date(),
             0, 0, false, false, true, 23, 'Server', 'Amiga Ansi', '/X Zmodem', 'Prompt',
-            'QWK', true, false, 1, 'XXX', 'Sysop', false, 0, 0, 0
+            'QWK', true, false, 1, '   XXX', 'Sysop', false, 0, 0, 0
           ]);
           console.log('  ✓ Sysop user created successfully');
         } else {

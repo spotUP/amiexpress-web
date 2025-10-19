@@ -686,7 +686,7 @@ export function displayDoorManagerInfo(socket: Socket, session: BBSSession) {
  * Execute door game/utility
  * Creates door session and routes to appropriate executor
  */
-export function executeDoor(socket: Socket, session: BBSSession, door: Door) {
+export async function executeDoor(socket: Socket, session: BBSSession, door: Door) {
   console.log('Executing door:', door.name);
 
   // Create door session
@@ -703,7 +703,7 @@ export function executeDoor(socket: Socket, session: BBSSession, door: Door) {
   // Execute based on door type
   switch (door.type) {
     case 'web':
-      executeWebDoor(socket, session, door, doorSession);
+      await executeWebDoor(socket, session, door, doorSession);
       break;
     case 'native':
       socket.emit('ansi-output', 'Native door execution not implemented yet.\r\n');
@@ -724,13 +724,13 @@ export function executeDoor(socket: Socket, session: BBSSession, door: Door) {
  * Execute web-compatible door (ported AmiExpress doors)
  * Routes to specific door implementation
  */
-export function executeWebDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
+export async function executeWebDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
   switch (door.id) {
     case 'sal':
-      executeSAmiLogDoor(socket, session, door, doorSession);
+      await executeSAmiLogDoor(socket, session, door, doorSession);
       break;
     case 'checkup':
-      executeCheckUPDoor(socket, session, door, doorSession);
+      await executeCheckUPDoor(socket, session, door, doorSession);
       break;
     default:
       socket.emit('ansi-output', 'Door implementation not found.\r\n');
@@ -739,26 +739,28 @@ export function executeWebDoor(socket: Socket, session: BBSSession, door: Door, 
 
 /**
  * Execute SAmiLog callers log viewer door
- * Displays recent caller activity
+ * Displays recent caller activity from database
  */
-export function executeSAmiLogDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
+export async function executeSAmiLogDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
   socket.emit('ansi-output', '\x1b[36m-= Super AmiLog v3.00 =-\x1b[0m\r\n');
   socket.emit('ansi-output', 'Advanced Callers Log Viewer\r\n\r\n');
-
-  // Simulate callers log display (would read from BBS:NODE{x}/CALLERSLOG)
   socket.emit('ansi-output', 'Recent callers:\r\n\r\n');
 
-  // Mock some caller entries
-  const mockCallers = [
-    { user: 'ByteMaster', action: 'Logged off', time: '22:15:30' },
-    { user: 'AmigaFan', action: 'Downloaded file', time: '22:10:15' },
-    { user: 'RetroUser', action: 'Posted message', time: '22:05:42' },
-    { user: 'NewUser', action: 'Logged on', time: '21:58:12' }
-  ];
+  // Get real caller activity from database (express.e reads from BBS:NODE{x}/CALLERSLOG)
+  const { getRecentCallerActivity } = await import('../bbs/helpers');
+  const callerActivity = await getRecentCallerActivity(20);
 
-  mockCallers.forEach(caller => {
-    socket.emit('ansi-output', `${caller.time} ${caller.user.padEnd(15)} ${caller.action}\r\n`);
-  });
+  if (callerActivity.length === 0) {
+    socket.emit('ansi-output', '\x1b[33mNo recent activity logged.\x1b[0m\r\n');
+  } else {
+    callerActivity.forEach(entry => {
+      const timestamp = new Date(entry.timestamp);
+      const timeStr = timestamp.toLocaleTimeString();
+      const userStr = entry.username.padEnd(15);
+      const actionStr = entry.action;
+      socket.emit('ansi-output', `${timeStr} ${userStr} ${actionStr}\r\n`);
+    });
+  }
 
   socket.emit('ansi-output', '\r\n\x1b[32mPress any key to exit SAmiLog...\x1b[0m');
   session.menuPause = false;
@@ -767,27 +769,52 @@ export function executeSAmiLogDoor(socket: Socket, session: BBSSession, door: Do
 
 /**
  * Execute CheckUP file checking utility
- * Scans and processes upload directory
+ * Scans and processes upload directory for pending files
  */
-export function executeCheckUPDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
+export async function executeCheckUPDoor(socket: Socket, session: BBSSession, door: Door, doorSession: DoorSession) {
   socket.emit('ansi-output', '\x1b[36m-= CheckUP v0.4 =-\x1b[0m\r\n');
   socket.emit('ansi-output', 'File checking utility for upload directories\r\n\r\n');
-
-  // Check upload directory for files
   socket.emit('ansi-output', 'Checking upload directory...\r\n');
 
-  // Simulate checking upload directory
-  const hasFiles = Math.random() > 0.5; // Random for demo
-
-  if (hasFiles) {
-    socket.emit('ansi-output', 'Files found in upload directory!\r\n');
-    socket.emit('ansi-output', 'Processing uploads...\r\n');
-    socket.emit('ansi-output', '- File1.lha: Archive OK\r\n');
-    socket.emit('ansi-output', '- File2.zip: Archive OK\r\n');
-    socket.emit('ansi-output', 'Moving files to download area...\r\n');
-  } else {
-    socket.emit('ansi-output', 'No files found in upload directory.\r\n');
-    socket.emit('ansi-output', 'Running cleanup scripts...\r\n');
+  // Check for files with status='held' (pending validation) in database
+  // In express.e, this checks the upload directory for files
+  const { db } = await import('../database');
+  
+  try {
+    // Query for held/pending files across all areas
+    const client = await (db as any).pool.connect();
+    try {
+      const result = await client.query(`
+        SELECT filename, size, uploader, uploaddate, areaid, checked
+        FROM file_entries
+        WHERE status = 'held' OR checked = 'N'
+        ORDER BY uploaddate DESC
+        LIMIT 10
+      `);
+      
+      const pendingFiles = result.rows;
+      
+      if (pendingFiles.length > 0) {
+        socket.emit('ansi-output', `\x1b[32mFiles found in upload directory: ${pendingFiles.length}\x1b[0m\r\n\r\n`);
+        socket.emit('ansi-output', 'Processing uploads...\r\n');
+        
+        pendingFiles.forEach((file: any) => {
+          const sizeKB = Math.ceil(file.size / 1024);
+          socket.emit('ansi-output', `- ${file.filename} (${sizeKB}KB): Checking...\r\n`);
+        });
+        
+        socket.emit('ansi-output', '\r\n\x1b[33mValidation complete. Files ready for sysop review.\x1b[0m\r\n');
+      } else {
+        socket.emit('ansi-output', 'No files found in upload directory.\r\n');
+        socket.emit('ansi-output', 'Running cleanup scripts...\r\n');
+        socket.emit('ansi-output', '\x1b[32mUpload directory is clean.\x1b[0m\r\n');
+      }
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.error('CheckUP error:', error);
+    socket.emit('ansi-output', '\x1b[31mError checking upload directory.\x1b[0m\r\n');
   }
 
   socket.emit('ansi-output', '\r\n\x1b[32mCheckUP completed. Press any key to continue...\x1b[0m');

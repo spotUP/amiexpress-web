@@ -338,11 +338,11 @@ export function checkConfAccess(session: any, confNum: number, user?: any): bool
 
   if (!isAreaBased) {
     // Simple string-based access (express.e:8506-8509)
-    // conferenceAccess is a string where each character represents a conference
+    // confAccess is a string where each character represents a conference
     // confNum is 1-based, so check index confNum-1
     // "X" means user has access to that conference
-    if (targetUser.conferenceAccess && confNum <= targetUser.conferenceAccess.length) {
-      if (targetUser.conferenceAccess[confNum - 1] === 'X') {
+    if (targetUser.confAccess && confNum <= targetUser.confAccess.length) {
+      if (targetUser.confAccess[confNum - 1] === 'X') {
         return true;
       }
     }
@@ -352,7 +352,7 @@ export function checkConfAccess(session: any, confNum: number, user?: any): bool
   // Area-based access system (express.e:8510-8511)
   // Checks BBS/Access/<areaname>.info for "Conf.{N}" tooltype
   const ttname = `Conf.${confNum}`;
-  // TODO for 100% 1:1: Implement checkToolTypeExists(TOOLTYPE_AREA, conferenceAccess, ttname)
+  // TODO for 100% 1:1: Implement checkToolTypeExists(TOOLTYPE_AREA, confAccess, ttname)
   // For now, fall back to granting access (sysop-level users get access)
   return targetUser.secLevel >= 100;
 }
@@ -371,11 +371,11 @@ export function checkConfAccess(session: any, confNum: number, user?: any): bool
  * @returns true if using area-based access, false for simple X-based
  */
 function isConfAccessAreaName(user: any): boolean {
-  if (!user.conferenceAccess) {
+  if (!user.confAccess) {
     return false;
   }
 
-  const confAccess = user.conferenceAccess;
+  const confAccess = user.confAccess;
 
   // If it starts with a number, it's area-based (express.e:8515)
   if (/^\d/.test(confAccess)) {

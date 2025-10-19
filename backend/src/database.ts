@@ -654,6 +654,31 @@ export class Database {
         )
       `);
 
+      // Caller activity log (express.e:9493 callersLog)
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS caller_activity (
+          id SERIAL PRIMARY KEY,
+          node_id INTEGER DEFAULT 1,
+          user_id TEXT REFERENCES users(id),
+          username TEXT NOT NULL,
+          action TEXT NOT NULL,
+          details TEXT,
+          timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // User statistics for bytes/ratio tracking
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS user_stats (
+          user_id TEXT PRIMARY KEY REFERENCES users(id),
+          bytes_uploaded BIGINT DEFAULT 0,
+          bytes_downloaded BIGINT DEFAULT 0,
+          files_uploaded INTEGER DEFAULT 0,
+          files_downloaded INTEGER DEFAULT 0,
+          updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
       // Create indexes for performance
       await this.createIndexes(client);
     } finally {
@@ -682,6 +707,11 @@ export class Database {
     // User indexes
     await client.query(`CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)`);
     await client.query(`CREATE INDEX IF NOT EXISTS idx_users_seclevel ON users(seclevel)`);
+
+    // Caller activity indexes
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_caller_activity_user ON caller_activity(user_id)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_caller_activity_timestamp ON caller_activity(timestamp DESC)`);
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_caller_activity_node ON caller_activity(node_id)`);
   }
 
 
@@ -2186,6 +2216,141 @@ export class Database {
     }
   }
 
+
+  // Caller Activity Log methods (express.e:9493 callersLog)
+  async logCallerActivity(
+    userId: string | null,
+    username: string,
+    action: string,
+    details?: string,
+    nodeId: number = 1
+  ): Promise<void> {
+    const client = await this.pool.connect();
+    try {
+      const sql = `
+        INSERT INTO caller_activity (node_id, user_id, username, action, details)
+        VALUES ($1, $2, $3, $4, $5)
+      `;
+      await client.query(sql, [nodeId, userId, username, action, details || null]);
+    } catch (error) {
+      console.error('Error logging caller activity:', error);
+      // Fail silently like express.e would
+    } finally {
+      client.release();
+    }
+  }
+
+  async getRecentCallerActivity(limit: number = 20, nodeId?: number): Promise<any[]> {
+    const client = await this.pool.connect();
+    try {
+      let sql = `
+        SELECT node_id, user_id, username, action, details, timestamp
+        FROM caller_activity
+      `;
+      const params: any[] = [];
+      
+      if (nodeId !== undefined) {
+        sql += ` WHERE node_id = $1`;
+        params.push(nodeId);
+      }
+      
+      sql += ` ORDER BY timestamp DESC LIMIT $${params.length + 1}`;
+      params.push(limit);
+
+      const result = await client.query(sql, params);
+      return result.rows;
+    } catch (error) {
+      console.error('Error getting caller activity:', error);
+      return [];
+    } finally {
+      client.release();
+    }
+  }
+
+  // User Stats methods
+  async getUserStats(userId: string): Promise<{
+    bytes_uploaded: number;
+    bytes_downloaded: number;
+    files_uploaded: number;
+    files_downloaded: number;
+  }> {
+    const client = await this.pool.connect();
+    try {
+      const sql = `SELECT * FROM user_stats WHERE user_id = $1`;
+      const result = await client.query(sql, [userId]);
+      
+      if (result.rows.length > 0) {
+        const stats = result.rows[0];
+        return {
+          bytes_uploaded: Number(stats.bytes_uploaded) || 0,
+          bytes_downloaded: Number(stats.bytes_downloaded) || 0,
+          files_uploaded: Number(stats.files_uploaded) || 0,
+          files_downloaded: Number(stats.files_downloaded) || 0
+        };
+      }
+      
+      // Create default stats if not exists
+      await client.query(`
+        INSERT INTO user_stats (user_id, bytes_uploaded, bytes_downloaded, files_uploaded, files_downloaded)
+        VALUES ($1, 0, 0, 0, 0)
+        ON CONFLICT (user_id) DO NOTHING
+      `, [userId]);
+      
+      return {
+        bytes_uploaded: 0,
+        bytes_downloaded: 0,
+        files_uploaded: 0,
+        files_downloaded: 0
+      };
+    } catch (error) {
+      console.error('Error getting user stats:', error);
+      return {
+        bytes_uploaded: 0,
+        bytes_downloaded: 0,
+        files_uploaded: 0,
+        files_downloaded: 0
+      };
+    } finally {
+      client.release();
+    }
+  }
+
+  async updateUserStats(
+    userId: string,
+    updates: {
+      bytes_uploaded?: number;
+      bytes_downloaded?: number;
+      files_uploaded?: number;
+      files_downloaded?: number;
+    }
+  ): Promise<void> {
+    const client = await this.pool.connect();
+    try {
+      // Ensure record exists first
+      await client.query(`
+        INSERT INTO user_stats (user_id, bytes_uploaded, bytes_downloaded, files_uploaded, files_downloaded)
+        VALUES ($1, 0, 0, 0, 0)
+        ON CONFLICT (user_id) DO NOTHING
+      `, [userId]);
+
+      // Build update query
+      const fields = Object.keys(updates);
+      if (fields.length === 0) return;
+
+      const sql = `
+        UPDATE user_stats 
+        SET ${fields.map((f, i) => `${f} = ${f} + $${i + 1}`).join(', ')}, updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $${fields.length + 1}
+      `;
+      const values = [...fields.map(f => updates[f as keyof typeof updates]), userId];
+
+      await client.query(sql, values);
+    } catch (error) {
+      console.error('Error updating user stats:', error);
+    } finally {
+      client.release();
+    }
+  }
   async getBulletinById(id: number): Promise<Bulletin | null> {
     const client = await this.pool.connect();
     try {

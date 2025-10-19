@@ -23,6 +23,7 @@
 import { Socket, Server } from 'socket.io';
 import { BBSSession, BBSState, LoggedOnSubState } from '../bbs/session';
 import { loadScreen } from '../bbs/screens';
+import { displayConnectionScreen } from '../bbs/connection';
 import { setupAuthHandlers } from './authHandlers';
 import { setupDoorHandlers } from '../amiga-emulation/doorHandler';
 import { setupChatHandlers, releaseNodeFromSession } from '../chatHandlers';
@@ -32,6 +33,7 @@ import { handleCommand } from './commandHandler';
 import { displayDoorManager } from './doorHandlers';
 import { RedisSessionStore } from '../server/sessionStore';
 import { chatState, conferences, messageBases, fileAreas, doors, messages } from '../server/dataStore';
+import { nodeManager } from '../nodes';
 
 /**
  * Setup all BBS connection handlers for a new socket connection
@@ -62,9 +64,13 @@ export async function setupBBSConnection(
   // ====================================================================
   // SESSION INITIALIZATION
   // ====================================================================
+  // Assign session to a node
+  const nodeSession = await nodeManager.assignSessionToNode(socket.id, socket.id);
+  
   // Initialize session (mirroring processAwait in AmiExpress)
   const session: BBSSession = {
     state: BBSState.AWAIT,
+    nodeNumber: nodeSession.nodeId,
     currentConf: 0,
     currentMsgBase: 0,
     timeRemaining: 60, // 60 minutes default
@@ -77,21 +83,38 @@ export async function setupBBSConnection(
     inputBuffer: '', // Buffer for line-based input
     relConfNum: 0, // Relative conference number
     currentConfName: 'Unknown', // Current conference name
-    cmdShortcuts: false // Like AmiExpress - default to line input mode, not hotkeys
+    cmdShortcuts: false, // Like AmiExpress - default to line input mode, not hotkeys
+    ansiMode: true, // Default to ANSI mode
+    ripMode: false, // RIP graphics mode
+    quickLogon: false, // Quick logon flag
+    loginRetries: 0, // Number of login attempts
+    passwordRetries: 0, // Number of password attempts
+    loginTime: Date.now(), // Login timestamp
+    nodeStartTime: Date.now() // Node start time
   };
   await sessions.set(socket.id, session);
 
   // ====================================================================
-  // DISPLAY BBSTITLE SCREEN
+  // DISPLAY CONNECTION SCREEN AND BBSTITLE
   // ====================================================================
+  // Display connection screen with node status (express.e:29507-29524)
+  await displayConnectionScreen(socket, session, nodeSession.nodeId);
+  
   // Display BBS title screen on connect (will pause until login)
   const titleScreen = loadScreen('BBSTITLE', session);
   if (titleScreen) {
     socket.emit('ansi-output', titleScreen);
   } else {
     // Fallback welcome message
-    socket.emit('ansi-output', '\x1b[2J\x1b[H\x1b[0;36mWelcome to AmiExpress-Web BBS\x1b[0m\r\n\r\n');
+    socket.emit('ansi-output', '\r\n\x1b[2J\x1b[H\x1b[0;36mWelcome to AmiExpress-Web BBS\x1b[0m\r\n\r\n');
   }
+
+  // Prompt for graphics mode (express.e:29528-29545)
+  socket.emit('ansi-output', '\r\nANSI, RIP or No graphics (A/r/n)? ');
+  
+  // Set state to wait for graphics mode input
+  session.state = BBSState.GRAPHICS_SELECT;
+  await sessions.set(socket.id, session);
 
   // ====================================================================
   // SETUP EVENT HANDLERS
@@ -279,6 +302,18 @@ export async function setupBBSConnection(
         } catch (error) {
           console.error('[CHAT] Error handling disconnect for chat session:', error);
         }
+      }
+
+      // Log caller activity for logout (express.e:9493)
+      if (currentSession.user) {
+        const { callersLog } = await import('../bbs/helpers');
+        await callersLog(
+          currentSession.user.id,
+          currentSession.user.username,
+          'Logged off',
+          reason,
+          currentSession.nodeNumber || 1
+        );
       }
 
       // Release multinode assignment

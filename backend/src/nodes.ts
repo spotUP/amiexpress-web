@@ -16,7 +16,7 @@ export class NodeManager {
   private async initializeNodes(): Promise<void> {
     // Load nodes from database
     // For now, create default nodes if they don't exist
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 8; i++) {
       if (!this.nodes.has(i)) {
         const nodeInfo: NodeInfo = {
           id: i,

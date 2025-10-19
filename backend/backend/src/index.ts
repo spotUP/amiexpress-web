@@ -754,8 +754,8 @@ function parseMciCodes(content: string, session: BBSSession, bbsName: string = '
 // Like express.e displayScreen() - loads from BBS:Node{X}/Screens/ or BBS:Conf{X}/Screens/
 function loadScreenFile(screenName: string, conferenceId?: number, nodeId: number = 0): string | null {
   // BBS directory structure matches original Amiga AmiExpress
-  // From backend/backend/src, go up two levels to backend/, then into BBS/
-  const baseDir = path.join(__dirname, '../../BBS');
+  // From backend/src (where tsx runs), go up one level to backend/, then into BBS/
+  const baseDir = path.join(__dirname, '../BBS');
   const paths = [];
 
   // Try conference-specific screen first (if provided)

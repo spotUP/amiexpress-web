@@ -195,6 +195,10 @@ export function setupAuthHandlers(socket: Socket, io: Server, sessions: RedisSes
         console.error('Error checking OLM messages:', error);
       }
 
+      // Log caller activity (express.e:9493)
+      const { callersLog } = await import('../bbs/helpers');
+      await callersLog(user.id, user.username, 'Logged on', undefined, nodeId);
+
       // Pause after LOGON screen, then show bulletins
       socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
       session.subState = LoggedOnSubState.DISPLAY_BULL; // Wait for key before bulletins
@@ -294,6 +298,10 @@ export function setupAuthHandlers(socket: Socket, io: Server, sessions: RedisSes
       } catch (error) {
         console.error('Error checking OLM messages:', error);
       }
+
+      // Log caller activity for token login
+      const { callersLog } = await import('../bbs/helpers');
+      await callersLog(user.id, user.username, 'Logged on (token)', undefined, session.nodeNumber || 1);
 
       // Pause after LOGON screen, then show bulletins
       socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
@@ -486,6 +494,10 @@ export function setupAuthHandlers(socket: Socket, io: Server, sessions: RedisSes
       if (displayScreen(socket, session, 'LOGON')) {
         doPause(socket, session);
       }
+
+      // Log caller activity for new user registration
+      const { callersLog } = await import('../bbs/helpers');
+      await callersLog(user.id, user.username, 'New user registered', undefined, session.nodeNumber || 1);
 
       // Start DISPLAY_BULL flow (will show BULL, NODE_BULL, CONF_BULL, then menu)
       session.subState = LoggedOnSubState.DISPLAY_BULL;
