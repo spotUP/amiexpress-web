@@ -308,3 +308,87 @@ export function initializeSecurity(session: any): void {
   session.quietFlag = false;
   session.blockOLM = false;
 }
+
+/**
+ * Check if user has access to a specific conference
+ * Based on express.e checkConfAccess() - lines 8499-8511 (1:1 port)
+ *
+ * Conference access can be controlled two ways:
+ * 1. Simple string-based: user.conferenceAccess[confNum-1] == "X" means access
+ * 2. Area-based (ToolType): checks TOOLTYPE_AREA for "Conf.{N}" entry
+ *
+ * @param session - BBS session (or user object if provided)
+ * @param confNum - Conference number (1-based, like express.e)
+ * @param user - Optional user object (defaults to session.user)
+ * @returns true if user can access conference
+ */
+export function checkConfAccess(session: any, confNum: number, user?: any): boolean {
+  // Use provided user or session user (express.e:8501)
+  const targetUser = user || session?.user;
+
+  // No user = no access (express.e:8502)
+  if (!targetUser) {
+    return false;
+  }
+
+  // Check if using area-based access system (express.e:8504-8505)
+  // isConfAccessAreaName() checks if conferenceAccess starts with specific marker
+  // For now, we use simple string-based access (most common)
+  const isAreaBased = isConfAccessAreaName(targetUser);
+
+  if (!isAreaBased) {
+    // Simple string-based access (express.e:8506-8509)
+    // conferenceAccess is a string where each character represents a conference
+    // confNum is 1-based, so check index confNum-1
+    // "X" means user has access to that conference
+    if (targetUser.conferenceAccess && confNum <= targetUser.conferenceAccess.length) {
+      if (targetUser.conferenceAccess[confNum - 1] === 'X') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Area-based access system (express.e:8510-8511)
+  // Checks BBS/Access/<areaname>.info for "Conf.{N}" tooltype
+  const ttname = `Conf.${confNum}`;
+  // TODO for 100% 1:1: Implement checkToolTypeExists(TOOLTYPE_AREA, conferenceAccess, ttname)
+  // For now, fall back to granting access (sysop-level users get access)
+  return targetUser.secLevel >= 100;
+}
+
+/**
+ * Check if conference access uses area-based naming (ToolType system)
+ * Based on express.e isConfAccessAreaName() - lines 8513-8519
+ *
+ * In area-based mode, conferenceAccess contains an area name (e.g., "SysOp", "User")
+ * instead of a string of X's. Area names are looked up in Access/<areaname>.info
+ *
+ * The function checks if the string is numeric or starts with specific prefixes
+ * that indicate it's an area name rather than the simple X-based system.
+ *
+ * @param user - User object
+ * @returns true if using area-based access, false for simple X-based
+ */
+function isConfAccessAreaName(user: any): boolean {
+  if (!user.conferenceAccess) {
+    return false;
+  }
+
+  const confAccess = user.conferenceAccess;
+
+  // If it starts with a number, it's area-based (express.e:8515)
+  if (/^\d/.test(confAccess)) {
+    return true;
+  }
+
+  // Check for specific area name prefixes (express.e:8516-8519)
+  // Common area names: "SysOp", "CoSysOp", "User", "Guest", etc.
+  // These don't start with 'X' and are longer than simple access strings
+  // For now, if it contains any letters other than X, treat as area-based
+  if (confAccess.length > 0 && /[A-WYZ]/i.test(confAccess)) {
+    return true;
+  }
+
+  return false;
+}

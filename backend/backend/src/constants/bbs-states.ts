@@ -83,6 +83,9 @@ export enum LoggedOnSubState {
   // Conference operations
   CONFERENCE_SELECT = 'conference_select',
   CONFERENCE_JOIN = 'conference_join',
+
+  // Bulletin operations
+  BULLETIN_SELECT = 'bulletin_select',
 }
 
 export enum SessionStatus {

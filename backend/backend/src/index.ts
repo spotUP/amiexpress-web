@@ -18,6 +18,7 @@ import { ACSCode } from './constants/acs-codes';
 import { EnvStat } from './constants/env-codes';
 import {
   checkSecurity,
+  checkConfAccess,
   setEnvStat,
   initializeSecurity,
   setTempSecurityFlag,
@@ -830,12 +831,6 @@ function displayScreen(socket: any, session: BBSSession, screenName: string) {
 
 // Display "Press any key..." pause prompt
 // Like express.e doPause() - express.e:28566, 28571
-function doPause(socket: any, session: BBSSession) {
-  socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
-  // Note: Actual key wait is handled by client sending keypress event
-  // This just displays the prompt
-}
-
 // ===== END SCREEN FILE SYSTEM =====
 
 // Display connection screen (express.e:29507-29524 processLogon)
@@ -1052,43 +1047,323 @@ async function displayConferenceBulletins(socket: any, session: BBSSession) {
   // Conference scan for mail (confScan equivalent - express.e:28066-28120)
   await performMailScan(socket, session);
 
-  // Join default conference (joinConf equivalent)
-  await joinConference(socket, session, session.confRJoin, session.msgBaseRJoin);
+  // Perform conference scan (confScan) - scans all conferences for new mail
+  await confScan(socket, session);
 }
 
-// Join conference function (joinConf equivalent)
-async function joinConference(socket: any, session: BBSSession, confId: number, msgBaseId: number) {
-  const conference = conferences.find(c => c.id === confId);
+// Conference scan - 1:1 port of express.e:28066-28169 confScan()
+// Scans all conferences for new messages during login
+async function confScan(socket: any, session: BBSSession) {
+  // Display MAILSCAN screen (express.e:28072)
+  await displayScreen(socket, session, 'MAILSCAN');
+
+  // Show scanning message (express.e:28080-28082)
+  socket.emit('ansi-output', '\r\n\x1b[0mScanning conferences for mail...\r\n\r\n');
+
+  // Loop through all conferences (express.e:28084-28120)
+  for (const conference of conferences) {
+    // Check conference access (express.e:28087)
+    // IF (checkConfAccess(conf))
+    if (!checkConfAccess(session, conference.id)) {
+      continue; // Skip conferences user doesn't have access to
+    }
+
+    // Get message bases for this conference
+    const confMessageBases = messageBases.filter(mb => mb.conferenceId === conference.id);
+
+    // Scan each message base in this conference (express.e:28089-28092)
+    for (const msgBase of confMessageBases) {
+      // Call joinConference with confScan=TRUE (express.e:28092)
+      // This loads pointers and performs scan without displaying join messages
+      await joinConference(socket, session, conference.id, msgBase.id, true, false, 'NOFORCE');
+    }
+
+    // TODO: Also scan for new files in this conference (express.e:28093-28098)
+    // runSysCommand('N', 'S U')
+  }
+
+  // Move to DISPLAY_CONF_BULL state (express.e:28569-28570)
+  session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+}
+
+// Load message scan pointers from database (express.e:5038-5048 loadMsgPointers)
+async function loadMsgPointers(session: BBSSession, confId: number, msgBaseId: number) {
+  if (!session.user) return;
+
+  try {
+    const result = await db.pool.query(
+      `SELECT last_msg_read_conf, last_new_read_conf
+       FROM conf_base
+       WHERE user_id = $1 AND conference_id = $2 AND message_base_id = $3`,
+      [session.user.id, confId, msgBaseId]
+    );
+
+    if (result.rows.length > 0) {
+      session.lastMsgReadConf = result.rows[0].last_msg_read_conf || 0;
+      session.lastNewReadConf = result.rows[0].last_new_read_conf || 0;
+    } else {
+      // Initialize if no record exists
+      session.lastMsgReadConf = 0;
+      session.lastNewReadConf = 0;
+      await db.pool.query(
+        `INSERT INTO conf_base (user_id, conference_id, message_base_id, last_msg_read_conf, last_new_read_conf)
+         VALUES ($1, $2, $3, 0, 0)
+         ON CONFLICT (user_id, conference_id, message_base_id) DO NOTHING`,
+        [session.user.id, confId, msgBaseId]
+      );
+    }
+  } catch (error) {
+    console.error('Error loading message pointers:', error);
+    session.lastMsgReadConf = 0;
+    session.lastNewReadConf = 0;
+  }
+}
+
+// Save message scan pointers to database (express.e saveMsgPointers)
+async function saveMsgPointers(session: BBSSession, confId: number, msgBaseId: number) {
+  if (!session.user) return;
+
+  try {
+    await db.pool.query(
+      `UPDATE conf_base
+       SET last_msg_read_conf = $1, last_new_read_conf = $2
+       WHERE user_id = $3 AND conference_id = $4 AND message_base_id = $5`,
+      [session.lastMsgReadConf || 0, session.lastNewReadConf || 0, session.user.id, confId, msgBaseId]
+    );
+  } catch (error) {
+    console.error('Error saving message pointers:', error);
+  }
+}
+
+// Join conference function - 1:1 port of express.e:4975-5200 joinConf()
+// Parameters match express.e: joinConf(conf, msgBaseNum, confScan, auto, forceMailScan)
+async function joinConference(
+  socket: any,
+  session: BBSSession,
+  confId: number,
+  msgBaseId: number,
+  isConfScan: boolean = false,
+  isAuto: boolean = false,
+  forceMailScan: string = 'NOFORCE'
+) {
+  // Validate conference access (express.e:4982-4992)
+  let conference = conferences.find(c => c.id === confId);
   if (!conference) {
-    socket.emit('ansi-output', '\r\n\x1b[31mInvalid conference!\x1b[0m\r\n');
+    confId = 1; // Fallback to conference 1
+    conference = conferences.find(c => c.id === confId);
+  }
+
+  // Check conference access (express.e:4982)
+  // IF (checkConfAccess(conf)=FALSE) THEN conf:=1
+  if (!checkConfAccess(session, confId)) {
+    confId = 1; // Fallback to conference 1 if no access
+    conference = conferences.find(c => c.id === confId);
+  }
+
+  // Keep checking until we find an accessible conference (express.e:4983-4987)
+  // WHILE (conf<=cmds.numConf) ANDALSO (checkConfAccess(conf)=FALSE)
+  let attempts = 0;
+  while (confId <= conferences.length && !checkConfAccess(session, confId) && attempts < 10) {
+    confId++;
+    conference = conferences.find(c => c.id === confId);
+    attempts++;
+  }
+
+  // If no accessible conference found, deny access (express.e:4989-4993)
+  if (confId > conferences.length || !checkConfAccess(session, confId)) {
+    socket.emit('ansi-output', '\r\n\x1b[31mYou do not have access to any conferences on this BBS\x1b[0m\r\n');
+    socket.emit('ansi-output', '\x1b[31mDisconnecting..\x1b[0m\r\n');
+    // Set disconnect state
+    session.state = BBSState.LOGOFF;
     return false;
   }
 
   const messageBase = messageBases.find(mb => mb.id === msgBaseId && mb.conferenceId === confId);
   if (!messageBase) {
-    socket.emit('ansi-output', '\r\n\x1b[31mInvalid message base for this conference!\x1b[0m\r\n');
+    msgBaseId = 1; // Fallback to first message base
+  }
+
+  // Set current conference/msgbase (express.e:4998-5000)
+  if (!isConfScan) {
+    session.currentConf = confId;
+    session.currentMsgBase = msgBaseId;
+  }
+
+  session.currentConfName = conference?.name || 'General';
+  session.relConfNum = confId;
+
+  // Load message scan pointers (express.e:5033 loadMsgPointers)
+  await loadMsgPointers(session, confId, msgBaseId);
+
+  // Get mail statistics from database (express.e:5035-5048)
+  const mailStats = await getMailStats(confId, msgBaseId);
+
+  // Validate scan pointers against mail stats (express.e:5041-5048)
+  if (session.lastMsgReadConf! < mailStats.lowestNotDel) {
+    session.lastMsgReadConf = mailStats.lowestNotDel;
+  }
+  if (session.lastNewReadConf! < mailStats.lowestNotDel) {
+    session.lastNewReadConf = mailStats.lowestNotDel;
+  }
+  if (session.lastMsgReadConf! > mailStats.highMsgNum) {
+    session.lastMsgReadConf = 0;
+  }
+  if (session.lastNewReadConf! > mailStats.highMsgNum) {
+    session.lastNewReadConf = 0;
+  }
+
+  // If not a scan operation, display conference join messages (express.e:5056-5132)
+  if (!isConfScan) {
+    // Display CONF_BULL screen (express.e:5056-5059)
+    const bullDisplayed = await displayScreen(socket, session, 'CONF_BULL');
+    if (bullDisplayed) {
+      await doPause(socket, session);
+    }
+
+    // Show join message (express.e:5068-5106)
+    socket.emit('ansi-output', '\r\n');
+    if (isAuto) {
+      socket.emit('ansi-output', `\x1b[32mConference ${confId}: ${session.currentConfName} [${messageBase?.name}] Auto-ReJoined\x1b[0m\r\n`);
+    } else {
+      socket.emit('ansi-output', `\x1b[32mJoining Conference:\x1b[33m\x1b[0m ${session.currentConfName} [${messageBase?.name}]\r\n`);
+    }
+
+    // Log conference join (express.e:5104-5106)
+    if (session.user) {
+      await callersLog(session.user.id, session.user.username, `${session.currentConfName} [${messageBase?.name}] (${confId}) Conference Joined`, '');
+    }
+
+    // Display message statistics (express.e:5109-5127)
+    if (mailStats.lowestKey > 1) {
+      socket.emit('ansi-output', `\x1b[32mMessages range from \x1b[33m( \x1b[0m${mailStats.lowestKey} \x1b[32m- \x1b[0m${mailStats.highMsgNum - 1} \x1b[33m)\x1b[0m\r\n`);
+    } else {
+      socket.emit('ansi-output', `\r\n\x1b[32mTotal messages           \x1b[33m:\x1b[0m ${mailStats.highMsgNum - 1}\r\n`);
+    }
+
+    const lastScanned = (session.lastNewReadConf || 0) - 1;
+    socket.emit('ansi-output', `\r\n\x1b[32mLast message auto scanned\x1b[33m:\x1b[0m ${lastScanned < 0 ? 1 : lastScanned}\r\n`);
+    socket.emit('ansi-output', `\x1b[32mLast message read        \x1b[33m:\x1b[0m ${session.lastMsgReadConf || 0}\r\n`);
+  }
+
+  // Perform message scan if requested (express.e:5136-5145)
+  if (!isAuto && forceMailScan !== 'SKIP') {
+    if (forceMailScan === 'ALL' || shouldScanForMail(session, confId, msgBaseId)) {
+      // TODO: Implement actual message scanning
+      // For now, just update the scan pointer to mark all as scanned
+      session.lastNewReadConf = mailStats.highMsgNum;
+      await saveMsgPointers(session, confId, msgBaseId);
+    }
+  }
+
+  // Save confRJoin and msgBaseRJoin for auto-rejoin (express.e:5153-5156)
+  if (!isAuto && !isConfScan && session.user) {
+    session.user.confRJoin = confId;
+    session.user.msgBaseRJoin = msgBaseId;
+    // Update in database
+    await db.pool.query(
+      `UPDATE users SET conf_r_join = $1, msg_base_r_join = $2 WHERE id = $3`,
+      [confId, msgBaseId, session.user.id]
+    );
+  }
+
+  return true;
+}
+
+// Helper to get mail statistics (express.e:5035 getMailStatFile)
+async function getMailStats(confId: number, msgBaseId: number) {
+  try {
+    const result = await db.pool.query(
+      `SELECT lowest_key, high_msg_num, lowest_not_del
+       FROM mail_stats
+       WHERE conference_id = $1 AND message_base_id = $2`,
+      [confId, msgBaseId]
+    );
+
+    if (result.rows.length > 0) {
+      return {
+        lowestKey: result.rows[0].lowest_key || 1,
+        highMsgNum: result.rows[0].high_msg_num || 1,
+        lowestNotDel: result.rows[0].lowest_not_del || 0
+      };
+    }
+  } catch (error) {
+    console.error('Error getting mail stats:', error);
+  }
+
+  return {
+    lowestKey: 1,
+    highMsgNum: 1,
+    lowestNotDel: 0
+  };
+}
+
+// Helper to check if should scan for mail (express.e checkMailConfScan)
+function shouldScanForMail(session: BBSSession, confId: number, msgBaseId: number): boolean {
+  // TODO: Implement scan flags checking
+  // For now, default to true (always scan)
+  return true;
+}
+
+// Implement doPause (express.e:5161-5172)
+async function doPause(socket: any, session: BBSSession) {
+  socket.emit('ansi-output', '\r\n\x1b[32m(\x1b[33mPause\x1b[32m)\x1b[34m...\x1b[32mSpace To Resume\x1b[33m: \x1b[0m');
+  // For now, just show the pause prompt
+  // In the full implementation, this would wait for user input
+  // We'll handle this through the frontend keypress event
+}
+
+// Display bulletin menu (express.e:24607-24656)
+// This is a 1:1 port - uses BullHelp screen file, NOT dynamic scanning
+async function displayBulletinMenu(socket: any, session: BBSSession) {
+  const fs = require('fs/promises');
+  const path = require('path');
+
+  // Check if BullHelp.txt exists (express.e:24614-24618)
+  // Checks confScreenDir + 'Bulletins/BullHelp.txt'
+  const confNum = session.currentConf || 1;
+  const confScreenDir = path.join(__dirname, `../../../BBS/Conf${String(confNum).padStart(2, '0')}/Screens`);
+  const bullHelpPath = path.join(confScreenDir, 'Bulletins', 'BullHelp.txt');
+
+  try {
+    await fs.access(bullHelpPath);
+    // File exists, continue
+  } catch (error) {
+    // BullHelp.txt doesn't exist - myError(ERR_NO_BULLS) (express.e:24615-24617)
+    socket.emit('ansi-output', '\r\n\x1b[31mNo bulletins available.\x1b[0m\r\n\r\n');
+    socket.emit('ansi-output', '\x1b[32mPress any key to continue...\x1b[0m');
+    session.menuPause = false;
+    session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+    return;
+  }
+
+  // Display BullHelp screen file (express.e:24626-24627)
+  // Uses findSecurityScreen() + displayFile()
+  // For now, we'll use displayScreen() which does similar functionality
+  await displayScreen(socket, session, 'Bulletins/BullHelp');
+
+  // Prompt for bulletin number (express.e:24629-24631)
+  socket.emit('ansi-output', '\r\n\x1b[32mWhich Bulletin (?)=List, (Enter)=none? \x1b[0m');
+
+  // Set state to wait for bulletin selection (enters inputAgain loop)
+  session.subState = LoggedOnSubState.BULLETIN_SELECT as any;
+  return;
+}
+
+// Display specific bulletin file (express.e:24645-24651)
+// Uses findSecurityScreen() + displayFile() - we use displayScreen()
+async function displayBulletin(socket: any, session: BBSSession, bulletinNum: number) {
+  // Build path: confScreenDir + 'Bulletins/Bull{N}' (express.e:24644)
+  const screenName = `Bulletins/Bull${bulletinNum}`;
+
+  // Try to display bulletin using displayScreen() (like findSecurityScreen + displayFile)
+  const displayed = await displayScreen(socket, session, screenName);
+
+  if (!displayed) {
+    // Bulletin not found (express.e:24648-24650)
+    socket.emit('ansi-output', `\r\n\x1b[31mSorry there is no bulletin #${bulletinNum}\x1b[0m\r\n\r\n`);
     return false;
   }
 
-  session.currentConf = confId;
-  session.currentMsgBase = msgBaseId;
-  session.currentConfName = conference.name;
-  session.relConfNum = confId; // For simplicity, use absolute conf number as relative
-
-  socket.emit('ansi-output', `\r\n\x1b[32mJoined conference: ${conference.name}\x1b[0m\r\n`);
-  socket.emit('ansi-output', `\r\n\x1b[32mCurrent message base: ${messageBase.name}\x1b[0m\r\n`);
-
-  // Log conference join (express.e:9493 callersLog)
-  if (session.user) {
-    await callersLog(session.user.id, session.user.username, 'Joined conference', conference.name);
-  }
-
-  // Like express.e:28576-28577 - load flagged files and command history
-  await loadFlagged(socket, session);
-  await loadHistory(session);
-
-  // Move to menu display
-  session.subState = LoggedOnSubState.DISPLAY_MENU;
   return true;
 }
 
@@ -2541,6 +2816,46 @@ async function handleCommand(socket: any, session: BBSSession, data: string) {
       session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
       session.tempData = undefined;
     }
+    return;
+  }
+
+  // Handle bulletin selection (express.e:24629-24650)
+  if (session.subState === LoggedOnSubState.BULLETIN_SELECT) {
+    console.log('📰 In bulletin selection state');
+    const input = data.trim();
+
+    // Empty input = exit (express.e:24636-24639)
+    if (input === '') {
+      socket.emit('ansi-output', '\r\n');
+      socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+      session.menuPause = false;
+      session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+      session.tempData = undefined;
+      return;
+    }
+
+    // "?" = redisplay help/list (express.e:24640)
+    if (input.toUpperCase() === '?') {
+      await displayBulletinMenu(socket, session);
+      return;
+    }
+
+    // Parse bulletin number (express.e:24641-24643)
+    const bulletinNum = parseInt(input);
+
+    if (isNaN(bulletinNum) || bulletinNum < 1) {
+      socket.emit('ansi-output', '\r\n\x1b[31mInvalid bulletin number.\x1b[0m\r\n');
+      socket.emit('ansi-output', '\r\n\x1b[32mWhich Bulletin (?)=List, (Enter)=none? \x1b[0m');
+      // Stay in BULLETIN_SELECT state for next input (JUMP inputAgain)
+      return;
+    }
+
+    // Try to display the bulletin (express.e:24645-24650)
+    const displayed = await displayBulletin(socket, session, bulletinNum);
+
+    // After displaying bulletin (or error), prompt again (express.e:24650 JUMP inputAgain)
+    socket.emit('ansi-output', '\r\n\x1b[32mWhich Bulletin (?)=List, (Enter)=none? \x1b[0m');
+    // Stay in BULLETIN_SELECT state for continuous input loop
     return;
   }
 
@@ -4266,13 +4581,21 @@ async function processBBSCommand(socket: any, session: BBSSession, command: stri
       return;
 
     case 'B': // Bulletins (internalCommandB) - express.e:24607
-      // TODO: Implement bulletin file system from Bulletins/ directory
-      socket.emit('ansi-output', '\x1b[36m-= Bulletins =-\x1b[0m\r\n');
-      socket.emit('ansi-output', 'Bulletin system not yet implemented.\r\n');
-      socket.emit('ansi-output', 'This will display bulletins from the Bulletins/ directory.\r\n');
-      socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
-      session.menuPause = false;
-      session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+      // Check security (express.e:24613)
+      // IF checkSecurity(ACS_READ_BULLETINS)=FALSE THEN RETURN RESULT_NOT_ALLOWED
+      if (!checkSecurity(session, ACSCode.READ_BULLETINS)) {
+        socket.emit('ansi-output', '\r\n\x1b[31mYou do not have permission to read bulletins.\x1b[0m\r\n');
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.menuPause = false;
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        return;
+      }
+
+      // Set environment status (express.e:24614)
+      setEnvStat(session, EnvStat.BULLETINS);
+
+      // Display bulletins from Bulletins/ directory
+      await displayBulletinMenu(socket, session);
       return;
 
     case 'H': // Help (internalCommandH) - express.e:25071
