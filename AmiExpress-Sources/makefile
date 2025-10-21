@@ -24,7 +24,7 @@ axSetupTool:
 ACP:					ACP.e acpversion.m axcommon.m jsonParser.m jsonCreate.m stringlist.m 
 							$(compiler) ACP $(options)
 
-express5:			express.e expversion.m axcommon.m axconsts.m MiscFuncs.m axobjects.m axenums.m stringlist.m errors.m mailssl.m ftpd.m httpd.m xymodem.m zmodem.m hydra.m tooltypes.m pwdhash.m bcd.m sha256.m
+express5:			express.e expversion.m axcommon.m axconsts.m MiscFuncs.m axobjects.m axenums.m stringlist.m errors.m mailssl.m ftpd.m httpd.m xymodem.m zmodem.m hydra.m tooltypes.m pwdhash.m bcd.m sha256.m modules/message_system.m modules/user_management.m modules/file_transfer.m modules/network_communication.m modules/session_management.m modules/ui_display.m modules/shared_data.m
 							$(compiler) express $(options)
 							copy express express5
 							delete express
@@ -112,9 +112,30 @@ ftpd.m:				ftpd.e tooltypes.m stringlist.m axobjects.m axenums.m MiscFuncs.m bcd
 
 httpd.m:			httpd.e axcommon.m stringlist.m
 							$(compiler) httpd $(options)
+modules/message_system.m: modules/message_system.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/message_system $(options)
+
+modules/user_management.m: modules/user_management.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/user_management $(options)
+
+modules/file_transfer.m: modules/file_transfer.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/file_transfer $(options)
+
+modules/network_communication.m: modules/network_communication.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/network_communication $(options)
+
+modules/session_management.m: modules/session_management.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/session_management $(options)
+
+modules/ui_display.m: modules/ui_display.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/ui_display $(options)
+
+modules/shared_data.m: modules/shared_data.e axcommon.m axconsts.m axenums.m axobjects.m stringlist.m
+							$(compiler) modules/shared_data $(options)
+
 
 clean:
-							delete expversion.e acpversion.e delete express VerInfoGen express5 acp qwk ftn jsonImport icon2cfg MiscFuncs.m stringlist.m errors.m mailssl.m jsonCreate.m jsonParser.m axcommon.m ftpd.m httpd.m axconsts.m axobjects.m axenums.m zmodem.m xymodem.m hydra.m bcd.m expversion.m acpversion.m pwdhash.m tooltypes.m sha256.m
+							delete expversion.e acpversion.e delete express VerInfoGen express5 acp qwk ftn jsonImport icon2cfg MiscFuncs.m stringlist.m errors.m mailssl.m jsonCreate.m jsonParser.m axcommon.m ftpd.m httpd.m axconsts.m axobjects.m axenums.m zmodem.m xymodem.m hydra.m bcd.m expversion.m acpversion.m pwdhash.m tooltypes.m sha256.m modules/message_system.m modules/user_management.m modules/file_transfer.m modules/network_communication.m modules/session_management.m modules/ui_display.m modules/shared_data.m
 
 dist:					options=$(releaseoptions)
 dist:					build=release
