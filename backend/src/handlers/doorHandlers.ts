@@ -9,6 +9,7 @@ import { Door, DoorSession } from '../types';
 import { doors, doorSessions } from '../server/dataStore';
 import { displayMainMenu } from '../bbs/menu';
 import { getAmigaDoorManager } from '../doors/amigaDoorManager';
+import { executePhreakWarsDoor } from '../doors/phreakWars';
 
 /**
  * Display door games menu (DOORS command)
@@ -731,6 +732,9 @@ export async function executeWebDoor(socket: Socket, session: BBSSession, door: 
       break;
     case 'checkup':
       await executeCheckUPDoor(socket, session, door, doorSession);
+      break;
+    case 'phreakwars':
+      await executePhreakWarsDoor(socket, session, door, doorSession);
       break;
     default:
       socket.emit('ansi-output', 'Door implementation not found.\r\n');

@@ -8,7 +8,7 @@
 import { Socket } from 'socket.io';
 import { BBSSession, LoggedOnSubState } from '../bbs/session';
 import { fileAreas, fileEntries, conferences } from '../server/dataStore';
-import { parseParams } from '../bbs/utils';
+import { parseParams } from '../bbs/helpers';
 
 /**
  * Display contents of a specific file area

@@ -44,6 +44,49 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-pro
 export function setupAuthHandlers(socket: Socket, io: Server, sessions: RedisSessionStore) {
 
   /**
+   * Handle username validation (frontend sends this before asking for password)
+   *
+   * This handler checks if a username exists in the database and responds with:
+   * - 'username-valid': Username exists, proceed to password prompt
+   * - 'username-not-found': Username doesn't exist, offer new user registration
+   */
+  socket.on('validate-username', async (data: { username: string }) => {
+    console.log('Username validation request:', data.username);
+
+    try {
+      const session = await sessions.get(socket.id);
+      if (!session) {
+        socket.emit('username-invalid');
+        return;
+      }
+
+      // Validate input
+      if (!data.username || data.username.trim().length === 0) {
+        socket.emit('ansi-output', '\r\nUsername cannot be empty. Username: ');
+        socket.emit('username-invalid');
+        return;
+      }
+
+      // Check if user exists
+      const user = await db.getUserByUsername(data.username);
+      
+      if (user) {
+        // User exists - ask for password
+        console.log('Username valid:', data.username);
+        socket.emit('ansi-output', 'Password: ');
+        socket.emit('username-valid', { username: data.username });
+      } else {
+        // User doesn't exist - offer new user registration
+        console.log('Username not found:', data.username);
+        socket.emit('username-not-found', { username: data.username });
+      }
+    } catch (error) {
+      console.error('Username validation error:', error);
+      socket.emit('username-invalid');
+    }
+  });
+
+  /**
    * Handle username/password login
    *
    * This handler:

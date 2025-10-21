@@ -24,30 +24,44 @@ function addAnsiEscapes(content: string): string {
 
 /**
  * Process classic AmiExpress MCI codes
- * Format: ~CODE where CODE is 1-3 character identifier
+ * Format: ~CODE or %CODE where CODE is 1-3 character identifier
  * Port from express.e processMciCmd() lines 5258-5762
+ * Enhanced to handle both ~ and % prefixes like index.ts parseMciCodes()
  */
 function processMciCodes(content: string, session: BBSSession): string {
   let result = '';
   let pos = 0;
 
   while (pos < content.length) {
+    // Look for both ~ and % prefixes
     const tilde = content.indexOf('~', pos);
+    const percent = content.indexOf('%', pos);
 
-    if (tilde === -1) {
+    // Find the closest prefix
+    let prefixPos = -1;
+    let prefixChar = '';
+    if (tilde !== -1 && (percent === -1 || tilde < percent)) {
+      prefixPos = tilde;
+      prefixChar = '~';
+    } else if (percent !== -1) {
+      prefixPos = percent;
+      prefixChar = '%';
+    }
+
+    if (prefixPos === -1) {
       // No more MCI codes
       result += content.substring(pos);
       break;
     }
 
-    // Add content before tilde
-    result += content.substring(pos, tilde);
+    // Add content before prefix
+    result += content.substring(pos, prefixPos);
 
     // Parse MCI code
-    let codeEnd = tilde + 1;
+    let codeEnd = prefixPos + 1;
     let maxLen = -1;
 
-    // Check for numeric length specifier: ~123CODE
+    // Check for numeric length specifier: ~123CODE or %123CODE
     let numStr = '';
     while (codeEnd < content.length && content[codeEnd] >= '0' && content[codeEnd] <= '9' && numStr.length < 3) {
       numStr += content[codeEnd];
@@ -57,7 +71,7 @@ function processMciCodes(content: string, session: BBSSession): string {
 
     // Get code (up to space or | terminator)
     const codeStart = codeEnd;
-    while (codeEnd < content.length && content[codeEnd] !== ' ' && content[codeEnd] !== '|' && content[codeEnd] !== '~') {
+    while (codeEnd < content.length && content[codeEnd] !== ' ' && content[codeEnd] !== '|' && content[codeEnd] !== '~' && content[codeEnd] !== '%') {
       codeEnd++;
     }
 
@@ -65,6 +79,7 @@ function processMciCodes(content: string, session: BBSSession): string {
     let value = '';
 
     // Process MCI codes (from express.e lines 5290-5762)
+    // Handle both ~ and % prefixes with same logic
     switch (code) {
       case 'N':   // User name
         value = session.user?.username || 'Guest';
@@ -127,12 +142,45 @@ function processMciCodes(content: string, session: BBSSession): string {
       case 'BN':  // BBS Name (custom extension)
         value = 'AmiExpress Web BBS';
         break;
-      case '':    // Empty ~~ = literal tilde
-        value = '~';
+      case 'CF':  // Current conference name
+        value = session.currentConfName || 'General';
+        break;
+      case 'TM':  // Total messages in conference
+        // TODO: Get total message count for current conference
+        value = '0';
+        break;
+      case 'NM':  // New messages for user
+        // TODO: Get new message count for user
+        value = '0';
+        break;
+      case 'NF':  // New files for user
+        // TODO: Get new file count for user
+        value = '0';
+        break;
+      case 'AU':  // Active users
+        // TODO: Get active user count
+        value = '1';
+        break;
+      case 'SL':  // Security level (same as A)
+        value = String(session.user?.secLevel || 0);
+        break;
+      case 'UL':  // Upload/download ratio (same as UL above)
+        const uploads = session.user?.uploads || 0;
+        const downloads = session.user?.downloads || 0;
+        value = downloads > 0 ? (uploads / downloads).toFixed(2) : uploads.toString();
+        break;
+      case 'R':   // Time remaining (same as TR)
+        value = String(Math.floor(session.timeRemaining / 60));
+        break;
+      case 'B':   // BBS name (same as BN)
+        value = 'AmiExpress Web BBS';
+        break;
+      case '':    // Empty ~~ or %% = literal prefix
+        value = prefixChar;
         break;
       default:
         // Unknown code - output as-is
-        value = '~' + numStr + code;
+        value = prefixChar + numStr + code;
     }
 
     // Apply max length if specified

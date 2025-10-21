@@ -36,9 +36,10 @@ export async function joinConference(
   // TODO: Check conference access with checkConfAccess(session, confId)
   // For now, assume all conferences are accessible
 
-  const messageBase = messageBases.find(mb => mb.id === msgBaseId && mb.conferenceId === confId);
+  let messageBase = messageBases.find(mb => mb.id === msgBaseId && mb.conferenceId === confId);
   if (!messageBase) {
     msgBaseId = 1; // Fallback to first message base
+    messageBase = messageBases.find(mb => mb.id === msgBaseId && mb.conferenceId === confId);
   }
 
   // Set current conference/msgbase (express.e:4998-5000)
@@ -100,6 +101,9 @@ export async function joinConference(
     const lastScanned = (session.lastNewReadConf || 0) - 1;
     socket.emit('ansi-output', `\r\n\x1b[32mLast message auto scanned\x1b[33m:\x1b[0m ${lastScanned < 0 ? 1 : lastScanned}\r\n`);
     socket.emit('ansi-output', `\x1b[32mLast message read        \x1b[33m:\x1b[0m ${session.lastMsgReadConf || 0}\r\n`);
+
+    // Add pause prompt after conference bulletin display (express.e:28586)
+    socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
   }
 
   // Perform message scan if requested (express.e:5136-5145)

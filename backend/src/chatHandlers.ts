@@ -7,6 +7,8 @@ import { Socket } from 'socket.io';
 import { chatManager } from './chat';
 import { chatRoomManager } from './chatroom';
 import { multiNodeManager } from './multinode';
+import { db } from './database';
+import { BBSState } from './bbs/session';
 
 /**
  * Setup chat event handlers for a socket
@@ -443,24 +445,105 @@ export async function releaseNodeFromSession(session: any): Promise<void> {
 }
 
 /**
- * Get online users from multinode manager
+ * Get online users from active sessions
  */
-export async function getOnlineUsers(): Promise<any[]> {
+export async function getOnlineUsers(sessions?: any): Promise<any[]> {
   try {
+    console.log('[CHAT] getOnlineUsers called');
+
+    // If sessions store is provided, get users from active sessions
+    if (sessions) {
+      console.log('[CHAT] Getting users from sessions store');
+      const allSocketIds = await sessions.getAllKeys();
+      const onlineUsers = [];
+
+      for (const socketId of allSocketIds) {
+        const session = await sessions.get(socketId);
+        if (session && session.user && session.state === BBSState.LOGGEDON) {
+          // Skip users in quiet mode
+          if (session.user.quietNode) {
+            console.log('[CHAT] Skipping user in quiet mode:', session.user.username);
+            continue;
+          }
+
+          // Check if user is available for chat
+          if (!session.user.availableForChat) {
+            console.log('[CHAT] Skipping user not available for chat:', session.user.username);
+            continue;
+          }
+
+          // Get node info for this user
+          const nodeInfo = await multiNodeManager.getNodeByUsername(session.user.username);
+          const nodeId = nodeInfo ? nodeInfo.nodeId : 1;
+
+          onlineUsers.push({
+            nodeId: nodeId,
+            username: session.user.username,
+            location: session.user.location || '',
+            chatColor: 32, // Default green
+            offHook: false,
+            private: false,
+            quietMode: session.user.quietNode || false,
+            availableForChat: session.user.availableForChat
+          });
+
+          console.log('[CHAT] Added user from session:', session.user.username);
+        }
+      }
+
+      console.log('[CHAT] Returning', onlineUsers.length, 'users from sessions');
+      return onlineUsers;
+    }
+
+    // Fallback: get users from multinode system (legacy behavior)
+    console.log('[CHAT] Falling back to multinode system');
     const nodes = await multiNodeManager.getOnlineUsers();
-    return nodes
-      .filter(node => !node.quietMode) // Filter out users in quiet mode
-      .map(node => ({
+    console.log('[CHAT] Found', nodes.length, 'total online nodes');
+
+    const filteredNodes = [];
+
+    for (const node of nodes) {
+      console.log('[CHAT] Processing node:', node.nodeId, 'user:', node.handle, 'quiet:', node.quietMode);
+
+      // Filter out users in quiet mode
+      if (node.quietMode) {
+        console.log('[CHAT] Skipping user in quiet mode:', node.handle);
+        continue;
+      }
+
+      // Get user data from database to include chat availability
+      const user = await db.getUserByUsername(node.handle);
+      if (!user) {
+        console.log('[CHAT] User not found in database:', node.handle);
+        continue;
+      }
+
+      console.log('[CHAT] User', node.handle, 'availableForChat:', user.availableForChat);
+
+      // Filter out users not available for chat
+      if (!user.availableForChat) {
+        console.log('[CHAT] Skipping user not available for chat:', node.handle);
+        continue;
+      }
+
+      filteredNodes.push({
         nodeId: node.nodeId,
         username: node.handle,
         location: node.location,
         chatColor: node.chatColor,
         offHook: node.offHook,
         private: node.private,
-        quietMode: node.quietMode
-      }));
+        quietMode: node.quietMode,
+        availableForChat: user.availableForChat
+      });
+
+      console.log('[CHAT] Added user to filtered list:', node.handle);
+    }
+
+    console.log('[CHAT] Returning', filteredNodes.length, 'filtered users from multinode');
+    return filteredNodes;
   } catch (error) {
-    console.error('[MULTINODE] Get online users error:', error);
+    console.error('[CHAT] Get online users error:', error);
     return [];
   }
 }

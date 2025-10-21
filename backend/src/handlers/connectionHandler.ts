@@ -25,6 +25,7 @@ import { BBSSession, BBSState, LoggedOnSubState } from '../bbs/session';
 import { loadScreen } from '../bbs/screens';
 import { displayConnectionScreen } from '../bbs/connection';
 import { setupAuthHandlers } from './authHandlers';
+import { setupInternodeChatHandlers } from './internodeChatHandlers';
 import { setupDoorHandlers } from '../amiga-emulation/doorHandler';
 import { setupChatHandlers, releaseNodeFromSession } from '../chatHandlers';
 import { db } from '../database';
@@ -123,6 +124,9 @@ export async function setupBBSConnection(
   // Setup authentication handlers (login, register, new-user-response, login-with-token)
   setupAuthHandlers(socket, io, sessions);
 
+  // Setup internode chat handlers (chat:request, chat:accept, chat:decline, chat:message, chat:end)
+  setupInternodeChatHandlers(socket, io, sessions);
+
   // Setup Amiga door handlers (door:launch, door:status-request, door:input)
   setupDoorHandlers(socket);
 
@@ -215,6 +219,102 @@ export async function setupBBSConnection(
     } catch (error) {
       console.error('Error processing uploaded door:', error);
       socket.emit('ansi-output', `\r\n\x1b[31mX Error processing door: ${error instanceof Error ? error.message : 'Unknown error'}\x1b[0m\r\n`);
+    }
+  });
+
+  // ====================================================================
+  // DOOR UPLOAD HANDLER (Direct WebSocket)
+  // ====================================================================
+  /**
+   * Handle door archive upload via direct WebSocket
+   * Ported from monolithic index.ts lines 1503-1577
+   *
+   * This handler receives door archives directly via WebSocket (as alternative to HTTP upload).
+   * It validates the file, saves it to the archives directory, and updates the door manager.
+   */
+  socket.on('door-upload', async (data: { filename: string; content: Buffer | string }) => {
+    console.log('[DOOR UPLOAD] Received file:', data.filename);
+
+    const currentSession = await sessions.get(socket.id);
+    if (!currentSession || currentSession.user!.securityLevel < 255) {
+      socket.emit('door-upload-error', { message: 'Access denied: Sysop only' });
+      return;
+    }
+
+    if (currentSession.tempData?.doorManagerMode !== 'upload') {
+      socket.emit('door-upload-error', { message: 'Not in upload mode' });
+      return;
+    }
+
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const archivesPath = path.join(__dirname, '../../doors/archives');
+
+      // Ensure archives directory exists
+      if (!fs.existsSync(archivesPath)) {
+        fs.mkdirSync(archivesPath, { recursive: true });
+      }
+
+      // Validate filename
+      const filename = path.basename(data.filename);
+      if (!filename.toLowerCase().endsWith('.zip')) {
+        socket.emit('door-upload-error', { message: 'Only ZIP files are accepted' });
+        return;
+      }
+
+      // Convert content to Buffer if needed
+      const buffer = Buffer.isBuffer(data.content)
+        ? data.content
+        : Buffer.from(data.content, 'base64');
+
+      // Check file size (10MB limit)
+      if (buffer.length > 10 * 1024 * 1024) {
+        socket.emit('door-upload-error', { message: 'File too large (max 10MB)' });
+        return;
+      }
+
+      // Save file
+      const filepath = path.join(archivesPath, filename);
+      fs.writeFileSync(filepath, buffer);
+
+      socket.emit('ansi-output', `\r\n\x1b[32mFile uploaded successfully: ${filename}\x1b[0m\r\n`);
+      socket.emit('ansi-output', `Size: ${Math.round(buffer.length / 1024)} KB\r\n\r\n`);
+      socket.emit('ansi-output', 'Processing...\r\n');
+
+      // Re-scan doors to include new upload
+      await displayDoorManager(socket, currentSession);
+
+      // Find the newly uploaded door
+      const newDoor = currentSession.tempData.doorList.find((d: any) => d.filename === filename);
+      if (newDoor) {
+        // Set as current door and show info
+        currentSession.tempData.selectedIndex = currentSession.tempData.doorList.indexOf(newDoor);
+        currentSession.tempData.doorManagerMode = 'info';
+        const { displayDoorManagerInfo } = await import('./doorHandlers');
+        displayDoorManagerInfo(socket, currentSession);
+      } else {
+        // Just show the list
+        currentSession.tempData.doorManagerMode = 'list';
+        const { displayDoorManagerList } = await import('./doorHandlers');
+        displayDoorManagerList(socket, currentSession);
+      }
+
+      // Save session
+      await sessions.set(socket.id, currentSession);
+
+    } catch (error) {
+      console.error('[DOOR UPLOAD] Error:', error);
+      socket.emit('door-upload-error', {
+        message: 'Upload failed: ' + (error as Error).message
+      });
+      const currentSession = await sessions.get(socket.id);
+      if (currentSession) {
+        currentSession.tempData.doorManagerMode = 'list';
+        const { displayDoorManagerList } = await import('./doorHandlers');
+        displayDoorManagerList(socket, currentSession);
+        await sessions.set(socket.id, currentSession);
+      }
     }
   });
 

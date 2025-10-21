@@ -1,9 +1,9 @@
-[2J[H[0;31m
-  _   _          _   _                  _   _
- | \ | |        | \ | |                | | | |
- |  \| | ___    |  \| | _____      __  | | | |___  ___ _ __ ___
- | . ` |/ _ \   | . ` |/ _ \ \ /\ / /  | | | / __|/ _ \ '__/ __|
- | |\  | (_) |  | |\  |  __/\ V  V /   | |_| \__ \  __/ |  \__ \
+  +----------------+
+  |                |
+  |   NONEWUSERS   |
+  |                |
+  +----------------+
+
  |_| \_|\___/   |_| \_|\___| \_/\_/     \___/|___/\___|_|  |___/
 [0m
 [35m------------------------------------------------------------------------------[0m
@@ -12,7 +12,7 @@
 
 [35m------------------------------------------------------------------------------[0m
 
-[37mSorry, but [0;36m%B[0;37m is not accepting new user registrations at this time.[0m
+[37mSorry, but [0;36m~B[0;37m is not accepting new user registrations at this time.[0m
 
 [33mPossible reasons:[0m
   [37m• System is at maximum user capacity[0m
@@ -20,7 +20,7 @@
   [37m• Registration is by sysop approval only[0m
 
 [35mIf you need access to this BBS, please contact the sysop:[0m
-  [0;36m%S[0m
+  [0;36m~S[0m
 
 [35m------------------------------------------------------------------------------[0m
 

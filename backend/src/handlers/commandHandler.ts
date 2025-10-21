@@ -53,6 +53,7 @@ import { joinConference } from './conferenceHandlers';
 import { getAmigaDoorManager } from '../doors/amigaDoorManager';
 import { AmigaGuideParser } from '../amigaguide/AmigaGuideParser';
 import { AmigaGuideViewer } from '../amigaguide/AmigaGuideViewer';
+import { handlePhreakWarsInput } from '../doors/phreakWars';
 
 // Import shared state and stores
 // These are imported from the parent module that will use this handler
@@ -423,6 +424,12 @@ export async function handleCommand(
 
   if (session.state !== BBSState.LOGGEDON) {
     console.log('❌ Not in LOGGEDON state, ignoring command');
+    return;
+  }
+
+  // Handle Phreak Wars door input
+  if (session.subState === LoggedOnSubState.DOOR_RUNNING && session.tempData?.phreakWarsMode) {
+    handlePhreakWarsInput(socket, session, data);
     return;
   }
 
@@ -1022,11 +1029,15 @@ export async function handleCommand(
 
     // Handle chat user selection
     if (session.tempData?.chatUserSelection) {
+      console.log('[CHAT SELECTION] Processing chat user selection, input:', input);
       const availableUsers = session.tempData.availableUsers;
       const inputValue = input.trim();
 
+      console.log('[CHAT SELECTION] Available users:', availableUsers.map(u => `${u.nodeId}:${u.username}`));
+
       if (inputValue.length === 0) {
         // Empty input - cancel chat selection
+        console.log('[CHAT SELECTION] Empty input - cancelling');
         socket.emit('ansi-output', '\r\nChat selection cancelled.\r\n');
         socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
         session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
@@ -1038,8 +1049,10 @@ export async function handleCommand(
 
       // First try to parse as node number
       const nodeNumber = parseInt(inputValue);
+      console.log('[CHAT SELECTION] Parsed node number:', nodeNumber, 'isNaN:', isNaN(nodeNumber));
       if (!isNaN(nodeNumber)) {
         selectedUser = availableUsers.find(user => user.nodeId === nodeNumber);
+        console.log('[CHAT SELECTION] Found user by node number:', selectedUser?.username);
       }
 
       // If not a valid node number, try to find by username (case-insensitive)
@@ -1047,9 +1060,11 @@ export async function handleCommand(
         selectedUser = availableUsers.find(user =>
           user.username.toLowerCase() === inputValue.toLowerCase()
         );
+        console.log('[CHAT SELECTION] Found user by username:', selectedUser?.username);
       }
 
       if (!selectedUser) {
+        console.log('[CHAT SELECTION] No user found for input:', inputValue);
         socket.emit('ansi-output', `\r\n\x1b[31mUser '${inputValue}' not found in the online list.\x1b[0m\r\n`);
         socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
         session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
@@ -1057,10 +1072,12 @@ export async function handleCommand(
         return;
       }
 
+      console.log('[CHAT SELECTION] Selected user:', selectedUser.username, 'available:', selectedUser.availableForChat);
       socket.emit('ansi-output', `\r\n\x1b[32mAttempting to chat with ${selectedUser.username}...\x1b[0m\r\n`);
 
       // Check if user is available for chat
       if (!selectedUser.availableForChat) {
+        console.log('[CHAT SELECTION] User not available for chat');
         socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is not available for chat.\x1b[0m\r\n`);
         socket.emit('ansi-output', '\x1b[33mUse OLM TOGGLE to enable chat availability.\x1b[0m\r\n');
         socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
@@ -1069,8 +1086,9 @@ export async function handleCommand(
         return;
       }
 
-      // Check if user is already in a chat
+      // Check if target user is already in a chat session
       if (selectedUser.chatSessionId) {
+        console.log('[CHAT SELECTION] Target user already in chat');
         socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is already in a chat session.\x1b[0m\r\n`);
         socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
         session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
@@ -1078,8 +1096,19 @@ export async function handleCommand(
         return;
       }
 
-      // Check if we're trying to chat with ourselves
+      // Check if user is already in a chat
+      if (selectedUser.chatSessionId) {
+        console.log('[CHAT SELECTION] User already in chat');
+        socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is already in a chat session.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Check if we're trying to chat with ourselves - MOVED BEFORE chat request
       if (selectedUser.id === session.user?.id) {
+        console.log('[CHAT SELECTION] Trying to chat with self - blocking');
         socket.emit('ansi-output', '\x1b[33mYou cannot chat with yourself.\x1b[0m\r\n');
         socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
         session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
@@ -1087,16 +1116,85 @@ export async function handleCommand(
         return;
       }
 
-      // Send chat request
-      socket.emit('chat:request', {
-        targetUsername: selectedUser.username,
-        targetUserId: selectedUser.id
-      });
+      console.log('[CHAT SELECTION] Creating chat session directly for:', selectedUser.username);
 
-      // Clear temp data and return to menu
+      // For BBS terminal interface, create chat session directly (1:1 with AmiExpress)
+      // Find target session using the sessions parameter (RedisSessionStore)
+      let targetSession: BBSSession | null = null;
+      let targetSocketId: string | null = null;
+
+      const allSocketIds = await sessions.getAllKeys();
+      for (const socketId of allSocketIds) {
+        const sess = await sessions.get(socketId);
+        if (sess && sess.user && sess.user.id === selectedUser.id) {
+          targetSession = sess;
+          targetSocketId = socketId;
+          break;
+        }
+      }
+
+      if (!targetSession || !targetSocketId) {
+        console.log('[CHAT SELECTION] Target user not found in sessions');
+        socket.emit('ansi-output', `\x1b[31mUser "${selectedUser.username}" is no longer online.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Check if target is already in chat
+      if (targetSession.chatSessionId) {
+        console.log('[CHAT SELECTION] Target user already in chat');
+        socket.emit('ansi-output', `\x1b[33m${selectedUser.username} is already in a chat session.\x1b[0m\r\n`);
+        socket.emit('ansi-output', '\r\n\x1b[32mPress any key to continue...\x1b[0m');
+        session.subState = LoggedOnSubState.DISPLAY_CONF_BULL;
+        session.tempData = undefined;
+        return;
+      }
+
+      // Create chat session in database
+      const sessionId = await db.createChatSession(
+        session.user!.id,
+        session.user!.username,
+        socket.id,
+        selectedUser.id,
+        selectedUser.username,
+        targetSocketId
+      );
+
+      console.log(`[CHAT] Session ${sessionId} created: ${session.user!.username} <-> ${selectedUser.username}`);
+
+      // Update both sessions to chat mode
+      session.chatSessionId = sessionId;
+      session.chatWithUserId = selectedUser.id;
+      session.chatWithUsername = selectedUser.username;
+      session.previousState = session.state;
+      session.previousSubState = session.subState;
+      session.subState = LoggedOnSubState.CHAT;
+
+      targetSession.chatSessionId = sessionId;
+      targetSession.chatWithUserId = session.user!.id;
+      targetSession.chatWithUsername = session.user!.username;
+      targetSession.previousState = targetSession.state;
+      targetSession.previousSubState = targetSession.subState;
+      targetSession.subState = LoggedOnSubState.CHAT;
+
+      // Save updated sessions
+      await sessions.set(socket.id, session);
+      if (targetSocketId) {
+        await sessions.set(targetSocketId, targetSession);
+      }
+
+      // Notify both users they are now in chat
+      socket.emit('ansi-output', `\x1b[32mYou are now chatting with ${selectedUser.username}!\x1b[0m\r\n`);
+      socket.emit('ansi-output', '\x1b[36mType your messages. Press ENTER on a blank line to send.\x1b[0m\r\n');
+      socket.emit('ansi-output', '\x1b[36mType /END or /EXIT to end the chat.\x1b[0m\r\n\r\n');
+
+      // For now, skip target notification - the chat will start when they next send input
+      // TODO: Implement proper Socket.IO notification system for BBS terminal interface
+
+      console.log('[CHAT SELECTION] Chat session started successfully');
       session.tempData = undefined;
-      session.subState = LoggedOnSubState.DISPLAY_MENU;
-      displayMainMenu(socket, session);
       return;
     }
 
@@ -1845,7 +1943,7 @@ export async function processBBSCommand(
     case 'O': // Who's Online (ORIGINAL AmiExpress command from MENU.TXT)
       console.log('🔍 O command - Who\'s Online');
       socket.emit('ansi-output', '\x1b[36m-= Who\'s Online =-\x1b[0m\r\n\r\n');
-      const whoOnlineUsers = await getOnlineUsers();
+      const whoOnlineUsers = await getOnlineUsers(sessions);
       if (whoOnlineUsers.length === 0) {
         socket.emit('ansi-output', '\x1b[33mNo other users online.\x1b[0m\r\n');
       } else {
@@ -1890,13 +1988,7 @@ export async function processBBSCommand(
     case 'OLM': // Online Message System
       socket.emit('ansi-output', '\x1b[36m-= Online Message System =-\x1b[0m\r\n\r\n');
 
-      // Check if OLM is blocked for this user (like original AmiExpress)
-      if (session.blockOLM) {
-        socket.emit('ansi-output', '\x1b[31mOLM messages are currently blocked.\x1b[0m\r\n');
-        socket.emit('ansi-output', '\x1b[36mUse OLM TOGGLE to enable OLM messages.\x1b[0m\r\n\r\n');
-        break;
-      }
-
+      // Show commands first, then handle subcommands
       socket.emit('ansi-output', 'Commands:\r\n');
       socket.emit('ansi-output', '  OLM SEND <username> <message>  - Send a message to another user\r\n');
       socket.emit('ansi-output', '  OLM READ                        - Read your unread messages\r\n');
@@ -1908,6 +2000,14 @@ export async function processBBSCommand(
       if (params) {
         const olmParts = params.split(' ');
         const subCommand = olmParts[0].toUpperCase();
+
+        // Check if OLM is blocked for this user (like original AmiExpress)
+        // But allow TOGGLE even when blocked
+        if (session.blockOLM && subCommand !== 'TOGGLE') {
+          socket.emit('ansi-output', '\x1b[31mOLM messages are currently blocked.\x1b[0m\r\n');
+          socket.emit('ansi-output', '\x1b[36mUse OLM TOGGLE to enable OLM messages.\x1b[0m\r\n\r\n');
+          break;
+        }
 
         switch (subCommand) {
           case 'SEND':
@@ -1937,8 +2037,8 @@ export async function processBBSCommand(
                   socket.emit('ansi-output', `\x1b[32mMessage sent to ${targetUsername}!\x1b[0m\r\n\r\n`);
 
                   // Try to deliver immediately if user is online
-                  const allKeys = await sessions.getAllKeys();
-                  for (const socketId of allKeys) {
+                  const allSocketIds = await sessions.getAllKeys();
+                  for (const socketId of allSocketIds) {
                     const otherSession = await sessions.get(socketId);
                     if (otherSession?.user?.id === targetUser.id) {
                       // User is online, notify them
@@ -2022,21 +2122,41 @@ export async function processBBSCommand(
 
           case 'TOGGLE':
             try {
-              // Toggle blockOLM flag (like original AmiExpress)
+              console.log('[OLM TOGGLE] Starting toggle operation');
+              console.log('[OLM TOGGLE] Current session.blockOLM:', session.blockOLM);
+              console.log('[OLM TOGGLE] Current user ID:', session.user!.id);
+
+              // Toggle blockOLM flag and availableForChat (like original AmiExpress)
               const currentBlockOLM = session.blockOLM || false;
               const newBlockOLM = !currentBlockOLM;
 
+              console.log('[OLM TOGGLE] currentBlockOLM:', currentBlockOLM, '-> newBlockOLM:', newBlockOLM);
+
               // Update session
               session.blockOLM = newBlockOLM;
+              console.log('[OLM TOGGLE] Updated session.blockOLM to:', newBlockOLM);
+
+              // Also update database availableForChat field (chat availability)
+              const newAvailableForChat = !newBlockOLM;
+              console.log('[OLM TOGGLE] Updating database availableForChat to:', newAvailableForChat);
+
+              await db.updateUser(session.user!.id, {
+                availableForChat: newAvailableForChat // Available for chat when OLM is not blocked
+              });
+
+              console.log('[OLM TOGGLE] Database update completed');
 
               const statusText = newBlockOLM ? '\x1b[31mBLOCKED\x1b[0m' : '\x1b[32mALLOWED\x1b[0m';
-              socket.emit('ansi-output', `OLM messages ${statusText}\r\n\r\n`);
+              socket.emit('ansi-output', `OLM messages and chat ${statusText}\r\n\r\n`);
+              console.log('[OLM TOGGLE] Sent status message to client');
+
               // Return to menu after toggle (like original AmiExpress)
               session.subState = LoggedOnSubState.DISPLAY_MENU;
               displayMainMenu(socket, session);
+              console.log('[OLM TOGGLE] Returned to menu');
               return;
             } catch (error) {
-              console.error('OLM TOGGLE error:', error);
+              console.error('[OLM TOGGLE] Error:', error);
               socket.emit('ansi-output', '\x1b[31mError toggling OLM blocking.\x1b[0m\r\n\r\n');
             }
             break;
@@ -2053,14 +2173,17 @@ export async function processBBSCommand(
 
     case 'CHAT': // Internode Chat System
       console.log('💬 CHAT command - Internode Chat');
+      console.log('💬 Getting online users from sessions...');
       socket.emit('ansi-output', '\x1b[36m-= Internode Chat System =-\x1b[0m\r\n\r\n');
 
       // Show who's online
-      const chatOnlineUsers = await getOnlineUsers();
+      const chatOnlineUsers = await getOnlineUsers(sessions);
+      console.log('💬 Found', chatOnlineUsers.length, 'online users available for chat');
 
       if (chatOnlineUsers.length === 0) {
         socket.emit('ansi-output', '\x1b[33mNo other users online to chat with.\x1b[0m\r\n');
         socket.emit('ansi-output', '\x1b[33mTry the OLM (Online Messages) system to leave messages.\x1b[0m\r\n');
+        console.log('💬 No users available for chat');
         break;
       }
 
@@ -2072,13 +2195,16 @@ export async function processBBSCommand(
         const nodeStr = String(user.nodeId).padEnd(4);
         const usernameStr = user.username.padEnd(24);
         socket.emit('ansi-output', `${nodeStr}  ${usernameStr}\r\n`);
+        console.log('💬 Listed user:', user.username, 'node:', user.nodeId, 'available:', user.availableForChat);
       }
 
       socket.emit('ansi-output', '\r\n\x1b[33mEnter username to chat with (or press ENTER to cancel):\x1b[0m ');
+      console.log('💬 Prompting for username input');
 
       // Set up state to wait for username input
       session.subState = LoggedOnSubState.FILE_AREA_SELECT; // Reuse for chat target selection
       session.tempData = { chatUserSelection: true, availableUsers: chatOnlineUsers };
+      console.log('💬 Set up chat user selection state');
       return;
 
     case 'C': // Comment to Sysop (internalCommandC)
@@ -2210,7 +2336,7 @@ export async function processBBSCommand(
     case 'WHO': // Who's Online (internalCommandWHO from express.e line 26094)
       console.log('🔍 WHO command executed');
       socket.emit('ansi-output', '\x1b[36m-= Who\'s Online =-\x1b[0m\r\n\r\n');
-      const onlineUsers = await getOnlineUsers();
+      const onlineUsers = await getOnlineUsers(sessions);
       console.log('🔍 WHO: Found', onlineUsers.length, 'online users');
       if (onlineUsers.length === 0) {
         socket.emit('ansi-output', '\x1b[33mNo other users online.\x1b[0m\r\n');
@@ -2233,7 +2359,7 @@ export async function processBBSCommand(
     case 'WHD': // Who's Online Detailed (internalCommandWHD from express.e line 26104)
       console.log('🔍 WHD command executed');
       socket.emit('ansi-output', '\x1b[36m-= Who\'s Online (Detailed) =-\x1b[0m\r\n\r\n');
-      const onlineUsersDetailed = await getOnlineUsers();
+      const onlineUsersDetailed = await getOnlineUsers(sessions);
       if (onlineUsersDetailed.length === 0) {
         socket.emit('ansi-output', '\x1b[33mNo other users online.\x1b[0m\r\n');
       } else {
@@ -2241,7 +2367,7 @@ export async function processBBSCommand(
         for (const user of onlineUsersDetailed) {
           socket.emit('ansi-output', `\x1b[36mNode ${user.nodeId}:[0m ${user.username}\r\n`);
           socket.emit('ansi-output', `  Location: ${user.location || 'Unknown'}\r\n`);
-          socket.emit('ansi-output', `  Activity: ${user.activity || 'Idle'}\r\n`);
+          socket.emit('ansi-output', `  Activity: Idle\r\n`);
           if (user.private) socket.emit('ansi-output', `  \x1b[35m[PRIVATE MODE]\x1b[0m\r\n`);
           if (user.offHook) socket.emit('ansi-output', `  \x1b[33m[OFF-HOOK - No interruptions]\x1b[0m\r\n`);
           socket.emit('ansi-output', '\r\n');

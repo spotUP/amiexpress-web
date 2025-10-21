@@ -10,16 +10,16 @@
 [0m
 [36m---------------------------------------------------------------------------[0m
 
-[0;32m              Thanks for calling [0;37m%B[0;32m, [0;37m%U[0;32m![0m
+[0;32m              Thanks for calling [0;37m~B[0;32m, [0;37m%U[0;32m![0m
 
 [36m---------------------------------------------------------------------------[0m
 
 [33mSession Statistics:[0m
-  [37m• Time Online:[0m [0;36m%OT[0m minutes
-  [37m• Messages Posted:[0m [0;36m%MP[0m
-  [37m• Files Downloaded:[0m [0;36m%DF[0m
-  [37m• Files Uploaded:[0m [0;36m%UF[0m
-  [37m• Last Call:[0m [0;36m%D[0m at [0;36m%T[0m
+  [37m• Time Online:[0m [0;36m~OT[0m minutes
+  [37m• Messages Posted:[0m [0;36m~MP[0m
+  [37m• Files Downloaded:[0m [0;36m~DF[0m
+  [37m• Files Uploaded:[0m [0;36m~UF[0m
+  [37m• Last Call:[0m [0;36m~D[0m at [0;36m%T[0m
 
 [36m---------------------------------------------------------------------------[0m
 

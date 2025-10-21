@@ -8,15 +8,15 @@
 [0m
 [35m--------------------------------------------------------------------------[0m
 
-[0;32m    Congratulations, [0;37m%U[0;32m! You're now a member of [0;37m%B[0;32m![0m
+[0;32m    Congratulations, [0;37m~U[0;32m! You're now a member of [0;37m%B[0;32m![0m
 
 [36m--------------------------------------------------------------------------[0m
 
 [33mYour Account Information:[0m
-  [37m• Username:[0m [0;36m%U[0m
-  [37m• Access Level:[0m [0;36m%A[0m
-  [37m• Time Remaining Today:[0m [0;36m%R[0m minutes
-  [37m• Available Conferences:[0m [0;36m%C[0m
+  [37m• Username:[0m [0;36m~U[0m
+  [37m• Access Level:[0m [0;36m~A[0m
+  [37m• Time Remaining Today:[0m [0;36m~R[0m minutes
+  [37m• Available Conferences:[0m [0;36m~C[0m
 
 [33mQuick Start Guide:[0m
   [37m• Press [0;33m?[0;37m at any menu for help[0m

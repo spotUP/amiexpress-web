@@ -1,0 +1,9 @@
+  +---------------+
+  |               |
+  |   CONF BULL   |
+  |               |
+  +---------------+
+
+[1;32mWelcome to the ~CN conference![0m
+
+[1;33mNo conference bulletins at this time.[0m

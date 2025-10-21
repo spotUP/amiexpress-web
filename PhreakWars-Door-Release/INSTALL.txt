@@ -1,0 +1,101 @@
+PHREAK WARS BBS DOOR - INSTALLATION GUIDE
+==========================================
+
+Thank you for downloading Phreak Wars: The Underground BBS Empire!
+
+This is a complete BBS door game for AmiExpress-Web systems that immerses players
+in the authentic world of 1980s phone phreaking and computer underground culture.
+
+INSTALLATION REQUIREMENTS
+=========================
+
+- AmiExpress-Web BBS system (latest version recommended)
+- Node.js and TypeScript support
+- Socket.io for real-time features
+- At least 10MB free disk space
+
+INSTALLATION STEPS
+==================
+
+1. EXTRACT FILES
+   -------------
+   Extract all files from this ZIP archive to your AmiExpress-Web installation directory.
+
+2. COPY GAME FILE
+   -------------
+   Copy phreakWars.ts to your backend/src/doors/ directory:
+
+   cp phreakWars.ts /path/to/your/amiexpress/backend/src/doors/
+
+3. REGISTER THE DOOR
+   -----------------
+   Add the door to your AmiExpress door configuration. You may need to:
+
+   a) Import the door functions in doorHandlers.ts:
+      import { executePhreakWarsDoor, handlePhreakWarsInput } from '../doors/phreakWars';
+
+   b) Add door registration in your door manager:
+      registerDoor('phreakwars', executePhreakWarsDoor, handlePhreakWarsInput);
+
+4. BUILD THE SYSTEM
+   ----------------
+   Rebuild your AmiExpress-Web backend:
+
+   cd /path/to/your/amiexpress/backend
+   npm run build
+
+5. CONFIGURE DOOR ACCESS
+   ---------------------
+   Set appropriate access levels for the Phreak Wars door in your BBS configuration.
+   Recommended: Level 0 (all users) or Level 10+ (experienced users only).
+
+6. TEST THE INSTALLATION
+   ---------------------
+   Start your BBS and test the door by accessing it from a user account.
+   The door should appear in your door menu as "Phreak Wars BBS Game".
+
+TROUBLESHOOTING
+===============
+
+If you encounter compilation errors:
+
+1. Check that all TypeScript dependencies are installed
+2. Verify the import paths match your AmiExpress-Web version
+3. Ensure the door is properly registered in your door handlers
+
+If the door doesn't appear in menus:
+
+1. Check your door configuration files
+2. Verify user access levels
+3. Restart the BBS server after installation
+
+GAME FEATURES
+=============
+
+- Complete phreaking simulation with authentic 1980s techniques
+- Progressive skill development from novice to master hacker
+- Economic system with illegal goods trading
+- Multiplayer BBS ownership and hacking competition
+- Interactive romance storyline with "Shadow" character
+- Authentic 1980s computing limitations and culture
+- Comprehensive documentation in README_PHREAKWARS.md
+
+SUPPORT
+=======
+
+For support or questions about Phreak Wars:
+
+- Read the full documentation in README_PHREAKWARS.md
+- Check the AmiExpress-Web documentation for door integration
+- Visit the AmiExpress-Web community forums
+
+ENJOY THE UNDERGROUND!
+======================
+
+Phreak Wars captures the thrill and danger of 1980s computer hacking culture.
+May your journey from curious teenager to legendary master hacker be legendary!
+
+---
+Phreak Wars v1.0.0
+Developed for AmiExpress-Web
+Historical Research & Game Design: AmiExpress-Web AI Assistant

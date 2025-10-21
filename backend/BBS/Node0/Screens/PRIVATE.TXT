@@ -25,8 +25,8 @@
 
 [0;37mIf you would like to request access, please contact:[0m
 
-  [0;36mSysop:[0m %S
-  [0;36mBBS:[0m %B
+  [0;36mSysop:[0m ~S
+  [0;36mBBS:[0m ~B
 
 [35m---------------------------------------------------------------------------------[0m
 

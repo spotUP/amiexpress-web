@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "puppeteer": "^24.25.0"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.1"
   }
 }

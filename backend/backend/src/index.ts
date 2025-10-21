@@ -39,61 +39,62 @@ import {
 } from './utils/message-pointers.util';
 
 interface BBSSession {
-  state: BBSState;
-  subState?: LoggedOnSubState;
-  user?: any; // Will be User from database
-  currentConf: number;
-  currentMsgBase: number;
-  timeRemaining: number;
-  lastActivity: number;
-  confRJoin: number; // Default conference to join (from user preferences)
-  msgBaseRJoin: number; // Default message base to join
-  commandBuffer: string; // Buffer for command input
-  commandText?: string; // Current command text for PROCESS_COMMAND state (express.e:28639)
-  menuPause: boolean; // Like AmiExpress menuPause - controls if menu displays immediately
-  messageSubject?: string; // For message posting workflow
-  messageBody?: string; // For message posting workflow
-  messageRecipient?: string; // For private message recipient
-  inputBuffer: string; // Buffer for line-based input (like login system)
-  relConfNum: number; // Relative conference number (like AmiExpress relConfNum)
-  currentConfName: string; // Current conference name (like AmiExpress currentConfName)
-  cmdShortcuts: boolean; // Like AmiExpress cmdShortcuts - controls hotkey vs line input mode
-  doorExpertMode: boolean; // Like AmiExpress doorExpertMode - express.e:28583 - door can force menu display
-  tempData?: any; // Temporary data storage for complex operations (like file listing)
+   state: BBSState;
+   subState?: LoggedOnSubState;
+   user?: any; // Will be User from database
+   currentConf: number;
+   currentMsgBase: number;
+   timeRemaining: number;
+   lastActivity: number;
+   confRJoin: number; // Default conference to join (from user preferences)
+   msgBaseRJoin: number; // Default message base to join
+   commandBuffer: string; // Buffer for command input
+   commandText?: string; // Current command text for PROCESS_COMMAND state (express.e:28639)
+   menuPause: boolean; // Like AmiExpress menuPause - controls if menu displays immediately
+   messageSubject?: string; // For message posting workflow
+   messageBody?: string; // For message posting workflow
+   messageRecipient?: string; // For private message recipient
+   inputBuffer: string; // Buffer for line-based input (like login system)
+   relConfNum: number; // Relative conference number (like AmiExpress relConfNum)
+   currentConfName: string; // Current conference name (like AmiExpress currentConfName)
+   cmdShortcuts: boolean; // Like AmiExpress cmdShortcuts - controls hotkey vs line input mode
+   doorExpertMode: boolean; // Like AmiExpress doorExpertMode - express.e:28583 - door can force menu display
+   tempData?: any; // Temporary data storage for complex operations (like file listing)
+   nodeId?: number; // Node ID for multi-node support
 
-  // Phase 9: Security/ACS System (express.e:165-167, 306-308)
-  acsLevel: number; // Current ACS level (0-255, or -1 if invalid) - express.e:165
-  securityFlags: string; // Temporary per-session ACS overrides ("T"/"F"/"?") - express.e:306
-  secOverride: string; // Permanent override denials ("T"=deny) - strongest denial - express.e:307
-  overrideDefaultAccess: boolean; // Whether to skip default access checks - express.e:166
-  userSpecificAccess: boolean; // Whether user has specific access file - express.e:167
-  currentStat: number; // Current environment status (what user is doing) - express.e:308
-  quietFlag: boolean; // Whether node is in quiet mode (invisible to WHO) - express.e:309
-  blockOLM: boolean; // Whether to block Online Messages (OLM) - express.e:310
-  loginTime: number; // Login timestamp for session time tracking
-  nodeStartTime: number; // Node start time for uptime display
+   // Phase 9: Security/ACS System (express.e:165-167, 306-308)
+   acsLevel: number; // Current ACS level (0-255, or -1 if invalid) - express.e:165
+   securityFlags: string; // Temporary per-session ACS overrides ("T"/"F"/"?") - express.e:306
+   secOverride: string; // Permanent override denials ("T"=deny) - strongest denial - express.e:307
+   overrideDefaultAccess: boolean; // Whether to skip default access checks - express.e:166
+   userSpecificAccess: boolean; // Whether user has specific access file - express.e:167
+   currentStat: number; // Current environment status (what user is doing) - express.e:308
+   quietFlag: boolean; // Whether node is in quiet mode (invisible to WHO) - express.e:309
+   blockOLM: boolean; // Whether to block Online Messages (OLM) - express.e:310
+   loginTime: number; // Login timestamp for session time tracking
+   nodeStartTime: number; // Node start time for uptime display
 
-  // Phase 10: Message Pointer System (express.e:199-200, 4882-4973)
-  lastMsgReadConf: number; // Last message manually read (confBase.confYM) - express.e:199
-  lastNewReadConf: number; // Last message auto-scanned (confBase.confRead) - express.e:200
+   // Phase 10: Message Pointer System (express.e:199-200, 4882-4973)
+   lastMsgReadConf: number; // Last message manually read (confBase.confYM) - express.e:199
+   lastNewReadConf: number; // Last message auto-scanned (confBase.confRead) - express.e:200
 
-  // Login tracking (express.e:29140-29220, 29627-29641)
-  loginRetries: number; // Number of login attempts (max 5 for username, 3 for password)
-  passwordRetries: number; // Number of password attempts (max 3)
-  attemptedUsername?: string; // Username being attempted for login
-  ansiMode: boolean; // ANSI graphics mode enabled
-  ripMode: boolean; // RIP graphics mode enabled
-  quickLogon: boolean; // Quick logon flag
+   // Login tracking (express.e:29140-29220, 29627-29641)
+   loginRetries: number; // Number of login attempts (max 5 for username, 3 for password)
+   passwordRetries: number; // Number of password attempts (max 3)
+   attemptedUsername?: string; // Username being attempted for login
+   ansiMode: boolean; // ANSI graphics mode enabled
+   ripMode: boolean; // RIP graphics mode enabled
+   quickLogon: boolean; // Quick logon flag
 
-  // New user signup tracking (express.e:30128-30320)
-  newUserSubState?: string; // Current step in new user signup flow
-  signupData?: {
-    username: string;
-    password: string;
-    location: string;
-    phone: string;
-    email: string;
-  };
+   // New user signup tracking (express.e:30128-30320)
+   newUserSubState?: string; // Current step in new user signup flow
+   signupData?: {
+     username: string;
+     password: string;
+     location: string;
+     phone: string;
+     email: string;
+   };
 }
 
 // Conference and Message Base data structures (simplified)
@@ -668,86 +669,160 @@ const SCREEN_JOINMSGBASE = 'JoinMsgBase';
 // Parse MCI codes (Macro Command Interface) in screen files
 // Like express.e parseMci() function
 function parseMciCodes(content: string, session: BBSSession, bbsName: string = 'AmiExpress-Web'): string {
-  let parsed = content;
+   let parsed = content;
 
-  // Get user data safely
-  const user = session.user;
-  const now = new Date();
+   // Get user data safely
+   const user = session.user;
+   const now = new Date();
 
-  // IMPORTANT: Replace variables from longest to shortest to avoid partial matches!
-  // For example: %LD must be replaced BEFORE %D, %LT before %T, %TC before %T, etc.
+   // IMPORTANT: Replace variables from longest to shortest to avoid partial matches!
+   // Handle both ~ (tilde) and % (percent) prefixes used in screen files
 
-  // %CF - Current Conference Name (2 chars)
-  parsed = parsed.replace(/%CF/g, session.currentConfName || 'Unknown');
+   // ~CN / %CF - Current Conference Name
+   parsed = parsed.replace(/~CN/g, session.currentConfName || 'Unknown');
+   parsed = parsed.replace(/%CF/g, session.currentConfName || 'Unknown');
 
-  // %LD - Last Login Date (2 chars) - MUST come before %D
-  if (user?.lastLogin) {
-    const lastDate = new Date(user.lastLogin);
-    const lastDateStr = lastDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-    parsed = parsed.replace(/%LD/g, lastDateStr);
-  } else {
-    parsed = parsed.replace(/%LD/g, 'Never');
-  }
+   // ~CF - Current Conference Name (alternative)
+   parsed = parsed.replace(/~CF/g, session.currentConfName || 'Unknown');
 
-  // %LT - Last Login Time (2 chars) - MUST come before %T
-  if (user?.lastLogin) {
-    const lastDate = new Date(user.lastLogin);
-    const lastTimeStr = lastDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-    parsed = parsed.replace(/%LT/g, lastTimeStr);
-  } else {
-    parsed = parsed.replace(/%LT/g, '--:--');
-  }
+   // ~TM - Total Messages
+   const totalMessages = messages.filter(msg =>
+     msg.conferenceId === session.currentConf &&
+     msg.messageBaseId === session.currentMsgBase
+   ).length;
+   parsed = parsed.replace(/~TM/g, totalMessages.toString());
 
-  // %TC - Total Calls (2 chars) - MUST come before %T
-  parsed = parsed.replace(/%TC/g, (user?.calls || 0).toString());
+   // ~NM / %NM - New Messages
+   if (session.user) {
+     const newMessages = messages.filter(msg =>
+       msg.conferenceId === session.currentConf &&
+       msg.messageBaseId === session.currentMsgBase &&
+       msg.timestamp > (session.user.lastLogin || new Date(0))
+     );
+     parsed = parsed.replace(/~NM/g, newMessages.length.toString());
+     parsed = parsed.replace(/%NM/g, newMessages.length.toString());
+   } else {
+     parsed = parsed.replace(/~NM/g, '0');
+     parsed = parsed.replace(/%NM/g, '0');
+   }
 
-  // %MP - Messages Posted (2 chars) - MUST come before %M
-  parsed = parsed.replace(/%MP/g, (user?.messagesPosted || 0).toString());
+   // ~LD / %LD - Last Message Date
+   const lastMessage = messages
+     .filter(msg => msg.conferenceId === session.currentConf && msg.messageBaseId === session.currentMsgBase)
+     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())[0];
+   if (lastMessage) {
+     const lastMsgDate = lastMessage.timestamp.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+     parsed = parsed.replace(/~LD/g, lastMsgDate);
+     parsed = parsed.replace(/%LD/g, lastMsgDate);
+   } else {
+     parsed = parsed.replace(/~LD/g, 'Never');
+     parsed = parsed.replace(/%LD/g, 'Never');
+   }
 
-  // %UF - Files Uploaded (2 chars) - MUST come before %U and %F
-  parsed = parsed.replace(/%UF/g, (user?.uploads || 0).toString());
+   // ~AU / %AU - Active Users
+   const activeUsers = Array.from(sessions.values()).filter(s => s.user && s.state === BBSState.LOGGEDON).length;
+   parsed = parsed.replace(/~AU/g, activeUsers.toString());
+   parsed = parsed.replace(/%AU/g, activeUsers.toString());
 
-  // %DF - Files Downloaded (2 chars) - MUST come before %D and %F
-  parsed = parsed.replace(/%DF/g, (user?.downloads || 0).toString());
+   // ~ON - Node Number
+   parsed = parsed.replace(/~ON/g, (session.nodeId || 0).toString());
 
-  // %NM - New Messages (2 chars) - MUST come before %N and %M
-  parsed = parsed.replace(/%NM/g, '0');
+   // ~OD - Connection Date
+   const connectDate = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+   parsed = parsed.replace(/~OD/g, connectDate);
 
-  // %NF - New Files (2 chars) - MUST come before %N and %F
-  parsed = parsed.replace(/%NF/g, '0');
+   // ~OT - Connection Time
+   const connectTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+   parsed = parsed.replace(/~OT/g, connectTime);
 
-  // %SL - Security Level (2 chars)
-  parsed = parsed.replace(/%SL/g, (user?.secLevel || 0).toString());
+   // ~BR - Baud Rate (always FULL SPEED for web)
+   parsed = parsed.replace(/~BR/g, 'FULL SPEED');
 
-  // %UL - Upload/Download Ratio (2 chars)
-  const uploads = user?.uploads || 0;
-  const downloads = user?.downloads || 0;
-  const ratio = downloads > 0 ? (uploads / downloads).toFixed(2) : uploads.toString();
-  parsed = parsed.replace(/%UL/g, ratio);
+   // ~BN - BBS Name
+   parsed = parsed.replace(/~BN/g, bbsName);
 
-  // NOW safe to replace single-character variables
+   // ~TR - Time Remaining
+   parsed = parsed.replace(/~TR/g, Math.floor(session.timeRemaining).toString());
 
-  // %B - BBS Name (1 char)
-  parsed = parsed.replace(/%B/g, bbsName);
+   // ~FD - Files Downloaded
+   parsed = parsed.replace(/~FD/g, (user?.downloads || 0).toString());
 
-  // %U - Username (1 char)
-  parsed = parsed.replace(/%U/g, user?.username || 'Guest');
+   // ~FU - Files Uploaded
+   parsed = parsed.replace(/~FU/g, (user?.uploads || 0).toString());
 
-  // %N - Node Number (1 char)
-  parsed = parsed.replace(/%N/g, (session.nodeId || 0).toString());
+   // ~M - Messages Posted
+   parsed = parsed.replace(/~M/g, (user?.messagesPosted || 0).toString());
 
-  // %R - Time Remaining (1 char)
-  parsed = parsed.replace(/%R/g, Math.floor(session.timeRemaining / 60).toString());
+   // ~UL - User Location
+   parsed = parsed.replace(/~UL/g, user?.location || 'Unknown');
 
-  // %D - Current Date (1 char)
-  const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
-  parsed = parsed.replace(/%D/g, dateStr);
+   // ~A - Security Level
+   parsed = parsed.replace(/~A/g, (user?.secLevel || 0).toString());
 
-  // %T - Current Time (1 char)
-  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-  parsed = parsed.replace(/%T/g, timeStr);
+   // ~MP / %MP - Messages Posted
+   parsed = parsed.replace(/~MP/g, (user?.messagesPosted || 0).toString());
+   parsed = parsed.replace(/%MP/g, (user?.messagesPosted || 0).toString());
 
-  return parsed;
+   // ~UF / %UF - Files Uploaded
+   parsed = parsed.replace(/~UF/g, (user?.uploads || 0).toString());
+   parsed = parsed.replace(/%UF/g, (user?.uploads || 0).toString());
+
+   // ~DF / %DF - Files Downloaded
+   parsed = parsed.replace(/~DF/g, (user?.downloads || 0).toString());
+   parsed = parsed.replace(/%DF/g, (user?.downloads || 0).toString());
+
+   // ~NF / %NF - New Files
+   parsed = parsed.replace(/~NF/g, '0'); // TODO: Implement new file counting
+   parsed = parsed.replace(/%NF/g, '0');
+
+   // ~TC / %TC - Total Calls
+   parsed = parsed.replace(/~TC/g, (user?.calls || 0).toString());
+   parsed = parsed.replace(/%TC/g, (user?.calls || 0).toString());
+
+   // %LT - Last Login Time
+   if (user?.lastLogin) {
+     const lastDate = new Date(user.lastLogin);
+     const lastTimeStr = lastDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+     parsed = parsed.replace(/%LT/g, lastTimeStr);
+   } else {
+     parsed = parsed.replace(/%LT/g, '--:--');
+   }
+
+   // %SL - Security Level
+   parsed = parsed.replace(/%SL/g, (user?.secLevel || 0).toString());
+
+   // %UL - Upload/Download Ratio
+   const uploads = user?.uploads || 0;
+   const downloads = user?.downloads || 0;
+   const ratio = downloads > 0 ? (uploads / downloads).toFixed(2) : uploads.toString();
+   parsed = parsed.replace(/%UL/g, ratio);
+
+   // Single character variables (must come after longer ones)
+
+   // %B - BBS Name
+   parsed = parsed.replace(/%B/g, bbsName);
+
+   // %U - Username
+   parsed = parsed.replace(/%U/g, user?.username || 'Guest');
+
+   // ~N / %N - Node Number
+   parsed = parsed.replace(/~N/g, (session.nodeId || 0).toString());
+   parsed = parsed.replace(/%N/g, (session.nodeId || 0).toString());
+
+   // %R - Time Remaining
+   parsed = parsed.replace(/%R/g, Math.floor(session.timeRemaining / 60).toString());
+
+   // ~D / %D - Current Date
+   const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+   parsed = parsed.replace(/~D/g, dateStr);
+   parsed = parsed.replace(/%D/g, dateStr);
+
+   // ~T / %T - Current Time
+   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+   parsed = parsed.replace(/~T/g, timeStr);
+   parsed = parsed.replace(/%T/g, timeStr);
+
+   return parsed;
 }
 
 // Load screen file from disk
@@ -760,13 +835,9 @@ function loadScreenFile(screenName: string, conferenceId?: number, nodeId: numbe
 
   // Try conference-specific screen first (if provided)
   if (conferenceId) {
-    // Find the relative conference number (1-based position in conferences array)
-    const confIndex = conferences.findIndex(c => c.id === conferenceId);
-    if (confIndex !== -1) {
-      const relConfNum = confIndex + 1; // Convert to 1-based
-      const confPath = path.join(baseDir, `Conf${String(relConfNum).padStart(2, '0')}`, 'Screens', `${screenName}.TXT`);
-      paths.push(confPath);
-    }
+    // Use conference ID directly (no mapping needed)
+    const confPath = path.join(baseDir, `Conf${String(conferenceId).padStart(2, '0')}`, 'Screens', `${screenName}.TXT`);
+    paths.push(confPath);
   }
 
   // Then try node-specific screen

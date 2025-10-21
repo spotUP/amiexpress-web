@@ -394,7 +394,7 @@ export class Database {
       // Conferences table
       await client.query(`
         CREATE TABLE IF NOT EXISTS conferences (
-          id SERIAL PRIMARY KEY,
+          id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
           description TEXT,
           created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -405,7 +405,7 @@ export class Database {
       // Message bases table
       await client.query(`
         CREATE TABLE IF NOT EXISTS message_bases (
-          id SERIAL PRIMARY KEY,
+          id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
           conferenceid INTEGER NOT NULL REFERENCES conferences(id),
           created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -1896,23 +1896,28 @@ export class Database {
   async initializeDefaultData(): Promise<void> {
     const client = await this.pool.connect();
     try {
-      // Step 1: Create conferences
+      // Step 1: Create conferences and get their IDs
+      const conferenceIds: { [key: string]: number } = {};
       try {
         console.log('[DB Init Step 1/5] Creating default conferences...');
         const conferences = [
-          { name: 'General', description: 'General discussion' },
-          { name: 'Tech Support', description: 'Technical support' },
-          { name: 'Announcements', description: 'System announcements' }
+          { id: 1, name: 'General', description: 'General discussion' },
+          { id: 2, name: 'Tech Support', description: 'Technical support' },
+          { id: 3, name: 'Announcements', description: 'System announcements' }
         ];
 
         for (const conf of conferences) {
-          const existing = await client.query('SELECT id FROM conferences WHERE name = $1', [conf.name]);
-          if (existing.rows.length === 0) {
-            await client.query('INSERT INTO conferences (name, description) VALUES ($1, $2)', [conf.name, conf.description]);
-            console.log(`  ✓ Created conference: ${conf.name}`);
-          } else {
-            console.log(`  • Conference already exists: ${conf.name}`);
-          }
+          const result = await client.query(`
+            INSERT INTO conferences (id, name, description)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (id) DO UPDATE SET
+              name = EXCLUDED.name,
+              description = EXCLUDED.description,
+              updated = CURRENT_TIMESTAMP
+            RETURNING id
+          `, [conf.id, conf.name, conf.description]);
+          conferenceIds[conf.name] = result.rows[0].id;
+          console.log(`  ✓ Conference: ${conf.name} (ID: ${conferenceIds[conf.name]})`);
         }
         console.log('[DB Init Step 1/5] ✓ Conferences initialized');
       } catch (error) {
@@ -1920,24 +1925,33 @@ export class Database {
         throw error;
       }
 
-      // Step 2: Create message bases
+      // Step 2: Create message bases using actual conference IDs
       try {
         console.log('[DB Init Step 2/5] Creating default message bases...');
         const messageBases = [
-          { name: 'Main', conferenceId: 1 },
-          { name: 'Off Topic', conferenceId: 1 },
-          { name: 'Support', conferenceId: 2 },
-          { name: 'News', conferenceId: 3 }
+          { id: 1, name: 'Main', conferenceName: 'General' },
+          { id: 2, name: 'Off Topic', conferenceName: 'General' },
+          { id: 3, name: 'Support', conferenceName: 'Tech Support' },
+          { id: 4, name: 'News', conferenceName: 'Announcements' }
         ];
 
         for (const mb of messageBases) {
-          const existing = await client.query('SELECT id FROM message_bases WHERE name = $1 AND conferenceid = $2', [mb.name, mb.conferenceId]);
-          if (existing.rows.length === 0) {
-            await client.query('INSERT INTO message_bases (name, conferenceid) VALUES ($1, $2)', [mb.name, mb.conferenceId]);
-            console.log(`  ✓ Created message base: ${mb.name} in conference ${mb.conferenceId}`);
-          } else {
-            console.log(`  • Message base already exists: ${mb.name} in conference ${mb.conferenceId}`);
+          const conferenceId = conferenceIds[mb.conferenceName];
+          if (!conferenceId) {
+            console.error(`  ✗ Conference not found: ${mb.conferenceName}`);
+            continue;
           }
+
+          const result = await client.query(`
+            INSERT INTO message_bases (id, name, conferenceid)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (id) DO UPDATE SET
+              name = EXCLUDED.name,
+              conferenceid = EXCLUDED.conferenceid,
+              updated = CURRENT_TIMESTAMP
+            RETURNING id
+          `, [mb.id, mb.name, conferenceId]);
+          console.log(`  ✓ Message base: ${mb.name} in conference ${mb.conferenceName} (ID: ${result.rows[0].id})`);
         }
         console.log('[DB Init Step 2/5] ✓ Message bases initialized');
       } catch (error) {
@@ -1945,27 +1959,33 @@ export class Database {
         throw error;
       }
 
-      // Step 3: Create file areas
+      // Step 3: Create file areas using actual conference IDs
       try {
         console.log('[DB Init Step 3/5] Creating default file areas...');
         const fileAreas = [
-          { name: 'General Files', description: 'General purpose file area', path: '/files/general', conferenceId: 1, maxFiles: 100, uploadAccess: 10, downloadAccess: 1 },
-          { name: 'Utilities', description: 'System utilities and tools', path: '/files/utils', conferenceId: 1, maxFiles: 50, uploadAccess: 50, downloadAccess: 1 },
-          { name: 'Games', description: 'BBS games and entertainment', path: '/files/games', conferenceId: 2, maxFiles: 75, uploadAccess: 25, downloadAccess: 1 },
-          { name: 'Tech Files', description: 'Technical documentation and tools', path: '/files/tech', conferenceId: 2, maxFiles: 60, uploadAccess: 20, downloadAccess: 1 },
-          { name: 'System News', description: 'System announcements and updates', path: '/files/news', conferenceId: 3, maxFiles: 30, uploadAccess: 100, downloadAccess: 1 }
+          { name: 'General Files', description: 'General purpose file area', path: '/files/general', conferenceName: 'General', maxFiles: 100, uploadAccess: 10, downloadAccess: 1 },
+          { name: 'Utilities', description: 'System utilities and tools', path: '/files/utils', conferenceName: 'General', maxFiles: 50, uploadAccess: 50, downloadAccess: 1 },
+          { name: 'Games', description: 'BBS games and entertainment', path: '/files/games', conferenceName: 'Tech Support', maxFiles: 75, uploadAccess: 25, downloadAccess: 1 },
+          { name: 'Tech Files', description: 'Technical documentation and tools', path: '/files/tech', conferenceName: 'Tech Support', maxFiles: 60, uploadAccess: 20, downloadAccess: 1 },
+          { name: 'System News', description: 'System announcements and updates', path: '/files/news', conferenceName: 'Announcements', maxFiles: 30, uploadAccess: 100, downloadAccess: 1 }
         ];
 
         for (const area of fileAreas) {
-          const existing = await client.query('SELECT id FROM file_areas WHERE name = $1 AND conferenceid = $2', [area.name, area.conferenceId]);
+          const conferenceId = conferenceIds[area.conferenceName];
+          if (!conferenceId) {
+            console.error(`  ✗ Conference not found: ${area.conferenceName}`);
+            continue;
+          }
+          
+          const existing = await client.query('SELECT id FROM file_areas WHERE name = $1 AND conferenceid = $2', [area.name, conferenceId]);
           if (existing.rows.length === 0) {
             await client.query(`
               INSERT INTO file_areas (name, description, path, conferenceid, maxfiles, uploadaccess, downloadaccess)
               VALUES ($1, $2, $3, $4, $5, $6, $7)
-            `, [area.name, area.description, area.path, area.conferenceId, area.maxFiles, area.uploadAccess, area.downloadAccess]);
-            console.log(`  ✓ Created file area: ${area.name} in conference ${area.conferenceId}`);
+            `, [area.name, area.description, area.path, conferenceId, area.maxFiles, area.uploadAccess, area.downloadAccess]);
+            console.log(`  ✓ Created file area: ${area.name} in conference ${area.conferenceName} (ID: ${conferenceId})`);
           } else {
-            console.log(`  • File area already exists: ${area.name} in conference ${area.conferenceId}`);
+            console.log(`  • File area already exists: ${area.name} in conference ${area.conferenceName}`);
           }
         }
         console.log('[DB Init Step 3/5] ✓ File areas initialized');
@@ -1984,8 +2004,8 @@ export class Database {
         // Try to update existing sysop user first
         console.log('  • Checking for existing sysop user...');
         const updateResult = await client.query(`
-          UPDATE users SET passwordhash = $1 WHERE username = 'sysop'
-        `, [hashedPassword]);
+          UPDATE users SET passwordhash = $1, availableforchat = $2 WHERE username = 'sysop'
+        `, [hashedPassword, true]);
 
         if (updateResult.rowCount === 0) {
           // User doesn't exist, create it
@@ -2013,6 +2033,18 @@ export class Database {
         } else {
           console.log(`  ✓ Sysop user password updated (affected ${updateResult.rowCount} rows)`);
         }
+
+        // Update all existing users to be available for chat by default
+        console.log('  • Setting all users available for chat...');
+        const chatUpdateResult = await client.query(`
+          UPDATE users SET availableforchat = true WHERE availableforchat = false
+        `);
+        if (chatUpdateResult.rowCount > 0) {
+          console.log(`  ✓ Updated ${chatUpdateResult.rowCount} users to be available for chat`);
+        } else {
+          console.log('  • All users already available for chat');
+        }
+
         console.log('[DB Init Step 4/5] ✓ Sysop user initialized');
       } catch (error) {
         console.error('[DB Init Step 4/5] ✗ CRITICAL: Failed to create sysop user:', error);
@@ -2051,48 +2083,58 @@ export class Database {
     }
   }
 
-  // Clean up duplicate conferences by name, keeping only the first occurrence
+  // Clean up duplicate conferences by name, keeping only the correct IDs (1,2,3)
   async cleanupDuplicateConferences(): Promise<void> {
     const client = await this.pool.connect();
     try {
       console.log('Cleaning up duplicate conferences...');
 
-      // Find duplicate conference names
-      const duplicates = await client.query(`
-        SELECT name, COUNT(*) as count
-        FROM conferences
-        GROUP BY name
-        HAVING COUNT(*) > 1
-      `);
+      // Define the correct conference IDs we want to keep
+      const correctIds = [1, 2, 3];
 
-      if (duplicates.rows.length > 0) {
-        console.log(`Found ${duplicates.rows.length} conference names with duplicates`);
+      // For each correct conference name, find all entries and keep only the one with the correct ID
+      const conferenceNames = ['General', 'Tech Support', 'Announcements'];
 
-        for (const dup of duplicates.rows) {
-          // Get all IDs for this conference name, ordered by creation date
-          const ids = await client.query(`
-            SELECT id FROM conferences
-            WHERE name = $1
-            ORDER BY created ASC
-          `, [dup.name]);
+      for (const name of conferenceNames) {
+        // Find the correct ID for this conference name
+        const correctId = correctIds[conferenceNames.indexOf(name)];
 
-          // Keep the first one, delete the rest
-          const idsToDelete = ids.rows.slice(1).map((row: any) => row.id);
+        // Get all entries for this conference name
+        const allEntries = await client.query(`
+          SELECT id FROM conferences WHERE name = $1 ORDER BY id ASC
+        `, [name]);
+
+        if (allEntries.rows.length > 1) {
+          console.log(`Found ${allEntries.rows.length} entries for conference: ${name}`);
+
+          // Keep the entry with the correct ID, delete all others
+          const idsToDelete = allEntries.rows
+            .filter((row: any) => row.id !== correctId)
+            .map((row: any) => row.id);
 
           if (idsToDelete.length > 0) {
+            // First, reassign message bases and file areas to the correct conference ID
+            await client.query(
+              `UPDATE message_bases SET conferenceid = $1 WHERE conferenceid = ANY($2)`,
+              [correctId, idsToDelete]
+            );
+            await client.query(
+              `UPDATE file_areas SET conferenceid = $1 WHERE conferenceid = ANY($2)`,
+              [correctId, idsToDelete]
+            );
+
+            // Now delete the duplicate conferences
             await client.query(
               `DELETE FROM conferences WHERE id = ANY($1)`,
               [idsToDelete]
             );
-            console.log(`Deleted ${idsToDelete.length} duplicate entries for conference: ${dup.name}`);
+            console.log(`Deleted ${idsToDelete.length} duplicate entries for conference: ${name}, kept ID ${correctId}`);
           }
         }
-
-        // Also clean up orphaned message bases and file areas
-        await this.cleanupOrphanedData();
-      } else {
-        console.log('No duplicate conferences found');
       }
+
+      // Also clean up orphaned message bases and file areas
+      await this.cleanupOrphanedData();
     } finally {
       client.release();
     }

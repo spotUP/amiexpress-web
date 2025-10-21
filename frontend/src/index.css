@@ -6,6 +6,14 @@
   font-style: normal;
 }
 
+/* Unscii Font - Default BBS Font */
+@font-face {
+  font-family: 'unscii';
+  src: url('../Fonts/unscii-16-full.ttf.gz') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @font-face {
   font-family: 'MicroKnight_v1.0';
   src: url('../Fonts/MicroKnight_v1.0.ttf') format('truetype');

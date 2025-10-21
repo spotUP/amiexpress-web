@@ -306,6 +306,20 @@ export class AmigaDoorManager {
       }
     }
 
+    // Add Phreak Wars door
+    doors.push({
+      name: 'phreakwars',
+      displayName: 'Phreak Wars: The Underground BBS Empire',
+      description: 'A text-based adventure game about 1980s phone phreaking and BBS hacking',
+      version: '1.0.0',
+      author: 'AmiExpress-Web AI',
+      main: 'phreakWars.ts',
+      path: path.join(doorsPath, 'phreakWars.ts'),
+      installed: true,
+      isTypeScriptDoor: true,
+      accessLevel: 0,
+    });
+
     return doors;
   }
 

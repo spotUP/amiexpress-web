@@ -43,6 +43,7 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:5174",
+      "http://localhost:5175",
       "http://localhost:3000",
       "http://localhost:3001",
       /^https:\/\/amiexpress.*\.onrender\.com$/,
@@ -264,6 +265,11 @@ async function initializeData() {
       console.log(`> First 3 message bases in global array:`, messageBases.slice(0, 3).map(mb => ({ id: mb.id, name: mb.name, conferenceId: mb.conferenceId })));
     }
 
+    // Force reload conferences after message base cleanup
+    const finalConfs = await db.getConferences();
+    setConferences(finalConfs);
+    console.log(`Final conference count after all cleanup: ${conferences.length}`);
+
     // Load file areas for all conferences (limit to prevent timeout)
     const allFileAreas = [];
     for (const conf of conferencesToLoad) {
@@ -329,6 +335,17 @@ async function initializeDoors() {
       accessLevel: 255, // Sysop only
       enabled: true,
       type: 'native',
+      parameters: []
+    },
+    {
+      id: 'phreakwars',
+      name: 'Phreak Wars: The Underground BBS Empire',
+      description: 'A text-based adventure game about 1980s phone phreaking and BBS hacking',
+      command: 'PHREAKWARS',
+      path: 'doors/phreakWars.ts',
+      accessLevel: 0,
+      enabled: true,
+      type: 'web',
       parameters: []
     }
   ];

@@ -11,21 +11,21 @@
 [36m----------------------------------------------------------------------------[0m
 
 [0;33m                 Welcome to the AmiExpress BBS System[0m
-[0;35m                     Running on Node [0;35m%N[0m
+[0;35m                     Running on Node [0;35m~N[0m
 
 [36m----------------------------------------------------------------------------[0m
 
 [33mSystem Status:[0m
-  [37m• BBS Name:[0m [0;36m%B[0m
-  [37m• Location:[0m [36m%L[0m
-  [37m• Sysop:[0m [36m%S[0m
-  [37m• System Time:[0m [36m%T[0m
-  [37m• Date:[0m [36m%D[0m
+  [37m• BBS Name:[0m [0;36m~B[0m
+  [37m• Location:[0m [36m~L[0m
+  [37m• Sysop:[0m [36m~S[0m
+  [37m• System Time:[0m [36m~T[0m
+  [37m• Date:[0m [36m~D[0m
 
 [33mNode Information:[0m
-  [37m• Node Number:[0m [0;35m%N[0m
-  [37m• Baud Rate:[0m [36m%R[0m
-  [37m• Available Conferences:[0m [36m%C[0m
+  [37m• Node Number:[0m [0;35m~N[0m
+  [37m• Baud Rate:[0m [36m~R[0m
+  [37m• Available Conferences:[0m [36m~C[0m
 
 [36m----------------------------------------------------------------------------[0m
 

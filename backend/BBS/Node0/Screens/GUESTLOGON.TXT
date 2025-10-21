@@ -14,7 +14,7 @@
 
 [35m------------------------------------------------------------------------------[0m
 
-[37mYou are logging in as a [0;32mGuest[0;37m on [0;36m%B[0;37m.[0m
+[37mYou are logging in as a [0;32mGuest[0;37m on [0;36m~B[0;37m.[0m
 
 [33mAs a guest, you have limited access:[0m
   [32m•[0m [37mRead public messages[0m
