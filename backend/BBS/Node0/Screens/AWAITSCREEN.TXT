@@ -1,2 +1,17 @@
 [2J[H
+Connecting to %B...
+CONNECT FULL SPEED
+
+/X Native Telnet:  Searching for free node...
+/X Native Telnet:  Successful connection to node %N
+
+CONNECT %R
+**EMSI_IRQ8E08
+
+Welcome to %B, located in %L
+
+Running AmiExpress 1.0.0 Copyright ©2018-2025 Darren Coles
+Registration %S. You are connected to Node %N at %R baud
+Connection occured at %D.
+
 %NODELIST
