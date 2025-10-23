@@ -1,34 +1,17 @@
-[2J[H[0;37m
-   ___          _ ____
-  / _ \        (_)  ____|
- / /_\ \_ __ ___ | |__  __  ___ __  _ __ ___  ___ ___
- |  _  | '_ ` _ \|  __| \ \/ / '_ \| '__/ _ \/ __/ __|
- | | | | | | | | | |____ >  <| |_) | | |  __/\__ \__ \
- \_| |_/_| |_| |_|______/_/\_\ .__/|_|  \___||___/___/
-                              | |
-                              |_|
-[0m
-[36m----------------------------------------------------------------------------[0m
+[2J[H
+Connecting to %B...
+CONNECT FULL SPEED
 
-[0;33m                 Welcome to the AmiExpress BBS System[0m
-[0;35m                     Running on Node [0;35m%N[0m
+/X Native Telnet:  Searching for free node...
+/X Native Telnet:  Successful connection to node %N
 
-[36m----------------------------------------------------------------------------[0m
+CONNECT %R
 
-[33mSystem Status:[0m
-  [37m• BBS Name:[0m [0;36m%B[0m
-  [37m• Location:[0m [36m%L[0m
-  [37m• Sysop:[0m [36m%S[0m
-  [37m• System Time:[0m [36m%T[0m
-  [37m• Date:[0m [36m%D[0m
+Welcome to %B, located in %L
 
-[33mNode Information:[0m
-  [37m• Node Number:[0m [0;35m%N[0m
-  [37m• Baud Rate:[0m [36m%R[0m
-  [37m• Available Conferences:[0m [36m%C[0m
+Running AmiExpress-Web 1.0.0 Copyright (c) 2025
+Registration %S. You are connected to Node %N at %R baud
+Connection occured at %D %T.
 
-[36m----------------------------------------------------------------------------[0m
+%NODELIST
 
-[0;32m              Press any key to continue or wait for a call...[0m
-
-[36m----------------------------------------------------------------------------[0m
