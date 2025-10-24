@@ -465,7 +465,174 @@ The Internode Chat system is **architecturally complete** with all database tabl
 
 ---
 
-**Report Generated:** October 23, 2025
+## Session Update: October 24, 2025
+
+### Issues Fixed This Session
+
+#### Issue 7: Chat Commands Transmitted to Partner ❌ → ✅
+**Problem:** Chat commands like `/end`, `/exit`, `/help` were being transmitted character-by-character to the partner user in real-time before being recognized as commands
+
+**Root Cause:** Lines 498-501 in `command.handler.ts` transmitted every printable character immediately via `handleChatKeystroke()` without checking if the input buffer starts with `/`
+
+**User Impact:** Partner user would see "sysop: /end█" in their typing indicator before the command was executed
+
+**Fix Applied:**
+- Modified printable character handler (lines 501-507) to check if `session.inputBuffer.trim().startsWith('/')` before transmission
+- Modified backspace handler (lines 490-498) to suppress backspace transmission when typing commands
+- Commands starting with `/` are now purely local and never sent to partner
+
+**Files Modified:**
+- `backend/src/handlers/command.handler.ts` (lines 490-507)
+
+**Code:**
+```typescript
+// Handle printable characters - real-time transmission
+else if (data.length === 1 && data >= ' ' && data <= '~') {
+  session.inputBuffer += data;
+  // Don't transmit commands (starting with /) to partner
+  const isCommand = session.inputBuffer.trim().startsWith('/');
+  if (!isCommand) {
+    await handleChatKeystroke(socket, session, { keystroke: data });
+  }
+}
+```
+
+#### Issue 8: Partner User Stuck in Chat State After `/end` ❌ → 🔍 IN PROGRESS
+**Problem:** When one user ends chat with `/end` or `/exit`, the partner user remains stuck on the "Chat Session Ended" screen. Pressing any key shows them still in `chat` subState, unable to return to menu.
+
+**Root Cause Identified:** Partner's socket ID was not being properly captured during session lookup in `handleChatEnd()` function
+
+**Debugging Steps Taken:**
+1. Added logging to `cleanupChatSession()` - confirmed it was NOT being called for partner
+2. Identified that `partnerSession.socketId` was `undefined` (session object doesn't store socketId)
+3. Found that socketId is the KEY in sessions Map, not a property on the session object
+
+**Fix Attempted:**
+- Modified lines 754-768 in `internode-chat.handler.ts` to capture both `partnerSession` and `partnerSocketId` during Map iteration
+- Updated lines 797-819 to use `partnerSocketId` instead of `partnerSession.socketId!`
+- Added extensive debug logging to track partner lookup and cleanup execution
+
+**Files Modified:**
+- `backend/src/handlers/internode-chat.handler.ts` (lines 754-768, 797-819)
+
+**Current Status:**
+- ⏳ Backend restarted with debug logging
+- ⏳ Awaiting user test to verify fix
+- 📊 Debug logs will show:
+  - Whether partner session is found
+  - Whether partner socketId is captured
+  - Whether Socket.io socket object is retrieved
+  - Whether cleanup function is actually executed for partner
+
+**Debug Output Expected:**
+```
+🔍 [CHAT END] Looking for partner with ID: <partnerId>
+  Checking session: socketId=<id>, userId=<userId>
+  ✅ FOUND PARTNER! socketId=<socketId>
+🔍 [CHAT END] Partner session found: true, socketId: <socketId>
+🧹 [CHAT END] Cleaning up initiating user: <username>
+🧹 [CHAT END] Attempting partner cleanup: partnerSession=true, partnerSocketId=<id>
+🧹 [CHAT END] Partner socket found: true
+🧹 [CHAT END] Cleaning up partner user: <username>
+🧹 [CLEANUP CHAT] Starting cleanup for user: <partner>
+  Current subState: chat
+  Previous subState: display_menu
+  New subState: display_menu
+🧹 [CHAT END] Partner cleanup complete
+```
+
+### New Database Column Documentation
+
+**Added to CLAUDE.md Project Guidelines:**
+```markdown
+## 🚨 CRITICAL: Database Column Names - ALWAYS USE LOWERCASE 🚨
+
+PostgreSQL column names are CASE-SENSITIVE when quoted!
+
+1. ALL columns are lowercase (e.g., availableforchat, seclevel, quietnode)
+2. NEVER use camelCase in SQL queries
+3. Use aliases for TypeScript mapping:
+   SELECT availableforchat as "availableForChat" FROM users
+```
+
+**Reason:** This error has occurred multiple times - now permanently documented to prevent recurrence
+
+**Files Updated:**
+- `/Users/spot/Code/amiexpress-web/CLAUDE.md` (new critical section at top)
+
+### New User Registration Fields Fixed
+
+**Issue:** Newly registered users had NULL values for:
+- `availableforchat` → NULL (should be true)
+- `quietnode` → NULL (should be false)
+- `autorejoin` → NULL (should be 1)
+- `confaccess` → NULL (should be 'XXX')
+- `newuser` → NULL (should be true)
+
+**Fix Applied:**
+- Updated `new-user.handler.ts` lines 378-397 to include all missing fields in createUser call
+- Ran database UPDATE to fix 6 existing users
+
+**Impact:** New users can now properly use LIVECHAT and all BBS features immediately after registration
+
+**Files Modified:**
+- `backend/src/handlers/new-user.handler.ts` (lines 378-397)
+
+---
+
+## Testing Required
+
+### Manual Test Plan for Issue 8 (Partner Stuck):
+
+**Setup:**
+1. Open two browser windows/tabs
+2. Login as two different users (e.g., sysop and hola)
+
+**Test Steps:**
+1. User A types: `LIVECHAT`
+2. User A selects User B from list
+3. User B accepts invitation (press Enter)
+4. Users exchange messages
+5. User A types: `/exit` and presses Enter
+6. **Verify User A:** Should see end screen, then menu
+7. **Verify User B:** Should see end screen, then be able to press any key to return to menu
+
+**Expected Backend Logs:**
+```
+🔍 [CHAT END] Looking for partner with ID: <partnerId>
+  ✅ FOUND PARTNER! socketId=<socketId>
+🧹 [CHAT END] Partner cleanup complete
+🧹 [CLEANUP CHAT] Starting cleanup for user: <partnerUsername>
+  New subState: display_menu
+```
+
+**Success Criteria:**
+- ✅ User A returns to menu successfully
+- ✅ User B sees end screen with "Press any key to continue..."
+- ✅ User B can press Enter/Space to return to menu
+- ✅ Both users see menu prompt after chat ends
+- ✅ No "No pending chat invitation" errors
+- ✅ No lingering `/exit` or `/end` commands visible in partner's screen
+
+---
+
+## Code Statistics Update
+
+**This Session:**
+- Modified: 3 files
+- Lines changed: ~60 lines
+- Debug logging added: ~15 log statements
+- Documentation updated: 2 files (CLAUDE.md, CHAT_PROGRESS_REPORT.md)
+
+**Total Project:**
+- Chat handlers: 1,953 lines
+- Database functions: 25 methods
+- Socket.io events: 22 events
+- BBS commands: 15 commands
+
+---
+
+**Report Updated:** October 24, 2025
 **Author:** Claude (AI Assistant)
-**Session Duration:** ~3 hours
-**Lines of Code:** 1,953 (chat handlers) + database functions
+**Session Duration:** ~2 hours
+**Status:** Debugging partner cleanup issue - awaiting test results
