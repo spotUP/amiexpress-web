@@ -92,8 +92,8 @@ export class ConfigManager {
       port: 3001,
 
       // Path Settings
-      // Default to project root (parent of backend/) which contains BBS/ directory
-      dataDir: process.env.BBS_DATA_DIR || path.join(__dirname, '../..'),
+      // Default to server directory which contains BBS/ directory
+      dataDir: process.env.BBS_DATA_DIR || path.join(__dirname, '..'),
 
       // Time Settings
       timeZone: 'UTC',
