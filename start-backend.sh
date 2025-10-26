@@ -24,8 +24,8 @@ if lsof -ti:3001 >/dev/null 2>&1; then
     exit 1
 fi
 
-# Change to backend directory
-cd "$(dirname "$0")/backend"
+# Change to server directory
+cd "$(dirname "$0")/server"
 
 # Set environment variables
 export DATABASE_URL="postgresql://localhost/amiexpress"

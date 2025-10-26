@@ -24,8 +24,8 @@ if lsof -ti:5173 >/dev/null 2>&1; then
     exit 1
 fi
 
-# Change to frontend directory
-cd "$(dirname "$0")/frontend"
+# Change to client directory
+cd "$(dirname "$0")/client"
 
 # Start the server
 echo "→ Starting frontend server on port 5173..."

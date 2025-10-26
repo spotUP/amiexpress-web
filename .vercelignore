@@ -1,19 +1,19 @@
 # Development files
-backend/src/amiga-emulation/cpu/moira-source
-backend/src/amiga-emulation/cpu/build
-backend/src/amiga-emulation/test
+server/src/amiga-emulation/cpu/moira-source
+server/src/amiga-emulation/cpu/build
+server/src/amiga-emulation/test
 
 # Data files
-backend/data
-backend/amiexpress.db
+server/data
+server/amiexpress.db
 
 # Build artifacts
-backend/backend
-backend/dist
+server/server
+server/dist
 
 # Test files
-backend/test-*.ts
-backend/*.zip
+server/test-*.ts
+server/*.zip
 
 # Documentation
 *.md
