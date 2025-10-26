@@ -2537,7 +2537,7 @@ async function initializeData() {
 
     // Load Amiga command definitions (.info and .CMD files)
     // express.e loads commands at startup for SYSCMD and BBSCMD lookup
-    const bbsBaseDir = path.join(__dirname, '../BBS');
+    const bbsBaseDir = path.join(config.get('dataDir'), 'BBS');
     loadCommands(bbsBaseDir, 1, 0); // Load for conference 1, node 0
 
     // Inject dependencies into chat handler
@@ -2585,7 +2585,7 @@ async function initializeData() {
     setDisplayFileCommandsDependencies({
       displayScreen,
       findSecurityScreen,
-      confScreenDir: path.join(config.get('dataDir') || path.join(__dirname, '..'), 'BBS', 'Conf01', 'Screens'),
+      confScreenDir: path.join(config.get('dataDir'), 'BBS', 'Conf01', 'Screens'),
       db
     });
 
@@ -2624,7 +2624,7 @@ async function initializeData() {
     setUtilityCommandsDependencies({
       handleGoodbyeCommand,
       messages,
-      confScreenDir: path.join(config.get('dataDir') || path.join(__dirname, '..'), 'BBS', 'Conf01', 'Screens'),
+      confScreenDir: path.join(config.get('dataDir'), 'BBS', 'Conf01', 'Screens'),
       findSecurityScreen,
       displayScreen,
       searchFileDescriptions

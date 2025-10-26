@@ -13,7 +13,7 @@ export interface BBSConfig {
   port: number;
 
   // Path Settings
-  dataDir: string; // BBS data directory (contains BBS/, Node0/, etc.)
+  dataDir: string; // BBS data directory root (project root, contains BBS/ directory)
 
   // Time Settings
   timeZone: string;
@@ -92,7 +92,8 @@ export class ConfigManager {
       port: 3001,
 
       // Path Settings
-      dataDir: process.env.BBS_DATA_DIR || process.cwd(),
+      // Default to project root (parent of backend/) which contains BBS/ directory
+      dataDir: process.env.BBS_DATA_DIR || path.join(__dirname, '../..'),
 
       // Time Settings
       timeZone: 'UTC',
