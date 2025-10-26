@@ -46,7 +46,7 @@ async function testDoor() {
   console.log('');
 
   // Test AquaBulls door (the one showing icon.library error)
-  const doorPath = path.join(__dirname, 'BBS/Doors/aquabulls/Doors/AquaBulls/AquaBulls');
+  const doorPath = path.join(__dirname, 'BBS/Doors/AquaBulls/AquaBulls');
   // const doorPath = path.join(__dirname, 'BBS/Doors/BestConf/BestConf.XIM');
   // const doorPath = path.join(__dirname, 'BBS/Doors/WeekConfTop/WeekConfTop.XIM');
 
