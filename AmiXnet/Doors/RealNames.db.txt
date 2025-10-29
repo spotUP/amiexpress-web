@@ -1,0 +1,7 @@
+
+We have just installed some NetMail conferences on this BBS.
+some of these net conferences require realnames, if you wish
+to use these conferences please enter a REALNAME at the prompt.
+If you do not enter a real name at the prompt you will not be
+allowed to write mail in some of the net conferences.
+
