@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Test GetAnswer Door with Library Call Trapping
+ * Test MultiTop Door with Library Call Trapping
  *
  * This script:
  * 1. Connects to the BBS via browser
  * 2. Logs in as sysop
- * 3. Executes the GA (GetAnswer) door
+ * 3. Executes the MULTITOP (MultiTop) door
  * 4. Monitors backend logs for library trap messages
  */
 
@@ -75,8 +75,8 @@ async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function testGetAnswerDoor() {
-  console.log('=== GetAnswer Door Test ===\n');
+async function testMultiTopDoor() {
+  console.log('=== MultiTop Door Test ===\n');
 
   // Start tailing logs
   console.log('Starting log monitor...');
@@ -132,9 +132,9 @@ async function testGetAnswerDoor() {
     await page.keyboard.press('Enter');
     await sleep(500);
 
-    // Execute GA command (GetAnswer door)
-    console.log('\n=== EXECUTING GA COMMAND (GetAnswer Door) ===');
-    await page.keyboard.type('GA');
+    // Execute MULTITOP command (MultiTop door)
+    console.log('\n=== EXECUTING MULTITOP COMMAND (MultiTop Door) ===');
+    await page.keyboard.type('MULTITOP');
     await page.keyboard.press('Enter');
 
     // Wait for door to execute and library traps to fire
@@ -184,4 +184,4 @@ async function testGetAnswerDoor() {
 }
 
 // Run test
-testGetAnswerDoor().catch(console.error);
+testMultiTopDoor().catch(console.error);

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Test GetAnswer Door with Library Call Trapping
+ * Test aeclidoor Door with Library Call Trapping
  *
  * This script:
  * 1. Connects to the BBS via browser
  * 2. Logs in as sysop
- * 3. Executes the GA (GetAnswer) door
+ * 3. Executes the GA (aeclidoor) door
  * 4. Monitors backend logs for library trap messages
  */
 
@@ -75,8 +75,8 @@ async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function testGetAnswerDoor() {
-  console.log('=== GetAnswer Door Test ===\n');
+async function testaeclidoorDoor() {
+  console.log('=== aeclidoor Door Test ===\n');
 
   // Start tailing logs
   console.log('Starting log monitor...');
@@ -132,8 +132,8 @@ async function testGetAnswerDoor() {
     await page.keyboard.press('Enter');
     await sleep(500);
 
-    // Execute GA command (GetAnswer door)
-    console.log('\n=== EXECUTING GA COMMAND (GetAnswer Door) ===');
+    // Execute GA command (aeclidoor door)
+    console.log('\n=== EXECUTING GA COMMAND (aeclidoor Door) ===');
     await page.keyboard.type('GA');
     await page.keyboard.press('Enter');
 
@@ -184,4 +184,4 @@ async function testGetAnswerDoor() {
 }
 
 // Run test
-testGetAnswerDoor().catch(console.error);
+testaeclidoorDoor().catch(console.error);

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Test GetAnswer Door with Library Call Trapping
+ * Test What Door with Library Call Trapping
  *
  * This script:
  * 1. Connects to the BBS via browser
  * 2. Logs in as sysop
- * 3. Executes the GA (GetAnswer) door
+ * 3. Executes the WH (What) door
  * 4. Monitors backend logs for library trap messages
  */
 
@@ -75,8 +75,8 @@ async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function testGetAnswerDoor() {
-  console.log('=== GetAnswer Door Test ===\n');
+async function testWhatDoor() {
+  console.log('=== What Door Test ===\n');
 
   // Start tailing logs
   console.log('Starting log monitor...');
@@ -97,7 +97,7 @@ async function testGetAnswerDoor() {
     await page.goto(BBS_URL, { waitUntil: 'networkidle2' });
 
     console.log('Waiting for terminal to connect...');
-    await sleep(1500);
+    await sleep(3000);
 
     // Check if we see login prompt
     const bodyText = await page.evaluate(() => document.body.innerText);
@@ -107,39 +107,39 @@ async function testGetAnswerDoor() {
     console.log('\nAnswering ANSI prompt with A');
     await page.keyboard.type('A');
     await page.keyboard.press('Enter');
-    await sleep(750);
+    await sleep(1500);
 
     // Type sysop username
     console.log('Typing username: sysop');
     await page.keyboard.type('sysop');
     await page.keyboard.press('Enter');
-    await sleep(750);
+    await sleep(1500);
 
     // Type password
     console.log('Typing password: sysop');
     await page.keyboard.type('sysop');
     await page.keyboard.press('Enter');
-    await sleep(1500);
+    await sleep(3000);
 
     // Should be at main menu now
     console.log('\n--- Should be at main menu ---');
-    await sleep(500);
+    await sleep(1000);
 
     // Press Enter a few times to get past any screens
     console.log('Pressing Enter to get past screens...');
     await page.keyboard.press('Enter');
-    await sleep(500);
+    await sleep(1000);
     await page.keyboard.press('Enter');
-    await sleep(500);
+    await sleep(1000);
 
-    // Execute GA command (GetAnswer door)
-    console.log('\n=== EXECUTING GA COMMAND (GetAnswer Door) ===');
-    await page.keyboard.type('GA');
+    // Execute WH command (What door)
+    console.log('\n=== EXECUTING WH COMMAND (What Door) ===');
+    await page.keyboard.type('WH');
     await page.keyboard.press('Enter');
 
     // Wait for door to execute and library traps to fire
     console.log('Waiting for door to execute and library traps to fire...');
-    await sleep(2500);
+    await sleep(5000);
 
     // Check screen content
     const finalText = await page.evaluate(() => document.body.innerText);
@@ -148,7 +148,7 @@ async function testGetAnswerDoor() {
 
     // Give more time for logs to appear
     console.log('\nWaiting for final log messages...');
-    await sleep(1500);
+    await sleep(3000);
 
   } catch (error) {
     console.error('Error during test:', error);
@@ -184,4 +184,4 @@ async function testGetAnswerDoor() {
 }
 
 // Run test
-testGetAnswerDoor().catch(console.error);
+testWhatDoor().catch(console.error);
