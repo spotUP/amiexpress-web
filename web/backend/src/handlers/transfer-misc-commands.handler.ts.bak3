@@ -6,7 +6,7 @@
 
 import { BBSSession, LoggedOnSubState } from '../index';
 import { checkSecurity } from '../utils/acs.util';
-import { ACSPermission } from '../constants/acs-permissions';
+import { ACSCode } from '../constants/acs-codes';
 import { EnvStat } from '../constants/env-codes';
 import { AnsiUtil } from '../utils/ansi.util';
 import { ErrorHandler } from '../utils/error-handling.util';
@@ -300,7 +300,7 @@ async function displayVoteTopics(socket: any, session: BBSSession): Promise<void
 
   session.tempData = session.tempData || {};
   session.tempData.voteTopics = topics;
-  session.subState = LoggedOnSubState.VO_TOPIC_SELECT;
+  session.subState = 'VO_TOPIC_SELECT';
 }
 
 /**
@@ -465,7 +465,7 @@ async function displayNextQuestion(socket: any, session: BBSSession): Promise<vo
 
   session.tempData.currentQuestion = question;
   session.tempData.currentAnswers = answers;
-  session.subState = LoggedOnSubState.VO_ANSWER_INPUT;
+  session.subState = 'VO_ANSWER_INPUT';
 }
 
 /**
@@ -571,7 +571,7 @@ async function displayVoteMenu(socket: any, session: BBSSession): Promise<void> 
 
   socket.emit('ansi-output', '\r\n>');
 
-  session.subState = LoggedOnSubState.VO_MENU_CHOICE;
+  session.subState = 'VO_MENU_CHOICE';
 }
 
 /**
