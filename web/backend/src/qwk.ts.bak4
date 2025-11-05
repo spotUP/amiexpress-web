@@ -488,7 +488,7 @@ export class QWKManager {
     const fs = require('fs');
     const path = require('path');
 
-    for (const packet of (oldPackets || []) as any) {
+    for (const packet of oldPackets) {
       try {
         // Delete file if it exists
         const filePath = path.join(this.qwkPath, packet.filename);
