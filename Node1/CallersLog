@@ -1,0 +1,138 @@
+01-Nov-25 20:57 Login: spot
+01-Nov-25 20:57 Logoff: spot
+01-Nov-25 20:57 Login: sysop
+01-Nov-25 20:57 Door: WHO
+01-Nov-25 20:57 Door exit: WHO
+01-Nov-25 20:59 Logoff: sysop
+01-Nov-25 20:59 Login: spot
+01-Nov-25 22:01 Login: sysop
+01-Nov-25 22:01 Door: WHO
+01-Nov-25 22:01 Door exit: WHO
+01-Nov-25 22:01 Door: GA
+01-Nov-25 22:01 Door exit: GA
+01-Nov-25 22:01 Door: GA
+01-Nov-25 22:01 Door exit: GA
+01-Nov-25 22:02 Door: WHO
+01-Nov-25 22:02 Door exit: WHO
+01-Nov-25 22:02 Door: WHO
+01-Nov-25 22:02 Door exit: WHO
+01-Nov-25 22:02 Door: WHO
+01-Nov-25 22:02 Door exit: WHO
+01-Nov-25 22:16 Logoff: sysop
+01-Nov-25 22:16 Login: sysop
+01-Nov-25 23:45 Logoff: sysop
+01-Nov-25 23:45 Login: sysop
+01-Nov-25 23:59 Login: sysop
+02-Nov-25 00:08 Door: WHO
+02-Nov-25 00:08 Door exit: WHO
+02-Nov-25 00:08 Door: WHO
+02-Nov-25 00:08 Door exit: WHO
+02-Nov-25 00:08 Door: WHO
+02-Nov-25 00:08 Door exit: WHO
+02-Nov-25 00:11 Login: sysop
+02-Nov-25 00:11 Door: WHO
+02-Nov-25 00:11 Door exit: WHO
+02-Nov-25 00:13 Door: TESTRESTRICT
+02-Nov-25 00:13 Door exit: TESTRESTRICT
+02-Nov-25 00:14 Door: TESTRESTRICT
+02-Nov-25 00:14 Door exit: TESTRESTRICT
+02-Nov-25 00:14 Door: TESTRESTRICT
+02-Nov-25 00:14 Door exit: TESTRESTRICT
+02-Nov-25 00:15 Door: CONFLIST
+02-Nov-25 00:15 Door exit: CONFLIST
+02-Nov-25 00:19 Login: sysop
+02-Nov-25 00:19 Door: B
+02-Nov-25 00:19 Door exit: B
+02-Nov-25 00:19 Door: WHO
+02-Nov-25 00:19 Door exit: WHO
+02-Nov-25 00:31 Login: sysop
+02-Nov-25 00:31 Logoff: sysop
+02-Nov-25 00:33 Login: sysop
+02-Nov-25 00:33 Door: WHO
+02-Nov-25 00:33 Door exit: WHO
+02-Nov-25 00:35 Login: sysop
+02-Nov-25 00:36 Door: WHO
+02-Nov-25 00:36 Door exit: WHO
+02-Nov-25 00:39 Login: sysop
+02-Nov-25 00:39 Door: WHO
+02-Nov-25 00:39 Door exit: WHO
+02-Nov-25 00:41 Login: sysop
+02-Nov-25 00:41 Door: WHO
+02-Nov-25 00:41 Door exit: WHO
+02-Nov-25 00:49 Login: sysop
+02-Nov-25 00:49 Door: WHO
+02-Nov-25 00:49 Door exit: WHO
+02-Nov-25 00:53 Login: sysop
+02-Nov-25 00:53 Door: WHO
+02-Nov-25 00:53 Door exit: WHO
+02-Nov-25 00:55 Login: sysop
+02-Nov-25 00:55 Door: WHO
+02-Nov-25 00:55 Door exit: WHO
+02-Nov-25 00:57 Login: sysop
+02-Nov-25 00:57 Door: WHO
+02-Nov-25 00:57 Door exit: WHO
+02-Nov-25 00:59 Login: sysop
+02-Nov-25 00:59 Door: WHO
+02-Nov-25 00:59 Door exit: WHO
+02-Nov-25 01:44 Login: sysop
+02-Nov-25 01:44 Door: WHO
+02-Nov-25 01:44 Door exit: WHO
+02-Nov-25 01:46 Door: WHO
+02-Nov-25 01:46 Door exit: WHO
+02-Nov-25 01:54 Door: WHO
+02-Nov-25 01:54 Door exit: WHO
+02-Nov-25 01:54 Logoff: sysop
+02-Nov-25 01:54 Login: sysop
+02-Nov-25 01:54 Door: WHO
+02-Nov-25 01:54 Door exit: WHO
+02-Nov-25 02:26 Login: sysop
+02-Nov-25 02:26 Door: WHO2
+02-Nov-25 02:26 Door exit: WHO2
+02-Nov-25 02:31 Logoff: sysop
+02-Nov-25 02:31 Login: sysop
+02-Nov-25 02:31 Door: WHO2
+02-Nov-25 02:31 Door exit: WHO2
+02-Nov-25 02:31 Door: WHO2
+02-Nov-25 02:31 Door exit: WHO2
+02-Nov-25 03:13 Door: WHO2
+02-Nov-25 03:13 Door exit: WHO2
+02-Nov-25 03:15 Logoff: sysop
+02-Nov-25 10:45 Login: sysop
+02-Nov-25 10:45 Door: WHO2
+02-Nov-25 10:45 Door exit: WHO2
+02-Nov-25 10:51 Login: sysop
+02-Nov-25 10:51 Door: WHO2
+02-Nov-25 10:51 Door exit: WHO2
+02-Nov-25 10:53 Login: sysop
+02-Nov-25 10:53 Door: WHO2
+02-Nov-25 10:53 Door exit: WHO2
+02-Nov-25 10:57 Login: sysop
+02-Nov-25 10:57 Door: WHO2
+02-Nov-25 10:57 Door exit: WHO2
+02-Nov-25 10:58 Door: WHO2
+02-Nov-25 10:58 Door exit: WHO2
+02-Nov-25 11:04 Logoff: sysop
+02-Nov-25 11:04 Login: sysop
+02-Nov-25 11:04 Logoff: sysop
+02-Nov-25 11:04 Login: sysop
+02-Nov-25 11:04 Door: WHO2
+02-Nov-25 11:04 Door exit: WHO2
+02-Nov-25 11:07 Door: WHO2
+02-Nov-25 11:07 Door exit: WHO2
+02-Nov-25 11:07 Logoff: sysop
+02-Nov-25 11:07 Login: sysop
+02-Nov-25 11:07 Door: WHO2
+02-Nov-25 11:07 Door exit: WHO2
+02-Nov-25 11:15 Door: GA
+02-Nov-25 11:16 Door exit: GA
+02-Nov-25 11:16 Logoff: sysop
+02-Nov-25 11:16 Login: sysop
+02-Nov-25 11:16 Logoff: sysop
+02-Nov-25 11:16 Login: sysop
+02-Nov-25 11:16 Logoff: sysop
+02-Nov-25 11:16 Login: sysop
+02-Nov-25 11:17 Logoff: sysop
+02-Nov-25 11:17 Login: sysop
+02-Nov-25 11:17 Door: TESTRESTRICT
+02-Nov-25 11:17 Door exit: TESTRESTRICT
+02-Nov-25 11:52 Logoff: sysop
