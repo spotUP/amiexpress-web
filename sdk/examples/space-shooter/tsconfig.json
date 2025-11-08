@@ -5,27 +5,17 @@
     "lib": ["ES2020"],
     "outDir": "./dist",
     "rootDir": "./",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "moduleResolution": "node",
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
-  "include": [
-    "core/**/*",
-    "engines/**/*",
-    "components/**/*",
-    "tools/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "examples",
-    "**/*.spec.ts"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
