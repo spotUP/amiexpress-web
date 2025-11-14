@@ -72,8 +72,8 @@ router.get('/deployment/system-info', authenticateToken, requireSysop, async (re
       ports: {
         backend: process.env.BACKEND_PORT || 3001,
         frontend: process.env.FRONTEND_PORT || 5173,
-        telnet: process.env.TELNET_PORT || 2323,
-        ssh: process.env.SSH_PORT || 2222,
+        telnet: process.env.TELNET_PORT || 1541,   // Commodore 1541!
+        ssh: process.env.SSH_PORT || 31337,        // Elite/leet!
       }
     };
 
@@ -337,8 +337,8 @@ async function checkPorts() {
     details: {
       backend: process.env.BACKEND_PORT || 3001,
       frontend: process.env.FRONTEND_PORT || 5173,
-      telnet: process.env.TELNET_PORT || 2323,
-      ssh: process.env.SSH_PORT || 2222,
+      telnet: process.env.TELNET_PORT || 1541,   // Commodore 1541!
+      ssh: process.env.SSH_PORT || 31337,        // Elite/leet!
     }
   };
 }

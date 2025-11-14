@@ -94,7 +94,7 @@ export class ConfigManager {
 
       // Network Settings
       hostname: 'localhost',
-      port: 3001,
+      port: 31337,  // Elite backend port (overridden by env var)
 
       // Path Settings
       // Project root contains BBS data (Commands/, Conf1/, Doors/, etc.)

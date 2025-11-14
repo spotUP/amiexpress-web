@@ -95,7 +95,7 @@ AmiExpress-Web is a TypeScript port of the classic Amiga BBS software AmiExpress
 - **68K Emulation**: MOIRA-based execution of Amiga binary doors
 - **AREXX Interpreter**: Full AREXX support (1905 lines, 40+ BBS API functions)
 - **Import/Export**: Amiga BBS data migration (users, messages, files, config)
-- **Multi-Protocol Access**: Telnet (port 2323), SSH (port 2222), WebSocket
+- **Multi-Protocol Access**: Telnet (port 1541), SSH (port 31337), WebSocket
 - **QWK/REP Mail**: Offline mail packet generation
 - **Multi-Node Chat**: Real-time Socket.IO-based chat system
 
@@ -129,8 +129,8 @@ AmiExpress-Web is a TypeScript port of the classic Amiga BBS software AmiExpress
 
 ### Multi-Protocol Access
 - **WebSocket**: Main browser interface (Frontend port 5173)
-- **Telnet**: Classic BBS access (port 2323)
-- **SSH**: Secure terminal access (port 2222)
+- **Telnet**: Classic BBS access (port 1541 - Commodore 1541 disk drive!)
+- **SSH**: Secure terminal access (port 31337 - elite/leet!)
   - Generate host key: `ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key -N ""`
   - Set path via `SSH_HOST_KEY_PATH` in `.env.local`
   - See `Documentation/3-Developers/TELNET_SSH_SERVERS.md`

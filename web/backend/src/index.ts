@@ -358,9 +358,9 @@ const io = new Server(server, {
 
 const port = process.env.PORT || config.get('port');
 
-// Create telnet and SSH servers for native BBS client connections
-const telnetPort = parseInt(process.env.TELNET_PORT || '2323');
-const sshPort = parseInt(process.env.SSH_PORT || '2222');
+// Create telnet and SSH servers for native BBS client connections (elite retro ports!)
+const telnetPort = parseInt(process.env.TELNET_PORT || '1541');  // Commodore 1541 disk drive
+const sshPort = parseInt(process.env.SSH_PORT || '31337');       // Elite/leet
 const telnetServer = new TelnetServer(telnetPort);
 
 // Load SSH host keys
