@@ -285,8 +285,8 @@ check_ports() {
 
     local backend_port="${BACKEND_PORT:-3001}"
     local frontend_port="${FRONTEND_PORT:-5173}"
-    local telnet_port="${TELNET_PORT:-2323}"
-    local ssh_port="${SSH_PORT:-2222}"
+    local telnet_port="${TELNET_PORT:-1541}"
+    local ssh_port="${SSH_PORT:-31337}"
 
     # Check if ports are in use (indicates services are running)
     check_port() {

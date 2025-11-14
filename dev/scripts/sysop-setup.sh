@@ -42,8 +42,8 @@ ADMIN_EMAIL=""
 JWT_SECRET=""
 DATABASE_DIR=""
 IMPORT_ARCHIVE=""
-TELNET_PORT=2323
-SSH_PORT=2222
+TELNET_PORT=1541  # Commodore 1541!
+SSH_PORT=31337    # Elite/leet!
 BACKEND_PORT=3001
 FRONTEND_PORT=5173
 
@@ -271,20 +271,20 @@ configure_ports() {
     echo "Default ports:"
     echo "  - Backend API: 3001"
     echo "  - Frontend (Web): 5173"
-    echo "  - Telnet: 2323"
-    echo "  - SSH: 2222"
+    echo "  - Telnet: 1541 (Commodore 1541!)"
+    echo "  - SSH: 31337 (Elite!)"
     echo ""
 
     if confirm "Use default ports?" "y"; then
         BACKEND_PORT=3001
         FRONTEND_PORT=5173
-        TELNET_PORT=2323
-        SSH_PORT=2222
+        TELNET_PORT=1541
+        SSH_PORT=31337
     else
         prompt_input "Backend Port" "3001" "BACKEND_PORT"
         prompt_input "Frontend Port" "5173" "FRONTEND_PORT"
-        prompt_input "Telnet Port" "2323" "TELNET_PORT"
-        prompt_input "SSH Port" "2222" "SSH_PORT"
+        prompt_input "Telnet Port" "1541" "TELNET_PORT"
+        prompt_input "SSH Port" "31337" "SSH_PORT"
     fi
 
     echo ""

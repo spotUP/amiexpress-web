@@ -171,7 +171,7 @@ export class SSHConnection extends EventEmitter {
 
 /**
  * SSH Server
- * Listens on port 2222 (or configured port) and creates SSH connections
+ * Listens on port 31337 (or configured port) and creates SSH connections
  */
 export class SSHServerImpl extends EventEmitter {
   private server: SSHServer | null = null;
@@ -179,7 +179,7 @@ export class SSHServerImpl extends EventEmitter {
   private hostKeys: Buffer[];
   private connections: Map<string, SSHConnection> = new Map();
 
-  constructor(port: number = 2222, hostKeys?: Buffer[]) {
+  constructor(port: number = 31337, hostKeys?: Buffer[]) {  // Elite/leet!
     super();
     this.port = port;
     this.hostKeys = hostKeys || [];

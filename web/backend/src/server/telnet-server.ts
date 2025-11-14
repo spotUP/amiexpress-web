@@ -309,7 +309,7 @@ export class TelnetServer extends EventEmitter {
   private port: number;
   private connections: Map<string, TelnetConnection> = new Map();
 
-  constructor(port: number = 2323) {
+  constructor(port: number = 1541) {  // Commodore 1541!
     super();
     this.port = port;
     this.server = new NetServer();
