@@ -1,11 +1,13 @@
 # Latest Work Summary
-- Restored the `~CC_V-AWAIT|` invocation inside `Node0/Screens/awaitscreen.txt` so the await screen once again launches the Sanctuary door right after connect, matching the intended AmiExpress behavior we reimplemented earlier. The screen handler now accepts both single- and double-pipe terminators for `~CC_` codes, mirroring express.e, so Sanctuary commands fire regardless of how the screen file was authored.
-- Pulled the SAmiLog snapshot back onto `main` via `git stash pop` (the stash had removed the file because `main` no longer tracked it). The restored binary is staged again so future commits can capture that session data without re-running the generator.
-- Wiped the accidental `.emcache` directory that the stash reintroduced and kept the working tree limited to the intended screen/log assets plus the doc notes.
-- Main is now the active branch for ongoing work; no further code changes were made yet beyond the await-screen fix and the repo clean-up.
+- Pushed `amigaguru/work` to origin and captured the huge door/emulation changes in `chore: sync workspace changes`, `docs: update handoff summary`, and `chore: update SAmiLog.Store snapshot`, so the remote branch mirrors every local edit made during the Sanctuary parity work.
+- Login/command flow from that branch remains intact: screen-triggered commands now run even before the ANSI prompt, WHO helper shortcuts keep their fast path, `SCREEN_DEBUG` quiets the logs, ExecLibrary imports compile, and pre-login doors get a synthesized guest profile plus ACS bypass so V-AWAIT launches just like classic AmiExpress.
+- File system fidelity improved via `resolveDoorExecutionUser()`, new path assigns (`S:`, `WORK:`, `SAMI:`), and the `pendingScreenCommand` guard that holds the prompt until a screen door finishes; together these match express.e’s await experience.
+- `SamiLogService` now mirrors live sessions into `S:SAmiLog.Store`, refreshing on connect/login/disconnect so Sanctuary’s V-AWAIT table always reflects current callers.
+- Restored `~CC_V-AWAIT|` in `Node0/Screens/awaitscreen.txt` and updated the screen handler to accept one or two trailing pipes on `~CC_` commands, so legacy screens fire doors regardless of their delimiter style.
+- Pulled the SAmiLog snapshot back into `main`, cleaned the stray `.emcache` artifacts left by the stash, rebuilt `handoff.md`, and noted that we still need to restart the backend so the new screen-handler parsing takes effect for verification.
 
 ## Recent User Prompts
-1. “ok do 1 and 2” – reapplied the SAmiLog stash and attempted to verify the V-AWAIT login flow (waiting on a backend restart so the updated screen handler is in use).
-2. “i don't see v-await when i log in now” – triggered the await screen investigation.
-3. “yes work in main” – led to switching branches (with the `S/SAmiLog.Store` stash) before making today’s change.
-4. “ok i have pushed to main what's next?” – confirmed main already has prior commits; waiting on follow-up tasks.
+1. “ok do 1 and 2” – reapplied the SAmiLog stash and queued up the await-screen verification (waiting on a backend restart).
+2. “commit all files” – staged everything and recorded `chore: sync workspace changes`.
+3. “trry to push to github now” – published `amigaguru/work` on GitHub.
+4. “i don't see v-await when i log in now” – kicked off the await-screen restoration and handler tweak.
