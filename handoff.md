@@ -2,12 +2,19 @@
 - Pushed `amigaguru/work` to origin and captured the huge door/emulation changes in `chore: sync workspace changes`, `docs: update handoff summary`, and `chore: update SAmiLog.Store snapshot`, so the remote branch mirrors every local edit made during the Sanctuary parity work.
 - Login/command flow from that branch remains intact: screen-triggered commands now run even before the ANSI prompt, WHO helper shortcuts keep their fast path, `SCREEN_DEBUG` quiets the logs, ExecLibrary imports compile, and pre-login doors get a synthesized guest profile plus ACS bypass so V-AWAIT launches just like classic AmiExpress.
 - File system fidelity improved via `resolveDoorExecutionUser()`, new path assigns (`S:`, `WORK:`, `SAMI:`), and the `pendingScreenCommand` guard that holds the prompt until a screen door finishes; together these match express.e’s await experience.
-- `SamiLogService` now mirrors live sessions into `S:SAmiLog.Store`, refreshing on connect/login/disconnect so Sanctuary’s V-AWAIT table always reflects current callers.
-- Restored `~CC_V-AWAIT|` in `Node0/Screens/awaitscreen.txt` and updated the screen handler to accept one or two trailing pipes on `~CC_` commands, so legacy screens fire doors regardless of their delimiter style.
+- `SamiLogService` now mirrors live sessions into `S:SAmiLog.Store`, refreshing on connect/login/disconnect so Sanctuary’s V-AWAIT table always reflects current callers, and seeds itself from the reference archive at `Source/Documentation/SanctuaryBBS/Utils/samilog/SAmiLog.Store` whenever the runtime store is missing or empty.
+- Added a door resource resolver plus case-insensitive Amiga path handling (`PathManager` and `executeAmigaDoor` both honor Capsules), so legacy binaries like `WALL`, `GL`, and other `Doors:` assigns actually map to `/doors/...` regardless of the original casing.
+- Updated the TypeScript doors that talk to scenewall (Global Wall + GLC Viewer) to resolve their configs from the real `/doors/...` tree, dropped in a default `doors/glc-viewer/glcviewer.cfg`, and preserved the camel-case `GWall.cfg` settings file no matter where the backend is launched from.
+- Restored `~CC_wall|` on every login screen, ensuring the classic wall door fires before the menu, and tweaked the ANSI prompt emission so it always starts on a fresh line after await-screen doors finish.
+- Restored `~CC_V-AWAIT|` in `Node0/Screens/awaitscreen.txt` and updated the screen handler to accept one or two trailing pipes on `~CC_` commands, so legacy screens fire doors regardless of their delimiter style. The runtime SAmiLog writer now owns/writes `S/SAmiLog.Store` again (`chown/chmod` applied) so the Sanctuary await table actually populates instead of staying blank due to EACCES failures.
+- `SamiLogService` now preserves historical entries instead of blanking the slots: it only overwrites the first `n` user records with active sessions, sets the call-count header from the non-default names already in the file, and updates the store date so V-AWAIT sees a non-zero “calls today” value. This ensures the await table actually renders rows as soon as the guest connects.
 - Pulled the SAmiLog snapshot back into `main`, cleaned the stray `.emcache` artifacts left by the stash, rebuilt `handoff.md`, and noted that we still need to restart the backend so the new screen-handler parsing takes effect for verification.
 
 ## Recent User Prompts
-1. “ok do 1 and 2” – reapplied the SAmiLog stash and queued up the await-screen verification (waiting on a backend restart).
-2. “commit all files” – staged everything and recorded `chore: sync workspace changes`.
-3. “trry to push to github now” – published `amigaguru/work` on GitHub.
-4. “i don't see v-await when i log in now” – kicked off the await-screen restoration and handler tweak.
+1. “ok it's back, great but i see no data in the table, please fix” – corrected file ownership/permissions so `SamiLogService` can refresh `S/SAmiLog.Store`, then taught the service to preserve history, seed itself from `SanctuaryBBS/`, and publish a non-zero call count so the V-AWAIT table renders rows.
+2. “ok do 1 and 2” – reapplied the SAmiLog stash and queued up the await-screen verification (waiting on a backend restart).
+3. “commit all files” – staged everything and recorded `chore: sync workspace changes`.
+4. “trry to push to github now” – published `amigaguru/work` on GitHub.
+5. “i don't see v-await when i log in now” – kicked off the await-screen restoration and handler tweak.
+6. “it doesn't ... please fix” – continued digging on V-AWAIT output even after the table seeding pass.
+7. “as we have so little context left, can you try to enable all other doors sanctuary have active...” – prompted today’s case-insensitive path resolution, login wall restoration, and scenewall door configuration work.
