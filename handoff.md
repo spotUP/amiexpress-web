@@ -1,4 +1,5 @@
 # Latest Work Summary
+- Pushed the local branch `amigaguru/work` to `origin` (new remote branch) so the latest SAmiLog/V-AWAIT fixes and the outstanding filesystem/door changes are now on GitHub; working tree still has many uncommitted files that need review before opening the PR the remote output referenced.
 - Followed up on the missing Sanctuary await screen: `handleCommand` now short-circuits screen-triggered commands via the normal priority stack even if the session is still in the ANSI prompt. This lets `~CC_V-AWAIT|` actually run the SYSCMD right after AWAITSCREEN.TXT renders.
 - Guarded the bypass so raw `DOORS:` helper invocations (NI/NO) continue taking their dedicated path, preserving existing WHO2 behavior.
 - Added a `SCREEN_DEBUG` env toggle in `screen.handler.ts` so the extremely chatty `displayScreen`/`loadScreenFile`/`MCI` logs stay silent unless `SCREEN_DEBUG=1` is set. Default output is now leaner, which should keep `logs/backend.log` smaller between debugging sessions.
@@ -12,5 +13,5 @@
 - **Pending Action:** restart or reconnect to ensure the backend picks up the new command-handler logic and confirm that V-AWAIT art appears before the ANSI prompt.
 
 ## Recent User Prompts
-1. “i logged in and out of the bbs, no await screen visible” – prompted the command-handler bypass fix.
-2. “ok proceed then fix the 68k door emulation” – still the overarching objective driving the Sanctuary/V-AWAIT parity work.
+1. “trry to push to github now” – request to publish the current branch.
+2. “ok proceed then fix the 68k door emulation” – overarching directive that keeps the Sanctuary/V-AWAIT door parity work in scope.
