@@ -1,5 +1,5 @@
 ~ ~f ~SS_BBS:Screens/Callers.txt| ~SP|
- ~f [0m
+~CC_wall| ~f [0m
 Welcome to AmiExpress.
 
 This BBS is being run on an Amiga emulator and will attempt to
