@@ -17,8 +17,7 @@ __\____  \   [0m [1;35m_l[0m  [1;35m \    |  \[0m  [1;35m   |___/ [0m   
 
 [37m[22C[32m  Running on AmiExpress TelNet
 [37m
-
-
+~
 ~CC_GLCVIEWER|
-
+~
 ~CC_GLOBALWALL|

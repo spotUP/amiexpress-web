@@ -21,7 +21,3 @@
 
 
 
-
-~CC_GLCVIEWER|
-
-~CC_GLOBALWALL|

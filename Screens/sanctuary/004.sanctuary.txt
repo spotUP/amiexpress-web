@@ -17,7 +17,3 @@
 [0m[8C[1;36m : [0m [1;36m ú [0m[6C[1;36m  .[0m    [1;32m SWEDISH  HEADQUARTERS [0m[11C[1;36m ú[0m   [1;36m  ú
 
 
-
-~CC_GLCVIEWER|
-
-~CC_GLOBALWALL|
