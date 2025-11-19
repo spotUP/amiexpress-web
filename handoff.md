@@ -237,3 +237,6 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
   - `logDoorMessageContents()` decodes the string via the same offsets, making debugging accurate.
 - Rebuilt backend (`cd web/backend && npx tsc --noEmit`) and reran `node tmp/test-bulls-comprehensive-fix.js`; Bulls still loops but now logs the richer message headers (check `/tmp/new-bulls-run.log`).
 - Investigated `Docs/doorport.c` (Daydream Linux door dispatcher). Its socket-based door loop and `DayDream_DoorMsg` layout reinforce that AEDoor/Daydream both expect fixed command IDs with inline data, so our next change should emulate the `DayDream_DoorMsg` header fields (command/data/string, same as `jhMessage`) when translating replies back to the BBS.
+
+## Deployment follow-up
+- Render build was failing because the local `@amiexpress/terminal` package pointed to `dist/index.js`, but that folder was excluded from `npm pack` (gitignored) and never built during `npm install`. Added `"files": ["dist"]` and a `"prepare": "npm run build"` script in `packages/terminal/package.json` so every install auto-compiles the package and includes `dist` in the tarball Render consumes.
