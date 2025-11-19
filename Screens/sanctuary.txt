@@ -8,6 +8,13 @@ I don't know what this will be end up with, but anyway Sanctuary BBS is back as
                     
                   What you see is just for nostalgic reasons
                   
-            Let us see if we can bring back some of the old magic.
-              
+Let us see if we can bring back some of the old magic.
+
                                Welcome back!
+
+Type `/GLCVIEWER` to view the Global Last Callers list.
+Type `/GLOBALWALL` to read/post on the Global Wall.
+~
+~CC_GLCVIEWER|
+~
+~CC_GLOBALWALL|
