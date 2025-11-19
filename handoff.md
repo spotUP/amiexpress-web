@@ -242,3 +242,7 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 
 ## Deployment follow-up
 - Render build was failing because the local `@amiexpress/terminal` package pointed to `dist/index.js`, but that folder was excluded from `npm pack` (gitignored) and never built during `npm install`. Added `"files": ["dist"]` and a `"prepare": "npm run build"` script in `packages/terminal/package.json` so every install auto-compiles the package and includes `dist` in the tarball Render consumes.
+## Latest Session Notes (2025-12-??)
+- Reviewed AGENTS/CLAUDE instructions and the backend logs; `V-AWAIT` still receives the startup `JH_REGISTER` but no `JH_STAT` reply, so execution loops inside ROM at PC `0xf30b10` with zero `Write()` calls.
+- `doors/ustats/S` now prints the ANSI template and the backend streams its `JH_SM` output, but every stat element remains empty because `populateNodeStatusBlock()` still writes placeholders instead of the real user stats.
+- Next goal: rework `DoorInfo`/node-status creation to mirror `Docs/aedoor28/Assembler/Include/AMiX.i` + `Docs/aedoor_library_disasm.asm` (user/location strings, sec-level, ratios, pointer offsets) and emit the missing `JH_STAT` handshake with `data=nodeStatusAddr` so Bulls leaves the ROM loop and triggers `Write()`; once the handshake works we can source the actual stats for `S` and confirm door output reaches every node as required.
