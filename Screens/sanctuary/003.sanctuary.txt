@@ -19,7 +19,3 @@
 [0m[24C[1;35m:[0m[31C[1;35m:
 
 
-
-~CC_GLCVIEWER|
-
-~CC_GLOBALWALL|
