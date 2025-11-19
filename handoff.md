@@ -220,10 +220,12 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - Key references: `Docs/bulls_disasm.asm` (0x01386-0x0141a), `/tmp/new-bulls-run.log` (latest instrumentation), `handoff.md` sections above for prior fixes.
 - Next steps for restart: keep decoding the handshake routine, replicate every field the disassembly copies into the info block, ensure our pointer writes happen before the door tests `0xdc`, then rerun `node tmp/test-bulls-comprehensive-fix.js` to watch for the first handshake success.
 
-### Latest progress (today)
 - Added `monitorBullsPointers()` plus PC-range instrumentation so every write to `A4+0x6c24/28/2c/40` logs the culprit PC. Watching these addresses should confirm whether the early setup loop (around `0x1020`) or later functions are clobbering the injected pointers.
 - When forcing the wait loop at `PC=0x1264`, we now also mirror `info+0xe0` back into `A4+0x6c40` so the post-WaitPort branch sees the expected handshake counter. Added another sync when we first inject Bulls pointers.
 - Rebuilt (`cd web/backend && npx tsc -p tsconfig.json`) and reran `node tmp/test-bulls-comprehensive-fix.js`; log still ends after 50k iterations with no `Write()` calls, but the new pointer watcher lines in `/tmp/new-bulls-run.log` will let us trace the earlier self-modifying writes next session.
+- Expanded `tmp/test-bulls-comprehensive-fix.js` to accept `DOOR_PATH`, `DOOR_TYPE`, `DOOR_NODE`, and `DOOR_INPUT_SEQUENCE`, so the harness can reuse the Bulls pipeline for other doors. Added simulated `door:input` injection plus the ability to reuse the door-specific configuration from env.
+- Updated `tmp/test-bulls-comprehensive-fix.js` to read the real `jhMessage` layout (string at `+0x14`, command/data starting at `+0xDC`) and log the new fields in `XIMMessageParser` so we can track node/line/signal/task/semaphore without guessing.
+- Ran `DOOR_PATH=doors/ustats/stats DOOR_INPUT_SEQUENCE="\r\n" node tmp/test-bulls-comprehensive-fix.js`. The S! user stats door now prints the entire menu (multiple `JH_SM` blocks) and keeps outputting ANSI lines, but we still stop it at 50k iterations since it waits for user interaction after the stats block. No `Write()` trap hits because it speaks only via XIM, so the door is effectively working – what remains is understanding the final prompt so we can feed the right key(s) before letting it exit.
 
 ### Follow-up tasks
 1. Inspect `/tmp/new-bulls-run.log` for the new `[BullsFix][POINTER]` lines around `PC=0x1020` to see where the buffer addresses flip back to 0x8016c.
