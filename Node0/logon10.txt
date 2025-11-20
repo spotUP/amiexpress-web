@@ -1,5 +1,0 @@
-~f
-~SS_BBS:screens/sanctuary.txt ~SP
-~f
-~SS_BBS:screens/flt.txt
-

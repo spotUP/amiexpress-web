@@ -1,733 +1,3126 @@
-01-Nov-25 20:57 Login: spot
-01-Nov-25 20:57 Logoff: spot
-01-Nov-25 20:57 Login: sysop
-01-Nov-25 20:57 Door: WHO
-01-Nov-25 20:57 Door exit: WHO
-01-Nov-25 20:59 Logoff: sysop
-01-Nov-25 20:59 Login: spot
-01-Nov-25 22:01 Login: sysop
-01-Nov-25 22:01 Door: WHO
-01-Nov-25 22:01 Door exit: WHO
-01-Nov-25 22:01 Door: GA
-01-Nov-25 22:01 Door exit: GA
-01-Nov-25 22:01 Door: GA
-01-Nov-25 22:01 Door exit: GA
-01-Nov-25 22:02 Door: WHO
-01-Nov-25 22:02 Door exit: WHO
-01-Nov-25 22:02 Door: WHO
-01-Nov-25 22:02 Door exit: WHO
-01-Nov-25 22:02 Door: WHO
-01-Nov-25 22:02 Door exit: WHO
-01-Nov-25 22:16 Logoff: sysop
-01-Nov-25 22:16 Login: sysop
-01-Nov-25 23:45 Logoff: sysop
-01-Nov-25 23:45 Login: sysop
-01-Nov-25 23:59 Login: sysop
-02-Nov-25 00:08 Door: WHO
-02-Nov-25 00:08 Door exit: WHO
-02-Nov-25 00:08 Door: WHO
-02-Nov-25 00:08 Door exit: WHO
-02-Nov-25 00:08 Door: WHO
-02-Nov-25 00:08 Door exit: WHO
-02-Nov-25 00:11 Login: sysop
-02-Nov-25 00:11 Door: WHO
-02-Nov-25 00:11 Door exit: WHO
-02-Nov-25 00:13 Door: TESTRESTRICT
-02-Nov-25 00:13 Door exit: TESTRESTRICT
-02-Nov-25 00:14 Door: TESTRESTRICT
-02-Nov-25 00:14 Door exit: TESTRESTRICT
-02-Nov-25 00:14 Door: TESTRESTRICT
-02-Nov-25 00:14 Door exit: TESTRESTRICT
-02-Nov-25 00:15 Door: CONFLIST
-02-Nov-25 00:15 Door exit: CONFLIST
-02-Nov-25 00:19 Login: sysop
-02-Nov-25 00:19 Door: B
-02-Nov-25 00:19 Door exit: B
-02-Nov-25 00:19 Door: WHO
-02-Nov-25 00:19 Door exit: WHO
-02-Nov-25 00:31 Login: sysop
-02-Nov-25 00:31 Logoff: sysop
-02-Nov-25 00:33 Login: sysop
-02-Nov-25 00:33 Door: WHO
-02-Nov-25 00:33 Door exit: WHO
-02-Nov-25 00:35 Login: sysop
-02-Nov-25 00:36 Door: WHO
-02-Nov-25 00:36 Door exit: WHO
-02-Nov-25 00:39 Login: sysop
-02-Nov-25 00:39 Door: WHO
-02-Nov-25 00:39 Door exit: WHO
-02-Nov-25 00:41 Login: sysop
-02-Nov-25 00:41 Door: WHO
-02-Nov-25 00:41 Door exit: WHO
-02-Nov-25 00:49 Login: sysop
-02-Nov-25 00:49 Door: WHO
-02-Nov-25 00:49 Door exit: WHO
-02-Nov-25 00:53 Login: sysop
-02-Nov-25 00:53 Door: WHO
-02-Nov-25 00:53 Door exit: WHO
-02-Nov-25 00:55 Login: sysop
-02-Nov-25 00:55 Door: WHO
-02-Nov-25 00:55 Door exit: WHO
-02-Nov-25 00:57 Login: sysop
-02-Nov-25 00:57 Door: WHO
-02-Nov-25 00:57 Door exit: WHO
-02-Nov-25 00:59 Login: sysop
-02-Nov-25 00:59 Door: WHO
-02-Nov-25 00:59 Door exit: WHO
-02-Nov-25 01:44 Login: sysop
-02-Nov-25 01:44 Door: WHO
-02-Nov-25 01:44 Door exit: WHO
-02-Nov-25 01:46 Door: WHO
-02-Nov-25 01:46 Door exit: WHO
-02-Nov-25 01:54 Door: WHO
-02-Nov-25 01:54 Door exit: WHO
-02-Nov-25 01:54 Logoff: sysop
-02-Nov-25 01:54 Login: sysop
-02-Nov-25 01:54 Door: WHO
-02-Nov-25 01:54 Door exit: WHO
-02-Nov-25 02:26 Login: sysop
-02-Nov-25 02:26 Door: WHO2
-02-Nov-25 02:26 Door exit: WHO2
-02-Nov-25 02:31 Logoff: sysop
-02-Nov-25 02:31 Login: sysop
-02-Nov-25 02:31 Door: WHO2
-02-Nov-25 02:31 Door exit: WHO2
-02-Nov-25 02:31 Door: WHO2
-02-Nov-25 02:31 Door exit: WHO2
-02-Nov-25 03:13 Door: WHO2
-02-Nov-25 03:13 Door exit: WHO2
-02-Nov-25 03:15 Logoff: sysop
-02-Nov-25 10:45 Login: sysop
-02-Nov-25 10:45 Door: WHO2
-02-Nov-25 10:45 Door exit: WHO2
-02-Nov-25 10:51 Login: sysop
-02-Nov-25 10:51 Door: WHO2
-02-Nov-25 10:51 Door exit: WHO2
-02-Nov-25 10:53 Login: sysop
-02-Nov-25 10:53 Door: WHO2
-02-Nov-25 10:53 Door exit: WHO2
-02-Nov-25 10:57 Login: sysop
-02-Nov-25 10:57 Door: WHO2
-02-Nov-25 10:57 Door exit: WHO2
-02-Nov-25 10:58 Door: WHO2
-02-Nov-25 10:58 Door exit: WHO2
-02-Nov-25 11:04 Logoff: sysop
-02-Nov-25 11:04 Login: sysop
-02-Nov-25 11:04 Logoff: sysop
-02-Nov-25 11:04 Login: sysop
-02-Nov-25 11:04 Door: WHO2
-02-Nov-25 11:04 Door exit: WHO2
-02-Nov-25 11:07 Door: WHO2
-02-Nov-25 11:07 Door exit: WHO2
-02-Nov-25 11:07 Logoff: sysop
-02-Nov-25 11:07 Login: sysop
-02-Nov-25 11:07 Door: WHO2
-02-Nov-25 11:07 Door exit: WHO2
-02-Nov-25 11:15 Door: GA
-02-Nov-25 11:16 Door exit: GA
-02-Nov-25 11:16 Logoff: sysop
-02-Nov-25 11:16 Login: sysop
-02-Nov-25 11:16 Logoff: sysop
-02-Nov-25 11:16 Login: sysop
-02-Nov-25 11:16 Logoff: sysop
-02-Nov-25 11:16 Login: sysop
-02-Nov-25 11:17 Logoff: sysop
-02-Nov-25 11:17 Login: sysop
-02-Nov-25 11:17 Door: TESTRESTRICT
-02-Nov-25 11:17 Door exit: TESTRESTRICT
-02-Nov-25 11:52 Logoff: sysop
-05-Nov-25 23:05 Login: sysop
-05-Nov-25 23:05 Door: WHO2
-05-Nov-25 23:05 Door exit: WHO2
-05-Nov-25 23:07 Logoff: sysop
-05-Nov-25 23:20 Login: sysop
-06-Nov-25 00:06 Logoff: sysop
-06-Nov-25 00:06 Login: sysop
-06-Nov-25 08:22 Login: sysop
-06-Nov-25 08:22 Door: WALL
-06-Nov-25 08:22 Door exit: WALL
-06-Nov-25 08:25 Door: WHO2
-06-Nov-25 08:25 Door exit: WHO2
-06-Nov-25 08:26 Logoff: sysop
-06-Nov-25 08:28 Login: sysop
-06-Nov-25 08:28 Door: GA
-06-Nov-25 08:28 Door exit: GA
-06-Nov-25 08:50 Login: sysop
-06-Nov-25 08:50 Door: WHO2
-06-Nov-25 08:50 Door exit: WHO2
-06-Nov-25 09:31 Login: sysop
-06-Nov-25 09:31 Door: WHO2
-06-Nov-25 09:31 Door exit: WHO2
-06-Nov-25 09:56 Door: WHO2
-06-Nov-25 09:56 Door exit: WHO2
-06-Nov-25 09:56 Logoff: sysop
-06-Nov-25 09:57 Login: sysop
-06-Nov-25 09:57 Logoff: sysop
-06-Nov-25 09:57 Login: sysop
-06-Nov-25 09:57 Logoff: sysop
-06-Nov-25 10:15 Login: sysop
-06-Nov-25 10:15 Door: WHO2
-06-Nov-25 10:15 Door exit: WHO2
-06-Nov-25 10:15 Logoff: sysop
-06-Nov-25 10:22 Login: sysop
-06-Nov-25 10:22 Door: WHO2
-06-Nov-25 10:22 Door exit: WHO2
-06-Nov-25 10:22 Logoff: sysop
-06-Nov-25 10:26 Login: sysop
-06-Nov-25 10:26 Door: WHO2
-06-Nov-25 10:26 Door exit: WHO2
-06-Nov-25 10:26 Logoff: sysop
-06-Nov-25 12:01 Login: sysop
-06-Nov-25 12:04 Logoff: sysop
-06-Nov-25 12:04 Login: sysop
-06-Nov-25 12:05 Login: sysop
-06-Nov-25 12:10 Login: sysop
-06-Nov-25 12:16 Login: sysop
-06-Nov-25 12:18 Login: sysop
-06-Nov-25 14:58 Login: sysop
-06-Nov-25 15:10 Login: sysop
-06-Nov-25 15:10 Door: WHO2
-06-Nov-25 15:10 Door exit: WHO2
-06-Nov-25 15:10 Door: GA
-06-Nov-25 15:11 Door exit: GA
-06-Nov-25 15:11 Door: WALL
-06-Nov-25 15:11 Door exit: WALL
-06-Nov-25 17:07 Login: sysop
-06-Nov-25 17:09 Logoff: sysop
-06-Nov-25 17:11 Login: sysop
-06-Nov-25 17:12 Logoff: sysop
-06-Nov-25 17:13 Login: sysop
-06-Nov-25 17:15 Logoff: sysop
-06-Nov-25 17:15 Login: sysop
-06-Nov-25 17:16 Logoff: sysop
-06-Nov-25 17:16 Login: sysop
-06-Nov-25 17:26 Login: sysop
-06-Nov-25 17:26 Door: ANSIEDIT
-06-Nov-25 17:26 Door exit: ANSIEDIT
-06-Nov-25 17:27 Logoff: sysop
-06-Nov-25 17:27 Login: sysop
-06-Nov-25 17:27 Door: ANSIEDIT
-06-Nov-25 17:27 Door exit: ANSIEDIT
-06-Nov-25 17:31 Login: sysop
-06-Nov-25 17:32 Door: ANSIEDIT
-06-Nov-25 17:32 Door exit: ANSIEDIT
-06-Nov-25 17:38 Login: sysop
-06-Nov-25 17:38 Door: ANSIED
-06-Nov-25 17:38 Door exit: ANSIED
-06-Nov-25 17:43 Login: sysop
-06-Nov-25 17:43 Door: ANSIED
-06-Nov-25 17:43 Door exit: ANSIED
-06-Nov-25 17:44 Login: sysop
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:44 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:45 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Logoff: sysop
-06-Nov-25 17:48 Login: sysop
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:48 Door: ANSIED
-06-Nov-25 17:55 Login: sysop
-06-Nov-25 17:55 Door: ANSIED
-06-Nov-25 18:00 Login: sysop
-06-Nov-25 18:00 Door: ANSIED
-06-Nov-25 18:02 Login: sysop
-06-Nov-25 18:02 Door: ANSIED
-06-Nov-25 18:04 Login: sysop
-06-Nov-25 18:04 Door: ANSIED
-06-Nov-25 18:19 Login: sysop
-06-Nov-25 18:19 Door: ANSIED
-06-Nov-25 18:21 Logoff: sysop
-06-Nov-25 18:21 Login: sysop
-06-Nov-25 18:21 Door: ANSIED
-06-Nov-25 18:40 Login: sysop
-06-Nov-25 18:40 Door: ANSIED
-06-Nov-25 18:45 Login: sysop
-06-Nov-25 18:45 Door: ANSIED
-06-Nov-25 18:48 Logoff: sysop
-06-Nov-25 18:48 Login: sysop
-06-Nov-25 18:48 Door: ANSIED
-06-Nov-25 18:50 Login: sysop
-06-Nov-25 18:50 Door: ANSIED
-06-Nov-25 18:51 Logoff: sysop
-06-Nov-25 18:51 Login: sysop
-06-Nov-25 18:51 Door: ANSIED
-06-Nov-25 18:52 Login: sysop
-06-Nov-25 18:52 Door: ANSIED
-06-Nov-25 18:53 Login: sysop
-06-Nov-25 18:53 Door: ANSIED
-06-Nov-25 18:55 Login: sysop
-06-Nov-25 18:55 Door: ANSIED
-06-Nov-25 18:56 Logoff: sysop
-06-Nov-25 18:56 Login: sysop
-06-Nov-25 18:56 Door: ANSIED
-06-Nov-25 18:57 Logoff: sysop
-06-Nov-25 19:02 Login: sysop
-06-Nov-25 19:02 Door: ANSIED
-06-Nov-25 19:04 Logoff: sysop
-06-Nov-25 19:04 Login: sysop
-06-Nov-25 19:04 Door: ANSIED
-06-Nov-25 19:06 Login: sysop
-06-Nov-25 19:06 Door: ANSIED
-06-Nov-25 19:08 Logoff: sysop
-06-Nov-25 19:08 Login: sysop
-06-Nov-25 19:08 Door: ANSIED
-06-Nov-25 19:22 Login: sysop
-06-Nov-25 19:22 Door: ANSIED
-06-Nov-25 19:25 Login: sysop
-06-Nov-25 19:25 Door: ANSIED
-06-Nov-25 19:25 Logoff: sysop
-06-Nov-25 19:27 Login: sysop
-06-Nov-25 19:27 Door: ANSIED
-06-Nov-25 19:28 Logoff: sysop
-06-Nov-25 19:28 Login: sysop
-06-Nov-25 19:28 Door: ANSIED
-06-Nov-25 19:29 Logoff: sysop
-06-Nov-25 19:30 Login: sysop
-06-Nov-25 19:30 Door: ANSIED
-06-Nov-25 20:20 Login: sysop
-06-Nov-25 20:20 Door: ANSIED
-06-Nov-25 20:20 Door: ANSIED
-06-Nov-25 20:20 Door: ANSIED
-06-Nov-25 20:20 Door: ANSIED
-06-Nov-25 20:21 Login: sysop
-06-Nov-25 20:21 Door: ANSIED
-06-Nov-25 20:21 Door: ANSIED
-06-Nov-25 20:21 Door: ANSIED
-06-Nov-25 20:21 Door: ANSIED
-06-Nov-25 20:22 Login: sysop
-06-Nov-25 20:22 Door: ANSIED
-06-Nov-25 20:22 Door: ANSIED
-06-Nov-25 20:22 Door: ANSIED
-06-Nov-25 20:22 Door: ANSIED
-06-Nov-25 20:23 Logoff: sysop
-06-Nov-25 20:23 Login: sysop
-06-Nov-25 20:23 Door: ANSIED
-06-Nov-25 20:23 Door: ANSIED
-06-Nov-25 20:23 Door: ANSIED
-06-Nov-25 20:23 Door: ANSIED
-06-Nov-25 20:24 Logoff: sysop
-06-Nov-25 20:24 Login: sysop
-06-Nov-25 20:24 Door: ANSIED
-06-Nov-25 20:24 Door: ANSIED
-06-Nov-25 20:24 Door: ANSIED
-06-Nov-25 20:41 Login: sysop
-06-Nov-25 20:41 Logoff: sysop
-06-Nov-25 20:41 Login: sysop
-06-Nov-25 20:43 Login: sysop
-06-Nov-25 20:45 Login: sysop
-06-Nov-25 20:46 Logoff: sysop
-06-Nov-25 20:46 Login: sysop
-06-Nov-25 20:48 Logoff: sysop
-06-Nov-25 20:49 Login: sysop
-06-Nov-25 20:51 Login: sysop
-06-Nov-25 21:06 Login: sysop
-06-Nov-25 21:07 Logoff: sysop
-06-Nov-25 21:09 Login: sysop
-06-Nov-25 21:10 Logoff: sysop
-06-Nov-25 21:10 Login: sysop
-06-Nov-25 21:10 Logoff: sysop
-06-Nov-25 21:11 Login: sysop
-06-Nov-25 21:15 Login: sysop
-06-Nov-25 21:17 Logoff: sysop
-06-Nov-25 21:18 Login: sysop
-06-Nov-25 21:20 Login: sysop
-06-Nov-25 21:28 Login: sysop
-06-Nov-25 21:30 Login: sysop
-06-Nov-25 21:39 Login: sysop
-06-Nov-25 21:42 Login: sysop
-06-Nov-25 21:42 Door: ANSIED
-06-Nov-25 21:45 Logoff: sysop
-06-Nov-25 21:45 Logoff: sysop
-06-Nov-25 21:45 Login: sysop
-06-Nov-25 21:45 Door: ANSIED
-06-Nov-25 21:49 Logoff: sysop
-06-Nov-25 21:49 Logoff: sysop
-06-Nov-25 21:50 Login: sysop
-06-Nov-25 21:50 Door: ANSIED
-06-Nov-25 21:50 Door exit: ANSIED
-06-Nov-25 21:51 Door: ANSIED
-06-Nov-25 21:51 Door exit: ANSIED
-06-Nov-25 21:52 Door: ANSIED
-06-Nov-25 21:54 Logoff: sysop
-06-Nov-25 21:54 Logoff: sysop
-06-Nov-25 21:54 Login: sysop
-06-Nov-25 21:54 Door: ANSIED
-06-Nov-25 21:57 Logoff: sysop
-06-Nov-25 21:57 Logoff: sysop
-06-Nov-25 21:57 Login: sysop
-06-Nov-25 21:58 Door: ANSIED
-06-Nov-25 21:58 Door: ANSIED
-06-Nov-25 22:10 Login: sysop
-06-Nov-25 22:10 Door: ANSIED
-06-Nov-25 22:11 Logoff: sysop
-06-Nov-25 22:11 Logoff: sysop
-06-Nov-25 22:11 Login: sysop
-06-Nov-25 22:11 Door: ANSIED
-06-Nov-25 22:11 Door: ANSIED
-06-Nov-25 22:16 Login: sysop
-06-Nov-25 22:16 Door: ANSIED
-06-Nov-25 22:20 Door: ANSIED
-06-Nov-25 22:21 Door: ANSIED
-06-Nov-25 22:21 Logoff: sysop
-06-Nov-25 22:21 Logoff: sysop
-06-Nov-25 22:21 Login: sysop
-06-Nov-25 22:22 Door: WALL
-06-Nov-25 22:22 Door exit: WALL
-06-Nov-25 22:34 Login: sysop
-06-Nov-25 22:34 Door: ANSIED
-07-Nov-25 08:12 Login: sysop
-07-Nov-25 08:12 Door: ANSIED
-07-Nov-25 08:19 Logoff: sysop
-07-Nov-25 08:19 Logoff: sysop
-07-Nov-25 08:19 Login: sysop
-07-Nov-25 08:19 Door: ANSIED
-07-Nov-25 08:37 Logoff: sysop
-07-Nov-25 08:37 Logoff: sysop
-07-Nov-25 08:42 Login: sysop
-07-Nov-25 08:42 Door: ANSIED
-07-Nov-25 08:45 Logoff: sysop
-07-Nov-25 08:45 Logoff: sysop
-07-Nov-25 08:45 Login: sysop
-07-Nov-25 08:45 Door: ANSIED
-07-Nov-25 08:46 Logoff: sysop
-07-Nov-25 08:46 Logoff: sysop
-07-Nov-25 08:47 Login: sysop
-07-Nov-25 08:47 Door: ANSIED
-07-Nov-25 08:47 Door: ANSIED
-07-Nov-25 08:47 Door: ANSIED
-07-Nov-25 08:54 Logoff: sysop
-07-Nov-25 08:54 Logoff: sysop
-07-Nov-25 08:54 Login: sysop
-07-Nov-25 08:54 Door: ANSIED
-12-Nov-25 00:22 Login: sysop
-12-Nov-25 00:22 Logoff: sysop
-12-Nov-25 07:11 Login: sysop
-12-Nov-25 07:11 Door: B
-12-Nov-25 07:11 Door exit: B
-12-Nov-25 07:18 Logoff: sysop
-12-Nov-25 07:47 Login: sysop
-12-Nov-25 08:08 Door: B
-12-Nov-25 08:08 Door exit: B
-12-Nov-25 08:40 Login: sysop
-12-Nov-25 08:40 Door: B
-12-Nov-25 08:40 Door exit: B
-12-Nov-25 09:10 Login: sysop
-12-Nov-25 09:11 Door: B
-12-Nov-25 09:11 Door exit: B
-12-Nov-25 10:15 Login: sysop
-12-Nov-25 10:18 Door: B
-12-Nov-25 10:18 Door exit: B
-12-Nov-25 10:37 Login: sysop
-12-Nov-25 10:37 Door: B
-12-Nov-25 10:37 Door exit: B
-12-Nov-25 10:56 Login: sysop
-12-Nov-25 10:56 Door: B
-12-Nov-25 10:56 Door exit: B
-12-Nov-25 11:02 Login: sysop
-12-Nov-25 11:02 Door: B
-12-Nov-25 11:02 Door exit: B
-12-Nov-25 11:06 Login: sysop
-12-Nov-25 11:07 Login: sysop
-12-Nov-25 11:07 Door: B
-12-Nov-25 11:07 Door exit: B
-12-Nov-25 11:17 Login: sysop
-12-Nov-25 11:17 Door: B
-12-Nov-25 11:17 Door exit: B
-12-Nov-25 11:51 Login: sysop
-12-Nov-25 11:51 Door: B
-12-Nov-25 11:51 Door exit: B
-12-Nov-25 12:12 Login: sysop
-12-Nov-25 12:12 Door: B
-12-Nov-25 12:12 Door exit: B
-12-Nov-25 12:22 Login: sysop
-12-Nov-25 12:22 Door: B
-12-Nov-25 12:22 Door exit: B
-12-Nov-25 12:25 Login: sysop
-12-Nov-25 12:25 Door: B
-12-Nov-25 12:25 Door exit: B
-12-Nov-25 12:27 Login: sysop
-12-Nov-25 12:52 Login: sysop
-12-Nov-25 12:52 Door: S
-12-Nov-25 12:52 Door exit: S
-12-Nov-25 12:54 Login: sysop
-12-Nov-25 12:54 Door: B
-12-Nov-25 12:54 Door exit: B
-12-Nov-25 12:54 Door: S
-12-Nov-25 12:54 Door exit: S
-12-Nov-25 13:08 Login: sysop
-12-Nov-25 13:09 Door: S
-12-Nov-25 13:09 Door exit: S
-12-Nov-25 13:17 Login: sysop
-12-Nov-25 13:17 Door: S
-12-Nov-25 13:17 Door exit: S
-12-Nov-25 13:31 Login: sysop
-12-Nov-25 13:31 Door: S
-12-Nov-25 13:31 Door exit: S
-12-Nov-25 13:34 Login: sysop
-12-Nov-25 13:34 Door: S
-12-Nov-25 13:34 Door exit: S
-12-Nov-25 14:03 Login: sysop
-12-Nov-25 14:12 Login: sysop
-12-Nov-25 14:12 Door: S
-12-Nov-25 14:12 Door exit: S
-12-Nov-25 14:13 Logoff: sysop
-12-Nov-25 14:29 Login: sysop
-12-Nov-25 14:35 Login: sysop
-12-Nov-25 14:45 Login: sysop
-12-Nov-25 14:47 Logoff: sysop
-12-Nov-25 14:55 Login: sysop
-12-Nov-25 14:55 Door: S
-12-Nov-25 14:55 Door exit: S
-12-Nov-25 14:56 Logoff: sysop
-12-Nov-25 15:02 Login: sysop
-12-Nov-25 15:12 Login: sysop
-12-Nov-25 15:13 Logoff: sysop
-12-Nov-25 15:22 Login: sysop
-12-Nov-25 15:22 Logoff: sysop
-12-Nov-25 15:41 Login: sysop
-12-Nov-25 15:41 Logoff: sysop
-12-Nov-25 15:47 Login: sysop
-12-Nov-25 15:47 Logoff: sysop
-12-Nov-25 15:49 Login: sysop
-12-Nov-25 15:50 Logoff: sysop
-12-Nov-25 15:55 Login: sysop
-12-Nov-25 15:55 Logoff: sysop
-12-Nov-25 16:24 Login: sysop
-12-Nov-25 16:24 Door: 2048
-12-Nov-25 16:25 Login: sysop
-12-Nov-25 16:26 Logoff: sysop
-12-Nov-25 16:35 Login: sysop
-12-Nov-25 16:35 Logoff: sysop
-12-Nov-25 16:44 Login: sysop
-12-Nov-25 16:45 Logoff: sysop
-12-Nov-25 17:21 Login: sysop
-12-Nov-25 17:37 Login: sysop
-12-Nov-25 17:43 Login: sysop
-12-Nov-25 17:52 Login: sysop
-12-Nov-25 18:09 Login: sysop
-12-Nov-25 18:31 Logoff: sysop
-13-Nov-25 09:33 Login: sysop
-13-Nov-25 12:04 Login: sysop
-13-Nov-25 15:06 Login: sysop
-13-Nov-25 15:06 Door: S
-13-Nov-25 15:06 Door exit: S
-13-Nov-25 15:42 Login: sysop
-13-Nov-25 15:42 Logoff: sysop
-13-Nov-25 17:16 Login: sysop
-13-Nov-25 17:16 Door: SCREEN
-13-Nov-25 17:16 Door exit: SCREEN
-13-Nov-25 17:20 Door: SCREEN
-13-Nov-25 17:20 Door exit: SCREEN
-13-Nov-25 17:50 Login: sysop
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:50 Door: SCREEN
-13-Nov-25 17:51 Logoff: sysop
-13-Nov-25 18:08 Login: sysop
-13-Nov-25 18:08 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:09 Door: SCREEN
-13-Nov-25 18:11 Login: sysop
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:12 Door: SCREEN
-13-Nov-25 18:16 Logoff: sysop
-13-Nov-25 23:20 Login: sysop
-14-Nov-25 01:02 Login: sysop
-14-Nov-25 01:17 Logoff: sysop
-14-Nov-25 08:48 Login: sysop
-14-Nov-25 08:50 Logoff: sysop
-14-Nov-25 09:55 Login: sysop
-14-Nov-25 10:03 Logoff: sysop
-15-Nov-25 18:05 Login: sysop
-15-Nov-25 18:05 Door: BUGTRACK
-15-Nov-25 18:14 Login: sysop
-15-Nov-25 18:14 Door: TRACKER
-15-Nov-25 18:15 Logoff: sysop
-15-Nov-25 18:15 Logoff: sysop
-15-Nov-25 18:26 Login: sysop
-15-Nov-25 18:26 Door: BUGTRACK
-15-Nov-25 22:15 Login: sysop
-16-Nov-25 10:06 Door: V-AWAIT
-16-Nov-25 10:06 Door exit: V-AWAIT
-16-Nov-25 10:10 Door: V-AWAIT
-16-Nov-25 10:10 Door exit: V-AWAIT
-16-Nov-25 10:17 Door: V-AWAIT
-16-Nov-25 10:17 Door exit: V-AWAIT
-16-Nov-25 10:21 Door: V-AWAIT
-16-Nov-25 10:21 Door exit: V-AWAIT
-16-Nov-25 10:38 Logoff: sysop
-16-Nov-25 13:30 Door: V-AWAIT
-16-Nov-25 13:30 Door exit: V-AWAIT
-17-Nov-25 14:50 Door: V-AWAIT
-17-Nov-25 14:50 Door exit: V-AWAIT
-17-Nov-25 16:05 Door: V-AWAIT
-17-Nov-25 16:05 Door exit: V-AWAIT
-17-Nov-25 16:05 Door: V-AWAIT
-17-Nov-25 16:05 Door exit: V-AWAIT
-17-Nov-25 16:10 Logoff: sysop
-17-Nov-25 16:36 Door: V-AWAIT
-17-Nov-25 16:36 Door exit: V-AWAIT
-17-Nov-25 17:21 Door: V-AWAIT
-17-Nov-25 17:21 Door exit: V-AWAIT
-17-Nov-25 17:42 Door: V-AWAIT
-17-Nov-25 17:42 Door exit: V-AWAIT
-17-Nov-25 17:43 Door: V-AWAIT
-17-Nov-25 17:43 Door exit: V-AWAIT
-17-Nov-25 17:43 Door: V-AWAIT
-17-Nov-25 17:43 Door exit: V-AWAIT
-17-Nov-25 17:43 Door: V-AWAIT
-17-Nov-25 17:43 Door exit: V-AWAIT
-17-Nov-25 18:21 Door: V-AWAIT
-17-Nov-25 18:21 Door exit: V-AWAIT
-17-Nov-25 20:18 Door: V-AWAIT
-17-Nov-25 20:18 Door exit: V-AWAIT
-17-Nov-25 20:25 Door: V-AWAIT
-17-Nov-25 20:25 Door exit: V-AWAIT
-17-Nov-25 20:33 Door: V-AWAIT
-17-Nov-25 20:33 Door exit: V-AWAIT
-17-Nov-25 20:33 Door: V-AWAIT
-17-Nov-25 20:33 Door exit: V-AWAIT
-17-Nov-25 20:33 Door: B
-17-Nov-25 20:33 Door exit: B
-17-Nov-25 21:23 Door: V-AWAIT
-17-Nov-25 21:23 Door exit: V-AWAIT
-17-Nov-25 21:27 Door: V-AWAIT
-17-Nov-25 21:27 Door exit: V-AWAIT
-17-Nov-25 21:28 Door: B
-17-Nov-25 21:28 Door exit: B
-17-Nov-25 21:37 Door: V-AWAIT
-17-Nov-25 21:37 Door exit: V-AWAIT
-17-Nov-25 21:55 Door: V-AWAIT
-17-Nov-25 21:55 Door exit: V-AWAIT
-17-Nov-25 22:03 Door: V-AWAIT
-17-Nov-25 22:03 Door exit: V-AWAIT
-17-Nov-25 22:03 Door: B
-17-Nov-25 22:03 Door exit: B
-17-Nov-25 22:20 Door: V-AWAIT
-17-Nov-25 22:20 Door exit: V-AWAIT
-17-Nov-25 22:34 Door: V-AWAIT
-17-Nov-25 22:34 Door exit: V-AWAIT
-17-Nov-25 22:41 Door: V-AWAIT
-17-Nov-25 22:41 Door exit: V-AWAIT
-17-Nov-25 22:46 Door: V-AWAIT
-17-Nov-25 22:46 Door exit: V-AWAIT
-17-Nov-25 22:46 Door: B
-17-Nov-25 22:46 Door exit: B
-17-Nov-25 22:48 Door: V-AWAIT
-17-Nov-25 22:48 Door exit: V-AWAIT
-17-Nov-25 22:57 Door: V-AWAIT
-17-Nov-25 22:57 Door exit: V-AWAIT
-18-Nov-25 06:58 Door: V-AWAIT
-18-Nov-25 06:58 Door exit: V-AWAIT
-18-Nov-25 07:02 Door: V-AWAIT
-18-Nov-25 07:02 Door exit: V-AWAIT
-18-Nov-25 07:03 Door: V-AWAIT
-18-Nov-25 07:03 Door exit: V-AWAIT
-18-Nov-25 07:04 Door: V-AWAIT
-18-Nov-25 07:04 Door exit: V-AWAIT
-18-Nov-25 07:05 Door: B
-18-Nov-25 07:05 Door exit: B
-18-Nov-25 07:10 Door: V-AWAIT
-18-Nov-25 07:10 Door exit: V-AWAIT
-18-Nov-25 07:59 Door: V-AWAIT
-18-Nov-25 07:59 Door exit: V-AWAIT
-18-Nov-25 08:39 Door: V-AWAIT
-18-Nov-25 08:39 Door exit: V-AWAIT
-18-Nov-25 09:08 Door: V-AWAIT
-18-Nov-25 09:08 Door exit: V-AWAIT
-18-Nov-25 10:02 Door: V-AWAIT
-18-Nov-25 10:02 Door exit: V-AWAIT
-18-Nov-25 10:07 Door: V-AWAIT
-18-Nov-25 10:07 Door exit: V-AWAIT
-18-Nov-25 10:08 Door: V-AWAIT
-18-Nov-25 10:08 Door exit: V-AWAIT
-18-Nov-25 10:09 Door: B
-18-Nov-25 10:09 Door exit: B
-18-Nov-25 10:21 Logoff: sysop
-18-Nov-25 10:21 Logoff: sysop
-18-Nov-25 11:35 Door: V-AWAIT
-18-Nov-25 11:35 Door exit: V-AWAIT
-18-Nov-25 12:03 Door: V-AWAIT
-18-Nov-25 12:03 Door exit: V-AWAIT
-18-Nov-25 13:12 Door: V-AWAIT
-18-Nov-25 13:12 Door exit: V-AWAIT
-18-Nov-25 13:53 Door: V-AWAIT
-18-Nov-25 13:53 Door exit: V-AWAIT
-18-Nov-25 14:05 Door: V-AWAIT
-18-Nov-25 14:05 Door exit: V-AWAIT
-18-Nov-25 14:31 Door: V-AWAIT
-18-Nov-25 14:31 Door exit: V-AWAIT
-18-Nov-25 15:27 Door: V-AWAIT
-18-Nov-25 15:27 Door exit: V-AWAIT
-18-Nov-25 15:52 Door: V-AWAIT
-18-Nov-25 15:52 Door exit: V-AWAIT
-18-Nov-25 16:44 Door: V-AWAIT
-18-Nov-25 16:44 Door exit: V-AWAIT
-18-Nov-25 16:50 Door: V-AWAIT
-18-Nov-25 16:50 Door exit: V-AWAIT
-18-Nov-25 17:17 Door: V-AWAIT
-18-Nov-25 17:17 Door exit: V-AWAIT
-18-Nov-25 17:27 Door: V-AWAIT
-18-Nov-25 17:27 Door exit: V-AWAIT
-18-Nov-25 17:33 Door: V-AWAIT
-18-Nov-25 17:33 Door exit: V-AWAIT
-18-Nov-25 17:35 Door: V-AWAIT
-18-Nov-25 17:35 Door exit: V-AWAIT
-18-Nov-25 19:55 Door: V-AWAIT
-18-Nov-25 20:03 Door exit: V-AWAIT
-19-Nov-25 15:01 Door: V-AWAIT
-19-Nov-25 15:01 Door exit: V-AWAIT
+	ADF Area (9) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Requests (8) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Scene Stuff (6) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	/X Section (4) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+09-27-25 (11:59:51) Garak Off Normally
+**************************************************************
+09-27-25 (13:34:54) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: uddi-31-b2-v4wan-166601-cust2577.vm12.cable.virginm.net (82.34.74.18)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/TRSISKL1.DMS 758390 bytes
+	Downloading BBS:Conf2/Upload/TRSISKL1.NFO 18949 bytes
+	Downloading BBS:Conf2/Upload/TRSISKL2.DMS 863111 bytes
+	Downloading BBS:Conf2/Upload/TRSISKL3.DMS 395611 bytes
+	Downloading BBS:Conf2/Upload/TRSISKLC.LHA 69818381 bytes
+	Downloading BBS:Conf2/Upload/TRSISKLH.LHA 1898095 bytes
+	Downloading BBS:Conf2/Upload/TRSISKLP.LHA 4594091 bytes
+	 7 files, 76510k bytes, 0 minutes 52 seconds 1495164 cps, 77873% efficiency at 19200
+	Directory Scan with AquaScan by Aquarius
+09-27-25 (13:38:03) RaGe Off Normally
+**************************************************************
+09-28-25 (04:09:47) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.249.24)
+	Password Failure (eliojah-1)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-28-25 (04:19:27) Ransom1122 Off Loss Carrier
+**************************************************************
+09-28-25 (06:38:00) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-28-25 (06:38:27) KayPirinha Off Normally
+**************************************************************
+09-28-25 (09:22:36) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: uddi-31-b2-v4wan-166601-cust2577.vm12.cable.virginm.net (82.34.74.18)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading R121011W.LHA 45714390 bytes
+	 1 file(s), 44642k bytes, 1 minute(s). 14 second(s), 614771 cps, 32019% efficiency.
+	Upload moved to BBS:Conf2/Upload/R121011W.LHA
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Uploading TESTP661.ZIP 9380030 bytes
+	Uploading VBCC09H3.LHA 2827931 bytes
+	Uploading TVSB2025.LHA 16192 bytes
+	Uploading AVALDE31.LHA 9026 bytes
+	Uploading AVALGD31.LHA 10088 bytes
+	Uploading MFX-STLO.DMS 129235 bytes
+	Uploading B-WOF106.ZIP 177553480 bytes
+	 7 file(s), 185474k bytes, 5 minute(s). 11 second(s), 609440 cps, 31741% efficiency.
+	Skipped R121011W.LHA
+	Upload moved to BBS:Conf2/Upload/TESTP661.ZIP
+	Upload moved to BBS:Conf2/Upload/VBCC09H3.LHA
+	Upload moved to BBS:Conf2/Upload/TVSB2025.LHA
+	Upload moved to BBS:Conf2/Upload/AVALDE31.LHA
+	Upload moved to BBS:Conf2/Upload/AVALGD31.LHA
+	Upload moved to BBS:Conf2/Upload/MFX-STLO.DMS
+	Upload moved to BBS:Conf2/Upload/B-WOF106.ZIP
+09-28-25 (09:33:30) RaGe Off Normally
+**************************************************************
+09-28-25 (10:04:31) [532] kokkiklhs (CONNECT 19200) Athens, GR
+	Telnet login address: 77.49.96.152.dsl.dyn.forthnet.gr (77.49.96.152)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+09-28-25 (10:07:01) kokkiklhs Off Normally
+**************************************************************
+09-28-25 (11:53:53) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading WP-CHG12.LHA 306224 bytes
+	Uploading WP-CE211.LHA 253222 bytes
+	Uploading WP-CE111.LHA 260580 bytes
+	Uploading TRSI-YET.DMS 761452 bytes
+	Uploading TRSI-YET.NFO 17647 bytes
+	Uploading FIX-TOMB.DMS 155697 bytes
+	Uploading ENGMM130.LHA 94041015 bytes
+	Uploading REPOM688.LHA 858450 bytes
+	Uploading AVALA310.LHA 141642 bytes
+	Uploading DEPSCN15.LHA 11378 bytes
+	 10 file(s), 94538k bytes, 0 minute(s). 21 second(s), 4469404 cps, 232781% efficiency.
+	Skipped TESTP661.ZIP
+	Skipped VBCC09H3.LHA
+	Skipped TVSB2025.LHA
+	Skipped AVALDE31.LHA
+	Skipped AVALGD31.LHA
+	Skipped MFX-STLO.DMS
+	Skipped B-WOF106.ZIP
+	Skipped R121011W.LHA
+	Skipped RA1206R1.LHA
+	Skipped WP-CHM11.LHA
+	Skipped WP-COO11.LHA
+	Skipped WP-CQ14E.LHA
+	Skipped WP-CQ212.LHA
+	Skipped WP-CQ14D.LHA
+	Skipped -O-BS150.LHA
+	Skipped KYVOS150.ZIP
+	Skipped HIP-265U.LHA
+	Skipped ZZAPAM24.ZIP
+	Skipped WP-CHK10.LHA
+	Skipped WP-CHC12.LHA
+	Skipped WP-CKA11.LHA
+	Skipped WP-CKE11.LHA
+	Skipped FIX-FGDM.DMS
+	Skipped SBARWR33.LHA
+	Skipped SHWMEM30.LHA
+	Skipped REPO6868.LHA
+	Skipped REPOO688.LHA
+	Skipped PFTCH193.LHA
+	Skipped MZPR472.LHA
+	Skipped MML47101.LHA
+	Skipped MEDVA151.LHA
+	Skipped VAMI44B1.ZIP
+	Skipped BK-I11XX.NFO
+	Skipped BK-I1101.ZIP
+	Skipped BK-I1102.ZIP
+	Skipped BK-I1103.ZIP
+	Skipped BK-I1104.ZIP
+	Skipped BK-I1105.ZIP
+	Skipped BK-I1106.ZIP
+	Skipped BK-I1107.ZIP
+	Skipped BK-I1108.ZIP
+	Skipped BK-I1109.ZIP
+	Skipped BK-I1110.ZIP
+	Skipped BK-I1111.ZIP
+	Skipped BK-I1112.ZIP
+	Skipped BK-I1113.ZIP
+	Skipped BK-I1114.ZIP
+	Skipped BK-I1115.ZIP
+	Skipped BK-I1116.ZIP
+	Skipped BK-I1117.ZIP
+	Skipped BK-I1118.ZIP
+	Skipped BK-I1119.ZIP
+	Skipped BK-I1120.ZIP
+	Skipped BK-I1121.ZIP
+	Skipped BK-I1122.ZIP
+	Skipped BK-I1123.ZIP
+	Upload moved to BBS:Conf2/Upload/WP-CHG12.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CE211.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CE111.LHA
+	Upload moved to BBS:Conf2/Upload/TRSI-YET.DMS
+	Upload moved to BBS:Conf2/Upload/TRSI-YET.NFO
+	Upload moved to BBS:Conf2/Upload/FIX-TOMB.DMS
+	Upload moved to BBS:Conf2/Upload/ENGMM130.LHA
+	Upload moved to BBS:Conf2/Upload/REPOM688.LHA
+	Upload moved to BBS:Conf2/Upload/AVALA310.LHA
+	Upload moved to BBS:Conf2/Upload/DEPSCN15.LHA
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading EX-VTATD.ZIP 13781 bytes
+	Uploading MIR-AS21.ZIP 52777284 bytes
+	Uploading HFE-TTV2.ZIP 28972 bytes
+	Uploading HF-CTPDG.ZIP 47858 bytes
+	 4 file(s), 51628k bytes, 0 minute(s). 11 second(s), 4510912 cps, 234943% efficiency.
+	Skipped NOS-0332.ZIP
+	Skipped LIDL-TFG.ZIP
+	Skipped LIDL-PEV.ZIP
+	Skipped LXT-FM11.ZIP
+	Skipped LIDL-FTP.ZIP
+	Skipped Q-IMPV2T.ZIP
+	Skipped HFE-TETR.ZIP
+	Upload moved to BBS:Conf5/Upload/EX-VTATD.ZIP
+	Upload moved to BBS:Conf5/Upload/MIR-AS21.ZIP
+	Upload moved to BBS:Conf5/Upload/HFE-TTV2.ZIP
+	Upload moved to BBS:Conf5/Upload/HF-CTPDG.ZIP
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+09-28-25 (11:57:26) MaRWic Off Normally
+**************************************************************
+09-28-25 (15:21:24) [540] Dalamar (CONNECT 19200) dRAGONLANCE
+	Telnet login address: 168-235-108-229.cloud.ramnode.com (168.235.108.229)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	**Input timed out **
+09-28-25 (15:28:18) Dalamar Off Normally
+**************************************************************
+09-29-25 (00:22:33) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bd6d8.dynamic.kabel-deutschland.de (95.91.214.216)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-29-25 (00:24:04) R/\DIOSITY! Off Normally
+**************************************************************
+09-29-25 (08:03:28) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	C64 (5) Conference Joined
+	Uploading EX-S8SPV.ZIP 72225 bytes
+	Uploading BLZ-PPV1.ZIP 20120 bytes
+	Uploading HFE-JJR1.ZIP 18793 bytes
+	Uploading BLZ-RPV1.ZIP 12415 bytes
+	 4 file(s), 120k bytes, 0 minute(s). 0 second(s), 363391 cps, 18926% efficiency.
+	Skipped EX-VTATD.ZIP
+	Skipped MIR-AS21.ZIP
+	Skipped HFE-TTV2.ZIP
+	Skipped HF-CTPDG.ZIP
+	Skipped NOS-0332.ZIP
+	Skipped LIDL-TFG.ZIP
+	Upload moved to BBS:Conf5/Upload/EX-S8SPV.ZIP
+	Upload moved to BBS:Conf5/Upload/BLZ-PPV1.ZIP
+	Upload moved to BBS:Conf5/Upload/HFE-JJR1.ZIP
+	Upload moved to BBS:Conf5/Upload/BLZ-RPV1.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading XFCEA413.ZIP 49280583 bytes
+	Uploading XFCEA412.ZIP 49987804 bytes
+	Uploading XFCEA411.ZIP 49967887 bytes
+	Uploading XFCEA410.ZIP 49989237 bytes
+	Uploading XFCEA409.ZIP 49997420 bytes
+	Uploading XFCEA408.ZIP 49971204 bytes
+	Uploading XFCEA407.ZIP 49946535 bytes
+	Uploading XFCEA406.ZIP 49973055 bytes
+	Uploading XFCEA405.ZIP 49975293 bytes
+	Uploading XFCEA404.ZIP 49989781 bytes
+	Uploading XFCEA403.ZIP 49978175 bytes
+	Uploading XFCEA402.ZIP 48187436 bytes
+	Uploading XFCEA401.ZIP 49742457 bytes
+	Uploading AMFM-SP4.ZIP 765839 bytes
+	Uploading AMFM-SP5.ZIP 763894 bytes
+	Uploading J-TT103.LHA  248408 bytes
+	Uploading J-TT103.DMS  153583 bytes
+	Uploading FIX-TS11.DMS 156285 bytes
+	Uploading AMIC3523.LHA 10960249 bytes
+	Uploading AMIA3523.LHA 11773226 bytes
+	Uploading AVALES31.LHA 12299 bytes
+	Uploading SDL33222.LHA 10337982 bytes
+	Uploading MEDVA160.LHA 4205448 bytes
+	Uploading FIX-SB11.DMS 465333 bytes
+	Uploading FIX-PFPG.DMS 450257 bytes
+	 25 file(s), 671171k bytes, 2 minute(s). 27 second(s), 4649436 cps, 242158% efficiency.
+	Skipped AVALGD31.LHA
+	Skipped AVALDE31.LHA
+	Skipped TVSB2025.LHA
+	Skipped VBCC09H3.LHA
+	Skipped TESTP661.ZIP
+	Skipped TRSI-YET.DMS
+	Skipped TRSI-YET.NFO
+	Skipped WP-CE111.LHA
+	Skipped WP-CE211.LHA
+	Skipped WP-CHG12.LHA
+	Upload moved to BBS:Conf2/Upload/XFCEA413.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA412.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA411.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA410.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA409.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA408.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA407.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA406.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA405.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA404.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA403.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA402.ZIP
+	Upload moved to BBS:Conf2/Upload/XFCEA401.ZIP
+	Upload moved to BBS:Conf2/Upload/AMFM-SP4.ZIP
+	Upload moved to BBS:Conf2/Upload/AMFM-SP5.ZIP
+	Upload moved to BBS:Conf2/Upload/J-TT103.LHA
+	Upload moved to BBS:Conf2/Upload/J-TT103.DMS
+	Upload moved to BBS:Conf2/Upload/FIX-TS11.DMS
+	Upload moved to BBS:Conf2/Upload/AMIC3523.LHA
+	Upload moved to BBS:Conf2/Upload/AMIA3523.LHA
+	Upload moved to BBS:Conf2/Upload/AVALES31.LHA
+	Upload moved to BBS:Conf2/Upload/SDL33222.LHA
+	Upload moved to BBS:Conf2/Upload/MEDVA160.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-SB11.DMS
+	Upload moved to BBS:Conf2/Upload/FIX-PFPG.DMS
+	Directory Scan with AquaScan by Aquarius
+09-29-25 (08:15:16) MaRWic Off Normally
+**************************************************************
+09-29-25 (12:12:21) [388] bananator (CONNECT 19200) StrangePlanet
+	Telnet login address: 85-76-73-117-nat.elisa-mobile.fi (85.76.73.117)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading DM-GTH10.LHA 38705 bytes
+	 1 file(s), 37k bytes, 0 minute(s). 0 second(s), 241906 cps, 12599% efficiency.
+	Skipped J-TT103.LHA
+	Skipped AMFM-SP5.ZIP
+	Skipped AMFM-SP4.ZIP
+	Skipped XFCEA401.ZIP
+	Skipped XFCEA402.ZIP
+	Skipped XFCEA403.ZIP
+	Skipped XFCEA404.ZIP
+	Skipped XFCEA405.ZIP
+	Skipped XFCEA406.ZIP
+	Skipped XFCEA407.ZIP
+	Skipped XFCEA408.ZIP
+	Skipped XFCEA409.ZIP
+	Skipped XFCEA410.ZIP
+	Skipped XFCEA411.ZIP
+	Skipped XFCEA412.ZIP
+	Skipped XFCEA413.ZIP
+	Skipped MFX-STLO.DMS
+	Skipped FIX-PFPG.DMS
+	Skipped FIX-SB11.DMS
+	Skipped FIX-TS11.DMS
+	Skipped J-TT103.DMS
+	Upload moved to BBS:Conf2/Upload/DM-GTH10.LHA
+09-29-25 (12:13:18) bananator Off Normally
+	**Input timed out **
+**************************************************************
+09-29-25 (18:48:39) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-29-25 (18:52:31) KayPirinha Off Normally
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+09-29-25 (22:15:22) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-182-193-32.hosted-by-worldstream.net (185.182.193.32)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-29-25 (22:18:12) RaGe Off Normally
+**************************************************************
+09-30-25 (05:50:47) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-30-25 (05:57:20) Ransom1122 Off Loss Carrier
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+09-30-25 (17:07:08) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading P-EVDM10.LHA 276728 bytes
+	Uploading VAMI44B4.ZIP 182834239 bytes
+	Uploading ILL-SB11.ZIP 447281 bytes
+	Uploading 4FFMPG80.LHA 59014894 bytes
+	 4 file(s), 236887k bytes, 0 minute(s). 51 second(s), 4745171 cps, 247144% efficiency.
+	Skipped DM-GTH10.LHA
+	Skipped FIX-PFPG.DMS
+	Skipped FIX-SB11.DMS
+	Skipped MEDVA160.LHA
+	Skipped SDL33222.LHA
+	Skipped AVALES31.LHA
+	Skipped AMIA3523.LHA
+	Skipped AMIC3523.LHA
+	Skipped FIX-TS11.DMS
+	Skipped J-TT103.DMS
+	Skipped J-TT103.LHA
+	Skipped AMFM-SP5.ZIP
+	Skipped AMFM-SP4.ZIP
+	Skipped XFCEA401.ZIP
+	Skipped XFCEA402.ZIP
+	Skipped XFCEA403.ZIP
+	Skipped XFCEA404.ZIP
+	Skipped XFCEA405.ZIP
+	Skipped XFCEA406.ZIP
+	Skipped XFCEA407.ZIP
+	Skipped XFCEA408.ZIP
+	Skipped XFCEA409.ZIP
+	Skipped XFCEA410.ZIP
+	Skipped XFCEA411.ZIP
+	Skipped XFCEA412.ZIP
+	Skipped XFCEA413.ZIP
+	Skipped WP-CHG12.LHA
+	Skipped WP-CE211.LHA
+	Skipped WP-CE111.LHA
+	Skipped TRSI-YET.DMS
+	Skipped TRSI-YET.NFO
+	Skipped TESTP661.ZIP
+	Upload moved to BBS:Conf2/Upload/P-EVDM10.LHA
+	Upload moved to BBS:Conf2/Upload/VAMI44B4.ZIP
+	Upload moved to BBS:Conf2/Upload/ILL-SB11.ZIP
+	Upload moved to BBS:Conf2/Upload/4FFMPG80.LHA
+09-30-25 (17:09:55) MaRWic Off Normally
+	**Input timed out **
+**************************************************************
+09-30-25 (19:26:58) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-30-25 (19:27:30) KayPirinha Off Normally
+**************************************************************
+09-30-25 (21:34:01) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf633.dynamic.kabel-deutschland.de (95.91.246.51)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+09-30-25 (21:34:37) R/\DIOSITY! Off Normally
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+09-30-25 (23:09:29) NEW [541] Lex Luthor (CONNECT 19200) USA,usa
+	Telnet login address: 81-4-100-99.cloud.ramnode.com (81.4.100.99)
+	Conference 2: Amiga Warez! Auto-ReJoined
+**************************************************************
+10-01-25 (20:34:50) [423] RaGe (CONNECT 19200) UK
+	Telnet login address:  (185.107.56.80)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading CONLACO1.DMS 728271 bytes
+	Uploading CONLACO2.DMS 722371 bytes
+	Uploading AVALFR31.LHA 8266 bytes
+	Uploading VOID-FBT.ZIP 4821 bytes
+	Uploading AMIDA136.LHA 673563 bytes
+	Uploading AMIDR136.LHA 674014 bytes
+	Uploading TMSCLR32.LHA 297189 bytes
+	 7 file(s), 3035k bytes, 0 minute(s). 3 second(s), 784973 cps, 40884% efficiency.
+	Upload moved to BBS:Conf2/Upload/CONLACO1.DMS
+	Upload moved to BBS:Conf2/Upload/CONLACO2.DMS
+	Upload moved to BBS:Conf2/Upload/AVALFR31.LHA
+	Upload moved to BBS:Conf2/Upload/VOID-FBT.ZIP
+	Upload moved to BBS:Conf2/Upload/AMIDA136.LHA
+	Upload moved to BBS:Conf2/Upload/AMIDR136.LHA
+	Upload moved to BBS:Conf2/Upload/TMSCLR32.LHA
+	Directory Scan with AquaScan by Aquarius
+10-01-25 (20:38:46) RaGe Off Normally
+**************************************************************
+10-01-25 (22:59:43) [540] Dalamar (CONNECT 19200) dRAGONLANCE
+	Telnet login address: 168-235-108-229.cloud.ramnode.com (168.235.108.229)
+10-01-25 (23:09:07) Dalamar Off Loss Carrier
+**************************************************************
+10-01-25 (23:49:54) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf65d.dynamic.kabel-deutschland.de (95.91.246.93)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-01-25 (23:50:20) R/\DIOSITY! Off Normally
+**************************************************************
+10-02-25 (03:01:01) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-02-25 (03:08:53) Ransom1122 Off Loss Carrier
+	**Input timed out **
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+10-02-25 (19:00:29) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 212-8-243-71.hosted-by-worldstream.net (212.8.243.71)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading -O-DCDPF.LHA 18847 bytes
+	Uploading LX6170.ZIP   64792525 bytes
+	Uploading AMSL4524.LHA 3830290 bytes
+	Uploading AMSL3524.LHA 4231284 bytes
+	Uploading LTX2182.LHA  2365698 bytes
+	Uploading FIX-YT11.DMS 777736 bytes
+	 6 file(s), 74234k bytes, 1 minute(s). 12 second(s), 1044755 cps, 54414% efficiency.
+	Upload moved to BBS:Conf2/Upload/-O-DCDPF.LHA
+	Upload moved to BBS:Conf2/Upload/LX6170.ZIP
+	Upload moved to BBS:Conf2/Upload/AMSL4524.LHA
+	Upload moved to BBS:Conf2/Upload/AMSL3524.LHA
+	Upload moved to BBS:Conf2/Upload/LTX2182.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-YT11.DMS
+10-02-25 (19:04:12) RaGe Off Normally
+**************************************************************
+10-02-25 (21:28:02) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bd6e0.dynamic.kabel-deutschland.de (95.91.214.224)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-02-25 (21:28:30) R/\DIOSITY! Off Normally
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+10-03-25 (08:09:12) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-03-25 (08:11:59) KayPirinha Off Normally
+**************************************************************
+10-03-25 (10:48:36) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.249.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-03-25 (10:57:55) Ransom1122 Off Loss Carrier
+	**Input timed out **
+**************************************************************
+10-03-25 (18:11:24) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: uddi-31-b2-v4wan-166601-cust2577.vm12.cable.virginm.net (82.34.74.18)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading DM-BRT30.LHA 52564 bytes
+	Uploading DM-AS101.LHA 52062 bytes
+	Uploading -O-LSN10.LHA 79276 bytes
+	 3 file(s), 179k bytes, 0 minute(s). 0 second(s), 383129 cps, 19954% efficiency.
+	Upload moved to BBS:Conf2/Upload/DM-BRT30.LHA
+	Upload moved to BBS:Conf2/Upload/DM-AS101.LHA
+	Upload moved to BBS:Conf2/Upload/-O-LSN10.LHA
+10-03-25 (18:11:58) RaGe Off Normally
+**************************************************************
+10-04-25 (05:29:37) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-04-25 (05:35:19) Ransom1122 Off Loss Carrier
+**************************************************************
+10-04-25 (07:34:00) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-04-25 (07:35:38) KayPirinha Off Normally
+	**Input timed out **
+**************************************************************
+10-04-25 (09:25:39) [224] Shocker (CONNECT 19200) HiGH VoLTAge
+	Telnet login address:  (185.9.7.69)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading INTBS151.LHA 794191 bytes
+	Uploading INTCL140.LHA 284784 bytes
+	Uploading DAYNPT13.LHA 8207 bytes
+	Uploading XASH3D10.LHA 4803200 bytes
+	Uploading TRSIYETU.DMS 761110 bytes
+	Uploading TRSIYETU.NFO 16130 bytes
+	Uploading AV300956.ZIP 45103204 bytes
+	Uploading AV300955.ZIP 49722239 bytes
+	Uploading AV300954.ZIP 49975348 bytes
+	Uploading AV300953.ZIP 47555789 bytes
+	Uploading AV300952.ZIP 49973959 bytes
+	Uploading AV300951.ZIP 49503316 bytes
+	Uploading AV300950.ZIP 49223922 bytes
+	Uploading AV300949.ZIP 49669417 bytes
+	Uploading AV300948.ZIP 49844159 bytes
+	Uploading AV300947.ZIP 49831152 bytes
+	Uploading AV300946.ZIP 49247506 bytes
+	Uploading AV300945.ZIP 49615168 bytes
+	Uploading AV300944.ZIP 49753872 bytes
+	Uploading AV300943.ZIP 49989474 bytes
+	Uploading AV300942.ZIP 50002972 bytes
+	Uploading AV300941.ZIP 49817740 bytes
+	Uploading AV300940.ZIP 49456172 bytes
+	Uploading AV300939.ZIP 49979092 bytes
+	Uploading AV300938.ZIP 49966595 bytes
+	Uploading AV300937.ZIP 49873586 bytes
+	Uploading AV300936.ZIP 49893198 bytes
+	Uploading AV300935.ZIP 49921255 bytes
+	Uploading AV300934.ZIP 49681212 bytes
+	Uploading AV300933.ZIP 49027776 bytes
+	Uploading AV300932.ZIP 42212706 bytes
+	Uploading AV300931.ZIP 47301031 bytes
+	Uploading AV300930.ZIP 47249661 bytes
+	Uploading AV300929.ZIP 49866356 bytes
+	Uploading AV300928.ZIP 47560138 bytes
+	Uploading AV300927.ZIP 49198447 bytes
+	Uploading AV300926.ZIP 49306388 bytes
+	Uploading AV300925.ZIP 49171992 bytes
+	Uploading AV300924.ZIP 49355359 bytes
+	Uploading AV300923.ZIP 47525653 bytes
+	Uploading AV300922.ZIP 49176263 bytes
+	Uploading AV300921.ZIP 48375927 bytes
+	Uploading AV300920.ZIP 49263984 bytes
+	Uploading AV300919.ZIP 49990560 bytes
+	Uploading AV300918.ZIP 48626196 bytes
+	Uploading AV300917.ZIP 49333341 bytes
+	Uploading AV300916.ZIP 48827777 bytes
+	Uploading AV300915.ZIP 46288145 bytes
+	Uploading AV300914.ZIP 49587089 bytes
+	Uploading AV300913.ZIP 49445113 bytes
+	Uploading AV300912.ZIP 49684946 bytes
+	Uploading AV300911.ZIP 49614293 bytes
+	Uploading AV300910.ZIP 49741044 bytes
+	Uploading AV300909.ZIP 49667807 bytes
+	Uploading AV300908.ZIP 48231332 bytes
+	Uploading AV300907.ZIP 48822683 bytes
+	Uploading AV300906.ZIP 49820225 bytes
+	Uploading AV300905.ZIP 49715217 bytes
+	Uploading AV300904.ZIP 49668445 bytes
+	Uploading AV300903.ZIP 50003799 bytes
+	Uploading AV300902.ZIP 49990687 bytes
+	Uploading AV300901.ZIP 49887490 bytes
+	 62 file(s), 2691216k bytes, 16 minute(s). 35 second(s), 2769264 cps, 144232% efficiency.
+	Skipped LX6170.ZIP
+	Skipped AMSL3524.LHA
+	Skipped AMSL4524.LHA
+	Skipped LTX2182.LHA
+	Skipped DM-AS101.LHA
+	Skipped DM-BRT30.LHA
+	Skipped -O-LSN10.LHA
+	Skipped FIX-YT11.DMS
+	Skipped -O-DCDPF.LHA
+	Skipped CONLACO1.DMS
+	Skipped CONLACO2.DMS
+	Skipped AMIDR136.LHA
+	Skipped TMSCLR32.LHA
+	Skipped AMIDA136.LHA
+	Skipped AVALFR31.LHA
+	Skipped VOID-FBT.ZIP
+	Upload moved to BBS:Conf2/Upload/INTBS151.LHA
+	Upload moved to BBS:Conf2/Upload/INTCL140.LHA
+	Upload moved to BBS:Conf2/Upload/DAYNPT13.LHA
+	Upload moved to BBS:Conf2/Upload/XASH3D10.LHA
+	Upload moved to BBS:Conf2/Upload/TRSIYETU.DMS
+	Upload moved to BBS:Conf2/Upload/TRSIYETU.NFO
+	Upload moved to BBS:Conf2/Upload/AV300956.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300955.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300954.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300953.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300952.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300951.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300950.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300949.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300948.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300947.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300946.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300945.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300944.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300943.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300942.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300941.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300940.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300939.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300938.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300937.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300936.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300935.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300934.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300933.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300932.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300931.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300930.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300929.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300928.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300927.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300926.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300925.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300924.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300923.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300922.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300921.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300920.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300919.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300918.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300917.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300916.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300915.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300914.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300913.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300912.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300911.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300910.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300909.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300908.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300907.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300906.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300905.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300904.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300903.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300902.ZIP
+	Upload moved to BBS:Conf2/Upload/AV300901.ZIP
+	**Input timed out **
+10-04-25 (10:05:52) Shocker Off Normally
+**************************************************************
+10-04-25 (12:17:14) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: dynamic-077-011-230-043.77.11.pool.telefonica.de (77.11.230.43)
+	FTP Command >: SYST
+	FTP Command >: TYPE A
+	FTP Command >: REST 1
+	FTP Command >: REST 0
+	FTP Command >: FEAT
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	FTP Command >: CWD 001-Amiga Warez!
+	Amiga Warez! (2) Conference Joined
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	Directory Scan via ftp
+	FTP Command >: TYPE I
+	FTP Command >: SIZE AMIM3523.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR AMIM3523.LHA
+	Uploading AMIM3523.LHA 11019541 bytes
+	 1 file(s), 10761k bytes, 0 minute(s). 10 second(s), 1078232 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/AMIM3523.LHA
+	FTP Command >: MDTM 20251004160536 AMIM3523.LHA
+	FTP Command >: SIZE DAYNPT13.LHA
+	FTP Command >: SIZE DAYNPT13(1).LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR DAYNPT13(1).LHA
+	Upload Failed..
+	Invalid filename DAYNPT13(1).LHA
+	FTP Command >: SIZE INTBS151.LHA
+	FTP Command >: SIZE INTBS151(1).LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR INTBS151(1).LHA
+	Upload Failed..
+	Invalid filename INTBS151(1).LHA
+	FTP Command >: SIZE INTCL140.LHA
+	FTP Command >: SIZE INTCL140(1).LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR INTCL140(1).LHA
+	Upload Failed..
+	Invalid filename INTCL140(1).LHA
+	FTP Command >: SIZE J-KCV101.DMS
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR J-KCV101.DMS
+	Uploading J-KCV101.DMS 283644 bytes
+	 1 file(s), 276k bytes, 0 minute(s). 0 second(s), 644645 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/J-KCV101.DMS
+	FTP Command >: MDTM 20251004113603 J-KCV101.DMS
+	FTP Command >: SIZE J-KCV101.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR J-KCV101.LHA
+	Uploading J-KCV101.LHA 1117669 bytes
+	 1 file(s), 1091k bytes, 0 minute(s). 1 second(s), 1117669 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/J-KCV101.LHA
+	FTP Command >: MDTM 20251004113527 J-KCV101.LHA
+	FTP Command >: SIZE LX6170.ZIP
+	FTP Command >: SIZE LX6170(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LX6170(1).ZIP
+	Upload Failed..
+	Invalid filename LX6170(1).ZIP
+	FTP Command >: SIZE ODUNR926.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR ODUNR926.LHA
+	Uploading ODUNR926.LHA 396859 bytes
+	 1 file(s), 387k bytes, 0 minute(s). 0 second(s), 640095 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/ODUNR926.LHA
+	FTP Command >: MDTM 20251004160906 ODUNR926.LHA
+	FTP Command >: SIZE SBARWR34.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR SBARWR34.LHA
+	Uploading SBARWR34.LHA 408350 bytes
+	 1 file(s), 398k bytes, 0 minute(s). 0 second(s), 1074605 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/SBARWR34.LHA
+	FTP Command >: MDTM 20251004160733 SBARWR34.LHA
+	FTP Command >: SIZE SLSDK524.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR SLSDK524.LHA
+	Uploading SLSDK524.LHA 2590411 bytes
+	 1 file(s), 2529k bytes, 0 minute(s). 2 second(s), 1070417 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/SLSDK524.LHA
+	FTP Command >: MDTM 20251004160450 SLSDK524.LHA
+	FTP Command >: TYPE A
+	FTP Command >: SIZE TRSIYETU.NFO
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR TRSIYETU.NFO
+	Upload Failed..
+	Skipped TRSIYETU.NFO
+	FTP Command >: TYPE I
+	FTP Command >: SIZE XASH3D10.LHA
+	FTP Command >: SIZE XASH3D10(1).LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR XASH3D10(1).LHA
+	Upload Failed..
+	Invalid filename XASH3D10(1).LHA
+	FTP Command >: SIZE XLINK13.LHA
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR XLINK13.LHA
+	Uploading XLINK13.LHA 1090033 bytes
+	 1 file(s), 1064k bytes, 0 minute(s). 0 second(s), 1397478 cps, N/A % efficiency.
+	Upload moved to BBS:Conf2/Upload/XLINK13.LHA
+	FTP Command >: MDTM 20251004160647 XLINK13.LHA
+	FTP Command >: TYPE A
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	Directory Scan via ftp
+	FTP Command >: CDUP
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	FTP Command >: CWD 002-C64
+	C64 (5) Conference Joined
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	Directory Scan via ftp
+	FTP Command >: TYPE I
+	FTP Command >: SIZE [EX]SVL4.ZIP
+	FTP Command >: SIZE [EX]SVL4(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR [EX]SVL4(1).ZIP
+	Upload Failed..
+	Invalid filename [EX]SVL4(1).ZIP
+	FTP Command >: SIZE BLZ-4OMP.ZIP
+	FTP Command >: SIZE BLZ-4OMP(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR BLZ-4OMP(1).ZIP
+	Upload Failed..
+	Invalid filename BLZ-4OMP(1).ZIP
+	FTP Command >: SIZE BLZ-GV22.ZIP
+	FTP Command >: SIZE BLZ-GV22(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR BLZ-GV22(1).ZIP
+	Upload Failed..
+	Invalid filename BLZ-GV22(1).ZIP
+	FTP Command >: SIZE CFN-HDS9.ZIP
+	FTP Command >: SIZE CFN-HDS9(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR CFN-HDS9(1).ZIP
+	Upload Failed..
+	Invalid filename CFN-HDS9(1).ZIP
+	FTP Command >: SIZE EX-UMIB4.ZIP
+	FTP Command >: SIZE EX-UMIB4(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR EX-UMIB4(1).ZIP
+	Upload Failed..
+	Invalid filename EX-UMIB4(1).ZIP
+	FTP Command >: SIZE HFE-TETR.ZIP
+	FTP Command >: SIZE HFE-TETR(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR HFE-TETR(1).ZIP
+	Upload Failed..
+	Invalid filename HFE-TETR(1).ZIP
+	FTP Command >: SIZE LIDL-FTP.ZIP
+	FTP Command >: SIZE LIDL-FTP(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LIDL-FTP(1).ZIP
+	Upload Failed..
+	Invalid filename LIDL-FTP(1).ZIP
+	FTP Command >: SIZE LIDL-PEV.ZIP
+	FTP Command >: SIZE LIDL-PEV(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LIDL-PEV(1).ZIP
+	Upload Failed..
+	Invalid filename LIDL-PEV(1).ZIP
+	FTP Command >: SIZE LIDL-TFG.ZIP
+	FTP Command >: SIZE LIDL-TFG(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LIDL-TFG(1).ZIP
+	Upload Failed..
+	Invalid filename LIDL-TFG(1).ZIP
+	FTP Command >: SIZE LXONS-IJ.ZIP
+	FTP Command >: SIZE LXONS-IJ(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LXONS-IJ(1).ZIP
+	Upload Failed..
+	Invalid filename LXONS-IJ(1).ZIP
+	FTP Command >: SIZE LXT-BFFD.ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LXT-BFFD.ZIP
+	Uploading LXT-BFFD.ZIP 46805 bytes
+	 1 file(s), 45k bytes, 0 minute(s). 0 second(s), 390041 cps, N/A % efficiency.
+	Upload moved to BBS:Conf5/Upload/LXT-BFFD.ZIP
+	FTP Command >: MDTM 20251004115521 LXT-BFFD.ZIP
+	FTP Command >: SIZE LXT-FM11.ZIP
+	FTP Command >: SIZE LXT-FM11(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LXT-FM11(1).ZIP
+	Upload Failed..
+	Invalid filename LXT-FM11(1).ZIP
+	FTP Command >: SIZE LXT-HB11.ZIP
+	FTP Command >: SIZE LXT-HB11(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LXT-HB11(1).ZIP
+	Upload Failed..
+	Invalid filename LXT-HB11(1).ZIP
+	FTP Command >: SIZE LXT-TT3D.ZIP
+	FTP Command >: SIZE LXT-TT3D(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR LXT-TT3D(1).ZIP
+	Upload Failed..
+	Invalid filename LXT-TT3D(1).ZIP
+	FTP Command >: SIZE MIR-AS21.ZIP
+	FTP Command >: SIZE MIR-AS21(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR MIR-AS21(1).ZIP
+	Upload Failed..
+	Invalid filename MIR-AS21(1).ZIP
+	FTP Command >: SIZE MSA-8WPV.ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR MSA-8WPV.ZIP
+	Uploading MSA-8WPV.ZIP 12014 bytes
+	 1 file(s), 11k bytes, 0 minute(s). 0 second(s), 600700 cps, N/A % efficiency.
+	Upload moved to BBS:Conf5/Upload/MSA-8WPV.ZIP
+	FTP Command >: MDTM 20251004115251 MSA-8WPV.ZIP
+	FTP Command >: SIZE MSA-DRP2.ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR MSA-DRP2.ZIP
+	Uploading MSA-DRP2.ZIP 31627 bytes
+	 1 file(s), 30k bytes, 0 minute(s). 0 second(s), 395337 cps, N/A % efficiency.
+	Upload moved to BBS:Conf5/Upload/MSA-DRP2.ZIP
+	FTP Command >: MDTM 20251004115407 MSA-DRP2.ZIP
+	FTP Command >: SIZE NOS-0332.ZIP
+	FTP Command >: SIZE NOS-0332(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR NOS-0332(1).ZIP
+	Upload Failed..
+	Invalid filename NOS-0332(1).ZIP
+	FTP Command >: SIZE Q-IMPV2T.ZIP
+	FTP Command >: SIZE Q-IMPV2T(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR Q-IMPV2T(1).ZIP
+	Upload Failed..
+	Invalid filename Q-IMPV2T(1).ZIP
+	FTP Command >: SIZE ROLE-AMC.ZIP
+	FTP Command >: SIZE ROLE-AMC(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR ROLE-AMC(1).ZIP
+	Upload Failed..
+	Invalid filename ROLE-AMC(1).ZIP
+	FTP Command >: SIZE STP-FB25.ZIP
+	FTP Command >: SIZE STP-FB25(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR STP-FB25(1).ZIP
+	Upload Failed..
+	Invalid filename STP-FB25(1).ZIP
+	FTP Command >: SIZE STP-MS25.ZIP
+	FTP Command >: SIZE STP-MS25(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR STP-MS25(1).ZIP
+	Upload Failed..
+	Invalid filename STP-MS25(1).ZIP
+	FTP Command >: SIZE VCC-BM14.ZIP
+	FTP Command >: SIZE VCC-BM14(1).ZIP
+	FTP Command >: PASV
+	FTP Command >: REST 0
+	FTP Command >: STOR VCC-BM14(1).ZIP
+	Upload Failed..
+	Invalid filename VCC-BM14(1).ZIP
+	FTP Command >: TYPE A
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	Directory Scan via ftp
+10-04-25 (12:27:03) diNO Off Normally
+**************************************************************
+10-04-25 (14:50:46) [43] Phantasm (CONNECT 19200) * R E T I R E D *
+	Telnet login address:  (20.121.15.153)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading evo391.lha   731105 bytes
+	 1 file(s), 713k bytes, 0 minute(s). 2 second(s), 332320 cps, 17308% efficiency.
+	Upload moved to BBS:Conf2/Upload/EVO391.LHA
+10-04-25 (14:51:46) Phantasm Off Normally
+**************************************************************
+10-04-25 (16:18:13) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Upload Failed..
+	Skipped LX6170.ZIP
+	Skipped AMSL4524.LHA
+	Skipped AMSL3524.LHA
+	Skipped LTX2182.LHA
+	Skipped FIX-YT11.DMS
+	Skipped DM-BRT30.LHA
+	Skipped DM-AS101.LHA
+	Skipped -O-LSN10.LHA
+	Skipped J-KCV101.LHA
+	Skipped J-KCV101.DMS
+	Skipped SLSDK524.LHA
+	Skipped AMIM3523.LHA
+	Skipped XLINK13.LHA
+	Skipped SBARWR34.LHA
+	Skipped ODUNR926.LHA
+	Skipped INTCL140.LHA
+	Skipped INTBS151.LHA
+	Skipped DAYNPT13.LHA
+	Skipped XASH3D10.LHA
+	Skipped TRSIYETU.NFO
+	Skipped TRSIYETU.DMS
+	Skipped EVO391.LHA
+	Skipped -O-DCDPF.LHA
+	Skipped CONLACO1.DMS
+	Skipped CONLACO2.DMS
+	Skipped AV300901.ZIP
+	Skipped AV300902.ZIP
+	Skipped AV300903.ZIP
+	Skipped AV300904.ZIP
+	Skipped AV300905.ZIP
+	Skipped AV300906.ZIP
+	Skipped AV300907.ZIP
+	Skipped AV300908.ZIP
+	Skipped AV300909.ZIP
+	Skipped AV300910.ZIP
+	Skipped AV300911.ZIP
+	Skipped AV300912.ZIP
+	Skipped AV300913.ZIP
+	Skipped AV300914.ZIP
+	Skipped AV300915.ZIP
+	Skipped AV300916.ZIP
+	Skipped AV300917.ZIP
+	Skipped AV300918.ZIP
+	Skipped AV300919.ZIP
+	Skipped AV300920.ZIP
+	Skipped AV300921.ZIP
+	Skipped AV300922.ZIP
+	Skipped AV300923.ZIP
+	Skipped AV300924.ZIP
+	Skipped AV300925.ZIP
+	Directory Scan with AquaScan by Aquarius
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+10-04-25 (16:19:50) MaRWic Off Normally
+**************************************************************
+10-04-25 (18:48:51) [423] RaGe (CONNECT 19200) UK
+	Telnet login address:  (185.98.171.246)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Upload Failed..
+	Skipped AMIM3523.LHA
+	Skipped DAYNPT13.LHA
+	Skipped INTBS151.LHA
+	Skipped INTCL140.LHA
+	Skipped J-KCV101.DMS
+	Skipped J-KCV101.LHA
+	Skipped ODUNR926.LHA
+	Skipped SBARWR34.LHA
+	Skipped SLSDK524.LHA
+	Skipped TRSIYETU.DMS
+	Skipped TRSIYETU.NFO
+	Skipped XASH3D10.LHA
+	Skipped XLINK13.LHA
+	Skipped EVO391.LHA
+10-04-25 (18:49:34) RaGe Off Normally
+**************************************************************
+10-04-25 (19:24:45) [355] strawa (CONNECT 19200) .oO NiGHTBITE BBS Oo.
+	Telnet login address:  (89.216.101.71)
+	Conference 7: Chip Tunes Auto-ReJoined
+	Chip Tunes (7) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf7/Upload/PURPLESH.MOD 13232 bytes
+	Downloading BBS2:Conf7/Upload/CLARKE2.MOD 9804 bytes
+	Downloading BBS2:Conf7/Upload/MATKAMIE.MOD 9456 bytes
+	Downloading BBS2:Conf7/Upload/PELIFIX.MOD 14814 bytes
+	Downloading BBS2:Conf7/Upload/OVL-MP1.DMS 468989 bytes
+	Downloading BBS2:Conf7/Upload/A-FRE.LHA 316211 bytes
+	Downloading BBS2:Conf7/Upload/RYL_PT01.DMS 484879 bytes
+	Downloading BBS2:Conf7/Upload/RYL_PT02.DMS 563722 bytes
+	Downloading BBS2:Conf7/Upload/SPN-SD5A.DMS 252032 bytes
+	Downloading BBS2:Conf7/Upload/SPN-SD5B.DMS 592966 bytes
+	Downloading BBS2:Conf7/Upload/IDODISK1.LHA 679110 bytes
+	Downloading BBS2:Conf7/Upload/IDODISK2.LHA 728010 bytes
+	Downloading BBS2:Conf7/Upload/IBR-COP1.DMS 827757 bytes
+	Downloading BBS2:Conf7/Upload/IBR-COP2.DMS 779837 bytes
+	Downloading BBS2:Conf7/Upload/IBR-COP3.DMS 285972 bytes
+	Downloading BBS2:Conf7/Upload/PTQ-SM09.LHA 220908 bytes
+	Downloading BBS2:Conf7/Upload/PTQ-SSM5.LHA 326130 bytes
+	Downloading BBS2:Conf7/Upload/PTQ-SM25.LHA 145914 bytes
+	Downloading BBS2:Conf7/Upload/PTQ-SM21.LHA 60530 bytes
+	Downloading BBS2:Conf7/Upload/ATW-BDN1.LHA 878083 bytes
+	Downloading BBS2:Conf7/Upload/ATW-BDN2.LHA 882804 bytes
+	Downloading BBS2:Conf7/Upload/CAT_CHIP.LHA 111006 bytes
+	Downloading BBS2:Conf7/Upload/OZ-BONZ1.DMS 262075 bytes
+	Downloading BBS2:Conf7/Upload/OZ-BONZ2.DMS 591744 bytes
+	Downloading BBS2:Conf7/Upload/OZ-SWTH.DMS 479705 bytes
+	Downloading BBS2:Conf7/Upload/RAINBLUE.LHA 300198 bytes
+	Downloading BBS2:Conf7/Upload/S8-CMP01.LHA 585955 bytes
+	Downloading BBS2:Conf7/Upload/WASTLA.DMS 387675 bytes
+	Downloading BBS2:Conf7/Upload/WASTLB.DMS 393812 bytes
+	Downloading BBS2:Conf7/Upload/LSD_CT02.DMS 514328 bytes
+	Downloading BBS2:Conf7/Upload/PL-NSE.DMS 254213 bytes
+	Downloading BBS2:Conf7/Upload/TBH-HHT3.DMS 751609 bytes
+	Downloading BBS2:Conf7/Upload/CP-C64M3.LHA 420730 bytes
+	Downloading BBS2:Conf7/Upload/OTL-MO1.DMS 832157 bytes
+	Downloading BBS2:Conf7/Upload/OPS-SID1.LHA 134081 bytes
+	Downloading BBS2:Conf7/Upload/TBH-HHT2.DMS 832466 bytes
+	Downloading BBS2:Conf7/Upload/SID01.LHA 318332 bytes
+	Downloading BBS2:Conf7/Upload/SID02.LHA 373318 bytes
+	Downloading BBS2:Conf7/Upload/SID03.LHA 431877 bytes
+	Downloading BBS2:Conf7/Upload/SID04.LHA 393506 bytes
+	Downloading BBS2:Conf7/Upload/SID05.LHA 360875 bytes
+	Downloading BBS2:Conf7/Upload/SID06.LHA 375466 bytes
+	Downloading BBS2:Conf7/Upload/SID07.LHA 445127 bytes
+	Downloading BBS2:Conf7/Upload/SID08.LHA 396745 bytes
+	Downloading BBS2:Conf7/Upload/SID09.LHA 375210 bytes
+	Downloading BBS2:Conf7/Upload/SID10.LHA 473113 bytes
+	Downloading BBS2:Conf7/Upload/SID11.LHA 400863 bytes
+	Downloading BBS2:Conf7/Upload/SID12.LHA 312799 bytes
+	Downloading BBS2:Conf7/Upload/SID13.LHA 341457 bytes
+	Downloading BBS2:Conf7/Upload/SID14.LHA 283387 bytes
+	Downloading BBS2:Conf7/Upload/SID15.LHA 353839 bytes
+	Downloading BBS2:Conf7/Upload/SIDINDEX.LHA 91085 bytes
+	Downloading BBS2:Conf7/Upload/LACER.LHA 341815 bytes
+	Downloading BBS2:Conf7/Upload/OVL-HYPA.LHA 713962 bytes
+	Downloading BBS2:Conf7/Upload/OVL-SMRF.LHA 411705 bytes
+	Downloading BBS2:Conf7/Upload/OVL-STRT.LHA 390623 bytes
+	Downloading BBS2:Conf7/Upload/RAMP51.LHA 88401 bytes
+	Downloading BBS2:Conf7/Upload/RAMP52.LHA 193563 bytes
+	Downloading BBS2:Conf7/Upload/RAMP53.LHA 170804 bytes
+	Downloading BBS2:Conf7/Upload/TRSI_SHV.LHA 316160 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD101.ZIP 9219679 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD102.ZIP 11044730 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD103.ZIP 10472841 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD104.ZIP 9855881 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD105.ZIP 18604137 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD106.ZIP 11855224 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD107.ZIP 10232505 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD108.ZIP 9482391 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD109.ZIP 17394630 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD201.ZIP 16983065 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD202.ZIP 10279946 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD203.ZIP 11143475 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD204.ZIP 11620088 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD205.ZIP 9075724 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD206.ZIP 10787133 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD207.ZIP 9932382 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD208.ZIP 11712567 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD209.ZIP 12444574 bytes
+	Downloading BBS2:Conf7/Upload/CH-CD210.ZIP 15104923 bytes
+	Downloading BBS2:Conf7/Upload/COVER&CD.ZIP 12919068 bytes
+	Downloading BBS2:Conf7/Upload/LOS-0UNO.DMS 779577 bytes
+	Downloading BBS2:Conf7/Upload/LOS-1DOS.DMS 741668 bytes
+	Downloading BBS2:Conf7/Upload/NOVA-CH.LZX 414147 bytes
+	Downloading BBS2:Conf7/Upload/LIFE2.LHA 122558 bytes
+	Downloading BBS2:Conf7/Upload/RYL-PT01.DMS 483888 bytes
+	Downloading BBS2:Conf7/Upload/RYL-PT02.DMS 562731 bytes
+	Downloading BBS2:Conf7/Upload/CB4!HYMN.LZX 252367 bytes
+	Downloading BBS2:Conf7/Upload/BLINDF.LHA 146279 bytes
+	Downloading BBS2:Conf7/Upload/DCS-FS02.LHA 34665 bytes
+	Downloading BBS2:Conf7/Upload/DCS-FS03.LHA 25800 bytes
+	Downloading BBS2:Conf7/Upload/SWEETLY.LHA 756292 bytes
+	Downloading BBS2:Conf7/Upload/TCHERNOB.LHA 264525 bytes
+	Downloading BBS2:Conf7/Upload/UP-MEGA1.LHA 21507140 bytes
+	 93 files, 283206k bytes, 3 minutes 31 seconds 1371304 cps, 71422% efficiency at 19200
+10-04-25 (19:31:03) strawa Off Normally
+**************************************************************
+10-04-25 (19:43:31) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Requests (8) Conference Joined
+	Chip Tunes (7) Conference Joined
+	Requests (8) Conference Joined
+10-04-25 (19:45:13) R/\DIOSITY! Off Normally
+**************************************************************
+10-04-25 (20:52:07) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	ADF Area (9) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-04-25 (20:52:57) R/\DIOSITY Off Normally
+**************************************************************
+10-04-25 (22:18:06) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 9: ADF Area Auto-ReJoined
+	Demo Dungeon (11) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf11/Upload/FLEX-NET.LHA 7102610 bytes
+	 1 files, 6936k bytes, 0 minutes 18 seconds 375799 cps, 19572% efficiency at 19200
+10-04-25 (22:19:48) R/\DIOSITY Off Normally
+**************************************************************
+10-05-25 (00:42:30) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 8: Requests Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Demo Dungeon (11) Conference Joined
+	Requests (8) Conference Joined
+10-05-25 (00:45:33) R/\DIOSITY! Off Normally
+**************************************************************
+10-05-25 (04:20:01) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (04:29:02) Ransom1122 Off Loss Carrier
+**************************************************************
+10-05-25 (04:43:46) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (04:45:53) KayPirinha Off Normally
+**************************************************************
+10-05-25 (10:06:58) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (10:16:32) Ransom1122 Off Loss Carrier
+**************************************************************
+10-05-25 (12:03:03) [277] yop (CONNECT 19200) shRiMPS dESiGn
+	Telnet login address: dynamic-002-243-178-242.2.243.pool.telefonica.de (2.243.178.242)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	ASCII & ANSI (10) Conference Joined
+	Uploading shd-dl25.txt 38784 bytes
+	 1 file(s), 37k bytes, 0 minute(s). 0 second(s), 277028 cps, 14428% efficiency.
+	CONFTOP (ERROR): Reset date is out of range.
+	Upload moved to BBS:Conf10/Upload/SHD-DL25.TXT
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (12:05:34) yop Off Normally
+**************************************************************
+10-05-25 (13:24:54) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-100-234-254.hosted-by-worldstream.net (185.100.234.254)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading DM-BB210.LHA 29347 bytes
+	 1 file(s), 28k bytes, 0 minute(s). 0 second(s), 183418 cps, 9553% efficiency.
+	Upload moved to BBS:Conf2/Upload/DM-BB210.LHA
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (13:25:50) RaGe Off Normally
+**************************************************************
+10-05-25 (13:47:02) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf62f.dynamic.kabel-deutschland.de (95.91.246.47)
+	Conference 11: Demo Dungeon Auto-ReJoined
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (13:47:58) R/\DIOSITY Off Normally
+**************************************************************
+10-05-25 (15:54:47) [161] HARALD KRISCHNA (CONNECT 19200) rCL^L$D^pZk
+	Telnet login address: p5b0d28cb.dip0.t-ipconnect.de (91.13.40.203)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading Nah-Sp71.zip 1492429 bytes
+	 1 file(s), 1457k bytes, 0 minute(s). 2 second(s), 738826 cps, 38480% efficiency.
+	Upload moved to BBS:Conf2/Upload/NAH-SP71.ZIP
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (15:56:10) HARALD KRISCHNA Off Normally
+**************************************************************
+10-05-25 (17:09:25) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-100-234-254.hosted-by-worldstream.net (185.100.234.254)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading NAHSP711.DMS 654256 bytes
+	Uploading NAHSP712.DMS 813481 bytes
+	Uploading TRSI-DDC.DMS 121472 bytes
+	Uploading TRSI-DDC.LHA 350754 bytes
+	Uploading shd-dl25.txt 38784 bytes
+	 5 file(s), 1932k bytes, 0 minute(s). 2 second(s), 738338 cps, 38455% efficiency.
+	Skipped NAH-SP71.ZIP
+	Skipped DM-BB210.LHA
+	Upload moved to BBS:Conf2/Upload/NAHSP711.DMS
+	Upload moved to BBS:Conf2/Upload/NAHSP712.DMS
+	Upload moved to BBS:Conf2/Upload/TRSI-DDC.DMS
+	Upload moved to BBS:Conf2/Upload/TRSI-DDC.LHA
+	Upload moved to BBS:Conf2/Upload/SHD-DL25.TXT
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+10-05-25 (17:10:23) RaGe Off Normally
+**************************************************************
+10-05-25 (18:37:46) [224] Shocker (CONNECT 19200) HiGH VoLTAge
+	Telnet login address:  (185.9.7.69)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading IMPRESSI.DMS 147275 bytes
+	Uploading RSE-NOPF.DMS 298092 bytes
+	Uploading D25-FGFX.ZIP 630983681 bytes
+	Uploading D25-3DEE.ZIP 624662019 bytes
+	Uploading D25-TPHO.ZIP 145696726 bytes
+	Uploading D25-SMUS.ZIP 133992273 bytes
+	Uploading D25-TEXT.ZIP 7394198 bytes
+	Uploading D25-KLEM.ZIP 480113972 bytes
+	Uploading D25-FPAI.ZIP 290036012 bytes
+	Uploading D25-MLIP.ZIP 166981 bytes
+	Uploading D25-TMUS.ZIP 6980499 bytes
+	Uploading D25-OMUS.ZIP 9069568 bytes
+	Uploading D25-OGFX.ZIP 16329673 bytes
+	Uploading D25-DLTR.ZIP 8746740 bytes
+	Uploading D25-MLAN.ZIP 4116014 bytes
+	Uploading D25-4KGF.ZIP 18259772 bytes
+	Uploading TRSIYET1.DMS 761140 bytes
+	Uploading TRSIYET1.NFO 16205 bytes
+	 18 file(s), 2322041k bytes, 18 minute(s). 15 second(s), 2170053 cps, 113023% efficiency.
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped SHD-DL25.TXT
+	Skipped DM-BB210.LHA
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped NAH-SP71.ZIP
+	Skipped EVO391.LHA
+	Skipped ODUNR926.LHA
+	Skipped J-KCV101.DMS
+	Skipped J-KCV101.LHA
+	Skipped SLSDK524.LHA
+	Skipped AMIM3523.LHA
+	Skipped XLINK13.LHA
+	Skipped SBARWR34.LHA
+	Skipped INTBS151.LHA
+	Skipped INTCL140.LHA
+	Skipped DAYNPT13.LHA
+	Skipped XASH3D10.LHA
+	Skipped TRSIYETU.DMS
+	Skipped TRSIYETU.NFO
+	Skipped LX6170.ZIP
+	Skipped AMSL3524.LHA
+	Skipped AMSL4524.LHA
+	Skipped LTX2182.LHA
+	Skipped DM-AS101.LHA
+	Skipped DM-BRT30.LHA
+	Skipped -O-LSN10.LHA
+	Skipped FIX-YT11.DMS
+	Skipped -O-DCDPF.LHA
+	Skipped AV300956.ZIP
+	Skipped AV300955.ZIP
+	Skipped AV300954.ZIP
+	Skipped AV300953.ZIP
+	Skipped AV300952.ZIP
+	Skipped AV300951.ZIP
+	Skipped AV300950.ZIP
+	Skipped AV300949.ZIP
+	Skipped AV300948.ZIP
+	Skipped AV300947.ZIP
+	Skipped AV300946.ZIP
+	Skipped AV300945.ZIP
+	Skipped AV300944.ZIP
+	Skipped AV300943.ZIP
+	Skipped AV300942.ZIP
+	Skipped AV300941.ZIP
+	Skipped AV300940.ZIP
+	Skipped AV300939.ZIP
+	Skipped AV300938.ZIP
+	Skipped AV300937.ZIP
+	Skipped AV300936.ZIP
+	Skipped AV300935.ZIP
+	Skipped AV300934.ZIP
+	Skipped AV300933.ZIP
+	Skipped AV300932.ZIP
+	Skipped AV300931.ZIP
+	Skipped AV300930.ZIP
+	Skipped AV300929.ZIP
+	Skipped AV300928.ZIP
+	Skipped AV300927.ZIP
+	Skipped AV300926.ZIP
+	Skipped AV300925.ZIP
+	Skipped AV300924.ZIP
+	Skipped AV300923.ZIP
+	Skipped AV300922.ZIP
+	Skipped AV300921.ZIP
+	Skipped AV300920.ZIP
+	Skipped AV300919.ZIP
+	Skipped AV300918.ZIP
+	Skipped AV300917.ZIP
+	Skipped AV300916.ZIP
+	Skipped AV300915.ZIP
+	Skipped AV300914.ZIP
+	Skipped AV300913.ZIP
+	Skipped AV300912.ZIP
+	Skipped AV300911.ZIP
+	Skipped AV300910.ZIP
+	Skipped AV300909.ZIP
+	Skipped AV300908.ZIP
+	Skipped AV300907.ZIP
+	Skipped AV300906.ZIP
+	Skipped AV300905.ZIP
+	Skipped AV300904.ZIP
+	Skipped AV300903.ZIP
+	Skipped AV300902.ZIP
+	Skipped AV300901.ZIP
+	Skipped CONLACO1.DMS
+	Skipped CONLACO2.DMS
+	Skipped AMIDR136.LHA
+	Skipped TMSCLR32.LHA
+	Skipped AMIDA136.LHA
+	Skipped AVALFR31.LHA
+	Skipped VOID-FBT.ZIP
+	Upload moved to BBS:Conf2/Upload/IMPRESSI.DMS
+	Upload moved to BBS:Conf2/Upload/RSE-NOPF.DMS
+	Upload moved to BBS:Conf2/Upload/D25-FGFX.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-3DEE.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-TPHO.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-SMUS.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-TEXT.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-KLEM.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-FPAI.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-MLIP.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-TMUS.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-OMUS.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-OGFX.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-DLTR.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-MLAN.ZIP
+	Upload moved to BBS:Conf2/Upload/D25-4KGF.ZIP
+	Upload moved to BBS:Conf2/Upload/TRSIYET1.DMS
+	Upload moved to BBS:Conf2/Upload/TRSIYET1.NFO
+10-05-25 (19:13:35) Shocker Off Normally
+**************************************************************
+10-05-25 (20:08:26) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-100-234-254.hosted-by-worldstream.net (185.100.234.254)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/D25-4KGF.ZIP 18260304 bytes
+	Downloading BBS:Conf2/Upload/D25-MLAN.ZIP 4116546 bytes
+	Downloading BBS:Conf2/Upload/D25-DLTR.ZIP 8747271 bytes
+	Downloading BBS:Conf2/Upload/D25-OGFX.ZIP 16330205 bytes
+	Downloading BBS:Conf2/Upload/D25-OMUS.ZIP 9070100 bytes
+	Downloading BBS:Conf2/Upload/D25-TMUS.ZIP 6981031 bytes
+	Downloading BBS:Conf2/Upload/D25-MLIP.ZIP 167513 bytes
+	Downloading BBS:Conf2/Upload/D25-FPAI.ZIP 290036545 bytes
+	Downloading BBS:Conf2/Upload/D25-KLEM.ZIP 480114505 bytes
+	Downloading BBS:Conf2/Upload/D25-TEXT.ZIP 7394731 bytes
+	Downloading BBS:Conf2/Upload/D25-SMUS.ZIP 133992805 bytes
+	Downloading BBS:Conf2/Upload/D25-TPHO.ZIP 145697259 bytes
+	Downloading BBS:Conf2/Upload/D25-3DEE.ZIP 624662552 bytes
+	Downloading BBS:Conf2/Upload/D25-FGFX.ZIP 630984215 bytes
+	Downloading BBS:Conf2/Upload/RSE-NOPF.DMS 297252 bytes
+	Downloading BBS:Conf2/Upload/IMPRESSI.DMS 146435 bytes
+	 16 files, 2321288k bytes, 52 minutes 18 seconds 757281 cps, 39441% efficiency at 19200
+	Uploading TTE-THV2.ZIP 1067026 bytes
+	 1 file(s), 1042k bytes, 0 minute(s). 11 second(s), 93928 cps, 4892% efficiency.
+	Skipped IMPRESSI.DMS
+	Skipped RSE-NOPF.DMS
+	Skipped D25-FGFX.ZIP
+	Upload moved to BBS:Conf2/Upload/TTE-THV2.ZIP
+10-05-25 (21:03:36) RaGe Off Normally
+**************************************************************
+10-05-25 (23:05:02) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf62f.dynamic.kabel-deutschland.de (95.91.246.47)
+	Password Failure (fuckibm)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/TRSIYET1.NFO 17490 bytes
+	Downloading BBS:Conf2/Upload/TRSIYET1.DMS 760300 bytes
+	 2 files, 759k bytes, 0 minutes 4 seconds 185188 cps, 9645% efficiency at 19200
+10-05-25 (23:06:25) R/\DIOSITY Off Normally
+**************************************************************
+10-05-25 (23:49:53) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading TRSI-HRD.ZIP 438086 bytes
+	 1 file(s), 427k bytes, 0 minute(s). 0 second(s), 1564592 cps, 81489% efficiency.
+	Upload moved to BBS:Conf5/Upload/TRSI-HRD.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Upload Failed..
+	Skipped SHD-DL25.TXT
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped D25-OMUS.ZIP
+	Skipped D25-OGFX.ZIP
+	Skipped D25-MLAN.ZIP
+	Skipped D25-DLTR.ZIP
+	Skipped D25-4KGF.ZIP
+	Skipped D25-KLEM.ZIP
+	Skipped D25-FPAI.ZIP
+	Skipped D25-MLIP.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped D25-3DEE.ZIP
+	Skipped D25-TPHO.ZIP
+	Skipped D25-SMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-FGFX.ZIP
+	Skipped RSE-NOPF.DMS
+	Skipped TTE-THV2.ZIP
+	Skipped IMPRESSI.DMS
+	Skipped TRSIYET1.NFO
+	Skipped TRSIYET1.DMS
+	Skipped DM-BB210.LHA
+	Skipped LX6170.ZIP
+	Skipped AMSL4524.LHA
+	Skipped AMSL3524.LHA
+	Skipped LTX2182.LHA
+	Skipped FIX-YT11.DMS
+	Skipped DM-BRT30.LHA
+	Skipped DM-AS101.LHA
+	Skipped -O-LSN10.LHA
+	Skipped J-KCV101.LHA
+	Skipped J-KCV101.DMS
+	Skipped SLSDK524.LHA
+	Skipped AMIM3523.LHA
+	Skipped XLINK13.LHA
+	Skipped SBARWR34.LHA
+	Skipped ODUNR926.LHA
+	Skipped INTCL140.LHA
+	Skipped INTBS151.LHA
+	Skipped DAYNPT13.LHA
+	Skipped XASH3D10.LHA
+	Skipped TRSIYETU.NFO
+	Skipped TRSIYETU.DMS
+	Skipped EVO391.LHA
+	Skipped -O-DCDPF.LHA
+	Skipped CONLACO1.DMS
+	Skipped CONLACO2.DMS
+	Skipped AV300901.ZIP
+	Skipped AV300902.ZIP
+	Skipped AV300903.ZIP
+	Skipped AV300904.ZIP
+	Skipped AV300905.ZIP
+	Skipped AV300906.ZIP
+	Skipped AV300907.ZIP
+	Skipped AV300908.ZIP
+	Skipped AV300909.ZIP
+	Skipped AV300910.ZIP
+	Skipped AV300911.ZIP
+	Skipped AV300912.ZIP
+	Skipped AV300913.ZIP
+	Skipped AV300914.ZIP
+	Skipped AV300915.ZIP
+	Skipped AV300916.ZIP
+	Skipped AV300917.ZIP
+	Skipped AV300918.ZIP
+	Skipped AV300919.ZIP
+	Skipped AV300920.ZIP
+	Skipped AV300921.ZIP
+	Skipped AV300922.ZIP
+	Skipped AV300923.ZIP
+	Skipped AV300924.ZIP
+	Skipped AV300925.ZIP
+	Skipped AV300926.ZIP
+	Skipped AV300927.ZIP
+	Skipped AV300928.ZIP
+	Skipped AV300929.ZIP
+	Skipped AV300930.ZIP
+	Skipped AV300931.ZIP
+	Skipped AV300932.ZIP
+	Skipped AV300933.ZIP
+	Skipped AV300934.ZIP
+	Skipped AV300935.ZIP
+	Skipped AV300936.ZIP
+	Skipped AV300937.ZIP
+	Skipped AV300938.ZIP
+	Skipped AV300939.ZIP
+	Skipped AV300940.ZIP
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Abandoned Apps (3) Conference Joined
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-05-25 (23:51:05) MaRWic Off Normally
+**************************************************************
+10-06-25 (02:06:35) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf62f.dynamic.kabel-deutschland.de (95.91.246.47)
+	Conference 8: Requests Auto-ReJoined
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-06-25 (02:07:21) R/\DIOSITY! Off Normally
+	**Input timed out **
+**************************************************************
+10-06-25 (08:04:33) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading DKD-1649.LHA 70370 bytes
+	Uploading SHWMEM31.LHA 16206 bytes
+	Uploading ROMWAK04.LHA 21735 bytes
+	Uploading PCIDV407.LHA 182849 bytes
+	Uploading CPUM018.LHA  683116 bytes
+	Uploading APCOM313.LHA 211463 bytes
+	Uploading REDP0958.LHA 8757383 bytes
+	Uploading RSRC4215.LHA 138153 bytes
+	Uploading ACON120.LHA  2983685 bytes
+	 9 file(s), 12758k bytes, 0 minute(s). 4 second(s), 2996550 cps, 156070% efficiency.
+	Skipped SHD-DL25.TXT
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped D25-OMUS.ZIP
+	Skipped D25-OGFX.ZIP
+	Skipped D25-MLAN.ZIP
+	Skipped D25-DLTR.ZIP
+	Skipped D25-4KGF.ZIP
+	Skipped D25-KLEM.ZIP
+	Skipped D25-FPAI.ZIP
+	Skipped D25-MLIP.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped D25-3DEE.ZIP
+	Skipped D25-TPHO.ZIP
+	Skipped D25-SMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-FGFX.ZIP
+	Skipped RSE-NOPF.DMS
+	Skipped TTE-THV2.ZIP
+	Skipped IMPRESSI.DMS
+	Skipped TRSIYET1.NFO
+	Skipped TRSIYET1.DMS
+	Skipped DM-BB210.LHA
+	Skipped LX6170.ZIP
+	Skipped AMSL4524.LHA
+	Skipped AMSL3524.LHA
+	Upload moved to BBS:Conf2/Upload/DKD-1649.LHA
+	Upload moved to BBS:Conf2/Upload/SHWMEM31.LHA
+	Upload moved to BBS:Conf2/Upload/ROMWAK04.LHA
+	Upload moved to BBS:Conf2/Upload/PCIDV407.LHA
+	Upload moved to BBS:Conf2/Upload/CPUM018.LHA
+	Upload moved to BBS:Conf2/Upload/APCOM313.LHA
+	Upload moved to BBS:Conf2/Upload/REDP0958.LHA
+	Upload moved to BBS:Conf2/Upload/RSRC4215.LHA
+	Upload moved to BBS:Conf2/Upload/ACON120.LHA
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading OPSPR180.ZIP 21404791 bytes
+	Uploading EX-SPCP2.ZIP 11808 bytes
+	Uploading HFE-MM2D.ZIP 13290 bytes
+	Uploading HFE-V101.ZIP 30464 bytes
+	Uploading LXT-SCP2.ZIP 8434 bytes
+	Uploading ROLE-SS3.ZIP 31930 bytes
+	Uploading BLZ-OOPV.ZIP 19206 bytes
+	 7 file(s), 21015k bytes, 0 minute(s). 5 second(s), 3842843 cps, 200148% efficiency.
+	Skipped TRSI-HRD.ZIP
+	Skipped MSA-8WPV.ZIP
+	Skipped MSA-DRP2.ZIP
+	Skipped LXT-BFFD.ZIP
+	Skipped EX-S8SPV.ZIP
+	Upload moved to BBS:Conf5/Upload/OPSPR180.ZIP
+	Upload moved to BBS:Conf5/Upload/EX-SPCP2.ZIP
+	Upload moved to BBS:Conf5/Upload/HFE-MM2D.ZIP
+	Upload moved to BBS:Conf5/Upload/HFE-V101.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT-SCP2.ZIP
+	Upload moved to BBS:Conf5/Upload/ROLE-SS3.ZIP
+	Upload moved to BBS:Conf5/Upload/BLZ-OOPV.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-06-25 (08:07:47) MaRWic Off Normally
+**************************************************************
+10-06-25 (10:59:56) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading TTS-SDUS.LHA 2256476 bytes
+	Uploading WP-C2C31.LHA 1347306 bytes
+	Uploading WP-CR231.LHA 1347144 bytes
+	Uploading WP-CYA20.LHA 581867 bytes
+	 4 file(s), 5403k bytes, 0 minute(s). 1 second(s), 3179766 cps, 165612% efficiency.
+	Skipped DKD-1649.LHA
+	Skipped SHWMEM31.LHA
+	Skipped ROMWAK04.LHA
+	Skipped PCIDV407.LHA
+	Skipped CPUM018.LHA
+	Skipped APCOM313.LHA
+	Skipped REDP0958.LHA
+	Skipped RSRC4215.LHA
+	Skipped ACON120.LHA
+	Skipped SHD-DL25.TXT
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped D25-OMUS.ZIP
+	Skipped D25-OGFX.ZIP
+	Skipped D25-MLAN.ZIP
+	Skipped D25-DLTR.ZIP
+	Skipped D25-4KGF.ZIP
+	Skipped D25-KLEM.ZIP
+	Skipped D25-FPAI.ZIP
+	Skipped D25-MLIP.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped D25-3DEE.ZIP
+	Skipped D25-TPHO.ZIP
+	Skipped D25-SMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-FGFX.ZIP
+	Skipped RSE-NOPF.DMS
+	Skipped TTE-THV2.ZIP
+	Skipped IMPRESSI.DMS
+	Skipped TRSIYET1.NFO
+	Skipped TRSIYET1.DMS
+	Skipped DM-BB210.LHA
+	Skipped LX6170.ZIP
+	Skipped AMSL4524.LHA
+	Skipped AMSL3524.LHA
+	Skipped LTX2182.LHA
+	Skipped FIX-YT11.DMS
+	Skipped DM-BRT30.LHA
+	Skipped DM-AS101.LHA
+	Skipped -O-LSN10.LHA
+	Skipped J-KCV101.LHA
+	Skipped J-KCV101.DMS
+	Upload moved to BBS:Conf2/Upload/TTS-SDUS.LHA
+	Upload moved to BBS:Conf2/Upload/WP-C2C31.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CR231.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CYA20.LHA
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Upload Failed..
+	Skipped OPSPR180.ZIP
+	Skipped EX-SPCP2.ZIP
+	Skipped HFE-MM2D.ZIP
+	Skipped HFE-V101.ZIP
+	Skipped LXT-SCP2.ZIP
+	Skipped ROLE-SS3.ZIP
+	Skipped BLZ-OOPV.ZIP
+	Skipped TRSI-HRD.ZIP
+	Skipped MSA-8WPV.ZIP
+	Skipped MSA-DRP2.ZIP
+	Skipped LXT-BFFD.ZIP
+	Skipped EX-S8SPV.ZIP
+	Skipped BLZ-PPV1.ZIP
+	Amiga Warez! (2) Conference Joined
+10-06-25 (11:00:46) MaRWic Off Normally
+**************************************************************
+10-06-25 (11:19:27) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.249.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/TTS-SDUS.LHA 2256926 bytes
+	 1 files, 2204k bytes, 0 minutes 2 seconds 861422 cps, 44865% efficiency at 19200
+10-06-25 (11:26:50) Ransom1122 Off Loss Carrier
+**************************************************************
+10-06-25 (15:22:10) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address:  (217.9.247.27)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-06-25 (15:23:55) KayPirinha Off Normally
+**************************************************************
+10-06-25 (17:02:09) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-06-25 (17:03:03) R/\DIOSITY Off Normally
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+10-06-25 (21:54:05) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/D25-FPAI.ZIP 290036545 bytes
+	 1 files, 566477k bytes, 28 minutes 39 seconds 337294 cps, 17567% efficiency at 19200
+10-06-25 (22:09:51) R/\DIOSITY Off Normally
+**************************************************************
+10-06-25 (22:53:40) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf634.dynamic.kabel-deutschland.de (95.91.246.52)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading R!-BBPR2.LHA 596452 bytes
+	 1 file(s), 582k bytes, 0 minute(s). 1 second(s), 355030 cps, 18491% efficiency.
+	Upload moved to BBS:Conf2/Upload/R!-BBPR2.LHA
+10-06-25 (22:54:13) R/\DIOSITY Off Normally
+**************************************************************
+10-07-25 (09:42:08) [191] Analyze/AUS (CONNECT 19200) -+ bAD kARMA +-
+	Telnet login address:  (60.231.57.81)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading FIX-GQ6M.LHA 8957415 bytes
+	Uploading FIX-GQ6N.LHA 6706806 bytes
+	 2 file(s), 15297k bytes, 13 minute(s). 7 second(s), 19884 cps, 1035% efficiency.
+	Skipped -O-N114.LHA
+	Skipped -O-N114.NFO
+	Skipped -O-N235.LHA
+	Skipped -O-N235.NFO
+	Skipped -O-PTQ12.LHA
+	Skipped -O-PTS19.LHA
+	Skipped AGPT2112.LHA
+	Skipped AMX534.LHA
+	Skipped BK-TT102.DMS
+	Skipped BK-TT102.LHA
+	Skipped BK-TT102.NFO
+	Skipped D25-MLIP.ZIP
+	Skipped D25-OMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped DBXA301.LHA
+	Skipped DKD-1649.LHA
+	Skipped DM-ARE10.LHA
+	Skipped FAMEONCD.ZIP
+	Skipped FIX-GQ6P.LHA
+	Skipped FIX-JLPV.DMS
+	Skipped FUSION72.ZIP
+	Skipped GL250901.LHA
+	Skipped IMPRESSI.DMS
+	Skipped J-UA128.ZIP
+	Skipped J-UA64.ZIP
+	Skipped J-UECS.ZIP
+	Skipped LTX-CB13.LHA
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped ORTUTP1.ZIP
+	Skipped P-NAPL10.LHA
+	Skipped P-NARL10.LHA
+	Skipped P-TKRP10.LHA
+	Skipped PCIDV407.LHA
+	Skipped R!-BBPR2.LHA
+	Skipped REDP0957.LHA
+	Skipped REDP0958.LHA
+	Skipped RSE-NOPF.DMS
+	Skipped SHD-DL25.TXT
+	Skipped SUB-DD3F.LHA
+	Skipped T-ITA391.DMS
+	Skipped T-ITA392.DMS
+	Skipped T-ITA393.DMS
+	Skipped T-ITADV2.DMS
+	Skipped TESTP660.ZIP
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped TRSIYET1.DMS
+	Skipped TRSIYET1.NFO
+	Skipped TRSIYETU.DMS
+	Skipped TRSIYETU.NFO
+	Skipped TTE-THV2.ZIP
+	Skipped TTS-SDUS.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-GQ6M.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-GQ6N.LHA
+	Directory Scan with AquaScan by Aquarius
+10-07-25 (09:59:28) Analyze/AUS Off Normally
+	**Input timed out **
+**************************************************************
+10-07-25 (10:56:54) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/P-INVY15.LHA 49540 bytes
+	Downloading BBS:Conf2/Upload/FIX-GQ6M.LHA 8957867 bytes
+	Downloading BBS:Conf2/Upload/FIX-GQ6N.LHA 6707258 bytes
+	Downloading BBS:Conf2/Upload/FIX-GQ6P.LHA 6707738 bytes
+	 4 files, 21896k bytes, 0 minutes 30 seconds 746418 cps, 38875% efficiency at 19200
+10-07-25 (11:05:04) Ransom1122 Off Loss Carrier
+**************************************************************
+10-07-25 (13:39:03) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address:  (151.245.116.36)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/R!-BBPR2.LHA 596904 bytes
+	 1 files, 582k bytes, 0 minutes 0 seconds 765261 cps, 39857% efficiency at 19200
+10-07-25 (13:40:46) KayPirinha Off Loss Carrier
+**************************************************************
+10-07-25 (19:52:42) [170] pHANTOM (CONNECT 19200) -X- bAD kARMA -X-
+	Telnet login address: ppp-171-97-85-252.revip8.asianet.co.th (171.97.85.252)
+	Conference 5: C64 Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	**Input timed out **
+10-07-25 (19:58:57) pHANTOM Off Normally
+**************************************************************
+10-07-25 (23:24:26) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: ip5f5bf645.dynamic.kabel-deutschland.de (95.91.246.69)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Requests (8) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-07-25 (23:26:14) R/\DIOSITY! Off Normally
+	**Input timed out **
+**************************************************************
+10-08-25 (05:22:01) [388] bananator (CONNECT 19200) StrangePlanet
+	Telnet login address: 85-76-73-117-nat.elisa-mobile.fi (85.76.73.117)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading SEVGI184.LHA 934269 bytes
+	Uploading ODUNA926.LHA 780585 bytes
+	 2 file(s), 1674k bytes, 0 minute(s). 2 second(s), 654524 cps, 34089% efficiency.
+	Skipped FIX-GQ6N.LHA
+	Skipped FIX-GQ6P.LHA
+	Skipped FIX-GQ6M.LHA
+	Skipped R!-BBPR2.LHA
+	Upload moved to BBS:Conf2/Upload/SEVGI184.LHA
+	Upload moved to BBS:Conf2/Upload/ODUNA926.LHA
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (05:23:02) bananator Off Normally
+**************************************************************
+10-08-25 (06:25:43) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (06:26:17) KayPirinha Off Normally
+**************************************************************
+10-08-25 (08:45:30) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading FUSION73.ZIP 55160340 bytes
+	Uploading PCMCIA18.LHA 14985 bytes
+	Uploading AMIA3530.LHA 11784634 bytes
+	Uploading AMIC3530.LHA 10967953 bytes
+	 4 file(s), 76101k bytes, 0 minute(s). 18 second(s), 4207770 cps, 219154% efficiency.
+	Skipped P-INVY15.LHA
+	Skipped SEVGI184.LHA
+	Skipped ODUNA926.LHA
+	Skipped R!-BBPR2.LHA
+	Skipped FIX-GQ6N.LHA
+	Skipped FIX-GQ6P.LHA
+	Skipped FIX-GQ6M.LHA
+	Skipped TTS-SDUS.LHA
+	Skipped WP-C2C31.LHA
+	Skipped WP-CR231.LHA
+	Skipped WP-CYA20.LHA
+	Skipped DKD-1649.LHA
+	Skipped SHWMEM31.LHA
+	Skipped ROMWAK04.LHA
+	Skipped PCIDV407.LHA
+	Skipped CPUM018.LHA
+	Skipped APCOM313.LHA
+	Skipped REDP0958.LHA
+	Skipped RSRC4215.LHA
+	Skipped ACON120.LHA
+	Skipped SHD-DL25.TXT
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped D25-OMUS.ZIP
+	Skipped D25-OGFX.ZIP
+	Skipped D25-MLAN.ZIP
+	Skipped D25-DLTR.ZIP
+	Skipped D25-4KGF.ZIP
+	Skipped D25-KLEM.ZIP
+	Skipped D25-FPAI.ZIP
+	Skipped D25-MLIP.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped D25-3DEE.ZIP
+	Skipped D25-TPHO.ZIP
+	Skipped D25-SMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-FGFX.ZIP
+	Skipped RSE-NOPF.DMS
+	Skipped TTE-THV2.ZIP
+	Skipped IMPRESSI.DMS
+	Skipped TRSIYET1.NFO
+	Upload moved to BBS:Conf2/Upload/FUSION73.ZIP
+	Upload moved to BBS:Conf2/Upload/PCMCIA18.LHA
+	Upload moved to BBS:Conf2/Upload/AMIA3530.LHA
+	Upload moved to BBS:Conf2/Upload/AMIC3530.LHA
+	C64 (5) Conference Joined
+	Uploading LXT-BBR1.ZIP 50251 bytes
+	Uploading ZZAP6428.ZIP 52224614 bytes
+	 2 file(s), 51049k bytes, 0 minute(s). 12 second(s), 4277812 cps, 222802% efficiency.
+	Skipped OPSPR180.ZIP
+	Skipped EX-SPCP2.ZIP
+	Skipped HFE-MM2D.ZIP
+	Skipped HFE-V101.ZIP
+	Skipped LXT-SCP2.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT-BBR1.ZIP
+	Upload moved to BBS:Conf5/Upload/ZZAP6428.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (08:49:02) MaRWic Off Normally
+**************************************************************
+10-08-25 (09:18:29) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.249.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (09:29:02) Ransom1122 Off Loss Carrier
+**************************************************************
+10-08-25 (15:53:58) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 190-2-152-228.hosted-by-worldstream.net (190.2.152.228)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading WP-CIH11.LHA 470799 bytes
+	Uploading WP-CDL12.LHA 3686278 bytes
+	Uploading WP-CDF11.LHA 372170 bytes
+	Uploading YEETGI10.LHA 150751 bytes
+	 4 file(s), 4570k bytes, 0 minute(s). 4 second(s), 951219 cps, 49542% efficiency.
+	Skipped AMIA3530.LHA
+	Skipped AMIC3530.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CIH11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CDL12.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CDF11.LHA
+	Upload moved to BBS:Conf2/Upload/YEETGI10.LHA
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (15:54:55) RaGe Off Normally
+**************************************************************
+10-08-25 (23:38:12) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-003-104.176.0.pool.telefonica.de (176.0.3.104)
+	Conference 8: Requests Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-08-25 (23:39:13) R/\DIOSITY! Off Normally
+**************************************************************
+10-09-25 (09:18:28) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading JDS-0825.ZIP 10803 bytes
+	Uploading LXT-BBR5.ZIP 57313 bytes
+	Uploading lxt_bbr+.zip 49479 bytes
+	 3 file(s), 114k bytes, 0 minute(s). 0 second(s), 279988 cps, 14582% efficiency.
+	Skipped LXT-BBR1.ZIP
+	Skipped ZZAP6428.ZIP
+	Skipped OPSPR180.ZIP
+	Skipped EX-SPCP2.ZIP
+	Skipped HFE-MM2D.ZIP
+	Skipped HFE-V101.ZIP
+	Skipped LXT-SCP2.ZIP
+	Upload moved to BBS:Conf5/Upload/JDS-0825.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT-BBR5.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT_BBR+.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading AMIM3530.LHA 11043195 bytes
+	Uploading GOSNP018.LHA 14075 bytes
+	Uploading OBWB101.LHA  305189 bytes
+	Uploading MSEDRV11.LHA 189256 bytes
+	Uploading WP-CEE11.LHA 1444280 bytes
+	Uploading WP-CEC11.LHA 1502436 bytes
+	Uploading WP-CED11.LHA 1449863 bytes
+	Uploading WP-CAE11.LHA 2513558 bytes
+	Uploading WP-CAC11.LHA 2584587 bytes
+	Uploading WP-CAD11.LHA 2814846 bytes
+	 10 file(s), 23302k bytes, 0 minute(s). 6 second(s), 3593567 cps, 187164% efficiency.
+	Skipped WP-CIH11.LHA
+	Skipped WP-CDL12.LHA
+	Skipped WP-CDF11.LHA
+	Skipped YEETGI10.LHA
+	Skipped FUSION73.ZIP
+	Skipped P-INVY15.LHA
+	Skipped SEVGI184.LHA
+	Skipped ODUNA926.LHA
+	Skipped PCMCIA18.LHA
+	Skipped AMIA3530.LHA
+	Skipped AMIC3530.LHA
+	Skipped R!-BBPR2.LHA
+	Skipped FIX-GQ6N.LHA
+	Skipped FIX-GQ6P.LHA
+	Skipped FIX-GQ6M.LHA
+	Skipped TTS-SDUS.LHA
+	Skipped WP-C2C31.LHA
+	Skipped WP-CR231.LHA
+	Skipped WP-CYA20.LHA
+	Skipped DKD-1649.LHA
+	Skipped SHWMEM31.LHA
+	Skipped ROMWAK04.LHA
+	Skipped PCIDV407.LHA
+	Skipped CPUM018.LHA
+	Skipped APCOM313.LHA
+	Skipped REDP0958.LHA
+	Skipped RSRC4215.LHA
+	Skipped ACON120.LHA
+	Skipped SHD-DL25.TXT
+	Skipped NAH-SP71.ZIP
+	Skipped NAHSP711.DMS
+	Skipped NAHSP712.DMS
+	Skipped TRSI-DDC.DMS
+	Skipped TRSI-DDC.LHA
+	Skipped D25-OMUS.ZIP
+	Skipped D25-OGFX.ZIP
+	Skipped D25-MLAN.ZIP
+	Skipped D25-DLTR.ZIP
+	Skipped D25-4KGF.ZIP
+	Skipped D25-KLEM.ZIP
+	Skipped D25-FPAI.ZIP
+	Skipped D25-MLIP.ZIP
+	Skipped D25-TMUS.ZIP
+	Skipped D25-3DEE.ZIP
+	Skipped D25-TPHO.ZIP
+	Skipped D25-SMUS.ZIP
+	Skipped D25-TEXT.ZIP
+	Skipped D25-FGFX.ZIP
+	Skipped RSE-NOPF.DMS
+	Skipped TTE-THV2.ZIP
+	Skipped IMPRESSI.DMS
+	Skipped TRSIYET1.NFO
+	Skipped TRSIYET1.DMS
+	Skipped DM-BB210.LHA
+	Skipped LX6170.ZIP
+	Skipped AMSL4524.LHA
+	Skipped AMSL3524.LHA
+	Skipped LTX2182.LHA
+	Skipped FIX-YT11.DMS
+	Skipped DM-BRT30.LHA
+	Skipped DM-AS101.LHA
+	Skipped -O-LSN10.LHA
+	Skipped J-KCV101.LHA
+	Upload moved to BBS:Conf2/Upload/AMIM3530.LHA
+	Upload moved to BBS:Conf2/Upload/GOSNP018.LHA
+	Upload moved to BBS:Conf2/Upload/OBWB101.LHA
+	Upload moved to BBS:Conf2/Upload/MSEDRV11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CEE11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CEC11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CED11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CAE11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CAC11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CAD11.LHA
+10-09-25 (09:20:59) MaRWic Off Normally
+**************************************************************
+10-09-25 (10:17:51) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: uddi-31-b2-v4wan-166601-cust2577.vm12.cable.virginm.net (82.34.74.18)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-09-25 (10:19:49) RaGe Off Normally
+**************************************************************
+10-09-25 (10:40:57) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.249.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-09-25 (10:51:31) Ransom1122 Off Loss Carrier
+**************************************************************
+10-09-25 (13:39:15) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-09-25 (13:39:59) KayPirinha Off Normally
+**************************************************************
+10-09-25 (22:23:31) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-008-024.176.0.pool.telefonica.de (176.0.8.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-09-25 (22:24:30) R/\DIOSITY! Off Normally
+	**Input timed out **
+	**Input timed out **
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+10-10-25 (10:02:01) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+10-10-25 (10:04:23) Ransom1122 Off Loss Carrier
+**************************************************************
+10-10-25 (10:11:42) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-10-25 (10:21:12) Ransom1122 Off Loss Carrier
+**************************************************************
+10-10-25 (20:21:55) [535] Philix (CONNECT 19200) Dk
+	Telnet login address: x5996a7ec.customers.hiper-net.dk (89.150.167.236)
+	Conference 2: Amiga Warez! Auto-ReJoined
+10-10-25 (20:24:03) Philix Off Normally
+**************************************************************
+10-11-25 (01:24:53) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-002-206.176.0.pool.telefonica.de (176.0.2.206)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-11-25 (01:25:31) R/\DIOSITY! Off Normally
+**************************************************************
+10-11-25 (03:09:15) [517] stratos! (CONNECT 19200) -[ cONtRA! & gROtEStiCLE ]-
+	Telnet login address: cm-178.232.36.90.get.no (178.232.36.90)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	/X Section (4) Conference Joined
+	Downloading BBS2:Conf4/Upload/BK-RL01.LHA 13199 bytes
+	Downloading BBS2:Conf4/Upload/OGN-NP10.LHA 11476 bytes
+	 2 files, 24k bytes, 0 minutes 2 seconds 10728 cps, 558% efficiency at 19200
+	Downloading BBS2:Conf4/Upload/MO-ML10.LHA 2825 bytes
+	Downloading BBS2:Conf4/Upload/RMS05A2.LHA 82578 bytes
+	Downloading BBS2:Conf4/Upload/NBULVW.LHA 14009 bytes
+	Downloading BBS2:Conf4/Upload/XTRUDE12.LHA 165567 bytes
+	Downloading BBS2:Conf4/Upload/LAC-V120.LHA 61316 bytes
+	Downloading BBS2:Conf4/Upload/COP-DOOR.LHA 22431 bytes
+	Downloading BBS2:Conf4/Upload/BK-PB10.LHA 55233 bytes
+	Downloading BBS2:Conf4/Upload/PUGGLORY.LHA 101857 bytes
+	Downloading BBS2:Conf4/Upload/VN_WALLR.LHA 22392 bytes
+	 9 files, 515k bytes, 0 minutes 14 seconds 37250 cps, 1940% efficiency at 19200
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-11-25 (03:25:08) stratos! Off Normally
+**************************************************************
+10-11-25 (04:38:58) [517] stratos! (CONNECT 19200) -[ cONtRA! & gROtEStiCLE ]-
+	Telnet login address: cm-178.232.36.90.get.no (178.232.36.90)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Downloading BBS2:Conf2/Upload/RNOFER12.LHA 1975451 bytes
+	Downloading BBS:Conf2/Upload/DNLOAD16.LHA 48470 bytes
+	Downloading BBS:Conf2/Upload/UPLOAD12.LHA 30428 bytes
+	Downloading BBS:Conf2/Upload/AMIFTP53.LHA 345286 bytes
+	 4 files, 2343k bytes, 0 minutes 18 seconds 129710 cps, 6755% efficiency at 19200
+	Abandoned Apps (3) Conference Joined
+	Downloading BBS2:Conf3/Upload/CRX-FP03.LHA 194357 bytes
+	Downloading BBS2:Conf3/Upload/WUFT3719.LHA 214309 bytes
+	Downloading BBS2:Conf3/Upload/MFTP.LZX 72121 bytes
+	Downloading BBS2:Conf3/Upload/DFTP1124.LHA 239790 bytes
+	Downloading BBS2:Conf3/Upload/FTPGET.LHA 12176 bytes
+	Downloading BBS2:Conf3/Upload/MLINK11.LHA 110229 bytes
+	Downloading BBS2:Conf3/Upload/DAFTP.LHA 242410 bytes
+	Downloading BBS2:Conf3/Upload/TCOMP13.LHA 33403 bytes
+	Downloading BBS2:Conf3/Upload/MFTP1_26.LHA 61873 bytes
+	Downloading BBS2:Conf3/Upload/AMITCPSP.LHA 316371 bytes
+	Downloading BBS2:Conf3/Upload/OPUSFTP.LHA 98267 bytes
+	Downloading BBS2:Conf3/Upload/OPUSFTP.LZX 97311 bytes
+	Downloading BBS2:Conf3/Upload/FTPMT8.LHA 111328 bytes
+	Downloading BBS2:Conf3/Upload/CRX-MF13.LHA 156517 bytes
+	Downloading BBS2:Conf3/Upload/GUIXFTP.LHA 52807 bytes
+	Downloading BBS2:Conf3/Upload/CRX-MF33.LHA 94004 bytes
+	Downloading BBS2:Conf3/Upload/AUTOFTP.LZX 6098 bytes
+	Downloading BBS2:Conf3/Upload/FTPMNT.LHA 115743 bytes
+	 18 files, 2176k bytes, 0 minutes 36 seconds 60442 cps, 3148% efficiency at 19200
+10-11-25 (04:51:03) stratos! Off Normally
+**************************************************************
+10-11-25 (05:04:32) [517] stratos! (CONNECT 19200) -[ cONtRA! & gROtEStiCLE ]-
+	Telnet login address: cm-178.232.36.90.get.no (178.232.36.90)
+	Conference 3: Abandoned Apps Auto-ReJoined
+	Downloading BBS2:Conf3/Upload/OCTMED6D.LHA 1021435 bytes
+	Downloading BBS2:Conf3/Upload/DCN-OSP1.LHA 1057540 bytes
+	Downloading BBS2:Conf3/Upload/XMODUL34.LHA 234325 bytes
+	Downloading BBS2:Conf3/Upload/OCTAMED6.LHA 466452 bytes
+	Downloading BBS2:Conf3/Upload/OM60PROR.LHA 495237 bytes
+	Downloading BBS2:Conf3/Upload/OMED6NEW.LZX 180633 bytes
+	Downloading BBS2:Conf3/Upload/MEDU1231.LHA 66614 bytes
+	Downloading BBS2:Conf3/Upload/OCTAME61.LZH 502984 bytes
+	Downloading BBS2:Conf3/Upload/OMED6PEU.LHA 1058562 bytes
+	Downloading BBS2:Conf3/Upload/OCTV5_T1.LHA 146688 bytes
+	Downloading BBS2:Conf3/Upload/OCTV5_T5.LHA 715516 bytes
+	 11 files, 5806k bytes, 0 minutes 49 seconds 121099 cps, 6307% efficiency at 19200
+10-11-25 (05:09:47) stratos! Off Normally
+**************************************************************
+10-11-25 (08:14:17) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address:  (217.9.247.198)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-11-25 (08:14:57) KayPirinha Off Normally
+**************************************************************
+10-11-25 (16:08:27) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-007-015.176.0.pool.telefonica.de (176.0.7.15)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Demo Dungeon (11) Conference Joined
+	Scene Stuff (6) Conference Joined
+10-11-25 (16:09:11) R/\DIOSITY! Off Normally
+**************************************************************
+10-11-25 (18:39:02) [326] JACKTORY (CONNECT 19200) oOItalyOo RAMJAM
+	Telnet login address:  (151.95.88.228)
+	FTP Command >: SYST
+	FTP Command >: FEAT
+	FTP Command >: HELP SITE
+	FTP Command >: OPTS UTF8 ON
+	FTP Command >: PWD
+	FTP Command >: TYPE A
+	FTP Command >: PORT 192,168,1,10,225,156
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	FTP Command >: CWD 001-Amiga Warez!
+	Amiga Warez! (2) Conference Joined
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+	Directory Scan via ftp
+10-11-25 (18:41:37) JACKTORY Off Normally
+**************************************************************
+10-11-25 (21:16:54) NEW [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: 168-235-108-229.cloud.ramnode.com (168.235.108.229)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+10-11-25 (21:35:02) bamiga Off Normally
+**************************************************************
+10-11-25 (23:13:04) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-12-25 (04:44:32) bamiga Off Loss Carrier
+**************************************************************
+10-12-25 (05:21:26) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-12-25 (05:30:55) Ransom1122 Off Loss Carrier
+**************************************************************
+10-12-25 (09:59:20) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading TNPM10.LHA   94152 bytes
+	Uploading ODUNA927.LHA 959175 bytes
+	Uploading ODUNR927.LHA 960124 bytes
+	Uploading AMIMES12.LHA 24680 bytes
+	Uploading PASTPS21.LHA 131551 bytes
+	Uploading ACON122.LHA  2983854 bytes
+	Uploading AMBRX231.LHA 2295131 bytes
+	Uploading R1200R1R.LHA 120205435 bytes
+	Uploading DSR-PS01.ZIP 1296993 bytes
+	Uploading F9311P01.ZIP 922681 bytes
+	Uploading F9311B01.ZIP 938119 bytes
+	Uploading IC-OSHD5.ZIP 48834080 bytes
+	Uploading IC-DXIV2.ZIP 31350225 bytes
+	Uploading IC-UAE26.ZIP 51934202 bytes
+	Uploading DSR-PS01.DMS 845833 bytes
+	Uploading WP-AS101.LHA 599638 bytes
+	Uploading WP-ARN10.LHA 456733 bytes
+	Uploading WP-BB210.LHA 250586 bytes
+	Uploading WP-BRT30.LHA 1131594 bytes
+	Uploading WP-BB10E.LHA 513691 bytes
+	Uploading WP-BB10D.LHA 534089 bytes
+	Uploading WP-EDM10.LHA 10217900 bytes
+	Uploading WP-RL13N.LHA 573712 bytes
+	 23 file(s), 271537k bytes, 1 minute(s). 3 second(s), 4396808 cps, 229000% efficiency.
+	Skipped WP-CIH11.LHA
+	Skipped WP-CDL12.LHA
+	Skipped WP-CDF11.LHA
+	Skipped YEETGI10.LHA
+	Skipped AMIM3530.LHA
+	Skipped GOSNP018.LHA
+	Skipped OBWB101.LHA
+	Skipped MSEDRV11.LHA
+	Skipped WP-CEE11.LHA
+	Skipped WP-CEC11.LHA
+	Skipped WP-CED11.LHA
+	Skipped WP-CAE11.LHA
+	Upload moved to BBS:Conf2/Upload/TNPM10.LHA
+	Upload moved to BBS:Conf2/Upload/ODUNA927.LHA
+	Upload moved to BBS:Conf2/Upload/ODUNR927.LHA
+	Upload moved to BBS:Conf2/Upload/AMIMES12.LHA
+	Upload moved to BBS:Conf2/Upload/PASTPS21.LHA
+	Upload moved to BBS:Conf2/Upload/ACON122.LHA
+	Upload moved to BBS:Conf2/Upload/AMBRX231.LHA
+	Upload moved to BBS:Conf2/Upload/R1200R1R.LHA
+	Upload moved to BBS:Conf2/Upload/DSR-PS01.ZIP
+	Upload moved to BBS:Conf2/Upload/F9311P01.ZIP
+	Upload moved to BBS:Conf2/Upload/F9311B01.ZIP
+	Upload moved to BBS:Conf2/Upload/IC-OSHD5.ZIP
+	Upload moved to BBS:Conf2/Upload/IC-DXIV2.ZIP
+	Upload moved to BBS:Conf2/Upload/IC-UAE26.ZIP
+	Upload moved to BBS:Conf2/Upload/DSR-PS01.DMS
+	Upload moved to BBS:Conf2/Upload/WP-AS101.LHA
+	Upload moved to BBS:Conf2/Upload/WP-ARN10.LHA
+	Upload moved to BBS:Conf2/Upload/WP-BB210.LHA
+	Upload moved to BBS:Conf2/Upload/WP-BRT30.LHA
+	Upload moved to BBS:Conf2/Upload/WP-BB10E.LHA
+	Upload moved to BBS:Conf2/Upload/WP-BB10D.LHA
+	Upload moved to BBS:Conf2/Upload/WP-EDM10.LHA
+	Upload moved to BBS:Conf2/Upload/WP-RL13N.LHA
+	Directory Scan with AquaScan by Aquarius
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+10-12-25 (10:02:49) MaRWic Off Normally
+	**Input timed out **
+**************************************************************
+10-12-25 (14:25:23) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address:  (151.245.116.84)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/IC-UAE26.ZIP 51934733 bytes
+	Downloading BBS:Conf2/Upload/IC-DXIV2.ZIP 31350757 bytes
+	Downloading BBS:Conf2/Upload/IC-OSHD5.ZIP 48834612 bytes
+	 3 files, 129023k bytes, 1 minutes 40 seconds 1320408 cps, 68771% efficiency at 19200
+	**Input timed out **
+10-12-25 (14:38:31) KayPirinha Off Normally
+**************************************************************
+10-12-25 (18:07:15) [532] kokkiklhs (CONNECT 19200) Athens, GR
+	Telnet login address: 130.43.77.162.dsl.dyn.forthnet.gr (130.43.77.162)
+	FTP Command >: SYST
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: LIST
+	FTP Command >: CWD /Warez!
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: LIST
+	FTP Command >: CWD /002-C64
+	C64 (5) Conference Joined
+	FTP Command >: PASV
+	FTP Command >: LIST
+	Directory Scan via ftp
+	FTP Command >: CDUP
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: LIST
+10-12-25 (18:07:41) kokkiklhs Off Normally
+**************************************************************
+10-12-25 (18:22:33) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-000-046.176.0.pool.telefonica.de (176.0.0.46)
+	Password Failure (fuck ib m)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-12-25 (18:23:00) R/\DIOSITY Off Normally
+**************************************************************
+10-12-25 (18:49:18) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	**Input timed out **
+10-12-25 (19:04:12) bamiga Off Normally
+**************************************************************
+10-12-25 (20:21:55) [430] dabb (CONNECT 19200) Freiburg, GER
+	Telnet login address: pd9500b16.dip0.t-ipconnect.de (217.80.11.22)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/V2K43107.LHA 6916 bytes
+	Downloading BBS:Conf2/Upload/P96DD360.LHA 68754 bytes
+	 2 files, 73k bytes, 0 minutes 1 seconds 56470 cps, 2941% efficiency at 19200
+10-12-25 (20:51:45) dabb Off Loss Carrier
+**************************************************************
+10-12-25 (22:54:11) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+	Download Failed..
+	Download Failed..
+	Download Failed..
+10-12-25 (23:19:07) bamiga Off Normally
+**************************************************************
+10-12-25 (23:22:06) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/FLD_FOB1.LHA 960176 bytes
+	Download Failed..
+10-12-25 (23:45:28) bamiga Off Loss Carrier
+**************************************************************
+10-13-25 (00:41:33) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-000-046.176.0.pool.telefonica.de (176.0.0.46)
+	Conference 6: Scene Stuff Auto-ReJoined
+	Abandoned Apps (3) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-13-25 (00:45:58) R/\DIOSITY! Off Normally
+**************************************************************
+10-13-25 (08:43:07) [388] bananator (CONNECT 19200) StrangePlanet
+	Telnet login address: 85-76-73-117-nat.elisa-mobile.fi (85.76.73.117)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading FIX-CCCL.DMS 252536 bytes
+	Uploading DEARK171.LHA 4912641 bytes
+	Uploading FIX-MTFF.DMS 252856 bytes
+	 3 file(s), 5291k bytes, 0 minute(s). 7 second(s), 687567 cps, 35810% efficiency.
+	Skipped DSR-PS01.DMS
+	Skipped DSR-PS01.ZIP
+	Skipped F9311B01.ZIP
+	Skipped IC-OSHD5.ZIP
+	Skipped IC-DXIV2.ZIP
+	Skipped IC-UAE26.ZIP
+	Upload moved to BBS:Conf2/Upload/FIX-CCCL.DMS
+	Upload moved to BBS:Conf2/Upload/DEARK171.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-MTFF.DMS
+10-13-25 (08:43:35) bananator Off Normally
+**************************************************************
+10-13-25 (08:58:04) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-13-25 (09:11:36) Ransom1122 Off Loss Carrier
+**************************************************************
+10-13-25 (09:18:54) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading AST-DS04.DMS 728059 bytes
+	Uploading AMSL3525.LHA 4289673 bytes
+	Uploading AMSL4525.LHA 3884038 bytes
+	Uploading SLSDK525.LHA 2598048 bytes
+	Uploading TESTP662.ZIP 9469374 bytes
+	Uploading SHWMEM32.LHA 16310 bytes
+	Uploading ODUNA928.LHA 977457 bytes
+	Uploading ODUNR928.LHA 978183 bytes
+	Uploading P96DV361.LHA 127480 bytes
+	Uploading P96DD361.LHA 69053 bytes
+	Uploading REDP0959.LHA 8778423 bytes
+	 11 file(s), 31168k bytes, 0 minute(s). 8 second(s), 3781528 cps, 196954% efficiency.
+	Skipped IC-OSHD5.ZIP
+	Skipped FIX-CCCL.DMS
+	Skipped DEARK171.LHA
+	Skipped FIX-MTFF.DMS
+	Skipped TNPM10.LHA
+	Skipped ODUNA927.LHA
+	Skipped ODUNR927.LHA
+	Skipped AMIMES12.LHA
+	Skipped PASTPS21.LHA
+	Skipped ACON122.LHA
+	Skipped AMBRX231.LHA
+	Skipped R1200R1R.LHA
+	Skipped DSR-PS01.ZIP
+	Skipped F9311P01.ZIP
+	Skipped F9311B01.ZIP
+	Skipped IC-DXIV2.ZIP
+	Skipped IC-UAE26.ZIP
+	Skipped DSR-PS01.DMS
+	Skipped WP-AS101.LHA
+	Skipped WP-ARN10.LHA
+	Upload moved to BBS:Conf2/Upload/AST-DS04.DMS
+	Upload moved to BBS:Conf2/Upload/AMSL3525.LHA
+	Upload moved to BBS:Conf2/Upload/AMSL4525.LHA
+	Upload moved to BBS:Conf2/Upload/SLSDK525.LHA
+	Upload moved to BBS:Conf2/Upload/TESTP662.ZIP
+	Upload moved to BBS:Conf2/Upload/SHWMEM32.LHA
+	Upload moved to BBS:Conf2/Upload/ODUNA928.LHA
+	Upload moved to BBS:Conf2/Upload/ODUNR928.LHA
+	Upload moved to BBS:Conf2/Upload/P96DV361.LHA
+	Upload moved to BBS:Conf2/Upload/P96DD361.LHA
+	Upload moved to BBS:Conf2/Upload/REDP0959.LHA
+	Directory Scan with AquaScan by Aquarius
+10-13-25 (09:20:04) MaRWic Off Normally
+**************************************************************
+10-14-25 (10:26:46) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-14-25 (10:36:48) Ransom1122 Off Loss Carrier
+**************************************************************
+10-14-25 (11:07:37) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading F1GP25SG.LHA 10765 bytes
+	Uploading WHIFF417.LHA 6233243 bytes
+	Uploading WP-CJU12.LHA 227211 bytes
+	Uploading WP-CJ12E.LHA 196351 bytes
+	Uploading WP-CAB11.LHA 605392 bytes
+	Uploading WP-CBG10.LHA 192921 bytes
+	Uploading J-HS09D.DMS  738449 bytes
+	Uploading WP-PUC10.LHA 213877 bytes
+	Uploading J-HS09H.LHA  382194 bytes
+	 9 file(s), 8594k bytes, 0 minute(s). 3 second(s), 2683049 cps, 139742% efficiency.
+	Skipped IC-OSHD5.ZIP
+	Skipped FIX-CCCL.DMS
+	Skipped AST-DS04.DMS
+	Skipped DEARK171.LHA
+	Skipped AMSL3525.LHA
+	Upload moved to BBS:Conf2/Upload/F1GP25SG.LHA
+	Upload moved to BBS:Conf2/Upload/WHIFF417.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CJU12.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CJ12E.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CAB11.LHA
+	Upload moved to BBS:Conf2/Upload/WP-CBG10.LHA
+	Upload moved to BBS:Conf2/Upload/J-HS09D.DMS
+	Upload moved to BBS:Conf2/Upload/WP-PUC10.LHA
+	Upload moved to BBS:Conf2/Upload/J-HS09H.LHA
+10-14-25 (11:08:21) MaRWic Off Normally
+**************************************************************
+10-14-25 (18:29:01) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/IC-UAE26.ZIP 51934733 bytes
+	 1 files, 50717k bytes, 0 minutes 38 seconds 1364548 cps, 71070% efficiency at 19200
+10-14-25 (18:35:31) KayPirinha Off Normally
+	**Input timed out **
+	**Input timed out **
+**************************************************************
+10-14-25 (22:38:57) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-009-122.176.0.pool.telefonica.de (176.0.9.122)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+10-14-25 (22:39:40) R/\DIOSITY Off Normally
+**************************************************************
+10-14-25 (22:45:42) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+	Download Failed..
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+10-14-25 (22:55:23) bamiga Off Normally
+**************************************************************
+10-14-25 (23:26:46) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	Download Failed..
+10-14-25 (23:30:05) bamiga Off Normally
+**************************************************************
+10-15-25 (07:09:46) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading B-DR090.LHA  98099259 bytes
+	Uploading AMIA3531.LHA 11785067 bytes
+	Uploading AMIC3531.LHA 10968353 bytes
+	 3 file(s), 118020k bytes, 0 minute(s). 27 second(s), 4452935 cps, 231923% efficiency.
+	Skipped F1GP25SG.LHA
+	Skipped WHIFF417.LHA
+	Skipped WP-CJU12.LHA
+	Skipped WP-CJ12E.LHA
+	Skipped WP-CAB11.LHA
+	Skipped WP-CBG10.LHA
+	Skipped J-HS09D.DMS
+	Skipped WP-PUC10.LHA
+	Upload moved to BBS:Conf2/Upload/B-DR090.LHA
+	Upload moved to BBS:Conf2/Upload/AMIA3531.LHA
+	Upload moved to BBS:Conf2/Upload/AMIC3531.LHA
+10-15-25 (07:11:27) MaRWic Off Normally
+	**Input timed out **
+**************************************************************
+10-15-25 (19:48:09) [60] spot (CONNECT 19200) Up Rough
+	Telnet login address: c213-89-15-130.bredband.tele2.se (213.89.15.130)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	/X Section (4) Conference Joined
+	Downloading BBS2:Conf4/Upload/KLR-CHSR.LHA 115018 bytes
+	Downloading BBS2:Conf4/Upload/TN_NEWS1.LHA 13745 bytes
+	Downloading BBS2:Conf4/Upload/KLR-KBAU.LHA 54902 bytes
+	Downloading BBS2:Conf4/Upload/KLR-CHAT.LHA 120747 bytes
+	Downloading BBS2:Conf4/Upload/JOE_SOUR.LHA 477225 bytes
+	Downloading BBS2:Conf4/Upload/CHATSRC.LHA 117323 bytes
+	Downloading BBS2:Conf4/Upload/AEDOORS.LHA 12690 bytes
+	Downloading BBS2:Conf4/Upload/KLR-KCOM.LHA 92748 bytes
+	Downloading BBS2:Conf4/Upload/MAFIA.LZH 65451 bytes
+	Downloading BBS2:Conf4/Upload/MST-WT20.LHA 25347 bytes
+	Downloading BBS2:Conf4/Upload/KLRCHATS.LHA 114695 bytes
+	Downloading BBS2:Conf4/Upload/KLRBAUDS.LHA 48850 bytes
+	Downloading BBS2:Conf4/Upload/TRARA.LHA 33618 bytes
+	Downloading BBS2:Conf4/Upload/AMIX510.LHA 975800 bytes
+	Downloading BBS2:Conf4/Upload/AMIX520.LHA 985718 bytes
+	Downloading BBS:Conf4/Upload/AMIX530.LHA 1022658 bytes
+	 16 files, 4176k bytes, 0 minutes 4 seconds 933741 cps, 48632% efficiency at 19200
+10-15-25 (19:55:26) spot Off Normally
+**************************************************************
+10-15-25 (20:09:35) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-006-035.176.0.pool.telefonica.de (176.0.6.35)
+	Conference 3: Abandoned Apps Auto-ReJoined
+	Amiga Warez! (2) Conference Joined
+	Upload Failed..
+	Skipped WP-EDM10.LHA
+	Directory Scan with AquaScan by Aquarius
+10-15-25 (20:10:35) R/\DIOSITY! Off Normally
+**************************************************************
+10-15-25 (21:23:45) [530] R/\DIOSITY! (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-006-035.176.0.pool.telefonica.de (176.0.6.35)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Abandoned Apps (3) Conference Joined
+10-15-25 (21:24:25) R/\DIOSITY! Off Normally
+**************************************************************
+10-16-25 (03:43:22) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+10-16-25 (03:44:50) bamiga Off Normally
+**************************************************************
+10-16-25 (04:42:49) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+10-16-25 (08:19:43) bamiga Off Loss Carrier
+**************************************************************
+10-16-25 (08:46:38) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-16-25 (08:57:01) Ransom1122 Off Loss Carrier
+**************************************************************
+10-16-25 (09:57:43) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading EX-MPGY2.ZIP 20812 bytes
+	Uploading LXT-BFC1.ZIP 51321 bytes
+	Uploading LXT-BFF1.ZIP 47140 bytes
+	 3 file(s), 116k bytes, 0 minute(s). 0 second(s), 298182 cps, 15530% efficiency.
+	Skipped JDS-0825.ZIP
+	Skipped LXT-BBR5.ZIP
+	Skipped lxt_bbr+.zip
+	Upload moved to BBS:Conf5/Upload/EX-MPGY2.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT-BFC1.ZIP
+	Upload moved to BBS:Conf5/Upload/LXT-BFF1.ZIP
+	Uploading lxt-jurl.zip 21777 bytes
+	 1 file(s), 21k bytes, 0 minute(s). 0 second(s), 136106 cps, 7088% efficiency.
+	Upload moved to BBS:Conf5/Upload/LXT-JURL.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading P-EVDM11.LHA 277020 bytes
+	Uploading P-SDI12.LHA  73673 bytes
+	Uploading DM-MMA10.LHA 23848 bytes
+	Uploading AMIM3531.LHA 11043471 bytes
+	Uploading AMIDR138.LHA 1058094 bytes
+	Uploading AMIDA138.LHA 1057451 bytes
+	Uploading LHAR1141.LHA 155315 bytes
+	Uploading LHAM1141.LHA 85776 bytes
+	Uploading LHA41141.LHA 81163 bytes
+	Uploading LHAX1141.LHA 71278 bytes
+	Uploading TREEM221.LHA 130605 bytes
+	Uploading BW-CB137.LHA 6841027 bytes
+	 12 file(s), 20408k bytes, 0 minute(s). 5 second(s), 3530189 cps, 183864% efficiency.
+	Skipped B-DR090.LHA
+	Skipped AMIA3531.LHA
+	Upload moved to BBS:Conf2/Upload/P-EVDM11.LHA
+	Upload moved to BBS:Conf2/Upload/P-SDI12.LHA
+	Upload moved to BBS:Conf2/Upload/DM-MMA10.LHA
+	Upload moved to BBS:Conf2/Upload/AMIM3531.LHA
+	Upload moved to BBS:Conf2/Upload/AMIDR138.LHA
+	Upload moved to BBS:Conf2/Upload/AMIDA138.LHA
+	Upload moved to BBS:Conf2/Upload/LHAR1141.LHA
+	Upload moved to BBS:Conf2/Upload/LHAM1141.LHA
+	Upload moved to BBS:Conf2/Upload/LHA41141.LHA
+	Upload moved to BBS:Conf2/Upload/LHAX1141.LHA
+	Upload moved to BBS:Conf2/Upload/TREEM221.LHA
+	Upload moved to BBS:Conf2/Upload/BW-CB137.LHA
+10-16-25 (10:00:29) MaRWic Off Normally
+**************************************************************
+10-16-25 (15:52:47) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-16-25 (15:53:51) KayPirinha Off Normally
+**************************************************************
+10-16-25 (20:13:22) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-009-042.176.0.pool.telefonica.de (176.0.9.42)
+	Password Failure (fucjk ibm)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/AMIDA138.LHA 1057901 bytes
+	 1 files, 1033k bytes, 0 minutes 3 seconds 276937 cps, 14423% efficiency at 19200
+10-16-25 (20:15:01) R/\DIOSITY Off Normally
+**************************************************************
+10-16-25 (23:08:22) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/AS-CREEP.LHA 327186 bytes
+	 1 files, 319k bytes, 0 minutes 12 seconds 26385 cps, 1374% efficiency at 19200
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+10-16-25 (23:24:16) bamiga Off Loss Carrier
+**************************************************************
+10-16-25 (23:25:45) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-16-25 (23:30:00) bamiga Off Normally
+**************************************************************
+10-16-25 (23:58:13) [542] bamiga (CONNECT 19200) annapolis, md
+	Telnet login address: c-98-218-32-217.hsd1.md.comcast.net (98.218.32.217)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS2:Conf2/Upload/ORB_BDM1.DMS 458591 bytes
+	Downloading BBS2:Conf2/Upload/ORB_BDM2.DMS 598338 bytes
+	 2 files, 1032k bytes, 0 minutes 27 seconds 37937 cps, 1975% efficiency at 19200
+10-17-25 (00:00:12) bamiga Off Normally
+**************************************************************
+10-17-25 (02:20:54) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/AMIDA138.LHA 1057901 bytes
+	Downloading BBS:Conf2/Upload/AMIDR138.LHA 1058544 bytes
+	 2 files, 2066k bytes, 0 minutes 2 seconds 755873 cps, 39368% efficiency at 19200
+10-17-25 (02:30:27) Ransom1122 Off Loss Carrier
+**************************************************************
+10-17-25 (04:53:59) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-17-25 (05:03:15) Ransom1122 Off Loss Carrier
+**************************************************************
+10-17-25 (08:34:53) [60] spot (CONNECT 19200) Up Rough
+	Telnet login address: c213-89-15-130.bredband.tele2.se (213.89.15.130)
+	Conference 4: /X Section Auto-ReJoined
+	Downloading BBS2:Conf4/Upload/CAL-WEEK.LHA 12143 bytes
+	Downloading BBS2:Conf4/Upload/EMP-BL22.LHA 22291 bytes
+	Downloading BBS2:Conf4/Upload/SAMILOG.LZX 42476 bytes
+	Downloading BBS2:Conf4/Upload/OTL-RQ21.LHA 96759 bytes
+	 4 files, 169k bytes, 0 minutes 0 seconds 347338 cps, 18090% efficiency at 19200
+	Downloading BBS2:Conf4/Upload/MTH-RTW2.LHA 20234 bytes
+	 1 files, 19k bytes, 0 minutes 0 seconds 252925 cps, 13173% efficiency at 19200
+10-17-25 (08:52:01) spot Off Normally
+**************************************************************
+10-17-25 (10:25:41) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-17-25 (10:35:14) Ransom1122 Off Loss Carrier
+	**Input timed out **
+**************************************************************
+10-17-25 (13:51:38) [486] phigan (CONNECT 19200) tacopronto.bbs.io
+	Telnet login address: ip98-161-166-94.ph.ph.cox.net (98.161.166.94)
+	Conference 10: ASCII & ANSI Auto-ReJoined
+10-17-25 (13:56:01) phigan Off Normally
+**************************************************************
+10-17-25 (18:09:08) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+10-17-25 (18:09:55) KayPirinha Off Normally
+**************************************************************
+10-17-25 (19:42:08) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading TEDI-MIR.ZIP 11909 bytes
+	 1 file(s), 11k bytes, 0 minute(s). 0 second(s), 85064 cps, 4430% efficiency.
+	Skipped lxt-jurl.zip
+	Skipped EX-MPGY2.ZIP
+	Skipped LXT-BFC1.ZIP
+	Skipped LXT-BFF1.ZIP
+	Skipped JDS-0825.ZIP
+	Skipped LXT-BBR5.ZIP
+	Skipped lxt_bbr+.zip
+	Skipped LXT-BBR1.ZIP
+	Skipped ZZAP6428.ZIP
+	Skipped OPSPR180.ZIP
+	Skipped EX-SPCP2.ZIP
+	Skipped HFE-MM2D.ZIP
+	Upload moved to BBS:Conf5/Upload/TEDI-MIR.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading ACON132.LHA  2986781 bytes
+	Uploading XASH3D11.LHA 4885229 bytes
+	Uploading 3DOC150.LHA  2458647 bytes
+	Uploading ILL-AXPV.ZIP 755952 bytes
+	 4 file(s), 10826k bytes, 0 minute(s). 2 second(s), 3796783 cps, 197749% efficiency.
+	Skipped P-EVDM11.LHA
+	Skipped P-SDI12.LHA
+	Skipped DM-MMA10.LHA
+	Skipped AMIM3531.LHA
+	Skipped AMIDR138.LHA
+	Skipped AMIDA138.LHA
+	Skipped LHAR1141.LHA
+	Skipped LHAM1141.LHA
+	Skipped LHA41141.LHA
+	Skipped LHAX1141.LHA
+	Skipped TREEM221.LHA
+	Skipped BW-CB137.LHA
+	Skipped B-DR090.LHA
+	Skipped AMIA3531.LHA
+	Skipped AMIC3531.LHA
+	Skipped F1GP25SG.LHA
+	Skipped WHIFF417.LHA
+	Skipped WP-CJU12.LHA
+	Skipped WP-CJ12E.LHA
+	Skipped WP-CAB11.LHA
+	Skipped WP-CBG10.LHA
+	Skipped J-HS09D.DMS
+	Skipped WP-PUC10.LHA
+	Skipped J-HS09H.LHA
+	Skipped IC-OSHD5.ZIP
+	Skipped FIX-CCCL.DMS
+	Upload moved to BBS:Conf2/Upload/ACON132.LHA
+	Upload moved to BBS:Conf2/Upload/XASH3D11.LHA
+	Upload moved to BBS:Conf2/Upload/3DOC150.LHA
+	Upload moved to BBS:Conf2/Upload/ILL-AXPV.ZIP
+10-17-25 (19:43:13) MaRWic Off Normally
+**************************************************************
+10-18-25 (00:42:08) NEW [543] lordnikon (CONNECT 19200) arse, Dekadence
+	Telnet login address: ip4d17fd14.dynamic.kabel-deutschland.de (77.23.253.20)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-18-25 (00:45:26) lordnikon Off Normally
+**************************************************************
+10-18-25 (00:55:41) [543] lordnikon (CONNECT 19200) arse, Dekadence
+	Telnet login address: ip4d17fd14.dynamic.kabel-deutschland.de (77.23.253.20)
+	Conference 5: C64 Auto-ReJoined
+	ASCII & ANSI (10) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+10-18-25 (01:00:26) lordnikon Off Normally
+**************************************************************
+10-18-25 (05:10:21) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/ILL-AXPV.ZIP 756485 bytes
+	 1 files, 738k bytes, 0 minutes 1 seconds 444991 cps, 23176% efficiency at 19200
+10-18-25 (05:19:24) Ransom1122 Off Loss Carrier
+**************************************************************
+10-18-25 (07:23:27) [224] Shocker (CONNECT 19200) HiGH VoLTAge
+	Telnet login address:  (185.9.7.69)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Uploading TRSI-CLB.DMS 793517 bytes
+	Uploading TRSI-CLB.LHA 94982440 bytes
+	Uploading TRSI-CLB.NFO 12874 bytes
+	Uploading TRSI-CLB.zip 93018956 bytes
+	 4 file(s), 184382k bytes, 1 minute(s). 15 second(s), 2504082 cps, 130420% efficiency.
+	Upload moved to BBS:Conf2/Upload/TRSI-CLB.DMS
+	Upload moved to BBS:Conf2/Upload/TRSI-CLB.LHA
+	Upload moved to BBS:Conf2/Upload/TRSI-CLB.NFO
+	Upload moved to BBS:Conf2/Upload/TRSI-CLB.ZIP
+10-18-25 (07:26:30) Shocker Off Normally
+**************************************************************
+10-18-25 (10:27:21) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-177-124-101.hosted-by-worldstream.net (185.177.124.101)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading SIDDP109.LHA 61652 bytes
+	Uploading LSMLM200.LHA 27866908 bytes
+	Uploading LSML4200.LHA 28120603 bytes
+	 3 file(s), 54735k bytes, 0 minute(s). 54 second(s), 1022048 cps, 53231% efficiency.
+	Skipped TRSI-CLB.DMS
+	Skipped TRSI-CLB.LHA
+	Skipped TRSI-CLB.NFO
+	Skipped TRSI-CLB.ZIP
+	Upload moved to BBS:Conf2/Upload/SIDDP109.LHA
+	Upload moved to BBS:Conf2/Upload/LSMLM200.LHA
+	Upload moved to BBS:Conf2/Upload/LSML4200.LHA
+10-18-25 (10:28:51) RaGe Off Normally
+**************************************************************
+10-18-25 (11:39:21) [543] lordnikon (CONNECT 19200) Dekadence
+	Telnet login address: ip4d17fd14.dynamic.kabel-deutschland.de (77.23.253.20)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+10-18-25 (11:42:48) lordnikon Off Normally
+**************************************************************
+10-18-25 (18:00:48) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: 185-177-124-101.hosted-by-worldstream.net (185.177.124.101)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Upload Failed..
+	Skipped SIDDP109.LHA
+	Skipped LSMLM200.LHA
+	Skipped LSML4200.LHA
+	Skipped TRSI-CLB.DMS
+	Skipped TRSI-CLB.LHA
+	Skipped TRSI-CLB.NFO
+	Skipped TRSI-CLB.ZIP
+	Uploading LSLMR200.LHA 27810525 bytes
+	Uploading MIR-CNLP.DMS 319157 bytes
+	Uploading KYVOS160.ZIP 67295579 bytes
+	Uploading J-TNF104.DMS 743158 bytes
+	Uploading J-TNF104.LHA 696614 bytes
+	Uploading FIX-MMPV.DMS 175049 bytes
+	 6 file(s), 94765k bytes, 1 minute(s). 43 second(s), 937947 cps, 48851% efficiency.
+	Upload moved to BBS:Conf2/Upload/LSLMR200.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-CNLP.DMS
+	Upload moved to BBS:Conf2/Upload/KYVOS160.ZIP
+	Upload moved to BBS:Conf2/Upload/J-TNF104.DMS
+	Upload moved to BBS:Conf2/Upload/J-TNF104.LHA
+	Upload moved to BBS:Conf2/Upload/FIX-MMPV.DMS
+10-18-25 (18:03:57) RaGe Off Normally
+**************************************************************
+10-18-25 (19:59:03) [538] ramkiller (CONNECT 19200) italy trieste
+	Telnet login address: 81-4-100-99.cloud.ramnode.com (81.4.100.99)
+	Conference 5: C64 Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Directory Scan with AquaScan by Aquarius
+	Download Failed..
+10-18-25 (20:06:21) ramkiller Off Loss Carrier
+**************************************************************
+10-18-25 (20:09:00) [199] R/\DIOSITY (CONNECT 19200) HOODLUM
+	Telnet login address: dynamic-176-000-008-195.176.0.pool.telefonica.de (176.0.8.195)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-18-25 (20:09:40) R/\DIOSITY Off Normally
+**************************************************************
+10-18-25 (20:41:14) [532] kokkiklhs (CONNECT 19200) Athens, GR
+	Telnet login address: 130.43.77.162.dsl.dyn.forthnet.gr (130.43.77.162)
+	Conference 5: C64 Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	/X Section (4) Conference Joined
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	**Input timed out **
+10-18-25 (20:52:47) kokkiklhs Off Normally
+**************************************************************
+10-18-25 (20:57:10) NEW [544] Mindb3nd3r (CONNECT 19200) Kingsfield, Stockholm
+	Telnet login address: 81-4-100-99.cloud.ramnode.com (81.4.100.99)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Transfer Activities v2.0 by Bobo/Mystic
+	Directory Scan with AquaScan by Aquarius
+	Used SysInfo v2.3 by WHiZ/eQX!
+	Directory Scan with AquaScan by Aquarius
+	**Input timed out **
+10-18-25 (21:18:08) Mindb3nd3r Off Normally
+**************************************************************
+10-18-25 (22:31:36) [60] spot (CONNECT 19200) Up Rough
+	Telnet login address: c213-89-15-130.bredband.tele2.se (213.89.15.130)
+	Conference 4: /X Section Auto-ReJoined
+	/X Section (4) Conference Joined
+10-18-25 (22:35:32) spot Off Normally
+	**Input timed out **
+**************************************************************
+10-18-25 (22:59:34) [543] lordnikon (CONNECT 19200) Dekadence
+	Telnet login address: ip4d17fd14.dynamic.kabel-deutschland.de (77.23.253.20)
+	Password Failure (crasherx)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	ASCII & ANSI (10) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Amiga Warez! (2) Conference Joined
+	ASCII & ANSI (10) Conference Joined
+	Uploading dkd-aplant.l 34324 bytes
+	 1 file(s), 33k bytes, 0 minute(s). 0 second(s), 90326 cps, 4704% efficiency.
+	CONFTOP (ERROR): Reset date is out of range.
+	Upload moved to BBS:Conf10/Upload/DKD-APLT.LHA
+10-18-25 (23:04:56) lordnikon Off Normally
+**************************************************************
+10-18-25 (23:06:49) [60] spot (CONNECT 19200) Up Rough
+	Telnet login address: c213-89-15-130.bredband.tele2.se (213.89.15.130)
+10-18-25 (23:12:24) spot Off Normally
+**************************************************************
+10-19-25 (05:43:04) [529] KayPirinha (CONNECT 19200) Somewhere
+	Telnet login address: ip-095-222-009-000.um34.pools.vodafone-ip.de (95.222.9.0)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/TRSI-CLB.ZIP 93019490 bytes
+	Downloading BBS:Conf2/Upload/TRSI-CLB.LHA 94982893 bytes
+	 2 files, 183596k bytes, 2 minutes 5 seconds 1504019 cps, 78334% efficiency at 19200
+10-19-25 (05:50:14) KayPirinha Off Normally
+**************************************************************
+10-19-25 (06:33:30) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+	Downloading BBS:Conf2/Upload/FIX-MMPV.DMS 177771 bytes
+	Downloading BBS:Conf2/Upload/MIR-CNLP.DMS 321879 bytes
+	Downloading BBS:Conf2/Upload/LSLMR200.LHA 27810977 bytes
+	Downloading BBS:Conf2/Upload/LSML4200.LHA 28121053 bytes
+	Downloading BBS:Conf2/Upload/TRSI-CLB.ZIP 93019490 bytes
+	Downloading BBS:Conf2/Upload/TRSI-CLB.NFO 14159 bytes
+	Downloading BBS:Conf2/Upload/TRSI-CLB.LHA 94982893 bytes
+	Downloading BBS:Conf2/Upload/TRSI-CLB.DMS 796239 bytes
+	Downloading BBS:Conf2/Upload/ILL-AXPV.ZIP 756485 bytes
+	 9 files, 240235k bytes, 1 minutes 8 seconds 3611288 cps, 188087% efficiency at 19200
+10-19-25 (06:46:25) Ransom1122 Off Loss Carrier
+**************************************************************
+10-19-25 (06:57:26) [498] Ransom1122 (CONNECT 19200) Aus
+	Telnet login address:  (104.28.217.24)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+10-19-25 (07:04:43) Ransom1122 Off Loss Carrier
+**************************************************************
+10-19-25 (10:40:29) [516] MaRWic (CONNECT 19200) [dECiSiON&ShELTER]
+	Telnet login address:  (185.35.236.131)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	C64 (5) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading CFN-DRJ4.ZIP 46339 bytes
+	Uploading MSA-CSNK.ZIP 11509 bytes
+	 2 file(s), 56k bytes, 0 minute(s). 0 second(s), 262945 cps, 13695% efficiency.
+	Skipped TEDI-MIR.ZIP
+	Skipped lxt-jurl.zip
+	Skipped EX-MPGY2.ZIP
+	Skipped LXT-BFC1.ZIP
+	Skipped LXT-BFF1.ZIP
+	Upload moved to BBS:Conf5/Upload/CFN-DRJ4.ZIP
+	Upload moved to BBS:Conf5/Upload/MSA-CSNK.ZIP
+	Amiga Warez! (2) Conference Joined
+	Directory Scan with AquaScan by Aquarius
+	Uploading PIXY10R6.LHA 7207841 bytes
+	Uploading ACON140.LHA  2987256 bytes
+	Uploading SNP54127.LHA 99083 bytes
+	Uploading BK-S10UX.NFO 7013 bytes
+	Uploading BK-S10UC.ZIP 67327077 bytes
+	Uploading BK-S10UH.LHA 1886980 bytes
+	Uploading BK-S10U3.DMS 375893 bytes
+	Uploading BK-S10U2.DMS 818478 bytes
+	Uploading BK-S10U1.DMS 751300 bytes
+	Uploading BK-S10UP.LHA 4583062 bytes
+	Uploading FTN-MUMO.DMS 178624 bytes
+	 11 file(s), 84201k bytes, 0 minute(s). 19 second(s), 4376782 cps, 227957% efficiency.
+	Skipped SIDDP109.LHA
+	Skipped LSMLM200.LHA
+	Skipped LSML4200.LHA
+	Skipped LSLMR200.LHA
+	Skipped MIR-CNLP.DMS
+	Skipped KYVOS160.ZIP
+	Skipped J-TNF104.DMS
+	Skipped J-TNF104.LHA
+	Skipped FIX-MMPV.DMS
+	Skipped TRSI-CLB.ZIP
+	Skipped TRSI-CLB.NFO
+	Skipped TRSI-CLB.LHA
+	Skipped TRSI-CLB.DMS
+	Skipped ACON132.LHA
+	Skipped XASH3D11.LHA
+	Skipped 3DOC150.LHA
+	Skipped ILL-AXPV.ZIP
+	Skipped P-EVDM11.LHA
+	Skipped P-SDI12.LHA
+	Skipped DM-MMA10.LHA
+	Skipped AMIM3531.LHA
+	Skipped AMIDR138.LHA
+	Skipped AMIDA138.LHA
+	Skipped LHAR1141.LHA
+	Skipped LHAM1141.LHA
+	Skipped LHA41141.LHA
+	Skipped LHAX1141.LHA
+	Skipped TREEM221.LHA
+	Skipped BW-CB137.LHA
+	Skipped B-DR090.LHA
+	Skipped AMIA3531.LHA
+	Skipped AMIC3531.LHA
+	Skipped F1GP25SG.LHA
+	Skipped WHIFF417.LHA
+	Skipped WP-CJU12.LHA
+	Skipped WP-CJ12E.LHA
+	Skipped WP-CAB11.LHA
+	Skipped WP-CBG10.LHA
+	Skipped J-HS09D.DMS
+	Skipped WP-PUC10.LHA
+	Skipped J-HS09H.LHA
+	Skipped IC-OSHD5.ZIP
+	Skipped FIX-CCCL.DMS
+	Skipped AST-DS04.DMS
+	Skipped DEARK171.LHA
+	Skipped AMSL3525.LHA
+	Skipped AMSL4525.LHA
+	Skipped SLSDK525.LHA
+	Skipped TESTP662.ZIP
+	Skipped SHWMEM32.LHA
+	Skipped ODUNA928.LHA
+	Skipped ODUNR928.LHA
+	Skipped P96DV361.LHA
+	Skipped P96DD361.LHA
+	Skipped FIX-MTFF.DMS
+	Skipped REDP0959.LHA
+	Skipped TNPM10.LHA
+	Skipped ODUNA927.LHA
+	Skipped ODUNR927.LHA
+	Skipped AMIMES12.LHA
+	Skipped PASTPS21.LHA
+	Skipped ACON122.LHA
+	Upload moved to BBS:Conf2/Upload/PIXY10R6.LHA
+	Upload moved to BBS:Conf2/Upload/ACON140.LHA
+	Upload moved to BBS:Conf2/Upload/SNP54127.LHA
+	Upload moved to BBS:Conf2/Upload/BK-S10UX.NFO
+	Upload moved to BBS:Conf2/Upload/BK-S10UC.ZIP
+	Upload moved to BBS:Conf2/Upload/BK-S10UH.LHA
+	Upload moved to BBS:Conf2/Upload/BK-S10U3.DMS
+	Upload moved to BBS:Conf2/Upload/BK-S10U2.DMS
+	Upload moved to BBS:Conf2/Upload/BK-S10U1.DMS
+	Upload moved to BBS:Conf2/Upload/BK-S10UP.LHA
+	Upload moved to BBS:Conf2/Upload/FTN-MUMO.DMS
+10-19-25 (10:42:17) MaRWic Off Normally
+19-Nov-25 23:43 Login: sysop
+19-Nov-25 23:43 Door: GWALL
+19-Nov-25 23:43 Door exit: GWALL
+19-Nov-25 23:43 Door: GWALL
+19-Nov-25 23:43 Door exit: GWALL
+19-Nov-25 23:47 Login: sysop
+19-Nov-25 23:58 Login: sysop
+20-Nov-25 00:27 Login: sysop
+20-Nov-25 00:27 Door: GWALL
+20-Nov-25 00:27 Door exit: GWALL
+20-Nov-25 00:30 Logoff: sysop
+20-Nov-25 06:41 Login: sysop
+20-Nov-25 06:41 Door: GWALL
+20-Nov-25 06:41 Door exit: GWALL
+20-Nov-25 06:46 Door: GWALL
+20-Nov-25 06:46 Door exit: GWALL
+20-Nov-25 07:28 Logoff: sysop
+20-Nov-25 10:11 Login: sysop
+20-Nov-25 10:13 Logoff: sysop

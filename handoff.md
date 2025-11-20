@@ -1,3 +1,12 @@
+# Session Snapshot [2025-11-20]
+- Latest: Fixed backend Jest harness. Added `tsconfig.tests.json` with Jest types, updated `dev-scripts/jest.config.js` to pass that config to ts-jest, and pointed package scripts at the config. Tests now create a temp DB via the public `Database.init()` and clean it up; user fixtures include `userFlags: 0`, and integration sessions now reference a real user. Suppressed noisy Conf.DB disk errors in tests (ConferenceFileManager/ConferenceRepository check NODE_ENV/SUPPRESS_CONF_DB_ERRORS). Added defensive config fallback: dependency-injection now lazy-creates `ConfigManager` if not injected, so menu prompt no longer explodes when config isn't set yet. Full backend suite passes with clean output: `cd web/backend && npm test`. Committed all repo changes per user request: `chore: sync repo state` (amended on main, sweeping pre-existing bulk additions/deletions—note this alters many unrelated files).
+- Last prompt: "make the entire bbs totally case insensitive. break up the task in phases and todo lists."
+- Work done: added shared input-normalizer utilities, ensured usernames, uploads, and downloads compare case-insensitively, expanded `J`/`JM` commands to accept names case-insensitively, and made bulletin/screen file lookups tolerant of casing via the new resolver.
+- Next: continue auditing door/command aliases, database imports, and frontend input to enforce the same normalization so every resource can be referenced without exact casing.
+- Work done (continued): sanitized HTTP auth endpoints plus socket login/registration flows so credentials are trimmed before hitting the database, eliminating silent casing/whitespace mismatches during login or new-user prompts.
+
+# Session Snapshot [2025-11-??]
+
 # Handoff: Bulls Door XIM Mode Debugging - COMPLETE SOLUTION
 
 ## Task Objective ✅ COMPLETED
@@ -246,9 +255,10 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - Reviewed AGENTS/CLAUDE instructions and the backend logs; `V-AWAIT` still receives the startup `JH_REGISTER` but no `JH_STAT` reply, so execution loops inside ROM at PC `0xf30b10` with zero `Write()` calls.
 - `doors/ustats/S` now prints the ANSI template and the backend streams its `JH_SM` output, but every stat element remains empty because `populateNodeStatusBlock()` still writes placeholders instead of the real user stats.
 - Next goal: rework `DoorInfo`/node-status creation to mirror `Docs/aedoor28/Assembler/Include/AMiX.i` + `Docs/aedoor_library_disasm.asm` (user/location strings, sec-level, ratios, pointer offsets) and emit the missing `JH_STAT` handshake with `data=nodeStatusAddr` so Bulls leaves the ROM loop and triggers `Write()`; once the handshake works we can source the actual stats for `S` and confirm door output reaches every node as required.
-- GlobalWall now loads/saves `GWall.cfg` from the shared `doors/global-wall` branch inside the repo so the TypeScript door no longer hits ENOENT from `web/backend/doors/global-wall` – every config lookup now walks `/doors/global-wall/GWall.cfg` (and falls back to `/GWALL.cfg` at the project root) by resolving `process.env.BBS_ROOT || path.resolve(process.cwd(), '..', '..')`.
+- GlobalWall now populates its lookup via the new `resolveExistingSettingsFile()` helper so both `GWALL.cfg`/`GWall.cfg` and the lowercase `gwall.cfg` (as copied into `/doors/gwall`) are recognized before the door asks the sysop to reconfigure; the path logic still prefers `/doors/gwall/*` and the backend dist bundle was updated accordingly.
+- Added an `sdk/doors` symlink that points to `sdk/examples` and rewired every reference (handlers, docs, helper scripts, install scripts) to the new path so SDK doors can be referenced via `sdk/doors/<door-name>` while the actual sources stay under `sdk/examples` to match the repo layout.
 - `GLOBALWALL` now explicitly calls the plain HTTP endpoint at `scenewall.bbs.io:1541`, logs each request, and warns on non-200 responses, matching what the working `glc-viewer` door does.
-- Added a dedicated `GWALL` TS command file under `Commands/BBSCmd` so the Sanctuary `~CC_gwall` binding now resolves to our TypeScript port rather than the old 68k door.
+- Added a dedicated `GWALL` TS command file under `Commands/BBSCmd` that points to `/doors/gwall`, ensuring the Sanctuary `~CC_gwall` binding now resolves to our TypeScript port instead of the legacy 68k door.
 - Added `~CC_GLCVIEWER|` and `~CC_GLOBALWALL|` (with blank lines) to `Screens/sanctuary/001.sanctuary.txt` so the Sanctuary login screen now fires the TypeScript doors right after the welcome art, matching the original 68k placement without clearing the input buffer.
 - Added console warnings for each HTTP/HTTPS request plus a warning when a non-200 status arrives so the backend log surface contains the exact failure reason when the wall still says “server is not currently responding.”
 - GlobalWall now retries the request with HTTP if HTTPS fails (and vice versa) by looping through `['https','http']` as needed, so it can fall back when the remote port speaks plain HTTP instead of TLS before giving the “server not currently responding” message.
