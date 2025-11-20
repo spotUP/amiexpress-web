@@ -1,6 +1,7 @@
 # Session Snapshot [2025-12-??]
 - Latest: SDK dev loop hardened. Installer now validates door type (TS/JS/PY/AREXX) and entrypoint (main/dist). Added `dev/scripts/door-doctor.js` (`npm run door:doctor`) to validate doors/ entries, plus `dev/scripts/create-door-skeleton.js` (`npm run door:create <name>`) to scaffold a TS door in doors/. Door Manager info view now shows last reload status and supports hot reload with `R` (build + reinstall). Removed legacy sdk watcher.
 - Prior: SDK workflow runs directly on live `doors/`. `dev/scripts/watch-doors.js` (`npm run dev:doors`) watches `doors/<id>`, builds unless `--no-build`, and re-registers via installer. Installer prefers `doors/` (sdk only if missing) and skips copying when already there. Door resolution prefers installed `doors/`; client bundler resolves SDK deps via BBS tree. GWALL SDK package ships default configs (`GWall.cfg` / `GWALL.cfg`) and installer seeds configs when copying.
+- New: Door Doctor now includes PY/AREXX checks (entry extensions, optional py_compile via DOCTOR_COMPILE_PY=1, warns if AREXX lacks a run script).
 - Next: Run `npm run dev:doors`, edit a dev door, use `R` in Door Manager, and run `npm run door:doctor` to verify. Python/AREXX support still needs runtime tests/build hooks if we want true prod parity. Tests not rerun this pass.
 
 # Session Snapshot [2025-11-20]
