@@ -1,3 +1,8 @@
+# Session Snapshot [2025-12-??]
+- Latest: Confirmed menu prompt/config crash is resolved in runtime; no new errors observed. User asked to commit/push everything—working tree is currently clean (no changes needed). Repo already includes prior bulk sync commit.
+- Last prompt: “ok silence it” → proceed; then “during login … error … missing config?” → fixed via config guards, now gone; finally “commit all changes and push to github … include everything” (nothing pending to commit).
+- Next: If new changes land, commit/push per user; otherwise continue Bulls door/node-status handshake work per earlier notes. Tests not rerun this pass.
+
 # Session Snapshot [2025-11-20]
 - Latest: Fixed backend Jest harness. Added `tsconfig.tests.json` with Jest types, updated `dev-scripts/jest.config.js` to pass that config to ts-jest, and pointed package scripts at the config. Tests now create a temp DB via the public `Database.init()` and clean it up; user fixtures include `userFlags: 0`, and integration sessions now reference a real user. Suppressed noisy Conf.DB disk errors in tests (ConferenceFileManager/ConferenceRepository check NODE_ENV/SUPPRESS_CONF_DB_ERRORS). Added defensive config fallback: dependency-injection now lazy-creates `ConfigManager` if not injected, so menu prompt no longer explodes when config isn't set yet. Full backend suite passes with clean output: `cd web/backend && npm test`. Committed all repo changes per user request: `chore: sync repo state` (amended on main, sweeping pre-existing bulk additions/deletions—note this alters many unrelated files).
 - Last prompt: "make the entire bbs totally case insensitive. break up the task in phases and todo lists."
