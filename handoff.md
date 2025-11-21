@@ -6,6 +6,10 @@
 - Latest: Login/menu screen flow now mirrors express.e: BULL → NODE_BULL → confScan → CONF_BULL → MENU with a single key per pause. Added a `displayFlowPaused` flag and `advanceDisplayFlow` driver so pauses are consumed and the next screen/menu advances automatically; menuPause now shows its own prompt before rendering the menu. CONF_BULL display returns a boolean (pause handled by caller). Tests: `cd web/backend && npx tsc --noEmit`, `cd web/backend && npm test` (pass).
 - Prompt: ok fix the screen flow parity
 
+- # Session Snapshot [2025-??-screen-flow-tests]
+- Latest: Added Jest coverage for the display flow (`web/backend/tests/displayFlow.test.ts`). Tests validate BULL → NODE_BULL → CONF_BULL → MENU progression with single keypress pauses and that NO_BULLS/NO_CONF_BULLS skip screens. Jest mocks index/door/emulation to avoid server startup. All backend tests pass.
+- Prompt: drive those verifications and move on to next 1:1 parity item
+
 - # Session Snapshot [2025-??-hotkeys-1to1]
 - Latest: Matched AmiExpress cmdShortcuts handling. MENU loads now reset `cmdShortcuts` before loading, resolve the exact screen path (including security-numbered variants) for `.keys` lookup, and only re-enable hotkeys when that `.keys` exists; otherwise they stay in line mode. `displayScreen` records the resolved path for `.keys` checks. Added a resolved-path `.keys` helper. Surveyed TypeScript doors; none override BBS hotkey mode—they rely on their own door input handlers.
 - Prompt: “do it, and go through all our typescript doors and make sure they use hotkeys as they should.”
