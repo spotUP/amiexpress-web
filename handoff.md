@@ -425,3 +425,29 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - Latest: Fixed `~SS_` parsing so the BBS now stops at the next `~`/`|` marker, which means `~SS_BBS:screens/flt.txt` no longer drags the trailing `~SP.` into the filename and the direct `BBS:` path resolves instead of hitting the fallback blind. `loadScreenFile` also only queries `findSecurityScreen` when the requested name comes from a numbered screen instead of a colon/assign path, so security variants stay consistent with the Kiernan flow.
 - Latest: Added a `GLCVIEWER` command file pointing to `doors/glc-viewer` so every node that still issues `~CC_GLCVIEWER` (the legacy string you saw in the login logs) can run our TS door; at the same time the JS bundle now uses a shared `padStat()` helper, so yesterday’s stats—sometimes delivered as numbers—no longer trigger the `.padStart is not a function` runtime crash.
 - Latest: `npx tsc --noEmit` (from `web/backend`) still passes after these updates, so the TypeScript guard remains green.
+
+# Session Snapshot [2025-12-??-bbs-login-flow-acs]
+- Latest: Stopped the QuickNew/GLCVIEW command recursion by marking queued screen command execution (`session.executingScreenCommand=true` in `runQueuedScreenCommands`). Added `getConferenceToolFlags` helper that reads Conf#.info tooltypes (and DB if present) to honor FORCE_NEWSCAN/NO_NEWSCAN, SHOW/NO_NEW_FILES, and FORCE_MENUS. Menu display now respects FORCE_MENUS, and mail scan checks FORCE/NO_NEWSCAN before scanning a conference.
+- Prompt: User wants 1:1 AmiExpress login/bulletin flow; QuickNew Enter spammed GLCVIEW/PromiseRejectCallback errors; asked to bring over missing tooltype/ACS behaviors.
+- Notes: New util at `web/backend/src/utils/conference-tooltypes.util.ts`; displayMainMenu updated in both command.handler and command-handler/menu. Mail scan still counts all messages as new (message pointers not implemented yet); NO_BULLS/NO_CONF_BULLS handling still to confirm from sources.
+- Next: Verify login flow live to ensure queued commands run once and bulletins proceed; implement bulletin tooltype gating (NO_BULLS/NO_CONF_BULLS) if present in express.e; add per-user message pointers so new-message counts match AmiExpress; consider new-files scan parity and run backend tsc/tests.
+
+# Session Snapshot [2025-12-??-quicknew-refresh]
+- Latest: QuickNew is generated via a standalone helper (Sanctuary layout, single `~SP.`). GLC dist bundle now defines `padField` to avoid recordcalls padStart crashes.
+- Prompt: “QuickNew looks like old sanctuary data; make it 1:1 with the E sources/output; GLC padStart crash.”
+- Files: `web/backend/src/utils/quicknew-generator.ts`, `doors/glc-viewer/dist/index.js` (padField fix).
+- Next: Verify QuickNew shows once with fresh data; confirm GLC no longer loops after its pause; still pending NO_BULLS/NO_CONF_BULLS gating and message-pointer tracking.
+
+# Session Snapshot [2025-12-??-quicknew-door]
+- Latest: Removed core auto-generation; QuickNew is provided as a TS door (`doors/quicknew/index.ts`) plus command file `Commands/BBSCmd/QUICKNEW.info`. Sysop installs/runs the door to regen `Screens/quicknew.txt` and display it, matching the original door/archive model.
+- Prompt: “QuickNew is a door; generator should ship with the door, not baked into the BBS.”
+- Next: Install/trigger QUICKNEW command as needed; confirm it generates/outputs once. GLC loop after keypress still to verify; NO_BULLS/NO_CONF_BULLS and message pointers remain TODO.
+
+# Session Snapshot [2025-12-??-quicknew-asm-port]
+- Latest: Ported the 68k QuickNew door logic 1:1 into `doors/QuickNew/index.ts`: parses classic config (first two lines prefixes, display mode line, text blocks ending with `#` + dirfile path), supports days argument (default 1, prior/last N-day stats), reads last 0x13880 bytes of the dirfile, parses padded filename/status/size/date, computes @N/@F/@Y/@Z/@M.0/@B.0/@D, renders columns with modes 1/2/3 (mode2 centered like asm), and outputs footer + `~SP.`. CLI args now match the original: FILE (config path, required), DAYS (optional numeric).
+- Prompt: “read and comment QuickNew.asm; make TS 100% compatible.”
+- Files: `doors/QuickNew/index.ts` rewritten to follow QuickNew.asm; config resolver honors `BBS:` assign; errors mirror original messages.
+- Next: Verify against sample configs in `Doors/QuickNew/QuickNew.Config*` to ensure outputs match example text; adjust display-mode centering if discrepancies appear. Pending: bulletin gating and message pointers.
+- # Session Snapshot [2025-12-??-bull-pointers]
+- Latest: Added NO_BULLS/NO_CONF_BULLS tooltype flags to conference parsing and applied gating in the login display flow (BULL, NODE_BULL, CONF_BULL now skip when flags are set). Mail scan now honors per-user message pointers: it loads conf_base pointers, validates against MailStats/header files, counts new public/private messages from HeaderFile (with DB fallback), and advances last_new_read_conf after scans. Ran `cd web/backend && npx tsc --noEmit` (passes).
+- Prompt context: “fix --> NO_BULLS/NO_CONF_BULLS gating and per-user message pointers”.
