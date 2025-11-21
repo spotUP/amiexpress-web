@@ -501,3 +501,6 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - # Session Snapshot [2025-12-??-merge-origo]
 - Latest: Resolved merge of `main` into `origo` by keeping the newer command handler/menu code from main (hotkey/menu flow). Fixed post-merge TypeScript errors: guarded `AmigaDosEnvironment` trap handler, replaced `CommandResult` value usage with string constants in command-processing, and annotated an error as `any` in core. `cd web/backend && npx tsc --noEmit` and `npm test` now pass. Branch clean after merge commit `6c665e54`.
 - Prompt: Merge conflicts in `web/backend/src/handlers/command.handler.ts` and `command-handler/menu.ts`; asked to commit/push once resolved.
+- # Session Snapshot [2025-12-??-menu-keys-hotfix]
+- Latest: Expert “?” menu path now uses the resolved-path `.keys` helper, matching MENU hotkey loading (covers security-numbered MENU keys). Tests: `cd web/backend && npx tsc --noEmit && npm test` (pass).
+- Prompt: Continue 1:1 parity; audit security-numbered screen handling and expert/door gating.
