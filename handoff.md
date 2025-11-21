@@ -498,3 +498,6 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 # Session Snapshot [2025-??-expert-flag-strings]
 - Latest: Expert flag now matches express.e semantics globally, stored as “X”/“N” instead of boolean. Toggled via X command, propagated to DB, auth, new-user, door defaults, user editor (Y/N → X/N), config API, and emulator (DT_EXPERT and +0xB9 user struct now map “X”/“N” to 1/0). MENU gating uses `'N'` for non-expert. Tests: `cd web/backend && npm test` (pass).
 - Prompt: “no i mean in the big amiexpress E 1:1 porting plan”
+- # Session Snapshot [2025-12-??-merge-origo]
+- Latest: Resolved merge of `main` into `origo` by keeping the newer command handler/menu code from main (hotkey/menu flow). Fixed post-merge TypeScript errors: guarded `AmigaDosEnvironment` trap handler, replaced `CommandResult` value usage with string constants in command-processing, and annotated an error as `any` in core. `cd web/backend && npx tsc --noEmit` and `npm test` now pass. Branch clean after merge commit `6c665e54`.
+- Prompt: Merge conflicts in `web/backend/src/handlers/command.handler.ts` and `command-handler/menu.ts`; asked to commit/push once resolved.
