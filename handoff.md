@@ -504,3 +504,6 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - # Session Snapshot [2025-12-??-menu-keys-hotfix]
 - Latest: Expert “?” menu path now uses the resolved-path `.keys` helper, matching MENU hotkey loading (covers security-numbered MENU keys). Tests: `cd web/backend && npx tsc --noEmit && npm test` (pass).
 - Prompt: Continue 1:1 parity; audit security-numbered screen handling and expert/door gating.
+- # Session Snapshot [2025-12-??-mci-rotation-tests]
+- Latest: Added Jest coverage for ~SX_/~SR_ numbering. `web/backend/tests/mci/rotation.test.ts` verifies 3-digit zero padding, counter starts at 1 and increments, and resetCounter restarts at 1. No code changes needed; existing `formatNumberedFilename`/SequentialFileManager already align with express.e. Tests: `cd web/backend && npx tsc --noEmit && npm test -- rotation.test.ts` (pass).
+- Prompt: “do them all” for remaining 1:1 parity items.
