@@ -2,6 +2,10 @@
 - Latest: Main menu now always resets to line-input mode before checking for `.keys`; hotkeys only re-enable if a `.keys` file exists. Queued screen commands now run and continue the login flow on the same keypress unless they change subState (fixes needing two Enters on pauses triggered by ~CC screens).
 - Prompt: "the main menu has hokeys enabled in the bbs. many press enter to continue requires me to press enter twice."
 
+- # Session Snapshot [2025-??-screen-flow-parity]
+- Latest: Login/menu screen flow now mirrors express.e: BULL → NODE_BULL → confScan → CONF_BULL → MENU with a single key per pause. Added a `displayFlowPaused` flag and `advanceDisplayFlow` driver so pauses are consumed and the next screen/menu advances automatically; menuPause now shows its own prompt before rendering the menu. CONF_BULL display returns a boolean (pause handled by caller). Tests: `cd web/backend && npx tsc --noEmit`, `cd web/backend && npm test` (pass).
+- Prompt: ok fix the screen flow parity
+
 - # Session Snapshot [2025-??-hotkeys-1to1]
 - Latest: Matched AmiExpress cmdShortcuts handling. MENU loads now reset `cmdShortcuts` before loading, resolve the exact screen path (including security-numbered variants) for `.keys` lookup, and only re-enable hotkeys when that `.keys` exists; otherwise they stay in line mode. `displayScreen` records the resolved path for `.keys` checks. Added a resolved-path `.keys` helper. Surveyed TypeScript doors; none override BBS hotkey mode—they rely on their own door input handlers.
 - Prompt: “do it, and go through all our typescript doors and make sure they use hotkeys as they should.”
