@@ -1,3 +1,34 @@
+- # Session Snapshot [2025-??-bbs-menu-hotkeys]
+- Latest: Main menu now always resets to line-input mode before checking for `.keys`; hotkeys only re-enable if a `.keys` file exists. Queued screen commands now run and continue the login flow on the same keypress unless they change subState (fixes needing two Enters on pauses triggered by ~CC screens).
+- Prompt: "the main menu has hokeys enabled in the bbs. many press enter to continue requires me to press enter twice."
+
+- # Session Snapshot [2025-??-screen-flow-parity]
+- Latest: Login/menu screen flow now mirrors express.e: BULL → NODE_BULL → confScan → CONF_BULL → MENU with a single key per pause. Added a `displayFlowPaused` flag and `advanceDisplayFlow` driver so pauses are consumed and the next screen/menu advances automatically; menuPause now shows its own prompt before rendering the menu. CONF_BULL display returns a boolean (pause handled by caller). Tests: `cd web/backend && npx tsc --noEmit`, `cd web/backend && npm test` (pass).
+- Prompt: ok fix the screen flow parity
+
+- # Session Snapshot [2025-??-screen-flow-tests]
+- Latest: Added Jest coverage for the display flow (`web/backend/tests/displayFlow.test.ts`). Tests validate BULL → NODE_BULL → CONF_BULL → MENU progression with single keypress pauses and that NO_BULLS/NO_CONF_BULLS skip screens. Jest mocks index/door/emulation to avoid server startup. All backend tests pass.
+- Prompt: drive those verifications and move on to next 1:1 parity item
+
+- # Session Snapshot [2025-??-mail-file-scan]
+- Latest: Mail scan gating now honors per-base scanFlags and tooltypes. `confScan` checks `MAIL_SCAN_MASK` via `conf_base` and FORCE/NO_NEWSCAN; file scan honors SHOW_NEW_FILES/NO_NEW_FILES plus `FILE_SCAN_MASK` and runs `N` (`S U`) when enabled. Added `getConferenceScanFlags` helper. Tests: `cd web/backend && npx tsc --noEmit && npm test`.
+- Prompt: broaden security-numbered screen checks; next was new mail/file gating parity.
+
+- # Session Snapshot [2025-??-hotkeys-1to1]
+- Latest: Matched AmiExpress cmdShortcuts handling. MENU loads now reset `cmdShortcuts` before loading, resolve the exact screen path (including security-numbered variants) for `.keys` lookup, and only re-enable hotkeys when that `.keys` exists; otherwise they stay in line mode. `displayScreen` records the resolved path for `.keys` checks. Added a resolved-path `.keys` helper. Surveyed TypeScript doors; none override BBS hotkey mode—they rely on their own door input handlers.
+- Prompt: “do it, and go through all our typescript doors and make sure they use hotkeys as they should.”
+
+- # Session Snapshot [2025-??-hotkeys-1to1-b]
+- Latest: Consolidated menu handling to the command-handler menu module; command.handler now re-exports that implementation. `.keys` now loads into `session.shortcuts` using a ShortcutMap, and READ_SHORTCUTS translates keys via those entries before processing commands (express.e translateShortcut parity). MENU load still resets cmdShortcuts/shortcut map before checking `.keys`.
+- Prompt: “yes do that”
+
+- # Session Snapshot [2025-??-hotkeys-1to1-c]
+- Latest: cmdShortcuts resets now cover logoff (express.e 8124): Goodbye clears hotkeys/shortcuts map. Sessions initialize `shortcuts: new Map()` via session manager; only the single menu handler remains. Tests: `cd web/backend && npm test` (pass).
+- Prompt: “ok run the tests” / “ok push on”
+
+- # Session Snapshot [2025-??-expert-mode-flag]
+- Latest: EXPERT_MODE tooltype now treated as a boolean flag (presence sets expertMode) to match express.e doorExpertMode behavior when loading commands (.info). (amiga-command-parser.util.ts). Still to audit additional cmdShortcuts resets (door exit, relogon/expert toggles) and ensure session mutations stay limited to MENU/logoff paths.
+
 - # Session Snapshot [2025-11-20-b]
 - Latest: Retried the dungeon RPG door build (`cd Doors/dungeon-rpg && npm install && npm run build`) after the earlier fork error; added `// @ts-nocheck` + types reference to `Doors/dungeon-rpg/index.ts` and annotated the server RPC/connect/input params as `any` to match the SDK example. Build now succeeds.
 - Prompt context: user asked to "try again" and report any new errors. If the door throws new logs at runtime, capture them for follow-up.
@@ -451,3 +482,19 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - # Session Snapshot [2025-12-??-bull-pointers]
 - Latest: Added NO_BULLS/NO_CONF_BULLS tooltype flags to conference parsing and applied gating in the login display flow (BULL, NODE_BULL, CONF_BULL now skip when flags are set). Mail scan now honors per-user message pointers: it loads conf_base pointers, validates against MailStats/header files, counts new public/private messages from HeaderFile (with DB fallback), and advances last_new_read_conf after scans. Ran `cd web/backend && npx tsc --noEmit` (passes).
 - Prompt context: “fix --> NO_BULLS/NO_CONF_BULLS gating and per-user message pointers”.
+
+# Session Snapshot [2025-??-hotkeys-audit]
+- Latest: Menu flow now mirrors express.e: menuPause only triggers the pause prompt (doPause) and no longer suppresses menu display; menu display condition matches expert/doorExpert/forceMenus and loads `.keys` using the resolved screen path. READ_SHORTCUTS now feeds commands through PROCESS_COMMAND with menuPause set to false before returning to DISPLAY_MENU. Added a shared helper for post-command menu return, preserved door/sysop menu bypasses, stripped non-ASCII logging (emojis). Tests: `cd web/backend && npm test` pass.
+- Prompt: “audit other cmdShortcuts resets (relogon/expert toggle/door exit), ensure no stray mutations outside MENU/logoff, and verify expert/doorExpert transitions match express.e”
+
+# Session Snapshot [2025-??-pause-prompt]
+- Latest: doPause prompt now matches express.e exactly: “(Pause)...Space To Resume:” with original color codes. Backend tests still pass (`cd web/backend && npm test`).
+- Prompt: Asked to swap the pause prompt to the express.e wording.
+
+# Session Snapshot [2025-??-expert-questionmark-menu]
+- Latest: ? command now mirrors express.e for expert users: it displays MENU even in expert mode, loads the `.keys` alongside the resolved MENU path, sets cmdShortcuts accordingly, and immediately refreshes the menu prompt/input state. Added `hasKeysFile` injection into display-file commands deps. Tests: `cd web/backend && npm test` pass.
+- Prompt: Continue aligning hotkey/expert behaviors; verify screen command enter handling.
+
+# Session Snapshot [2025-??-expert-flag-strings]
+- Latest: Expert flag now matches express.e semantics globally, stored as “X”/“N” instead of boolean. Toggled via X command, propagated to DB, auth, new-user, door defaults, user editor (Y/N → X/N), config API, and emulator (DT_EXPERT and +0xB9 user struct now map “X”/“N” to 1/0). MENU gating uses `'N'` for non-expert. Tests: `cd web/backend && npm test` (pass).
+- Prompt: “no i mean in the big amiexpress E 1:1 porting plan”
