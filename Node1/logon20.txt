@@ -7,4 +7,4 @@
 ~f|
 ~SS_BBS:screens/uprough.txt||~SP.
 ~f|
-~SS_BBS:screens/quicknew.txt
+~SS_BBS:screens/quicknew.txt||~SP.
