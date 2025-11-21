@@ -1,2 +1,0 @@
-~XIDOORS:who/NI
-~SS_bbs:screens/sanctuary/007.sanctuary.txt
