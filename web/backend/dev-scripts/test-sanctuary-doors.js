@@ -14,7 +14,7 @@ console.log('🧪 Testing Sanctuary Doors...\n');
 const PROJECT_ROOT = path.resolve(__dirname, '../../..');
 
 console.log('1. Testing door configuration files:');
-const globalWallPath = path.join(PROJECT_ROOT, 'doors', 'global-wall', 'GWALL.cfg');
+const globalWallPath = path.join(PROJECT_ROOT, 'doors', 'gwall', 'GWALL.cfg');
 const glcViewerPath = path.join(PROJECT_ROOT, 'doors', 'glcviewer', 'GLCViewer.cfg');
 
 const globalWallExists = fs.existsSync(globalWallPath);
@@ -25,7 +25,7 @@ console.log('   GLC Viewer config:', glcViewerExists ? '✅ Found' : '❌ Not fo
 
 // Test door executables
 console.log('\n2. Testing door executables:');
-const globalWallDir = path.join(PROJECT_ROOT, 'doors', 'global-wall');
+const globalWallDir = path.join(PROJECT_ROOT, 'doors', 'gwall');
 const glcViewerDir = path.join(PROJECT_ROOT, 'doors', 'glcviewer');
 
 const globalWallDirExists = fs.existsSync(globalWallDir);
@@ -47,7 +47,7 @@ for (const server of testDoorServers) {
 
 // Test backend door implementations
 console.log('\n4. Testing backend door implementations:');
-const globalWallImpl = path.join(PROJECT_ROOT, 'web', 'backend', 'src', 'doors', 'global-wall', 'index.ts');
+const globalWallImpl = path.join(PROJECT_ROOT, 'web', 'backend', 'src', 'doors', 'gwall', 'index.ts');
 const glcViewerImpl = path.join(PROJECT_ROOT, 'web', 'backend', 'src', 'doors', 'glc-viewer', 'index.ts');
 
 const globalWallImplExists = fs.existsSync(globalWallImpl);
