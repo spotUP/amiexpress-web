@@ -447,6 +447,12 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 
 # Session Snapshot [2025-12-??-gwall-glc]
 - Latest: Fixed screen resolution so numbered security screens are honored and the dataDir points at the repo root. `loadScreenFile` now calls `findSecurityScreen` before loading, and it passes the session’s nodeId (so `LOGON20.TXT` under Node1/ etc. is found). Config default `dataDir` now roots at the repo (`path.resolve(__dirname,'../../..')`) so screens resolve correctly without requiring BBS_DATA_DIR. ~SX_/~SR_ now use express-style zero-padded `NNN.<basename>` filenames, and ~SR_ honors an optional max count parameter.
+- # Session Snapshot [2025-12-??-mail-scan-parity-tests]
+- Latest: Added `web/backend/tests/message-scan-parity.test.ts` to lock mail scan behavior to express.e. Coverage: counts public/private new mail from HeaderFile while respecting conf_base pointers (clamped to lowestNotDel), skips scanning when NO_NEWSCAN is set, and forceNewscan overrides disabled MAIL_SCAN flags. Pointers advance to MailStats high value after scans.
+- Tests: `cd web/backend && npm test -- message-scan-parity` (pass).
+- Remaining from parity list: file/ratio gating (FORCE/NO_NEW_FILES, FILE_SCAN_MASK, flagged file handling), door exit/menu return resets, tooltype/ACS audit, callers-log/persistence alignment.
+- Prompt context: continuing 1:1 AmiExpress E parity; “proceed, prompt me only when you must.”
+
 - Added a minimal `Screens/BULL.TXT` that calls `~CC_GLCVIEWER||` and `~CC_GWALL||` so the doors auto-run from bulletins; per latest prompt, you plan to trigger them from `logon20.txt` instead (now security lookup will pick it up).
 - Tests: `cd web/backend && npm test` (pass).
 - Update: Restored the express.e login step that displays the LOGON screen (security-aware) before bulletins. After auth, we now call `displayScreen(socket, session, 'LOGON')` and pause if it renders, then proceed to bulletins. This makes `LOGON20.TXT` trigger `~CC_GLCVIEW/~CC_GWALL` for sec>=20 users (including sysop).
