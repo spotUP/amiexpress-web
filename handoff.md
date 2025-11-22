@@ -450,7 +450,8 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - # Session Snapshot [2025-12-??-mail-scan-parity-tests]
 - Latest: Added `web/backend/tests/message-scan-parity.test.ts` to lock mail scan behavior to express.e. Coverage: counts public/private new mail from HeaderFile while respecting conf_base pointers (clamped to lowestNotDel), skips scanning when NO_NEWSCAN is set, and forceNewscan overrides disabled MAIL_SCAN flags. Pointers advance to MailStats high value after scans.
 - Tests: `cd web/backend && npm test -- message-scan-parity` (pass).
-- Remaining from parity list: file/ratio gating (FORCE/NO_NEW_FILES, FILE_SCAN_MASK, flagged file handling), door exit/menu return resets, tooltype/ACS audit, callers-log/persistence alignment.
+- Update: Extended the same suite to cover file-scan gating parity. Tests now assert per-base `FILE_SCAN_MASK` triggers `N S U`, `NO_NEW_FILES` suppresses even when per-base set, and `SHOW_NEW_FILES` forces scan when per-base FILE_SCAN is off. This pins express.e checkFileConfScan behavior.
+- Remaining from parity list: ratio/flagged-file handling (Goodbye/batch), door exit/menu return resets, broader tooltype/ACS audit, callers-log/persistence alignment.
 - Prompt context: continuing 1:1 AmiExpress E parity; “proceed, prompt me only when you must.”
 
 - Added a minimal `Screens/BULL.TXT` that calls `~CC_GLCVIEWER||` and `~CC_GWALL||` so the doors auto-run from bulletins; per latest prompt, you plan to trigger them from `logon20.txt` instead (now security lookup will pick it up).
