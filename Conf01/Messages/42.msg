@@ -1,6 +1,6 @@
-user1
-
-User1 Message
-21-Nov-25 01:22:13
+testuser
+recipient
+Private Test
+22-Nov-25 15:26:08
 2
-Message from user 1 in General
+Private message

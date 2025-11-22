@@ -1,6 +1,6 @@
 testuser
-recipient
-Private Test
-21-Nov-25 01:22:13
-2
-Private message
+
+Test Subject
+22-Nov-25 15:26:08
+1
+Test message body

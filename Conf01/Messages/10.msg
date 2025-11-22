@@ -1,6 +1,6 @@
 testuser
-
-Integration Test
-20-Nov-25 10:15:06
-1
-This is an integration test message
+SYSOP
+Comment to Sysop
+22-Nov-25 12:01:32
+3
+This is a comment to the sysop

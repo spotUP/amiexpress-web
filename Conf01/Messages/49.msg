@@ -1,6 +1,6 @@
 testuser
-recipient
-Private Test
-21-Nov-25 14:43:12
-2
-Private message
+
+Integration Test
+22-Nov-25 15:27:33
+1
+This is an integration test message
