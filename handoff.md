@@ -99,3 +99,14 @@ The documentation provides everything needed for ASCII artists to create authent
 - Message-entry substates now recover correctly (To → Subject → Private → Body) and echo input/backspace during To/Subject/Private prompts; typing in the “To:” field works.
 - Telnet/SSH no longer force-clear shortcuts; the state machine governs shortcut mode. Door state is cleared if inDoorManager is set without a handler.
 - `cd web/backend && npx tsc --noEmit` (pass).
+
+## Current Session (Message body echo)
+- Backend log showed POST_MESSAGE_BODY was consuming single characters with an empty buffer, so no echo appeared while typing. Updated `handleMessageEntryInput` to line-buffer characters, echo/backspace locally, and submit the full line on Enter (with a CR/LF before processing) to match AmiExpress behavior.
+- `cd web/backend && npx tsc --noEmit` (pass).
+- Next: retest full message entry (To/Subject/Private/Body) to verify echo, editor commands, and save/abort flow align 1:1.
+
+## Current Session (Conference paths canonicalized)
+- Tooltypes in `ConfConfig.info` specify `LOCATION.n=BBS:Conf#`. Updated path handling to match AmiExpress: unpadded `Conf#` names and BBS-rooted paths.
+- Moved `Conf1`-`Conf14` directories into `BBS/Conf#` and merged the old `BBS/Conf01` content into `BBS/Conf1`; removed `BBS/Conf01`.
+- Updated path helpers and managers: `bbs-paths.util.ts`, `MessageFileManager`, and `FileAreaManager` now target `BBS/Conf#`; default/fallback paths and exports switched from `Conf01` to `Conf1`.
+- Adjusted default references (`index.ts`, `session-manager.ts`, `bbs-info.ts/.js`, deployment/export paths, and helper comments). `npx tsc --noEmit` passes.
