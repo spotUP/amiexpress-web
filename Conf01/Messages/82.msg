@@ -1,6 +1,6 @@
-e2euser
+testuser
 
-E2E Test Message
-21-Nov-25 15:47:21
+Integration Test
+22-Nov-25 17:49:06
 1
-This is a complete end-to-end test message
+This is an integration test message

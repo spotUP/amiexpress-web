@@ -1,6 +1,6 @@
-user1
-
-User1 Message
-21-Nov-25 15:34:39
-2
-Message from user 1 in General
+testuser
+SYSOP
+Comment to Sysop
+22-Nov-25 16:30:24
+3
+This is a comment to the sysop

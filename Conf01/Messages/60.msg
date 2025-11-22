@@ -1,6 +1,6 @@
 testuser
-SYSOP
-Comment to Sysop
-21-Nov-25 15:12:39
-3
-This is a comment to the sysop
+recipient
+Private Test
+22-Nov-25 15:36:46
+2
+Private message
