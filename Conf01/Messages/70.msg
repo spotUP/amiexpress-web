@@ -1,6 +1,6 @@
-user1
+testuser
 
-User1 Message
-21-Nov-25 15:39:22
-2
-Message from user 1 in General
+Integration Test
+22-Nov-25 16:43:37
+1
+This is an integration test message

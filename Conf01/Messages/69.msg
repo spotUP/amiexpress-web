@@ -1,6 +1,6 @@
-testuser
+user1
 
-Test Subject
-21-Nov-25 15:39:22
-1
-Test message body
+User1 Message
+22-Nov-25 16:30:25
+2
+Message from user 1 in General

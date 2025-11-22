@@ -1,6 +1,6 @@
-e2euser
+testuser
 
-E2E Test Message
-21-Nov-25 15:46:51
+Test Subject
+22-Nov-25 16:53:35
 1
-This is a complete end-to-end test message
+Test message body
