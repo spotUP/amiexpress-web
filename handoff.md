@@ -115,3 +115,6 @@ The documentation provides everything needed for ASCII artists to create authent
 - Moved `Conf1`-`Conf14` directories into `BBS/Conf#` and merged the old `BBS/Conf01` content into `BBS/Conf1`; removed `BBS/Conf01`.
 - Updated path helpers and managers: `bbs-paths.util.ts`, `MessageFileManager`, and `FileAreaManager` now target `BBS/Conf#`; default/fallback paths and exports switched from `Conf01` to `Conf1`.
 - Adjusted default references (`index.ts`, `session-manager.ts`, `bbs-info.ts/.js`, deployment/export paths, and helper comments). `npx tsc --noEmit` passes.
+
+## Current Session (Conference directory cleanup)
+- `logs/backend.log` still complained about `Conf01` when locating command folders, downloads, bulletins, and FM scans. Swapped every hardcoded `Conf${String(...padStart)` for `Conf${confNum}` plus the `getConferenceDir` helper, rewired bulletin helpers to use the BBS root, and taught the screen loader & command scanner to look through both the new `BBS/Conf#` tree and legacy `Conf0#` names before falling back. `cd web/backend && npx tsc --noEmit` (pass).
