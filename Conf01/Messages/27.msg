@@ -1,6 +1,6 @@
-testuser
-SYSOP
-Comment to Sysop
-21-Nov-25 00:28:10
-3
-This is a comment to the sysop
+e2euser
+
+E2E Test Message
+22-Nov-25 13:12:27
+1
+This is a complete end-to-end test message

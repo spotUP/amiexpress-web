@@ -1,6 +1,6 @@
 testuser
 
-Integration Test
-20-Nov-25 10:19:02
+Test Subject
+22-Nov-25 12:07:58
 1
-This is an integration test message
+Test message body

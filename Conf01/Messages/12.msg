@@ -1,6 +1,6 @@
-testuser
-recipient
-Private Test
-20-Nov-25 10:15:06
-2
-Private message
+e2euser
+
+E2E Test Message
+22-Nov-25 12:07:58
+1
+This is a complete end-to-end test message

@@ -527,3 +527,66 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 
 # Session Snapshot [2025-12-??-door-exit-menu-reset]
 - Latest: Door exits (TS, SDK, client bridge) now reset cmdShortcuts/shortcuts and return to MENU with menuPause; client bridge endSession mirrors express.e. Goodbye batch prompt now chains back into logoff when flagged batch is confirmed/cancelled. Tests refreshed (`npm test -- system-commands`; `npx tsc --noEmit`).
+- Tests: `cd web/backend && npm test`; `cd web/backend && npx tsc --noEmit`.
+
+# Session Snapshot [2025-12-??-download-ratio-parity]
+- Latest: Unified download quota checks with express.e behavior. `checkDownloadRatios` now handles daily byte limits, ratioType (bytes-only, bytes+files, files-only), and ignores free downloads; both download and batch handlers use the shared gate. Download stats persist bytesDownload/dailyBytesDld/lastDownloadTime, and batch download prompts use ASCII-only markers. Added `web/backend/tests/download-ratios.util.test.ts`.
+- Tests: `cd web/backend && npm test`; `cd web/backend && npx tsc --noEmit`.
+- Remaining: Tooltype/ACS audit, callers-log/persistence alignment, and any outstanding ratio gating tied to conference accounting/credit accounts.
+
+# Session Snapshot [2025-12-??-credit-account-bypass]
+- Latest: Added credit-account awareness to ratio gating. `checkDownloadRatios` now skips ratio/file checks when an active credit account (creditDays/creditStartDate) is present; daily byte limits still apply. Exposed credit fields on `User` types. File status honors CREDITBYKB toggle and byteLimit alias. Tests updated (`download-ratios.util.test.ts`).
+- Tests: `cd web/backend && npm test -- download-ratios.util.test.ts`; `cd web/backend && npx tsc --noEmit`.
+- Remaining: deeper tooltype/ACS audit, callers-log/persistence parity, and conference-accounting nuances.
+
+# Session Snapshot [2025-12-??-acs-log-defaults]
+- Latest: ACS defaults now enable callers/UD logging flags to mirror express.e baseline (DO_CALLERSLOG/DO_UD_LOG), keeping CallersLog/UDLog writes active unless explicitly disabled by config.
+- Tests: `cd web/backend && npx tsc --noEmit`; `cd web/backend && npm test -- download-ratios.util.test.ts`.
+
+# Session Snapshot [2025-12-??-node-callerslog]
+- Latest: CallersLog/UDLog now respect ACS flags and write to Node#/CallersLog and Node#/UDLog under `dataDir` (with logs/ fallback), carrying nodeId from download handlers. logDivider updated accordingly.
+- Tests: `cd web/backend && npx tsc --noEmit`; `cd web/backend && npm test -- download-ratios.util.test.ts`.
+
+# Session Snapshot [2025-12-??-credit-tracking]
+- Latest: Download stat tracking now mirrors express.e credit logic: credit accounts bypass ratio/file checks but only bump downloads/bytes when creditTracking requests it (daily bytes still increment). Added TRACK_DOWNLOADS_BIT handling and a test to lock the behavior. ACS defaults keep Callers/UD logs enabled.
+- Tests: `cd web/backend && npm test -- download-ratios.util.test.ts`; `cd web/backend && npx tsc --noEmit`.
+
+# Session Snapshot [2025-12-??-conf-accounting]
+- Latest: Added per-conference accounting fields (ratio, ratioType, uploads/downloads, bytesUpload/bytesDownload) to the conferences schema and repository. Download/batch handlers now load conference stats and enforce per-conference limits when ACS_CONFERENCE_ACCOUNTING is enabled; per-conf downloads/bytes are persisted on successful transfers. `checkDownloadRatios` accepts conference data and enforces per-conf gates. Added `tests/conference-accounting.test.ts`.
+- Tests: `cd web/backend && npm test`; `cd web/backend && npx tsc --noEmit`.
+- Remaining: ensure upload paths update per-conf counters (and byte ratio calc), align any other conference-accounting hooks from express.e, and propagate conference cache loading where needed.
+
+# Session Snapshot [2025-12-??-conf-accounting-uploads]
+- Latest: Upload flow now increments per-conference uploads/bytesUpload (ACS_CONFERENCE_ACCOUNTING). Conference table migration added for accounting columns. Ratio util exports credit tracking helpers; per-conf downloads skip increments when credit download tracking is off. Conference cache lives on session.
+- Tests: `cd web/backend && npm test`; `cd web/backend && npx tsc --noEmit`; `npm test -- conference-accounting.test.ts`.
+- Remaining: fine-tune calcConfBad equivalents (byte availability math), per-conf credit nuances, and ensure other accounting hooks from express.e are mirrored.
+
+# Session Snapshot [2025-12-??-conf-accounting-bytesadl]
+- Latest: calcConfBad parity: `checkDownloadRatios` now uses bytesADL daily limits with per-conf ratio/file gates, skips global ratio checks when ACS conference accounting is active, and honors credit bypass while still counting daily bytes. Free downloads bypass ratio counters but still increment daily bytes; creditTracking off means user/conf counters are skipped. Download/batch handlers pass isFree into shared stats, skip per-conf counters on free/credit, and persist bytesAvailable/lastDownload from the util. Tests: `cd web/backend && npm test -- download-ratios.util.test.ts conference-accounting.test.ts`.
+- Prompt: finish calcConfBad-equivalent byte math, per-conf credit nuances, and accounting/persistence gaps from express.e.
+- Update: Added coverage for free downloads consuming daily bytes and for credit accounts bypassing per-conf ratio checks (`download-ratios.util.test.ts`, `conference-accounting.test.ts`). Tests still passing via `npm test -- download-ratios.util.test.ts conference-accounting.test.ts`.
+- Validation: `cd web/backend && npx tsc --noEmit` and full `npm test` both pass after the latest accounting changes.
+
+## Remaining 1:1 parity TODO
+- Exercise live download flows with ACS_CONFERENCE_ACCOUNTING on/off using real DIR stats to confirm bytesADL/remaining counters and conference increments match express.e (including free vs paid and creditTracking).
+- Audit ACS/tooltype coverage beyond downloads (e.g., any remaining callers/UD log flags, bulletin scan toggles) against express.e to close gaps.
+- Door/Amiga emulation TODO markers (DoorMessageHandler, doorHandler registry) remain; align outputs/behaviors where express.e parity is expected.
+
+# Session Snapshot [2025-12-??-file-status-conf]
+- Latest: FS now respects ACS conference accounting—when enabled it lists per-conference uploads/downloads/bytes using conference stats (with conf access check) while keeping daily bytes availability from user limits. Falls back to global stats when ACS accounting is off. CreditByKB formatting preserved. Typescript check: `cd web/backend && npx tsc --noEmit`.
+- Prompt: “what's left for 1:1 parity? update the todo list.”
+
+# Session Snapshot [2025-12-??-door-registry-getkey]
+- Latest: Door handler now resolves doors from the Doors directory (prefers matching binary inside a named folder) instead of TODO stub. DoorMessageHandler GETKEY now pauses for a client keypress via socket events (`door:keypress`/`keypress`) and resumes the door with the received keycode, emitting `door:await-key` to the client. Types: `npx tsc --noEmit` passes.
+- Remaining parity items: live download accounting validation with ACS on/off; ACS/tooltype audit; emulation edge cases beyond GETKEY.
+
+# Session Snapshot [2025-12-??-acs-log-gate]
+- Latest: Added ACS gating tests for Callers/UD logging. New Jest covers logDownload respecting DO_CALLERSLOG/DO_UD_LOG flags. Test setup now honors `SKIP_DB_INIT=1` to bypass DB init for lightweight suites. Commands: `SKIP_DB_INIT=1 npm test -- download-logging.util.test.ts`, `npx tsc --noEmit`.
+
+## Remaining 1:1 parity TODO
+- Exercise live download flows with ACS_CONFERENCE_ACCOUNTING on/off using real DIR stats to confirm bytesADL/remaining counters and conference increments match express.e (including free vs paid and creditTracking).
+- Audit ACS/tooltype coverage beyond downloads (e.g., any remaining callers/UD log flags, bulletin scan toggles) against express.e to close gaps.
+- Door/Amiga emulation edge cases beyond GETKEY (if any surfaced during door runs).
+
+# Session Snapshot [2025-12-??-download-accounting-test]
+- Latest: Fixed conference DB handle usage in download/batch handlers (pass raw DB handle to ConferenceRepository). Added integration test `tests/download-accounting.integration.test.ts` to verify per-conference download increments and creditTracking skip behavior. Commands: `cd web/backend && npm test -- download-accounting.integration.test.ts`. Type check still passes (`npx tsc --noEmit`).

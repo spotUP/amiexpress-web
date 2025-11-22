@@ -1,6 +1,6 @@
-user1
+e2euser
 
-User1 Message
-20-Nov-25 10:20:18
-2
-Message from user 1 in General
+E2E Test Message
+22-Nov-25 12:25:58
+1
+This is a complete end-to-end test message
