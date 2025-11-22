@@ -105,6 +105,11 @@ The documentation provides everything needed for ASCII artists to create authent
 - `cd web/backend && npx tsc --noEmit` (pass).
 - Next: retest full message entry (To/Subject/Private/Body) to verify echo, editor commands, and save/abort flow align 1:1.
 
+## Current Session (System route)
+- Users hitting `/system` now get a dedicated status page. Added `SystemStatus` (frontend only) under `web/frontend/src/components/admin` that fetches `/api/config/system` and renders the key/value map in a table.
+- Registered the new component on `App` with `<Route path="/system" element={<SystemStatus />}`.
+- `cd web/frontend && npm run build` (pass).
+
 ## Current Session (Conference paths canonicalized)
 - Tooltypes in `ConfConfig.info` specify `LOCATION.n=BBS:Conf#`. Updated path handling to match AmiExpress: unpadded `Conf#` names and BBS-rooted paths.
 - Moved `Conf1`-`Conf14` directories into `BBS/Conf#` and merged the old `BBS/Conf01` content into `BBS/Conf1`; removed `BBS/Conf01`.
