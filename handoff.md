@@ -523,4 +523,7 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 # Session Snapshot [2025-12-??-flagged-files-logoff]
 - Latest: Flagged file handling now uses the Partdownload/flagged slot files via `FileFlagManager` for logon/logoff. `loadFlagged` initializes `session.flagManager` (dataDir + slot), rings bell when flags exist. Goodbye uses `flagManager.getCount`, saves flags on exit, and batch download clears+saves. Flagging flows (alter flags, flag-from, listing pause flagging) persist immediately. Added `web/backend/tests/system-commands.test.ts` to assert goodbye prompt with flagged files.
 - Tests: `cd web/backend && npm test -- system-commands`; `cd web/backend && npx tsc --noEmit`.
-- Remaining parity items: ratio/quota enforcement & flagged-file gating on goodbye/batch beyond prompts, door exit/menu return resets, broader tooltype/ACS audit, callers-log/persistence alignment.
+- Remaining parity items: ratio/quota enforcement & flagged-file gating on goodbye/batch beyond prompts, broader tooltype/ACS audit, callers-log/persistence alignment.
+
+# Session Snapshot [2025-12-??-door-exit-menu-reset]
+- Latest: Door exits (TS, SDK, client bridge) now reset cmdShortcuts/shortcuts and return to MENU with menuPause; client bridge endSession mirrors express.e. Goodbye batch prompt now chains back into logoff when flagged batch is confirmed/cancelled. Tests refreshed (`npm test -- system-commands`; `npx tsc --noEmit`).
