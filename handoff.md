@@ -454,6 +454,11 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - Remaining from parity list: ratio/flagged-file handling (Goodbye/batch), door exit/menu return resets, broader tooltype/ACS audit, callers-log/persistence alignment.
 - Prompt context: continuing 1:1 AmiExpress E parity; “proceed, prompt me only when you must.”
 
+- # Session Snapshot [2025-12-??-flagged-files-logoff]
+- Latest: Flagged file handling now uses the Partdownload/flagged slot files via `FileFlagManager` for logon/logoff. `loadFlagged` initializes `session.flagManager` and rings bell when flags exist. Goodbye prompt uses `flagManager.getCount` and saves flags on exit; batch download clears and saves; flagging flows (alter flags, flag-from, listing pause flagging) persist immediately.
+- Tests: `cd web/backend && npm test -- system-commands` (pass) plus `npx tsc --noEmit`.
+- Remaining: ratio/quota enforcement & flagged-file gating on goodbye/batch beyond prompts, door exit/menu resets, tooltype/ACS audit, callers-log alignment.
+
 - Added a minimal `Screens/BULL.TXT` that calls `~CC_GLCVIEWER||` and `~CC_GWALL||` so the doors auto-run from bulletins; per latest prompt, you plan to trigger them from `logon20.txt` instead (now security lookup will pick it up).
 - Tests: `cd web/backend && npm test` (pass).
 - Update: Restored the express.e login step that displays the LOGON screen (security-aware) before bulletins. After auth, we now call `displayScreen(socket, session, 'LOGON')` and pause if it renders, then proceed to bulletins. This makes `LOGON20.TXT` trigger `~CC_GLCVIEW/~CC_GWALL` for sec>=20 users (including sysop).
