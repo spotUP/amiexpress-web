@@ -519,3 +519,8 @@ November 18, 2025 15:39:57 UTC - Bulls door fix completed successfully
 - # Session Snapshot [2025-12-??-mci-rotation-tests]
 - Latest: Added Jest coverage for ~SX_/~SR_ numbering. `web/backend/tests/mci/rotation.test.ts` verifies 3-digit zero padding, counter starts at 1 and increments, and resetCounter restarts at 1. No code changes needed; existing `formatNumberedFilename`/SequentialFileManager already align with express.e. Tests: `cd web/backend && npx tsc --noEmit && npm test -- rotation.test.ts` (pass).
 - Prompt: “do them all” for remaining 1:1 parity items.
+
+# Session Snapshot [2025-12-??-flagged-files-logoff]
+- Latest: Flagged file handling now uses the Partdownload/flagged slot files via `FileFlagManager` for logon/logoff. `loadFlagged` initializes `session.flagManager` (dataDir + slot), rings bell when flags exist. Goodbye uses `flagManager.getCount`, saves flags on exit, and batch download clears+saves. Flagging flows (alter flags, flag-from, listing pause flagging) persist immediately. Added `web/backend/tests/system-commands.test.ts` to assert goodbye prompt with flagged files.
+- Tests: `cd web/backend && npm test -- system-commands`; `cd web/backend && npx tsc --noEmit`.
+- Remaining parity items: ratio/quota enforcement & flagged-file gating on goodbye/batch beyond prompts, door exit/menu return resets, broader tooltype/ACS audit, callers-log/persistence alignment.
