@@ -1,120 +1,60 @@
 # Handoff Summary
 
-## Task Completed: BBS Screen Files Index for ASCII Artists
+- **Focus:** Fix backend command flows so prompts clear correctly and commands return to the menu without extra keypresses. Sanctuary data must stay untouched.
+- **Harness status:** `dev/scripts/test-all-commands.ts` was tweaked but remains flaky; manual testing is preferred now.
+- **Manual issues to fix:**
+  - `F`, `FR`: scroll the file list without a “Press any key”; should prompt and return to the menu.
+  - `FS`, `N`, `VER`, `WHD`: block until Enter with no prompt; should print summary, prompt, and return to menu.
+  - `T`: shows time then requires extra Enters; should prompt once and return to a single menu prompt.
+  - `S`: currently inline stats; should be overridden by the userstats door (or still return cleanly to menu).
+  - `?`: only says “Expert menu refreshed”; should show the help list and return to menu.
+  - `X`: toggles expert but the menu doesn’t redraw; should show on/off message and return to menu.
+  - `W`: works but needs two Enters to exit; should prompt once and return.
+  - `WHO`: launches the door but 68k emu isn’t complete; either finish glue or show a simple list and return.
+- **Partial code changes in progress:**
+  - `web/backend/src/handlers/file-listing.handler.ts`: now resets `menuPause`, sets `subState` to DISPLAY_MENU, and emits a press-key prompt after F/FR listings.
+  - `web/backend/src/handlers/info-commands.handler.ts`: VER now shows a press-key prompt and returns to menu; WHO/WHD need similar prompt/return adjustments (not fully patched yet).
+- **Next steps when resuming:**
+  1) Ensure WHO/WHD output includes a press-key prompt and sets `subState` to DISPLAY_MENU.
+  2) Add press-key + menu return for FS, N (in file.handler.ts/navigation-commands), and time handler (T).
+  3) Replace S with the userstats door invocation or at least ensure it returns to the menu.
+  4) Update ? to display the help list, not “Expert menu refreshed”.
+  5) Redraw the menu after X toggles expert mode.
+  6) If WHO door remains incomplete, stub a simple list that returns cleanly.
 
-### What Was Accomplished
-1. **Comprehensive Analysis**: Examined the entire file structure of Sanctuary BBS to identify all screen files used in the AmiExpress system
-2. **File Discovery**: Located over 100 screen files across multiple locations including:
-   - System-wide screens in `/Screens/` and `/Node0/Screens/`
-   - Node-specific screens in `/Node0/Node0/Screens/`, `/Node0/Node2/Screens/`
-   - Conference-specific screens in `/Conf01/Screens/`, `/Conf1/Screens/`, etc.
-   - Documentation backups in `/Source/Documentation/SanctuaryBBS/`
+## Latest changes (current session)
+- Added `MASTERPLAN.md` with a phased, line-referenced roadmap to reach 1:1 parity with express.e and Sanctuary data. All future work should update that file (use strikethrough when tasks complete).
+- Removed temporary `menuNeeded/menuPromptShown` guard so menu drawing is controlled solely by state transitions.
+- In `web/backend/src/handlers/command.handler.ts`, display-flow handling now returns immediately after advancing the bulletin/scan/menu flow to avoid extra menu renders; removed the second `displayMainMenu` call that doubled prompts.
+- Added explicit screen clears for AWAITSCREEN/BBSTITLE/LOGON/BULL/NODE_BULL/CONF_BULL/MENU in `screen.handler.ts`, clearing before first page and full-frame renders to stop screen bleed between AWAIT/BBSTITLE/BBS menu.
+- New user flow alignment started: added real-name/email/sex prompts, default “screen clears” now No unless Y, cleared input buffers between prompts, and adjusted summary prompt to wait for (Y/n). Questionnaire prompts now reset inputBuffer to avoid swallowed Enters.
+- New user fixes in progress: added extra email prompt state and sex/age now advances to questionnaire/account creation; password now enforces min 4 chars; empty passwords now count as invalid during login.
+- Bulletin/screen search now avoids legacy dataDir/BBS to prevent creation of empty BBS/ dir and prefers Conf1 roots; screen loader no longer probes repo-root/Screens when dataDir differs (expects correct dataDir/BBS_DATA_DIR).
+- MCI: Added bare `~SP` handling to set pause/strip output so Sanctuary screens no longer display the code verbatim.
+- MCI pause: `~SP` now triggers an actual pause (minimal pagination with a Pause prompt) before continuing, instead of just stripping the code.
+- Masterplan updated with initial express.e line references: state machine/menu loop (28540–28660), processCommand (~28229), MCI subsystem (5258–6812), new user prompts (~29610+), and data layout expectations (Conf1/Node1 screens, root Screens; avoid Conf01/BBS).
+- Added logon/logoff flow pointer (~28450+) to masterplan notes; registration references start ~29400 with retry/continue ~29610. Phase 0 mapping still in progress; no code changes.
+- Expanded masterplan with a processCommand dispatch map (navigation, messages, files, info/utility) to drive 1:1 alignment; still documenting—no runtime changes yet.
+- Added file listing/new-files references to masterplan (displayFileList/myNewFiles 27580–27860, flagPause at ~28025 controlling `(Pause)...(f)lags, More(Y/n/ns)?`). Still in mapping phase; no code touched.
+- Added message subsystem anchors to masterplan: enterMSG around 10749 (to/subject/private/reply/saveNewMSG), replyPrompt loop ~11040+ for A/D/M/F/R/L/Q/?/??/NS/translation, with wider message ops 9820–11980. Mapping only; behavior unchanged.
+- Phase 0 mapping tasks: marked module mapping and Sanctuary data layout as complete; deviation inventory still pending.
+- Masterplan now includes an initial deviation inventory (menu/prompt issues, screen path overreach, MCI/pause gaps, new-user flow, command mismatches, data integrity concerns). No code changes yet.
+- Added Phase 1 immediate actions checklist (state/pause/menu audit, menu render call tracing, screen loader path order, doPause/menuPause after mail scan/CONF_BULL). Still doc-only; no code touched.
+- Screen loader change: `getConferenceScreensCandidates` now only uses unpadded `Conf{n}` names (drops `Conf01` etc.) to avoid creating/reading padded conference dirs; Sanctuary data uses unpadded paths. No other runtime changes.
+- Command handler tweak: in PROCESS_COMMAND, we now skip calling `showMenuAfterCommand` if a command already changed `session.subState` (prevents overriding states that expect a pause/return, reducing extra menu renders). Minimal change; rest of menu flow unchanged.
+- Menu display alignment: `displayMainMenu` now always emits the menu prompt (even in expert mode or when MENU screen missing) and sets READ_COMMAND/READ_SHORTCUTS after the prompt; `displayMenuPrompt` no longer forces subState. This should reduce missing/duplicate prompts and better match express.e flow.
+- Menu flow tightening:
+  - Removed direct `displayMainMenu` calls in chat completion/exit; now set DISPLAY_MENU + menuPause and let the display loop render.
+  - Conference/message-base selection and read-command empty input now set DISPLAY_MENU (+menuPause where appropriate) without invoking displayMainMenu immediately.
+  - Door exits now return to DISPLAY_MENU with menuPause to mirror express.e pause-before-menu behavior.
+- Input-handlers: After command processing, if still in PROCESS_COMMAND we now set DISPLAY_MENU + menuPause and return (no direct displayMainMenu), keeping DISPLAY_MENU as the sole render path.
+- DISPLAY_MENU handler now returns immediately after displaying the menu, avoiding re-entry and extra prompts during the display flow.
+- CONF_SCAN now sets menuPause before DISPLAY_CONF_BULL to retain pause-before-menu cadence like express.e.
+- pauseDisplayFlow now calls doPause (was a stub), restoring express.e pauses after BULL/NODE_BULL/CONF_BULL when screens are shown.
+- Next checkpoints: verify post-mail-scan/CONF_BULL pause timing (single pause/prompt), audit screen loader for stray writes (no BBS/extensionless), then move to command-level parity once menu flow is stable.
 
-3. **Content Analysis**: Read and analyzed key screen files to understand:
-   - Different screen types and their purposes
-   - ASCII art styles and formatting requirements
-   - Color coding and ANSI sequences used
-   - Content themes and messaging patterns
-
-4. **Documentation Creation**: Created two comprehensive documents:
-
-#### `BBS_Screen_Files_Index_for_ASCII_Artists.md`
-- **Complete guide** for ASCII artists with detailed descriptions of each screen type
-- **Technical specifications** including width, character sets, and color codes
-- **Style recommendations** for different screen categories (system, group, user interface)
-- **Content guidelines** specifying what logo and content each screen should include
-- **ASCII art examples** and themes relevant to the BBS
-
-#### `Screen_Files_Quick_Reference.md`
-- **Complete file listing** organized by category
-- **Quick lookup reference** for finding specific screen files
-- **Usage notes** and special considerations
-- **File type explanations** (.txt, .GR, .library, etc.)
-
-### Screen Categories Identified
-1. **System Screens**: Logon/Logoff screens with various versions
-2. **User Interface**: Callers display, menus, waiting screens  
-3. **Group/Scene Screens**: Fairlight (FLT) and Sanctuary BBS themed screens
-4. **Conference Screens**: Menu and bulletin files for different boards
-5. **File Operations**: Upload/download messages and warnings
-6. **Bulletin/News**: General announcements and messages
-
-### Key Insights for ASCII Artists
-- **BBS Theme**: Retro Amiga computing nostalgia with Scandinavian BBS culture
-- **Group Branding**: Strong Fairlight scene representation with elite cracker aesthetics
-- **Technical Specs**: 80-column terminal width, ANSI color codes, specific ASCII sequences
-- **Style Variations**: From clean professional BBS branding to complex cracker-style ASCII art
-- **Content Focus**: System information, user statistics, group hierarchy, and nostalgic messaging
-
-### File Structure Understanding
-- Multiple node support (Node0, Node2) with location-specific screens
-- Conference-based organization with theme-specific content
-- Version control for different features (Logon20 vs Logon100)
-- Backup/documentation copies in source directory
-
-The documentation provides everything needed for ASCII artists to create authentic screen art that matches the Sanctuary BBS aesthetic while serving the functional requirements of each screen type.
-
----
-
-## Latest Session (door start prompts / hotkeys)
-- User asked to remove door-start messages like "Starting GLCVIEW..." and ensure hotkeys are not active inside doors.
-- Updated `web/backend/src/handlers/door.handler.ts` to silence all user-facing launch banners (native/script/python/ARexx/Amiga emulation) and to clear shortcuts for every door executor (web/native/script/python/ARexx, etc.), preventing hotkeys from leaking into doors.
-- Tests run: `cd web/backend && npx tsc --noEmit` and `npm test` (all suites passing, 1 skipped as before).
-
-## Latest Session (GLC Viewer width)
-- Fixed Global Last Callers door lines exceeding 80 columns and removed extra spaces in stats/records.
-- Added ANSI-aware truncation helper to both `doors/glc-viewer/index.ts` and `web/backend/src/doors/glc-viewer/index.ts`; all dynamic lines (call rows and stats) now trim to 80 cols without introducing extra linebreaks.
-- Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (prompt in expert mode)
-- Menu prompt missing after pressing `?` in expert mode was due to firing the prompt before the MENU screen finished rendering (no await). `handleQuestionMarkCommand` is now async/awaits `_displayScreen`, and all call sites await it (`command.handler.ts`, `command-handler/internal-commands.ts`, `command-handler/command-execution.ts`), ensuring the prompt appears after the menu.
-- Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (menu hotkeys forced off)
-- Main menu was still entering shortcut mode; hard-disabled .keys handling for MENU. In `command-handler/menu.ts` we now keep `cmdShortcuts` false and clear shortcuts regardless of .keys, and `handleQuestionMarkCommand` no longer considers .keys for MENU. This guarantees hotkeys are off on the main menu.
-- Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (download parity wiring)
-- Wired the command handler to existing download/file listing flows: `startFileDownload`, `handleFileDownload`, and `displayFileAreaContents` are now invoked from menu selections instead of placeholder TODOs. File listings return to the menu; downloads enter the existing selection flow.
-- Added tests previously for CREDITBYKB/FREEDOWNLOADS; latest change is wiring only. Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (account editing routing)
-- Redirected all account-editing related tempData branches to the implemented account editor (handleAccountEditingCommand) and removed redundant placeholder branches.
-- Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (account editor bulk parity)
-- Implemented bulk account editor (B option) to set a security level for all new accounts; added basic flow for change-sec-level, toggle expert/ANSI flags, and user search with DB-backed updates.
-- Added new substate for bulk editor and wired user list pagination to use the existing displayUserList.
-- Re-ran `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (FM command parity)
-- Reworked FM flow to use the proper directory-span prompt/parser (supporting hold/LCFILES), and to search DIR files with raw entry output (ANSI-colored C/D/M/V/Q prompt).
-- Added persistence/actions: delete now confirms then removes the entry from the DIR file; move prompts for destination dir and moves the entry to the target DIR file. Both resume scanning correctly across directories and respect flagged-file removal prompts.
-- Wired new substates for delete confirmation and move destination in `command.handler.ts`; continue/flag handling now resumes the scan loop instead of restarting.
-- `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (Hotkeys and Message Entry Parity)
-- Restored AmiExpress-like shortcut flow: MENU resets shortcuts, loads `MENU.keys` if present, and sets `cmdShortcuts`. READ_SHORTCUTS now translates a single key, executes it via the command priority system, sets `menuPause` false, and returns to DISPLAY_MENU; line input is used when no `MENU.keys` exists.
-- Tightened screen-command bypass: only active when `executingScreenCommand` is true *and* the incoming command string is >1 char, so single-key user input no longer bypasses the state machine.
-- Message-entry substates now recover correctly (To → Subject → Private → Body) and echo input/backspace during To/Subject/Private prompts; typing in the “To:” field works.
-- Telnet/SSH no longer force-clear shortcuts; the state machine governs shortcut mode. Door state is cleared if inDoorManager is set without a handler.
-- `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current Session (Message body echo)
-- Backend log showed POST_MESSAGE_BODY was consuming single characters with an empty buffer, so no echo appeared while typing. Updated `handleMessageEntryInput` to line-buffer characters, echo/backspace locally, and submit the full line on Enter (with a CR/LF before processing) to match AmiExpress behavior.
-- `cd web/backend && npx tsc --noEmit` (pass).
-- Next: retest full message entry (To/Subject/Private/Body) to verify echo, editor commands, and save/abort flow align 1:1.
-
-## Current Session (System route)
-- Users hitting `/system` now get a dedicated status page. Added `SystemStatus` (frontend only) under `web/frontend/src/components/admin` that fetches `/api/config/system` and renders the key/value map in a table.
-- Registered the new component on `App` with `<Route path="/system" element={<SystemStatus />}`.
-- `cd web/frontend && npm run build` (pass).
-
-## Current Session (Conference paths canonicalized)
-- Tooltypes in `ConfConfig.info` specify `LOCATION.n=BBS:Conf#`. Updated path handling to match AmiExpress: unpadded `Conf#` names and BBS-rooted paths.
-- Moved `Conf1`-`Conf14` directories into `BBS/Conf#` and merged the old `BBS/Conf01` content into `BBS/Conf1`; removed `BBS/Conf01`.
-- Updated path helpers and managers: `bbs-paths.util.ts`, `MessageFileManager`, and `FileAreaManager` now target `BBS/Conf#`; default/fallback paths and exports switched from `Conf01` to `Conf1`.
-- Adjusted default references (`index.ts`, `session-manager.ts`, `bbs-info.ts/.js`, deployment/export paths, and helper comments). `npx tsc --noEmit` passes.
-
-## Current Session (Conference directory cleanup)
-- `logs/backend.log` still complained about `Conf01` when locating command folders, downloads, bulletins, and FM scans. Swapped every hardcoded `Conf${String(...padStart)` for `Conf${confNum}` plus the `getConferenceDir` helper, rewired bulletin helpers to use the BBS root, and taught the screen loader & command scanner to look through both the new `BBS/Conf#` tree and legacy `Conf0#` names before falling back. `cd web/backend && npx tsc --noEmit` (pass).
+## Outstanding investigations
+- Verify whether triple menu prompts are resolved after the display-flow return change; if not, trace remaining call sites that trigger `displayMainMenu` multiple times during post-mail-scan.
+- Screen clearing should now precede key screens; confirm visually that AWAITSCREEN → BBSTITLE and subsequent flows no longer leak previous content.
+- New user flow: ensure Enter at questionnaire (NEW_USER_SCRIPT) resumes advancing after pressing Enter on summary/realname/email/sex/age; still need to verify node script continues on blank/Enter per Sanctuary behavior.
+- New user remaining: confirm sex/age proceeds into questionnaire or createAccount when no script present, and that questionnaire scripts load from node dirs; verify password rules match AmiExpress if more constraints exist (currently min 4 chars only).
