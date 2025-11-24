@@ -9,6 +9,7 @@
 - Fixes to InfoFileParser: dotted keys supported, and tooltypes are now parsed by splitting null-terminated entries (case-insensitive keys, first occurrence wins, parenthesized entries skipped) to mirror icon.library FindToolType semantics. ConfConfig overlay should now read NAME.n/LOCATION.n correctly. Restart required.
 - AEKIT notes expanded: README-now documents 68K door IPC in detail (AEDoorPort handshake, big-endian 32-bit fields, pause rules, ACS screen search, Zmodem/Net transfer codes, account/conf DB helpers). Remaining unknowns flagged (EDITOR_STRUCT/BYPASS_CSI_CHECK/SENTBY, ACP extras).
 - ConfConfig parsing fixed for control-prefixed tooltypes (icon length bytes). Conf names now parse correctly (NCONFS=14, Lamer Zone…bAUD bOY bATTLE) via `InfoFileParser`. Restart backend to apply overlay.
+- Navigation fallbacks now match express.e: `<`/`>` call J when no previous/next conference; `<<`/`>>` call JM when at message-base bounds (no warning prompt). This should align menu flow without extra pauses.
 - User’s priorities: MS/conf-scan parity, navigation keys (> < >> <<), and any remaining command/help quirks. Reply prepared with next-action plan.
 
 - **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
