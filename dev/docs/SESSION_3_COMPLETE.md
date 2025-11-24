@@ -407,7 +407,7 @@ cd backend/backend && npx tsc --noEmit
 ### Push Status
 ⚠️ **BLOCKED** - Cannot push to GitHub due to large file in history
 
-**Issue:** `SanctuaryBBS/Node1/CLogBackup` (117MB) exceeds GitHub's 100MB limit
+**Issue:** `SanctuaryNode1/CLogBackup` (117MB) exceeds GitHub's 100MB limit
 
 **Solution:** See `GIT_PUSH_BLOCKED.md` for resolution steps
 

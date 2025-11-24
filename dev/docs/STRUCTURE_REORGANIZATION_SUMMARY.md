@@ -49,7 +49,7 @@ The project has been analyzed against a real AmiExpress BBS (SanctuaryBBS) and r
 
 ### Authentic AmiExpress BBS (SanctuaryBBS)
 ```
-SanctuaryBBS/
+Sanctuary
 ├── Access/              ✓ Have this
 ├── AmiTCP/              ✓ Have this  
 ├── AmiXnet/             ✓ Have this
@@ -86,7 +86,7 @@ amiexpress-web/
 │   └── unlzx/
 └── [Source Code Archives]            ✓ Keep at root
     ├── AmiExpress-Sources/
-    └── SanctuaryBBS/
+    └── Sanctuary
 ```
 
 ---

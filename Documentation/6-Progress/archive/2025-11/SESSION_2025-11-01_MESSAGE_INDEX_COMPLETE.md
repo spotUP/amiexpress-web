@@ -372,7 +372,7 @@ Implement UserDatabaseManager for:
 - `/Docs/CRITICAL_MISSING_FILES.md` (analysis of what was missing)
 
 ### Real Data Reference:
-- `/Users/spot/Code/amiexpress-web/SanctuaryBBS/` (real Amiga BBS data)
+- `/Users/spot/Code/amiexpress-web/Sanctuary` (real Amiga BBS data)
 
 ## Summary
 
