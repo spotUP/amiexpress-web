@@ -7,6 +7,7 @@
 - Need verification after restart: confirm J output matches Conf.DB handles and that VER/WHO/WHD/FS/N no longer require a second Enter.
 - Implemented runtime ConfConfig overlay: during init, we now read `ConfConfig.info` (NCONFS/NAME.n/LOCATION.n) from `BBS_ROOT` and set the conference count/names from there; Conf.DB mirroring is now a fallback only when ConfConfig is absent. This trims the runtime conference list to the 14 Sanctuary names (Lamer Zone … bAUD bOY bATTLE) without mutating Conf.DB. Restart backend to load the change.
 - Fixes to InfoFileParser: dotted keys supported, and tooltypes are now parsed by splitting null-terminated entries (case-insensitive keys, first occurrence wins, parenthesized entries skipped) to mirror icon.library FindToolType semantics. ConfConfig overlay should now read NAME.n/LOCATION.n correctly. Restart required.
+- AEKIT notes expanded: README-now documents 68K door IPC in detail (AEDoorPort handshake, big-endian 32-bit fields, pause rules, ACS screen search, Zmodem/Net transfer codes, account/conf DB helpers). Remaining unknowns flagged (EDITOR_STRUCT/BYPASS_CSI_CHECK/SENTBY, ACP extras).
 - User’s priorities: MS/conf-scan parity, navigation keys (> < >> <<), and any remaining command/help quirks. Reply prepared with next-action plan.
 
 - **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
