@@ -10,6 +10,7 @@
 - AEKIT notes expanded: README-now documents 68K door IPC in detail (AEDoorPort handshake, big-endian 32-bit fields, pause rules, ACS screen search, Zmodem/Net transfer codes, account/conf DB helpers). Remaining unknowns flagged (EDITOR_STRUCT/BYPASS_CSI_CHECK/SENTBY, ACP extras).
 - ConfConfig parsing fixed for control-prefixed tooltypes (icon length bytes). Conf names now parse correctly (NCONFS=14, Lamer Zone…bAUD bOY bATTLE) via `InfoFileParser`. Restart backend to apply overlay.
 - Navigation fallbacks now match express.e: `<`/`>` call J when no previous/next conference; `<<`/`>>` call JM when at message-base bounds (no warning prompt). This should align menu flow without extra pauses.
+- Pause handling fixed: flagPause prompts now capture keystrokes via socket handler (line buffer), so F/FR listings should advance on Enter/NS/F/etc. Time command now sets menuPause so T returns to the menu prompt.
 - User’s priorities: MS/conf-scan parity, navigation keys (> < >> <<), and any remaining command/help quirks. Reply prepared with next-action plan.
 
 - **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
