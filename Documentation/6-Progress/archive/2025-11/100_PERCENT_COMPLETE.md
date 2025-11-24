@@ -214,7 +214,7 @@ createUser() {
 
 ### Real SanctuaryBBS (Amiga):
 ```
-SanctuaryBBS/
+Sanctuary
 ├── user.data (464 bytes - ~2 users)
 ├── user.keys (112 bytes - ~2 users)
 ├── user.misc (134,912 bytes - many users with stats)
@@ -357,7 +357,7 @@ Total:                     4 comprehensive docs
 - **express.e:8677, 11809** - MailStats operations
 
 ### Real Data Reference:
-- `/Users/spot/Code/amiexpress-web/SanctuaryBBS/` - Real Amiga BBS data
+- `/Users/spot/Code/amiexpress-web/Sanctuary` - Real Amiga BBS data
 
 ---
 

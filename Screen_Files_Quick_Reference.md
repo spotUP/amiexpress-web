@@ -143,7 +143,7 @@ Node2/Screens/Logon20.txt                  - Node 2 logon (20%)
 
 ## Duplicate/Backup Locations
 All screens also exist in:
-- `/Source/Documentation/SanctuaryBBS/` (backup/documentation copies)
+- `/Source/Documentation/Sanctuary` (backup/documentation copies)
 - Multiple node directories with identical or similar content
 
 ## Special File Types
