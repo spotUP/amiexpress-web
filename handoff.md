@@ -1,5 +1,14 @@
 # Handoff Summary
 
+## Current session
+- User asked to restart the backend to pick up Conf.DB overlay + prompt fixes; not restarted here per repo rules—please run `./dev/scripts/start-servers.sh` when ready.
+- Servers restarted by user. Backend log shows BBS root `/Users/spot/Code/amiexpress-web`, dataDir same; SQLite in `web/backend/data/amiexpress.db`.
+- Current conference list from `web/backend/data/amiexpress.db`: 1 General, 2 Tech Support, 3 Announcements, 4–17 “Conference N”, 18–31 “Conference N (Imported)”. Root `Conf.DB` is 0 bytes, so Conf.DB mirroring stays inert until a real Conf.DB is present or `BBS_ROOT` is pointed at Sanctuary data.
+- Need verification after restart: confirm J output matches Conf.DB handles and that VER/WHO/WHD/FS/N no longer require a second Enter.
+- Implemented runtime ConfConfig overlay: during init, we now read `ConfConfig.info` (NCONFS/NAME.n/LOCATION.n) from `BBS_ROOT` and set the conference count/names from there; Conf.DB mirroring is now a fallback only when ConfConfig is absent. This trims the runtime conference list to the 14 Sanctuary names (Lamer Zone … bAUD bOY bATTLE) without mutating Conf.DB. Restart backend to load the change.
+- Fixes to InfoFileParser: dotted keys supported, and tooltypes are now parsed by splitting null-terminated entries (case-insensitive keys, first occurrence wins, parenthesized entries skipped) to mirror icon.library FindToolType semantics. ConfConfig overlay should now read NAME.n/LOCATION.n correctly. Restart required.
+- User’s priorities: MS/conf-scan parity, navigation keys (> < >> <<), and any remaining command/help quirks. Reply prepared with next-action plan.
+
 - **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
 - **Harness status:** `dev/scripts/test-all-commands.ts` was tweaked but remains flaky; manual testing is preferred now.
 - **Manual issues to fix:**
