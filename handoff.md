@@ -1,26 +1,35 @@
 # Handoff Summary
 
-- **Focus:** Fix backend command flows so prompts clear correctly and commands return to the menu without extra keypresses. Sanctuary data must stay untouched.
+- **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
 - **Harness status:** `dev/scripts/test-all-commands.ts` was tweaked but remains flaky; manual testing is preferred now.
 - **Manual issues to fix:**
-  - `F`, `FR`: scroll the file list without a “Press any key”; should prompt and return to the menu.
-  - `FS`, `N`, `VER`, `WHD`: block until Enter with no prompt; should print summary, prompt, and return to menu.
-  - `T`: shows time then requires extra Enters; should prompt once and return to a single menu prompt.
-  - `S`: currently inline stats; should be overridden by the userstats door (or still return cleanly to menu).
-  - `?`: only says “Expert menu refreshed”; should show the help list and return to menu.
-  - `X`: toggles expert but the menu doesn’t redraw; should show on/off message and return to menu.
-  - `W`: works but needs two Enters to exit; should prompt once and return.
-  - `WHO`: launches the door but 68k emu isn’t complete; either finish glue or show a simple list and return.
+  - `F`/`FR`: verify they still pause once (recent fix sets menuPause + prompt).
+  - `FS`: already pauses; recheck after other menu-flow changes.
+  - `N`: now prints a press-key prompt; confirm single prompt and return.
+  - `VER`, `WHO`, `WHD`: now print a press-key prompt; confirm single prompt and return.
+  - `T`: now returns without a second pause; confirm single menu prompt.
+  - `S`: now shows a key prompt; ideally invoke userstats door, but confirm clean return.
+  - `?`: now redraws the menu (expert only); confirm matches express.e help behavior.
+  - `X`: now redraws the menu without extra pause; confirm output matches express.e.
+  - `W`: now exits to menu on one Enter; confirm.
+  - Logoff flow: ensure no commands execute after logoff (guard added; needs re-test with real session).
+  - Logoff screens: WORK:bbs/Screens/logoff/002.logoff should resolve via the new WORK: mapping (drops leading "bbs" component).
+  - QuickNew: ~SS_BBS:screens/quicknew.txt should now load (extension stripped); confirm it renders instead of showing raw text.
 - **Partial code changes in progress:**
-  - `web/backend/src/handlers/file-listing.handler.ts`: now resets `menuPause`, sets `subState` to DISPLAY_MENU, and emits a press-key prompt after F/FR listings.
-  - `web/backend/src/handlers/info-commands.handler.ts`: VER now shows a press-key prompt and returns to menu; WHO/WHD need similar prompt/return adjustments (not fully patched yet).
+  - `web/backend/src/handlers/display-file-commands.handler.ts`: `?` now redraws the menu in expert mode and drops the “Expert menu refreshed” text.
+  - `web/backend/src/handlers/file.handler.ts`: New Files adds a press-key prompt before returning to the menu.
+  - `web/backend/src/handlers/info-commands.handler.ts`: VER/WHO/WHD now emit a press-key prompt and return to the menu.
+  - `web/backend/src/handlers/preference-chat-commands.handler.ts`: X toggle now redraws menu immediately, no extra pause.
+  - `web/backend/src/handlers/navigation-commands.handler.ts`: T no longer adds an extra press-key prompt (returns straight to menu).
+  - `web/backend/src/utils/flag-pause.util.ts` + `server/socket-handlers.ts`: pause prompts now short-circuit command handling via a session flag handler, so F/FR should truly wait for user input.
+  - Earlier fix: `file-listing.handler.ts` pauses and returns to menu after F/FR.
 - **Next steps when resuming:**
-  1) Ensure WHO/WHD output includes a press-key prompt and sets `subState` to DISPLAY_MENU.
-  2) Add press-key + menu return for FS, N (in file.handler.ts/navigation-commands), and time handler (T).
-  3) Replace S with the userstats door invocation or at least ensure it returns to the menu.
-  4) Update ? to display the help list, not “Expert menu refreshed”.
-  5) Redraw the menu after X toggles expert mode.
-  6) If WHO door remains incomplete, stub a simple list that returns cleanly.
+  1) Verify menu prompts are single after VER/WHO/WHD/N/F/FR and adjust finalize/pause usage if needed.
+  2) Make `?` match express.e help behavior exactly (menu redraw in expert; no extra text in non-expert) and confirm prompt.
+  3) Ensure X toggle redraws the menu/prompt once.
+  4) Fix T to emit only one prompt and return to menu cleanly.
+  5) Wire S to the userstats door (or clean menu return) and W to exit on one Enter.
+  6) Decide interim WHO door behavior (simple list vs. 68k door) but keep single-prompt exit.
 
 ## Latest changes (current session)
 - Added `MASTERPLAN.md` with a phased, line-referenced roadmap to reach 1:1 parity with express.e and Sanctuary data. All future work should update that file (use strikethrough when tasks complete).
