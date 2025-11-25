@@ -1,5 +1,14 @@
 # Handoff Summary
 
+## New changes (ZMODEM bridge)
+- Added real ZMODEM scaffolding. Backend now has a `ZmodemTransferManager` (web/backend/src/services/zmodem-transfer.service.ts) that runs zmodem.js over the raw channel, starts ZRQINIT for downloads, and streams real files instead of staging. XIM ZMODEMSEND/RECEIVE/BATCH/NET* now call this manager and push paths through the playpen copy when sending. Raw flags are wired to session transferRawSink/transferRawSend and telnet/SSH handlers bypass cooked commands during transfers.
+- Socket.IO raw channel now uses transfer-raw:data/init/complete; manager cancels on end/cancel events. Telnet/SSH connections set transferRawSend to connection.write and feed raw buffers when transferRawActive is set.
+- Frontend terminal now uses zmodem.js (browser module) to run the negotiation loop. transfer-raw:init builds a Sentry, consumes transfer-raw:data, auto-sends ZRQINIT for uploads, and saves downloads via Browser.save_to_disk. startUpload queues Files for pending send sessions; downloads wait for the BBS to initiate. Old transfer:start/data scaffolding removed.
+- New type shims for zmodem.js added under web/backend/src/types and packages/terminal/src/types; package.json/package-lock updated (backend + terminal) to include zmodem.js.
+- RZ command now starts a real ZMODEM receive into the node playpen, wiring session transferRawActive/transferManager and emitting transfer-raw:init for web clients. Completion messages list received filenames (web/backend/src/handlers/transfer-misc-commands.handler.ts).
+- U/D commands now start ZMODEM transfers directly: U invokes a ZMODEM receive into the node playpen; D streams flagged files via ZMODEM if any are queued, otherwise falls back to the download interface (web/backend/src/handlers/user-commands.handler.ts).
+- Typecheck run: `cd web/backend && npx tsc --noEmit` (pass).
+
 ## Current session
 - User asked to restart the backend to pick up Conf.DB overlay + prompt fixes; not restarted here per repo rules—please run `./dev/scripts/start-servers.sh` when ready.
 - Servers restarted by user. Backend log shows BBS root `/Users/spot/Code/amiexpress-web`, dataDir same; SQLite in `web/backend/data/amiexpress.db`.
@@ -82,3 +91,17 @@
 - Screen clearing should now precede key screens; confirm visually that AWAITSCREEN → BBSTITLE and subsequent flows no longer leak previous content.
 - New user flow: ensure Enter at questionnaire (NEW_USER_SCRIPT) resumes advancing after pressing Enter on summary/realname/email/sex/age; still need to verify node script continues on blank/Enter per Sanctuary behavior.
 - New user remaining: confirm sex/age proceeds into questionnaire or createAccount when no script present, and that questionnaire scripts load from node dirs; verify password rules match AmiExpress if more constraints exist (currently min 4 chars only).
+
+## Current session (68K door/XIM focus)
+- User prompt: wire the 68K door bridge with AEKIT semantics (transfer/account/NSF/ACS behaviors).
+- jhMessage layout updated to include strptr/filler3 (0x108 length); parser logs new fields and exposes write helpers for string/filler3 pointers.
+- IO handler honors string pointers, fixes JH_LI maxlen ordering, and adds NSF display commands (DISPLAY_FILE/CHECK_TO_DISPLAY) that route through showfile/showgfile in non-stop mode. All prompt/output handlers now pull strings from stringPtr when present.
+- Transfers implemented with path resolution: ZMODEMSEND/BATCH/NETDOWNLOAD return Data=1 when any target exists (0 if none, -2 on carrier drop); RECEIVE/NETUPLOAD acknowledge destination directories and return 1 when a target path is available (no actual upload stream yet; logs a warning).
+- ZMODEMSEND/BATCH/NETDOWNLOAD now stage files into the node Playpen to simulate transfers; uploads/NETUPLOAD create destination dirs and touch a unique placeholder file (Data=1 on success).
+- Account/ConfDB helpers implemented: LOAD_/SAVE_/APPEND_ACCOUNT, SEARCH_ACCOUNT, LAST_ACCOUNTNUM, LOAD_/SAVE_CONFDB, GET_CONFNUM now read/write binary slots in User.data/User.keys/user.misc/Conf.DB (handles BE/LE slot numbers). APPEND seeds provided buffers with zeroed structs and a new slot; SAVE uses slot from struct or msg.data.
+- System commands now read string pointers (Return/Chain/EnvStat/ACP/etc.); ACP_COMMAND is stored in bbsSession.acpCommand for host pickup. AmigaDoorSession exposes getExitState, and door.handler now captures RETURNCOMMAND/CHAIN/PRV/ACP onto the BBSSession after door completion (execution still TODO).
+- Door handler now immediately auto-runs captured commands after door exit (priority CHAIN → RETURN → PRV → ACP) by invoking handleCommand with the returned strings and clearing the fields. Circular import avoided via dynamic require. Conf lookup for GET_CONFNUM now prefers ConfConfig.info entries, then Conf.DB handles, then fallback “Conference N”. ACP_COMMAND capture now includes the numeric code and target node for host-side handling.
+- ACP side effects: door.handler now toggles quiet/chat and forces logoff for specific ACP codes (4 ToggleChat, 5 ExitNode, 10/11 OffHook/QuietNode). All ACP actions are recorded on session.acpLastAction for further host handling.
+- Remaining gaps: transfer “streams” are still simulated via file copies/touches (no actual protocol exchange), many ACP codes remain as TODO, and pause/linecount parity may need revisit. Tests: backend `npx tsc --noEmit` currently passes.
+- New backend scaffold: Socket handler now supports transfer:start/data/end/cancel events for binary upload/download over Socket.IO. Uploads write to resolved Amiga paths (defaulting to Playpen), downloads stream chunks back to the client; state is stored on session.transfer. Still needs a real client-side ZMODEM/WebSocket loop to complete end-to-end transfers.
+- Additional scaffold for future ZMODEM: socket-handlers now expose a “transfer-raw” channel (start/data/end/cancel) and bypass command handling when transferRawActive is set. DOS output now has a raw callback that emits transfer-raw:echo when transferRawActive is true, and LibraryManager registers a session.serialInputHook that feeds raw buffers into dos.library’s input. There is still no true serial tap from the door—output is captured at dos.library Write (console) and input is pushed into queueInput—so this remains preparatory.
