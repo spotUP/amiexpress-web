@@ -1,5 +1,43 @@
 # Handoff Summary
 
+## Latest change (GA door startup)
+- Fixed GA door crash in `LibraryManager`: added `ensureAnswerFiles` to create `Answers/` and node `Answers/TempAns` directories (uses `BBS_ROOT`/projectRoot) before icon.library init. Typecheck passes (`cd web/backend && npx tsc --noEmit`). Backend restart needed to pick up the fix.
+
+## Latest change (Admin logs)
+- System admin logs endpoint now streams log files instead of reading entire files into memory, preventing `RangeError: Invalid string length` on multi-GB `backend.log`. Uses a streaming reader with a ring buffer to return the last N lines (with optional search) without loading the whole file. Typecheck passes (`cd web/backend && npx tsc --noEmit`). Restart backend to pick up the change.
+
+## Latest fixes (GA + command history)
+- GA command now passes the live BBS session into AmigaDoorSession so XIM/door input wiring uses the correct node/session data. Should prevent the GA door from exiting immediately after keystrokes. Restart backend, retry GA.
+- Command history arrows were being split into individual chars; socket handler now treats escape sequences (e.g., `\x1b[A`/`\x1b[B`) as single inputs so history navigation works again. Backend restart required.
+
+## Latest fix (screen pauses)
+- `doPause` now installs a real pagination gate and signals `advanceDisplayFlow` to resume after a keypress. Login/bulletin screens (e.g., `uprough.TXT`) should now pause for input instead of auto-advancing. Restart backend to apply.
+- Added guard so pauseDisplayFlow skips adding a second pause when a screen already set `paginatedScreen` (e.g., QuickNew with `~SP`). Should remove the double pause prompt.
+- Paginated screens now clear `menuPause` when finishing (Y/Enter, N, or NS) so we don’t stack an extra pause prompt after screen-driven pauses (e.g., QuickNew).
+- Added `~SP` to `Screens/uprough.txt` to force a pause on that screen (matches expected behavior).
+- QuickNew screen generation now clears the screen before content (adds ESC[2J ESC[H) so QuickNew displays from a clean screen.
+- Login assets aligned with Sanctuary layout: copied `Node2/Screens` into `Node1/Screens` so sysop gets node-specific AWAIT/LOGON/etc.; renamed `Screens/flt/001-005.flt*` to `.flt` so WORK:bbs/Screens/flt lookups resolve; seeded `Bulletins/lastc.txt` from `bull6.txt` so logon can show last callers until the door generates it.
+- Added initial Batch API (`/api/batches`) to list/load/save batch0–batch6 so sysops can edit batches from the admin UI. Backend wiring only; UI still pending.
+- Added headless 68K door runner (`web/backend/src/scripts/run-amiga-door.ts`) and hooked batch scheduler to run `ntr-lastcallers` via the runner instead of spawning host binaries. MultiTop/SlickTop still pending in the runner path.
+- Batch scheduler now routes `ntr-lastcallers`, `multitop/mtop`, and `slicktop/slicktop` through the 68K runner (node0 placeholder for runner) instead of host spawn. QuickNew stays native. UI still pending.
+
+## Latest changes (tooltypes parsing)
+- .info tooltypes are now parsed centrally (commented entries skipped) and preserved as an object on command definitions/door metadata. AmigaDoorManager uses the shared parser and exposes every tooltype on DoorInfo.
+- Door objects now carry stack/priority/resident/expert/trap/silent/quick/logInputs/scriptCheck/banner/mimicVer/passParameters/internal plus the full toolTypes map.
+- 68k door launches receive these fields in DoorConfig (stack/priority/flags/toolTypes, etc.) so stack sizes and other tooltype-driven behaviors flow into Moira. Command execution also passes the extra fields to executeDoor.
+- Typecheck: `cd web/backend && npx tsc --noEmit` (pass).
+
+## Latest updates (68K register)
+- XIM JH_REGISTER now mirrors express.e: command is set to the user’s line length (user.lineLength → pauseLines → lineWrap, fallback 29) before ReplyMsg; data/node/string are echoed unchanged and length defaults to 0x104 when absent.
+- LibraryManager now passes the BBS session into XIMProtocol so register replies and other handlers can see user settings (line length, etc.).
+- Amiga doors now receive live keystrokes: launchAmigaDoor sets `inDoorManager`/`DOOR_RUNNING` and a `doorInputHandler` that routes input to XIM queue (and DOS when not waiting on XIM), then clears it on exit. This should let GetAnswer/Bulls accept prompt input instead of timing out.
+- Door lifecycle guard now extends automatically when a door is waiting for line input (JH_PM/JH_LI/HK); the loop limit grows in 50k steps instead of terminating so the user can respond.
+- GA command path now also sets `inDoorManager`/`DOOR_RUNNING` and installs a doorInputHandler that feeds input into XIM/DOS, with cleanup on exit/error. This was missing before, so GetAnswer was not receiving keystrokes.
+- Persist session after wiring door input: both GA and launchAmigaDoor now call `setSession(socket.id, session)` after setting/clearing doorInputHandler so socket-handlers sees the door flags and routes keystrokes correctly.
+- Added `[DoorFile]` logging in dos.library: Open/Read/Write/Close calls append to `logs/backend.log` with Amiga path, handle, bytes, and real path when available (FileManager branch logs too). This should show up in the admin log dropdown for 68k door debugging.
+- 68k door logs now go to a dedicated `logs/door-68k.log` (DoorDebug/DoorFile/DoorLog/DoorRegs). Admin `/logs` dropdown now includes “68K Doors”, and backend API supports type=door68k (GET/DELETE). Config-app build succeeds.
+- GET /logs now auto-creates the requested log file (including door-68k) if missing so the admin log page won’t error when the file doesn’t exist yet.
+
 ## New changes (ZMODEM bridge)
 - Added real ZMODEM scaffolding. Backend now has a `ZmodemTransferManager` (web/backend/src/services/zmodem-transfer.service.ts) that runs zmodem.js over the raw channel, starts ZRQINIT for downloads, and streams real files instead of staging. XIM ZMODEMSEND/RECEIVE/BATCH/NET* now call this manager and push paths through the playpen copy when sending. Raw flags are wired to session transferRawSink/transferRawSend and telnet/SSH handlers bypass cooked commands during transfers.
 - Socket.IO raw channel now uses transfer-raw:data/init/complete; manager cancels on end/cancel events. Telnet/SSH connections set transferRawSend to connection.write and feed raw buffers when transferRawActive is set.
@@ -105,3 +143,55 @@
 - Remaining gaps: transfer “streams” are still simulated via file copies/touches (no actual protocol exchange), many ACP codes remain as TODO, and pause/linecount parity may need revisit. Tests: backend `npx tsc --noEmit` currently passes.
 - New backend scaffold: Socket handler now supports transfer:start/data/end/cancel events for binary upload/download over Socket.IO. Uploads write to resolved Amiga paths (defaulting to Playpen), downloads stream chunks back to the client; state is stored on session.transfer. Still needs a real client-side ZMODEM/WebSocket loop to complete end-to-end transfers.
 - Additional scaffold for future ZMODEM: socket-handlers now expose a “transfer-raw” channel (start/data/end/cancel) and bypass command handling when transferRawActive is set. DOS output now has a raw callback that emits transfer-raw:echo when transferRawActive is true, and LibraryManager registers a session.serialInputHook that feeds raw buffers into dos.library’s input. There is still no true serial tap from the door—output is captured at dos.library Write (console) and input is pushed into queueInput—so this remains preparatory.
+
+## Current session (68K door handshake rework)
+- Removed all proactive AEDoor “startup” pushes: AEDoorLibrary.CreateComm no longer injects a JH_REGISTER message into the reply port, and DoorLifecycleManager no longer auto-sends startup traffic for Bulls. Doors must now initiate XIM traffic via PutMsg, matching express.e’s `Wait/GetMsg/ReplyMsg` loop.
+- XIM replies now mutate the correct jhMessage fields: added `writeCommand()` to the parser and use it so JH_REGISTER sets `Command` to the line-wrap width (defaults to 79) without clobbering Data. Hotkey/quickkey/fetchkey/extHK now set `Command` to the expected port/char code, reset lineCount, and leave Data semantics aligned with express.e (carrier drop returns -1). FetchKey/ExtHK also write Command=0 when no input is present.
+- Quick key/Hotkey handling now tags Command with the XIM port (console=1, serial=2 via bbsSession.logonType). Extended hotkey/fetch-key commands now carry the char code in Command to mirror express.e.
+- Typecheck run after changes: `cd web/backend && npx tsc --noEmit` (pass).
+- Bulls JH_REGISTER reply now writes the line length into `msg.command`, sets NodeID from the session node, and leaves Data untouched (mirrors express.e semantics) to avoid confusing doors that expect their original Data value.
+- Note: user intentionally moved many door assets out of the tree (ByteKiller/FileID/etc. deletions showing in `git status`); do not restore or stage them unless requested.
+- Expanded LVO trap naming: `web/backend/src/amiga-emulation/constants/lvo-map.ts` now mirrors the Exec/DOS offsets from `dev/docs/amiga68ktools-master/tools/LVOs.i`, so trap logs will show correct names across the full vector range.
+- Bulls reroute disabled: PutMsg now honors the door’s chosen port instead of forcing AEDoorPort, to avoid misdelivery during JH_REGISTER.
+- Bulls control block now seeds the door info message with a neutral JH_REGISTER (command=1, data=0, node=current) to match expected structure before the door populates it.
+- Adjusted jhMessage length constant to 0x104 (260 bytes) to align with door-side structures seen in logs/AeDoor includes.
+- Added a TS debug door (`BVDBG` / hotkey `BV`) at `web/backend/src/doors/bullview-debug`. .info registered at `Commands/BBSCmd/BVDBG.info` (Location: `web/backend/src/doors/bullview-debug/index.ts`, Type=TS) so it can be launched to log XIM traffic end-to-end without 68k uncertainty.
+
+## Today (BVDBG/XIM host harness)
+- Added `MoiraEmulator.isInitialized()` so we can guard init without resetting memory.
+- XIMHostService is now an async factory that initializes Moira + Exec, creates a named `AEDoorPort<n>` (node from session), and wires `doorMessageCallback` to the real XIMProtocol so PutMsg/ReplyMsg flows mirror the Amiga path.
+- BVDBG door now allocates its jhMessage via XIMHostService (shared emulator) and drives JH_REGISTER/JH_LI/JH_SHUTDOWN through hostService.transfer with parsed dumps, eliminating the “Emulator not initialized” error and keeping logging aligned with the real XIM parser.
+- Typecheck: `cd web/backend && npx tsc --noEmit` (pass).
+- BVDBG wrapper now imports the TS implementation directly (`Doors/BVDBG/index.ts`), so ts-node will load the updated source once the backend is restarted/reloaded.
+- Bulls reply port is now a named public port (`DoorReplyPort<n>`) via `ensurePublicPort`, so PutMsg to that port triggers `doorMessageCallback` and reaches XIM handlers even when Bulls targets its own reply port.
+- Bulls DoorInfo seeding now forces a sane JH_REGISTER seed: command=1, data=0, node=(session node or 1). This avoids 0xFF sentinel nodes/data causing register loops.
+- XIM JH_REGISTER now mirrors express.e: only sets Command to line length and replies without altering data/node/string.
+- DoorMessageHandler no longer normalizes Bulls messages; it only dumps the first five for debugging.
+- Added Bulls-specific strptr fix: on JH_REGISTER we set StrPtr to the embedded string buffer (echo semantics otherwise unchanged) to avoid null pointers in doors expecting a valid string pointer.
+- Bulls seed message now sets StrPtr and filler1/filler2 to the embedded string buffer in the door info block so the door starts with valid string pointers.
+- BullsDoorHandler now exposes monitorPc(), and DoorLifecycleManager calls it each iteration; PC watchpoints (0x1fca, 0x22ea, 0x2308) will log PC/D0/D1 when hit to diagnose the register loop.
+- Register replies now set StrPtr/filler1/filler2 to the embedded string buffer and, if node==0xFF, normalize node to the session node before replying; everything else is echoed (Command=line length). Logs `RegisterReply` with cmd/data/node/strPtr.
+- DoorMessageHandler now only dumps Bulls messages (no field mutations) to mirror express.e echo behavior.
+- BullsDoorHandler now installs PC watchpoints (0x1fca, 0x22ea, 0x2308) via handleIllegal hook to log PC and D0 when Bulls hits the known loop PCs, to help diagnose the register loop.
+
+## Latest change (2025-11-25)
+- Bulls aggressive handling: JH_REGISTER now forces Command=0x3ea for Bulls (or tiny Command), echoes data/node, and mirrors cmd/data/node into any known Bulls pointer buffers (info/control/handshake/nodeMirror) after ReplyMsg. Bulls logging added in ReplyMsg, loop guard raised to 200k. Typecheck run: `cd web/backend && npx tsc --noEmit` (pass).
+
+## Next steps (68k door/Bulls)
+- Re-run Bulls after backend restart; check RegisterReply and Bulls PutMsg/ReplyMsg logs. If still looping, inspect PC monitor around 0x233e/0x234c with the longer loop guard; confirm d7 becomes nonzero when we mirror into control buffers.
+
+## Disassembly work
+- Saved a clean disassembly of the tiny XIM door `Doors/GetAnswer/GetAnswer` to `disasm/GetAnswer.asm` (raw, no ANSI). This is a small specimen to study proper XIM messaging without Bulls hacks. An earlier coarse annotation exists at `disasm/GetAnswer_annotated.asm` (auto-tagged, rough).
+- Next: manually trace `GetAnswer` to find its jhMessage writes (offsets around 0xdc/0xe0) and PutMsg/WaitPort/GetMsg usage; use it to align our XIM handler and remove remaining Bulls workarounds.
+
+## Latest admin/UI work (2025-11-26)
+- Added new-user defaults to system_config (security level, time/chat limits, lines per screen, expert/ANSI, protocol/screen type/editor, chat/quiet/auto-rejoin, conf access). SystemConfig API + config-app form expose them; new-user flow and /api/config/users now pick up these defaults.
+- Computer Types, Screen Types, File Checkers, Languages, Protocols pages are now fully CRUD with enable toggles and modals. File Checkers include error-pattern management. Protocols page disables Y-Modem toggling and notes it is not yet implemented; default selection now clears other defaults.
+- Deployment & Health page now uses authed API client; health/system/database tabs load data again.
+- Batch editor: added filter/hide-comments, helper inserts (timeout/sleep/wait), validation endpoint `/api/batches/validate` (checks missing executables, known special cases), inline status per line, and CSV export of validation results.
+- Added API client helpers for deployment endpoints and batch validation; config-app build and backend `tsc --noEmit` both pass.
+- System Config page now auto-saves on change (debounced) with a status indicator; manual Save button removed.
+- Uploads: web terminal now prompts for a file when U is pressed (opens a hidden file input) instead of aborting immediately; keeps the ZMODEM session alive until a file is chosen. Terminal build passes.
+- ANSI toggle (M): now flips session/user ansi flag, persists to DB, and server filters ANSI codes when ANSI is disabled. Session ansiMode seeded from user pref at login.
+- Telnet/SSH ports default to 64128/31337; startup now reads system_config unless env overrides and instantiates servers accordingly. start-servers.sh prints telnet/ssh commands. Max nodes default 255.
+- Admin System Config: color scheme removed (BBS stays standard ANSI), language defaults to English/Languages, telnet/ssh defaults shown, nodes default 255.
