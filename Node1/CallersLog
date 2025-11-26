@@ -3210,3 +3210,428 @@
 25-Nov-25 01:09 Door: U
 25-Nov-25 01:09 Door exit: U
 25-Nov-25 01:21 Logoff: sysop
+25-Nov-25 01:30 Login: sysop
+25-Nov-25 01:30 Door: U
+25-Nov-25 01:30 Door exit: U
+25-Nov-25 01:31 Door: B
+25-Nov-25 01:31 Door exit: B
+25-Nov-25 01:36 Door: U
+25-Nov-25 01:36 Door exit: U
+25-Nov-25 01:38 Login: sysop
+25-Nov-25 01:41 Door: B
+25-Nov-25 01:41 Door exit: B
+25-Nov-25 02:17 Login: sysop
+25-Nov-25 02:18 Door: B
+25-Nov-25 02:18 Door exit: B
+25-Nov-25 03:35 Logoff: sysop
+25-Nov-25 06:58 Login: sysop
+25-Nov-25 06:58 Door: B
+25-Nov-25 06:58 Door exit: B
+25-Nov-25 07:00 Logoff: sysop
+25-Nov-25 07:02 Login: sysop
+25-Nov-25 07:02 Door: B
+25-Nov-25 07:02 Door exit: B
+25-Nov-25 07:04 Door: B
+25-Nov-25 07:04 Door exit: B
+25-Nov-25 07:07 Login: sysop
+25-Nov-25 07:07 Door: B
+25-Nov-25 07:07 Door exit: B
+25-Nov-25 07:13 Login: sysop
+25-Nov-25 07:13 Door: B
+25-Nov-25 07:13 Door exit: B
+25-Nov-25 07:13 Door: B
+25-Nov-25 07:13 Door exit: B
+25-Nov-25 07:13 Door: B
+25-Nov-25 07:13 Door exit: B
+25-Nov-25 07:15 Door: WHO
+25-Nov-25 07:15 Door exit: WHO
+25-Nov-25 07:15 Door: V-AWAIT
+25-Nov-25 07:15 Door exit: V-AWAIT
+25-Nov-25 07:19 Login: sysop
+25-Nov-25 07:19 Door: B
+25-Nov-25 07:19 Door exit: B
+25-Nov-25 07:22 Login: sysop
+25-Nov-25 07:22 Door: B
+25-Nov-25 07:22 Door exit: B
+25-Nov-25 07:40 Login: sysop
+25-Nov-25 07:40 Door: B
+25-Nov-25 07:40 Door exit: B
+25-Nov-25 08:10 Logoff: sysop
+25-Nov-25 09:20 Login: sysop
+25-Nov-25 09:20 Door: B
+25-Nov-25 09:20 Door exit: B
+25-Nov-25 09:24 Logoff: sysop
+25-Nov-25 09:27 Login: sysop
+25-Nov-25 09:27 Door: B
+25-Nov-25 09:27 Door exit: B
+25-Nov-25 09:30 Login: sysop
+25-Nov-25 09:30 Door: B
+25-Nov-25 09:30 Door exit: B
+25-Nov-25 09:35 Login: sysop
+25-Nov-25 09:35 Door: B
+25-Nov-25 09:35 Door exit: B
+25-Nov-25 09:44 Login: sysop
+25-Nov-25 09:44 Door: B
+25-Nov-25 09:44 Door exit: B
+25-Nov-25 09:50 Login: sysop
+25-Nov-25 09:50 Door: B
+25-Nov-25 09:50 Door exit: B
+25-Nov-25 09:56 Login: sysop
+25-Nov-25 09:56 Door: B
+25-Nov-25 09:56 Door exit: B
+25-Nov-25 10:07 Login: sysop
+25-Nov-25 10:07 Door: B
+25-Nov-25 10:07 Door exit: B
+25-Nov-25 10:14 Login: sysop
+25-Nov-25 10:15 Door: B
+25-Nov-25 10:15 Door exit: B
+25-Nov-25 10:21 Login: sysop
+25-Nov-25 10:21 Door: B
+25-Nov-25 10:21 Door exit: B
+25-Nov-25 10:28 Login: sysop
+25-Nov-25 10:28 Door: B
+25-Nov-25 10:28 Door exit: B
+25-Nov-25 10:42 Login: sysop
+25-Nov-25 10:42 Door: B
+25-Nov-25 10:42 Door exit: B
+25-Nov-25 10:56 Login: sysop
+25-Nov-25 10:56 Door: B
+25-Nov-25 10:56 Door exit: B
+25-Nov-25 11:22 Login: sysop
+25-Nov-25 11:32 Login: sysop
+25-Nov-25 11:35 Login: sysop
+25-Nov-25 11:45 Login: sysop
+25-Nov-25 11:53 Login: sysop
+25-Nov-25 11:57 Logoff: sysop
+25-Nov-25 12:38 Login: sysop
+25-Nov-25 12:40 Login: sysop
+25-Nov-25 12:51 Login: sysop
+25-Nov-25 13:01 Login: sysop
+25-Nov-25 13:01 Door: B
+25-Nov-25 13:01 Door exit: B
+25-Nov-25 13:01 Door: BVDBG
+25-Nov-25 13:01 Door exit: BVDBG
+25-Nov-25 13:05 Login: sysop
+25-Nov-25 13:05 Door: BVDBG
+25-Nov-25 13:05 Door exit: BVDBG
+25-Nov-25 13:07 Door: B
+25-Nov-25 13:07 Door exit: B
+25-Nov-25 13:51 Login: sysop
+25-Nov-25 13:51 Door: BVDBG
+25-Nov-25 13:51 Door exit: BVDBG
+25-Nov-25 14:40 Login: sysop
+25-Nov-25 14:40 Door: B
+25-Nov-25 14:40 Door exit: B
+25-Nov-25 14:40 Door: BVDBG
+25-Nov-25 14:41 Door: B
+25-Nov-25 14:41 Door exit: B
+25-Nov-25 15:12 Login: sysop
+25-Nov-25 15:12 Door: BVDBG
+25-Nov-25 15:13 Door: B
+25-Nov-25 15:13 Door exit: B
+25-Nov-25 15:16 Door: B
+25-Nov-25 15:16 Door exit: B
+25-Nov-25 15:20 Door: B
+25-Nov-25 15:20 Door exit: B
+25-Nov-25 15:23 Door: B
+25-Nov-25 15:23 Door exit: B
+25-Nov-25 15:28 Door: B
+25-Nov-25 15:28 Door exit: B
+25-Nov-25 15:47 Logoff: sysop
+25-Nov-25 16:13 Login: sysop
+25-Nov-25 16:13 Door: B
+25-Nov-25 16:13 Door exit: B
+25-Nov-25 16:17 Door: B
+25-Nov-25 16:17 Door exit: B
+25-Nov-25 16:20 Door: B
+25-Nov-25 16:20 Door exit: B
+25-Nov-25 16:22 Login: sysop
+25-Nov-25 16:23 Door: B
+25-Nov-25 16:23 Door exit: B
+25-Nov-25 16:26 Door: B
+25-Nov-25 16:26 Door exit: B
+25-Nov-25 16:29 Door: B
+25-Nov-25 16:29 Door exit: B
+25-Nov-25 16:33 Door: B
+25-Nov-25 16:33 Door exit: B
+25-Nov-25 16:36 Door: B
+25-Nov-25 16:36 Door exit: B
+25-Nov-25 16:41 Door: B
+25-Nov-25 16:41 Door exit: B
+25-Nov-25 16:44 Door: B
+25-Nov-25 16:44 Door exit: B
+25-Nov-25 16:47 Door: B
+25-Nov-25 16:47 Door exit: B
+25-Nov-25 16:51 Door: B
+25-Nov-25 16:51 Door exit: B
+25-Nov-25 16:53 Door: B
+25-Nov-25 16:53 Door exit: B
+25-Nov-25 16:54 Door: B
+25-Nov-25 16:54 Door exit: B
+25-Nov-25 16:58 Door: B
+25-Nov-25 16:58 Door exit: B
+25-Nov-25 17:00 Door: B
+25-Nov-25 17:00 Door exit: B
+25-Nov-25 17:04 Door: B
+25-Nov-25 17:04 Door exit: B
+25-Nov-25 17:06 Door: B
+25-Nov-25 17:06 Door exit: B
+25-Nov-25 17:06 Door: B
+25-Nov-25 17:06 Door exit: B
+25-Nov-25 17:08 Login: sysop
+25-Nov-25 17:08 Door: B
+25-Nov-25 17:08 Door exit: B
+25-Nov-25 17:10 Door: B
+25-Nov-25 17:10 Door exit: B
+25-Nov-25 17:19 Door: B
+25-Nov-25 17:19 Door exit: B
+25-Nov-25 17:37 Door: B
+25-Nov-25 17:37 Door exit: B
+25-Nov-25 17:46 Login: sysop
+25-Nov-25 17:46 Door: B
+25-Nov-25 17:46 Door exit: B
+25-Nov-25 17:52 Door: B
+25-Nov-25 17:52 Door exit: B
+25-Nov-25 17:52 Door: B
+25-Nov-25 17:52 Door exit: B
+25-Nov-25 18:00 Door: B
+25-Nov-25 18:00 Door exit: B
+25-Nov-25 18:46 Login: sysop
+25-Nov-25 18:46 Door: B
+25-Nov-25 18:46 Door exit: B
+25-Nov-25 18:50 Login: sysop
+25-Nov-25 18:50 Door: B
+25-Nov-25 18:50 Door exit: B
+25-Nov-25 18:53 Login: sysop
+25-Nov-25 18:53 Door: B
+25-Nov-25 18:53 Door exit: B
+25-Nov-25 18:59 Login: sysop
+25-Nov-25 18:59 Door: B
+25-Nov-25 18:59 Door exit: B
+25-Nov-25 19:04 Login: sysop
+25-Nov-25 19:04 Door: B
+25-Nov-25 19:04 Door exit: B
+25-Nov-25 19:07 Login: sysop
+25-Nov-25 19:07 Door: B
+25-Nov-25 19:07 Door exit: B
+25-Nov-25 19:10 Login: sysop
+25-Nov-25 19:10 Door: B
+25-Nov-25 19:10 Door exit: B
+25-Nov-25 19:14 Login: sysop
+25-Nov-25 19:14 Door: B
+25-Nov-25 19:14 Door exit: B
+25-Nov-25 19:17 Login: sysop
+25-Nov-25 19:17 Door: B
+25-Nov-25 19:17 Door exit: B
+25-Nov-25 19:20 Login: sysop
+25-Nov-25 19:20 Door: B
+25-Nov-25 19:20 Door exit: B
+25-Nov-25 19:35 Login: sysop
+25-Nov-25 19:35 Door: B
+25-Nov-25 19:35 Door exit: B
+25-Nov-25 19:47 Login: sysop
+25-Nov-25 19:47 Door: B
+25-Nov-25 19:47 Door exit: B
+25-Nov-25 19:51 Login: sysop
+25-Nov-25 19:52 Door: B
+25-Nov-25 19:52 Door exit: B
+25-Nov-25 19:58 Login: sysop
+25-Nov-25 19:58 Door: B
+25-Nov-25 19:58 Door exit: B
+25-Nov-25 20:05 Login: sysop
+25-Nov-25 20:05 Door: B
+25-Nov-25 20:05 Door exit: B
+25-Nov-25 20:24 Login: sysop
+25-Nov-25 20:24 Door: B
+25-Nov-25 20:25 Door exit: B
+25-Nov-25 20:27 Login: sysop
+25-Nov-25 20:27 Door: B
+25-Nov-25 20:27 Door exit: B
+25-Nov-25 20:30 Login: sysop
+25-Nov-25 20:30 Door: B
+25-Nov-25 20:30 Door exit: B
+25-Nov-25 20:33 Login: sysop
+25-Nov-25 20:33 Door: B
+25-Nov-25 20:33 Door exit: B
+25-Nov-25 20:36 Login: sysop
+25-Nov-25 20:36 Door: B
+25-Nov-25 20:36 Door exit: B
+25-Nov-25 20:39 Login: sysop
+25-Nov-25 20:39 Door: B
+25-Nov-25 20:39 Door: B
+25-Nov-25 20:39 Door exit: B
+25-Nov-25 20:39 Door exit: B
+25-Nov-25 20:39 Door: B
+25-Nov-25 20:39 Door exit: B
+25-Nov-25 20:41 Login: sysop
+25-Nov-25 20:42 Door: B
+25-Nov-25 20:42 Door exit: B
+25-Nov-25 20:45 Logoff: sysop
+25-Nov-25 20:46 Login: sysop
+25-Nov-25 20:46 Door: B
+25-Nov-25 20:46 Door exit: B
+25-Nov-25 20:49 Login: sysop
+25-Nov-25 20:49 Door: B
+25-Nov-25 20:49 Door exit: B
+25-Nov-25 20:56 Login: sysop
+25-Nov-25 20:56 Door: B
+25-Nov-25 20:56 Door exit: B
+25-Nov-25 20:59 Login: sysop
+25-Nov-25 20:59 Door: B
+25-Nov-25 20:59 Door exit: B
+25-Nov-25 21:13 Logoff: sysop
+25-Nov-25 21:14 Login: sysop
+25-Nov-25 21:14 Door: B
+25-Nov-25 21:14 Door exit: B
+25-Nov-25 21:23 Door: GA
+25-Nov-25 21:23 Door exit: GA
+25-Nov-25 21:49 Login: sysop
+25-Nov-25 21:49 Door: GA
+25-Nov-25 21:49 Door exit: GA
+25-Nov-25 21:49 Door: B
+25-Nov-25 21:49 Door exit: B
+25-Nov-25 21:50 Door: GA
+25-Nov-25 21:50 Door exit: GA
+25-Nov-25 22:01 Login: sysop
+25-Nov-25 22:01 Door: GA
+25-Nov-25 22:01 Door exit: GA
+25-Nov-25 22:01 Door: GA
+25-Nov-25 22:01 Door exit: GA
+25-Nov-25 22:03 Logoff: sysop
+25-Nov-25 22:07 Login: sysop
+25-Nov-25 22:07 Door: GA
+25-Nov-25 22:07 Door exit: GA
+25-Nov-25 22:07 Door: GA
+25-Nov-25 22:07 Door exit: GA
+25-Nov-25 22:17 Door: GA
+25-Nov-25 22:17 Door exit: GA
+25-Nov-25 22:18 Login: sysop
+25-Nov-25 22:18 Door: GA
+25-Nov-25 22:18 Door exit: GA
+25-Nov-25 22:31 Logoff: sysop
+25-Nov-25 22:39 Login: sysop
+25-Nov-25 22:39 Door: GA
+25-Nov-25 22:40 Door: GA
+25-Nov-25 22:40 Door: GA
+25-Nov-25 22:40 Door: GA
+25-Nov-25 22:40 Door: GA
+25-Nov-25 22:40 Door: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Door exit: GA
+25-Nov-25 22:42 Logoff: sysop
+25-Nov-25 22:44 Login: sysop
+25-Nov-25 22:44 Door: GA
+25-Nov-25 22:44 Door: GA
+25-Nov-25 22:44 Door: GA
+25-Nov-25 22:44 Door: GA
+25-Nov-25 22:44 Door: GA
+25-Nov-25 22:45 Door: GA
+25-Nov-25 22:45 Door: GA
+25-Nov-25 22:45 Door: GA
+25-Nov-25 22:45 Door: GA
+25-Nov-25 22:45 Door: GA
+25-Nov-25 22:50 Login: sysop
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:50 Door: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 22:55 Door exit: GA
+25-Nov-25 23:11 Login: sysop
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:11 Door: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Door exit: GA
+25-Nov-25 23:16 Logoff: sysop
+25-Nov-25 23:31 Login: sysop
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:31 Door: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:36 Door exit: GA
+25-Nov-25 23:38 Login: sysop
+25-Nov-25 23:39 Door: GA
+25-Nov-25 23:39 Door: GA
+25-Nov-25 23:39 Door: GA
+25-Nov-25 23:39 Door: GA
+25-Nov-25 23:39 Door: GA
+25-Nov-25 23:45 Login: sysop
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:45 Door: GA
+25-Nov-25 23:47 Login: sysop
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:48 Door: GA
+25-Nov-25 23:53 Door exit: GA
+25-Nov-25 23:53 Door exit: GA
+25-Nov-25 23:53 Door exit: GA
+25-Nov-25 23:53 Door exit: GA
+25-Nov-25 23:53 Door exit: GA
+25-Nov-25 23:53 Door exit: GA
+26-Nov-25 00:16 Login: sysop
+26-Nov-25 00:16 Door: GA
+26-Nov-25 00:16 Door exit: GA
+26-Nov-25 00:16 Door: GA
+26-Nov-25 00:16 Door exit: GA
+26-Nov-25 00:24 Door: ULIST
+26-Nov-25 00:24 Door exit: ULIST
+26-Nov-25 07:31 Login: sysop
+26-Nov-25 07:31 Door: GA
+26-Nov-25 07:31 Door exit: GA
+26-Nov-25 07:35 Login: sysop
+26-Nov-25 07:35 Door: GA
+26-Nov-25 07:35 Door: GA
+26-Nov-25 07:35 Door: GA
+26-Nov-25 07:35 Door: GA
+26-Nov-25 07:36 Door: GA
+26-Nov-25 07:36 Door: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Door exit: GA
+26-Nov-25 07:38 Logoff: sysop
+26-Nov-25 07:47 Login: sysop
+26-Nov-25 08:14 Login: sysop
+26-Nov-25 08:14 Door: GA
+26-Nov-25 08:14 Door: GA
+26-Nov-25 08:14 Door: GA
+26-Nov-25 08:14 Door: GA
+26-Nov-25 08:14 Door: GA
+26-Nov-25 08:20 Login: sysop
+26-Nov-25 08:22 Logoff: sysop
+26-Nov-25 09:50 Login: sysop
