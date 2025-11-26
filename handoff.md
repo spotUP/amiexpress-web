@@ -1,5 +1,12 @@
 # Handoff Summary
 
+- Current session: read `AGENTS.md` and reviewed this handoff per user request; no code or config changes made.
+- Added a reusable `DataGrid` component for the config app. Nodes page now shows all nodes in a grid (no dropdown) with inline create/edit/delete controls; missing nodes use a Create button. Users page now renders via the same grid component. Built config-app successfully (`cd web/config-app && npm run build`).
+- Fixing the Users route so nested routing matches `/users`, and added ANSI stripping for plain mode (`AnsiUtil.stripAnsiForPlainText` + filter update). Backend typecheck (`cd web/backend && npx tsc --noEmit`) and config-app build (`cd web/config-app && npm run build`) both pass.
+- Sysop-only Admin login: `/auth/login` now filters out non-sysops, `/auth/me` exists for persistent sessions, and the admin frontend saves the authenticated BBS sysop in localStorage and reuses the saved token/user so the portal stays logged in as long as the JWT remains valid (backend typecheck + config-app build still pass).
+- Unified login session: the BBS terminal, admin UI, and SDK preview now share a single `authToken` (set on login success), letting any of the three authenticate the others via storage events; the SDK preview also enforces that the token belongs to a sysop before showing its overlay. ANSI filtering now only removes SGR color codes (`AnsiUtil.stripColorCodes`) so position-control sequences stay intact, and backend/config-app/sdk builds (`npx tsc --noEmit`, `npm run build` for both projects) all pass.
+- Added IP ban manager/rate limiter so telnet/SSH drop connections from clients that exceed connection or authentication attempt thresholds, plus auth flow now records failures so the same bans cover brute-force scans (backend typecheck + config-app build + SDK build still pass).
+
 ## Latest change (GA door startup)
 - Fixed GA door crash in `LibraryManager`: added `ensureAnswerFiles` to create `Answers/` and node `Answers/TempAns` directories (uses `BBS_ROOT`/projectRoot) before icon.library init. Typecheck passes (`cd web/backend && npx tsc --noEmit`). Backend restart needed to pick up the fix.
 
