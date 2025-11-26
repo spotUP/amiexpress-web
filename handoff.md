@@ -1,5 +1,7 @@
 # Handoff Summary
 
+- Latest change: added 68K door message tracing so every XIM request/data/string trio is appended to `logs/door-68k.log` (new `door-logging.util`, XIM exposes a message logger, and DoorMessageHandler registers it) for Bulls-level debugging.
+- Latest user prompts: target the admin UI nodes/users experience and refine the ANSI/plain-text stripping logic so turning ANSI off keeps layout intact.
 - Latest user prompts: target the admin UI nodes/users experience and refine the ANSI/plain-text stripping logic so turning ANSI off keeps layout intact.
 - Focus of this session: fix the broken `/users` route by rebuilding the admin routing/layout (Layout now renders via `Outlet` under `/admin/*` and nav links point at `/admin/...`), and tighten the ANSI filter so it only removes color codes (new `AnsiUtil.stripAnsiForPlainText` and auth filter).
 - Config app build completed (`cd web/config-app && npm run build`).
