@@ -1,5 +1,9 @@
 # Handoff Summary
 
+- Latest user prompts: target the admin UI nodes/users experience and refine the ANSI/plain-text stripping logic so turning ANSI off keeps layout intact.
+- Focus of this session: fix the broken `/users` route by rebuilding the admin routing/layout (Layout now renders via `Outlet` under `/admin/*` and nav links point at `/admin/...`), and tighten the ANSI filter so it only removes color codes (new `AnsiUtil.stripAnsiForPlainText` and auth filter).
+- Config app build completed (`cd web/config-app && npm run build`).
+
 - Current session: read `AGENTS.md` and reviewed this handoff per user request; no code or config changes made.
 - Added a reusable `DataGrid` component for the config app. Nodes page now shows all nodes in a grid (no dropdown) with inline create/edit/delete controls; missing nodes use a Create button. Users page now renders via the same grid component. Built config-app successfully (`cd web/config-app && npm run build`).
 - Fixing the Users route so nested routing matches `/users`, and added ANSI stripping for plain mode (`AnsiUtil.stripAnsiForPlainText` + filter update). Backend typecheck (`cd web/backend && npx tsc --noEmit`) and config-app build (`cd web/config-app && npm run build`) both pass.
