@@ -9,6 +9,12 @@
     ✔ Apply the same sanitization to socket-based login/username-check flows and new-user registration triggers
     □ Document the updates in handoff.md + note testing recommendations"
 
+## New updates (QuickNew stdout)
+- Added STDOUT redirection support: `FileManager` now tracks a configurable stdout BPTR; `DosLibrary.redirectStdout()` opens an Amiga path (MODE_NEWFILE) and updates Output(); `LibraryManager` honors `AEDOOR_STDOUT`/`AEDOOR_STDOUT_PATH` env to redirect before door start.
+- Ran: `AEDOOR_DISABLE_GUARD=1 AEDOOR_ROM=kickstart AEDOOR_STDOUT=screens:quicknew.txt npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/QuickNew/QuickNew 1 doors:quicknew/quicknew.config1`.
+- QuickNew now writes to `Screens/quicknew.txt` (6 KB, ANSI content). Door still ends with "PC out of code region" after closing dos.library, but output completes.
+- File accesses during the run (from logs): `screens:quicknew.txt`, `doors:quicknew/quicknew.config1`, and dir files `BBS:Conf{2..11}/Dir1` plus `BBS:Conf11/Dir2`.
+
 ## Recent updates (batch/logon stability)
 - Added `web/backend/src/scripts/run-batch.ts` to run batch scripts via the scheduler (exports `runBatchFile`); used it to run batch0–batch6 and batch000 (`npx tsx src/scripts/run-batch.ts ../../batchX`). `setenv` lines are skipped; drop files for Node1 created; SAmiLog ran. MultiTop/QuickNew remain commented out in batches.
 - Commented out QuickNew auto-runs in all `Node*/logon20.txt` and MultiTop auto-runs in `batch0–batch6` to stop login floods; login prompt returns reliably without unexpected door output.
