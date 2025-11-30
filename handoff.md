@@ -18,6 +18,9 @@
 ## New updates (exit handling)
 - DoorLifecycleManager now treats a PC that falls into the current stack bounds as a clean termination (covers QuickNew return into stack after closing dos.library). No functional change to doors beyond suppressing the crash log.
 
+## New updates (QuickNew automation)
+- Batch scheduler now special-cases QuickNew: runs `doors:quicknew/quicknew` with stdout redirected to `screens:quicknew.txt` and raises `AEDOOR_LOOP_LIMIT` to 2,000,000. Env overrides are passed through `runAmigaDoorViaRunner`, and guard remains disabled via tooltypes.
+
 ## Recent updates (batch/logon stability)
 - Added `web/backend/src/scripts/run-batch.ts` to run batch scripts via the scheduler (exports `runBatchFile`); used it to run batch0–batch6 and batch000 (`npx tsx src/scripts/run-batch.ts ../../batchX`). `setenv` lines are skipped; drop files for Node1 created; SAmiLog ran. MultiTop/QuickNew remain commented out in batches.
 - Commented out QuickNew auto-runs in all `Node*/logon20.txt` and MultiTop auto-runs in `batch0–batch6` to stop login floods; login prompt returns reliably without unexpected door output.
