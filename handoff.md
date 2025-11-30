@@ -22,6 +22,7 @@
 - ZMODEM: receiver now always sends a ZRQINIT kick for both upload/download and logs the first 32 bytes when Sentry consume fails (helps debug “Upload aborted” in web terminal). Needs backend restart.
 - Downloads: now prefer database-backed file paths (file_entries + file_areas) and flagged file lists. If the user has flagged files, running `D` with no args builds the download list from flagged entries (area path + filename) instead of prompting. Wildcard/filename searches now use DB paths first, falling back to legacy Dir# scanning.
 - Download flagged files improved: pulls flags from FileFlagManager (Partdownload/flagged#), session.tempData.flaggedFiles (DB), and session.flaggedFiles, so pressing `D` with flags present should immediately use them without dropping into hotkey prompt.
+- Batch files (daily logon): batch0–batch6 now have Sanctuary-style logon door calls uncommented: quicknew, multitop variants, slicktop, ntr-lastcallers, glcviewer/glcupdater, SAmiLog, callerslog helpers, and Announce stubs. These will run on logon per day-of-week when the backend restarts.
 
 ## Testing
 - `cd web/backend && SAmiLog_Path=bbs:utils/samilog AEDOOR_DISABLE_GUARD=0 AEDOOR_STDOUT=screens:quicknew.txt AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Utils/samilog/SAmiLog 1 '-UC\"1\"' '-O\"BBS:Bulletins/bull6.txt\"15'` → exits cleanly, `Bulletins/bull6.txt` now contains SAmiLog output.
