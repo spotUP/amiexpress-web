@@ -17,6 +17,7 @@
 - Web terminal input fixes: `@amiexpress/terminal` now resets state on `prompt-login` without re-running auto-login, guards duplicate prompts, and no longer writes its own `Username:` prompt (uses backend output) to prevent double prompts and dropped first characters. `login-failed`/`retry-login` only reset state; prompt text comes from backend. Rebuilt terminal package and ran `web/frontend npm run build`.
 - Logoff crash fix: `handleLogoff` now safely closes both socket.io and telnet/SSH sockets (checks for `disconnect`, `end`, `destroy`) to avoid `socket.disconnect is not a function` crashes that were bringing down the server after logoff. Needs backend restart to take effect.
 - Telnet UX: new connections now auto-advance past the connection screen and immediately show the ANSI graphics prompt (no extra Enter required). This should also prevent the first username character from being “eaten” after hitting Enter to continue.
+- Logoff exit for telnet/SSH: the telnet/SSH emitter now exposes `disconnect/end/destroy` to close the underlying transport, so logoff should terminate SSH/telnet sessions instead of hanging after “Disconnecting…”. Requires backend restart.
 
 ## Testing
 - `cd web/backend && SAmiLog_Path=bbs:utils/samilog AEDOOR_DISABLE_GUARD=0 AEDOOR_STDOUT=screens:quicknew.txt AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Utils/samilog/SAmiLog 1 '-UC\"1\"' '-O\"BBS:Bulletins/bull6.txt\"15'` → exits cleanly, `Bulletins/bull6.txt` now contains SAmiLog output.
