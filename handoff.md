@@ -1,210 +1,105 @@
-# Handoff Summary
+# Handoff (condensed)
 
-- Latest change: added 68K door message tracing so every XIM request/data/string trio is appended to `logs/door-68k.log` (new `door-logging.util`, XIM exposes a message logger, and DoorMessageHandler registers it) for Bulls-level debugging.
-- Latest user prompts: target the admin UI nodes/users experience and refine the ANSI/plain-text stripping logic so turning ANSI off keeps layout intact.
-- Latest user prompts: target the admin UI nodes/users experience and refine the ANSI/plain-text stripping logic so turning ANSI off keeps layout intact.
-- Focus of this session: fix the broken `/users` route by rebuilding the admin routing/layout (Layout now renders via `Outlet` under `/admin/*` and nav links point at `/admin/...`), and tighten the ANSI filter so it only removes color codes (new `AnsiUtil.stripAnsiForPlainText` and auth filter).
-- Config app build completed (`cd web/config-app && npm run build`).
+## Latest prompts
+- Current prompt: "how do we proceed?" / "it sounds good"
+- Prior prompt: "read agents.md and the handoff"
+- Prior prompt: "i added the amiga e dev kit to /Users/spot/Code/amiexpress-web/dev/docs/evo analyze it and find the info we need" and follow-ups about why we shouldn't need compiler-specific support—goal is real LoadSeg/DOS/Exec parity for all Amiga binaries, no stubs.
+- Earlier prompt: "we got interrupted:
+   ✔ Sanitize HTTP auth endpoints (login/register) before database lookup/insert
+    ✔ Apply the same sanitization to socket-based login/username-check flows and new-user registration triggers
+    □ Document the updates in handoff.md + note testing recommendations"
 
-- Current session: read `AGENTS.md` and reviewed this handoff per user request; no code or config changes made.
-- Added a reusable `DataGrid` component for the config app. Nodes page now shows all nodes in a grid (no dropdown) with inline create/edit/delete controls; missing nodes use a Create button. Users page now renders via the same grid component. Built config-app successfully (`cd web/config-app && npm run build`).
-- Fixing the Users route so nested routing matches `/users`, and added ANSI stripping for plain mode (`AnsiUtil.stripAnsiForPlainText` + filter update). Backend typecheck (`cd web/backend && npx tsc --noEmit`) and config-app build (`cd web/config-app && npm run build`) both pass.
-- Sysop-only Admin login: `/auth/login` now filters out non-sysops, `/auth/me` exists for persistent sessions, and the admin frontend saves the authenticated BBS sysop in localStorage and reuses the saved token/user so the portal stays logged in as long as the JWT remains valid (backend typecheck + config-app build still pass).
-- Unified login session: the BBS terminal, admin UI, and SDK preview now share a single `authToken` (set on login success), letting any of the three authenticate the others via storage events; the SDK preview also enforces that the token belongs to a sysop before showing its overlay. ANSI filtering now only removes SGR color codes (`AnsiUtil.stripColorCodes`) so position-control sequences stay intact, and backend/config-app/sdk builds (`npx tsc --noEmit`, `npm run build` for both projects) all pass.
-- Added IP ban manager/rate limiter so telnet/SSH drop connections from clients that exceed connection or authentication attempt thresholds, plus auth flow now records failures so the same bans cover brute-force scans (backend typecheck + config-app build + SDK build still pass).
+## Recent updates (batch/logon stability)
+- Added `web/backend/src/scripts/run-batch.ts` to run batch scripts via the scheduler (exports `runBatchFile`); used it to run batch0–batch6 and batch000 (`npx tsx src/scripts/run-batch.ts ../../batchX`). `setenv` lines are skipped; drop files for Node1 created; SAmiLog ran. MultiTop/QuickNew remain commented out in batches.
+- Commented out QuickNew auto-runs in all `Node*/logon20.txt` and MultiTop auto-runs in `batch0–batch6` to stop login floods; login prompt returns reliably without unexpected door output.
+- Gated `DoorLifecycleManager` progress spam behind `AEDOOR_PROGRESS_LOG`; default is silent so the BBS terminal no longer shows debug progress unless explicitly enabled.
+- GA (GetAnswer) door works but is slow because `Node1/Answers` is large (~6.7 MB); “Scanning on Node 1...” is expected until it finishes.
+- `Bulletins/bull1.txt` last touched Nov 28 21:57 by MultiTop run; still header-only (no rows). Other bulletins unchanged.
+- ED crash fix in progress: expanded guard whitelist in `DoorLifecycleManager`; now treats any library stub region (exec/dos/intuition/graphics/utility/AEDoor/icon) as safe with a wide window (base-0x1000 .. base+0x200000) to stop “PC out of code region” kills while running stub code. Need rerun to verify ED completes; A4 stayed nonzero in prior runs.
 
-## Latest change (GA door startup)
-- Fixed GA door crash in `LibraryManager`: added `ensureAnswerFiles` to create `Answers/` and node `Answers/TempAns` directories (uses `BBS_ROOT`/projectRoot) before icon.library init. Typecheck passes (`cd web/backend && npx tsc --noEmit`). Backend restart needed to pick up the fix.
+## Current focus
+- 68k door parity vs express.e: XIM/ACP semantics, dropfiles/playpen paths, batch hooks, and bulletin generators (MultiTop/SAmiLog/QuickNew). No stubs; port 1:1 from the E sources.
 
-## Latest change (Admin logs)
-- System admin logs endpoint now streams log files instead of reading entire files into memory, preventing `RangeError: Invalid string length` on multi-GB `backend.log`. Uses a streaming reader with a ring buffer to return the last N lines (with optional search) without loading the whole file. Typecheck passes (`cd web/backend && npx tsc --noEmit`). Restart backend to pick up the change.
+## Recent updates (this session)
+- CLI stack seeding fixed: stopped filling the top of the stack with the 0x1ff000 exit trap. `setupStack` now seeds only the seglist return BPTR and saved SP, matching vamos and avoiding register poison (the old fill showed 0x1ff000/0x20202020 in every register slot during traps). `cd web/backend && npx tsc --noEmit` still passes.
+- QuickNew repro (before the stack change): ran `AEDOOR_ROM=kickstart npx tsx web/backend/src/scripts/run-amiga-door.ts /Users/spot/Code/amiexpress-web/Doors/QuickNew/QuickNew 1 doors:quicknew/quicknew.config1` and hit a guard timeout after ~120s with massive DOS.Write loops; stack dumps showed every register word as 0x1ff000 due to the poisoned stack. Need to rerun after the stack fix.
+- RawDoFmt now calls the A2 putch callback per character (D0=char, A3=putData) with a small return stub; falls back to RawPutChar buffer semantics only when no callback is supplied. Added CPU state capture/restore to avoid register drift; kept 4KB scratch buffer guard and limited logging.
+- Re-ran MultiTop with full args: RawDoFmt loop resolved, console putch at 0x56be runs, `Bulletins/bull1.txt` writes succeed, and the door exits cleanly (~947 iterations, return D0=0). ExecBase/A6 stay stable and no guard timeout.
+- MultiTop re-run with arg `2` (Node2) still exits cleanly; no new bulletin writes observed (bull1 unchanged). Args appear empty in A0, so per-door arguments may not be reaching the door.
+- QuickNew runs now reach DOS.Open/ReadArgs but fail with “ERROR : Couldn't Open Config-File !” because the arg template parses FILE/A as “0” (A0 string is empty, so it tries to open PROGDIR:0). Needs arg passing fix or explicit config path.
+- Re-read AGENTS/CLAUDE rules and handoff, then focused on MultiTop 68k emulation.
+- Fixed Exec FreeMem trap so it no longer rewrites SP mid-run; added an exit fix to seed the exit trap (0x1ff000) on the stack when returning to 0x119a.
+- Aligned exit detection to also treat PC=0x1ff000 as a clean exit.
+- With `AEDOOR_DISABLE_GUARD=0`, MultiTop now runs through cleanup and exits cleanly (iterations ~943); stack no longer drifts to low memory.
+- Type check: `cd web/backend && npx tsc --noEmit` succeeds.
+ - Added stub loader to parse `dev/docs/LVOs.i` and install missing LVO traps for opened libraries (exec/dos/intuition/graphics/utility); RawDoFmt implemented; DOS FGetC/FPutC/FGets/FWrite/FRead added.
+ - Door args fixed: CLI arg string no longer includes program name; command BSTR now just program name; argc adjusted.
+ - FileManager now case-insensitive for assigns and uses PathManager; bulletin file opens/writes now happen.
+ - DoorLoader now routes pr_ReturnAddr/CLI return to exit trap instead of seglist and seeds stack return addresses with 0x1ff000; still exploring exit flow.
+ - Added PC-range crash guard in `DoorLifecycleManager` to stop when PC leaves code region; logs stack snapshot.
+ - Added per-instruction FLOW probe in `DoorLifecycleManager` to log indirect JSR/JMP targets plus PC window 0x5c90–0x5d10; now logs A6/target/memory around 0x5cda/0x5cfa/0x4b90.
+ - Latest runs (full args) still crash after FreeArgs but probes show real code executing in the 0x5c90 window. Final probe at PC=0x5cf6 shows `jsr d16(a6)` with A6=0x69546f70, ext=0xff3a -> target=0x69546eaa (lands on crash PC 0x546eaa); -0x58(A5)=0, A0=0xc7f0, A1=0x14008e, A4=0xc9d4. Need to find where A6 is corrupted from ExecBase 0x10000 to that bogus value.
+ - Added A6-change monitor (logs when A6 leaves known library bases) and ExecBase-pointer monitor (logs writes to address 0x4).
+ - RawDoFmt stub fixed: when *(A3) is NULL, it now defaults to A3 as the buffer pointer before writing, preventing clobbering of vectors/ExecBase.
+ - New run: ExecBase pointer stayed intact and bulletin writes now happen (`bbs:bulletins/bull1.txt` written), but RawDoFmt fires many times (often with A3=NULL), flooding logs and the door ends with PC=0x20007c after heavy output. Need to rein in RawDoFmt logging and see post-bulletin control flow.
 
-## Latest fixes (GA + command history)
-- GA command now passes the live BBS session into AmigaDoorSession so XIM/door input wiring uses the correct node/session data. Should prevent the GA door from exiting immediately after keystrokes. Restart backend, retry GA.
-- Command history arrows were being split into individual chars; socket handler now treats escape sequences (e.g., `\x1b[A`/`\x1b[B`) as single inputs so history navigation works again. Backend restart required.
+## Recent work
+- Runner/batch scheduler: all batch/door invocations now go through the Amiga runner with assigns (bbs:, doors:, nodeX:, PROGDIR), tooltypes (DISABLE_GUARD=TRUE), cwd set to door dir, DOOR.SYS/DORINFO written in Node{n} before execution, and redirection respected. Bare upload targets fall back to Node*/Playpen; real paths are used otherwise.
+- File system: PathManager base set to BBS root (`/Users/spot/Code/amiexpress-web`), ROM path fixed to `web/backend/data/amiga-roms`, FileManager/DOS open/write logging to `logs/door-68k.log`, guard disabled in DoorLifecycleManager. Assign maps are logged on init.
+- Batch files: auto-cloned batch0–batch6 into dataDir; logoff batches now run (batch000 + weekday variants). QuickNew/QuickNew2 regenerate and write via redirection.
+- Logging: door-68k.log now captures PathManager assigns, arg strings for mtop/SAmiLog calls, and console writes. No bulletin writes observed yet.
+- LibraryManager now resolves BBS_ROOT from `__dirname` (stable root regardless of cwd).
+- Tried extensive MultiTop parity work: Kickstart ROM forced (AEDOOR_ROM=kickstart), Process/CLI stubs populated (pr_CLI BPTR, pr_CurrentDir/Home locks, std handles, pr_Arguments, pr_SegList BPTR), A4/A5 set to DATA when present. Added arg logging/traces/guards, but MultiTop still loops before any DOS.Open; no bulletin writes. SAmiLog runs.
+- Tried extensive MultiTop parity work: Kickstart ROM forced (AEDOOR_ROM=kickstart), Process/CLI stubs populated (pr_CLI BPTR, pr_CurrentDir/Home locks, std handles, pr_Arguments, pr_SegList BPTR), A4/A5 set to DATA when present. Added arg logging/traces/guards, but MultiTop still loops before any DOS.Open; no bulletin writes. SAmiLog runs. SAS/C v6 manual link provided (needs Process/CLI/seglist/return addr setup per SAS/C startup).
+- HTTP auth hardening: sanitized login/register inputs before DB lookup/insert; same normalization applied to socket login/username-check/new-user registration triggers.
+- Door exit trap moved from ROM to RAM guard (`exitTrapAddress` now `0x1ff000`) to avoid ROM write detection conflicts during exit detection.
+- SAS/C boot alignment: DoorLoader now builds a BPTR seglist table, wires pr_SegList/cli_Module, sets CLI fields (CommandName, CommandDir, handles, Module, ReturnAddr), sets pr_ReturnAddr to the RAM trap, and forces A4/A5 to DATA base (or first segment). Added CLI/Process logging. `cd web/backend && npx tsc --noEmit` passes.
+- SAS/C boot alignment refinement: HunkLoader now allocates segments with DOS-style headers (size+next BPTR, data at +8), sets cli_Module/pr_SegList to the segment BPTR (header+4), and uses the new header-aware addresses for entrypoint. Seglist table removed in DoorLoader; A4/A5 now target the first segment base. tsc still passes.
+- Seg header tweak: size field now stored in longwords (size+next included) per DOS seglist expectations; next BPTR still header+4. Seglist BPTR remains 0x401 for MultiTop.
+- Switched back to LoadSeg-style mapping for Amiga E binaries: HunkLoader no longer writes headers; segments sit at BPTR<<2 code start, pr_SegList/cli_Module point to code BPTR. Added early A4/A5 change tracing in lifecycle.
+- MultiTop runs (AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Doors/MultiTop/mtop 1) still time out. Entrypoint 0x1000, BPTR 0x400; A4/A5 start at 0x1000 but A5 flips to 0xf0100 by iter=2 (PC=0x1006), A4 becomes 0xffffff8c by iter=18; first AllocMem trap still shows A4=0 and 0x1ff000-poisoned stack. Permit trap shows bogus SP and high-PC spin. Seg header log garbage (size_longs huge), watchpoint 0x1250..125F still fires during load (PC=0); no DOS.Open entries yet.
+- Amiga E dev kit review (`dev/docs/evo`): Technical_info.txt lists runtime A5 frame (e.g., arg at -32, wbmessage -36, execbase -40, dosbase -44, saved a5 -88, stdin/stdout, etc.) and stack model (globals+locals plus ~10K headroom). HUNK usage is standard AmigaDOS (code/data/BSS with reloc hunks, optional symbols/line debug; showhunk utility docs). Startup options include RUNBG/NOSTARTUP/STACK=<size>/GETA4; no compiler-specific loader needed—proper LoadSeg/reloc + correct CLI/Process/BPTR setup should make E binaries run.
+- HunkLoader fixes: parses HUNK_RELOC32SHORT, skips unknown hunks safely, and writes LoadSeg-style headers with size longs for payload only (no more inflated size_longs). Relocation parser now handles 16-bit short offsets; header default skip no longer corrupts position. `cd web/backend && npx tsc --noEmit` passes.
+- MultiTop hunk structure confirmed: single HUNK_CODE of 0x1355 longs (19,796 bytes) with one HUNK_RELOC32 group (61 entries), no DATA/BSS or RELOC32SHORT. Entry stub disassembly (file offset 0x20 → PC 0x1008) immediately calls AllocMem(0x3978, MEMF_CLEAR), then Forbid, switches A7 to allocPtr+size, links A4, calls Permit, stores allocPtr at -0x40(a4). It assumes A5 comes from initial A0 and uses offsets (-0x8(a5), 0xc(a5), etc.) as a data pointer before the stack switch, so our current A0=arg-string is wrong.
+- New run after loader fixes still fails: watchpoint triggers while writing segment (expected), A5 is set to arg-string, A4 stays 0; after a few instructions A5 flips to 0xf0100, A4 becomes 0xffffff8c, and Permit pops a garbage return (SP ~0xfffffd84, ret=0x392e3120) sending PC into ROM range; emulator spins (no DOS.Open). Root issue: initial registers/param block for E startup are wrong—need to supply the expected data pointer in A0/A5 (and possibly init block) rather than the raw arg string.
+- Stack attempt: stack now allocated via Exec.AllocMem (base 0x80018 in latest run) and SP set to top without forced RTS push; exit trap remains at 0x1ff000. MultiTop still blows the stack: first AllocMem/Forbid look sane, but StackSwap/Permit pop from corrupted SP (0xfffffd84) with ret=0x392e3120 and PC drops to ROM/low memory; still no DOS.Open.
+- Amiga E frame attempt: seeded A0/A5 with a runtime frame (offsets per Technical_info.txt: arg at -32, execbase/dosbase, stdin/stdout BPTRs, stack bottom, exit trap, thistask, saved a5). A5=0x82218 now; AllocMem/Forbid still fine, but by iter 18 A4=0xffffff8c and Permit still pops from bogus SP (0xfffffd84 → ret 0x392e3120). No DOS.Open yet; StackSwap path likely reading other frame fields or expecting different base/stack params.
+- Vamos reference (working): Stack lower=0x6e74, upper=0x8e74, SP=0x8e6c; A0/A5=stack top; A6=0x133c; first AllocMem returns 0x90d0; A4 links to ~0xc9d4 and stores allocPtr at -0x40(A4); exits to BPTR 0x400. Our emu now mirrors stack/A0/A5 and AllocMem base (0x90e8) but A4 still corrupts.
+- Latest instrumentation: StackSwap trap now logs struct fields (lower/upper/newSP), though MultiTop never calls it. DoorLifecycleManager logs A4/A5 changes with [-0x40]/[-0x1c] slots. In the latest run: iter 8/14 show A4=0, A5=0x8e74 slots zero; iter 18 A4 becomes 0xffffff8c; Permit then pops from bogus SP (~0xfffffd84) and ret=0x392e3120; no DOS.Open.
+- 2025-11-27 latest run: DoorLoader now seeds Amiga E runtime frame (BSTR arg at -32, exec/dos base, stdin/stdout BPTRs, stack bottom, saved A5, thistask), sets SR=0, D0/D1/D2 per vamos, A0/A5=stack top (0x8e74), pr/cli ReturnAddr=seglist BPTR (0x400), and pre-pushes 0x400 at SP. Exit trap RTS moved to 0x1ff000. `npx tsx .../mtop 1` still fails: after AllocMem/Forbid, Permit sees SP ~0xfffffd84 with junk return 0x392e3120; PC runs off until loop timeout, still no DOS.Open.
+- Exec stack tracking update: ExecLibrary now tracks current stack bounds (set by DoorLoader) for StackSwap symmetry. DoorLoader seeds the A5 frame with exit trap (0x1ff000), intuition/gfx base placeholders, and multiple seglist return words near the stack top; exit trap address is shared as a class field. Graphics.library still has no stub (OpenLibrary returns NULL).
+- Latest runs (post-update): MultiTop still terminates with “PC in low memory”. SP on the CLI stack drifts upward by 4 bytes each FreeMem/Forbid/Permit loop (e.g., 0x8e6c → 0x8eb0+); the final RTS at 0x119a pops zero and jumps to 0. Stack dumps now reflect our 0x400 seeding. No StackSwap calls; intuition stub opens at 0x50000, graphics fails to open. tsc continues to pass.
+- LVO coverage: added parser for `dev/docs/LVOs.i` and auto-installs stub traps for every known LVO of opened libraries (exec/dos always; graphics/intuition/utility once opened). Unknown library calls now return gracefully instead of running into ROM/garbage. `npx tsc --noEmit` still passes.
+- Stored the full `dev/docs/LVOs.i` (raw from amiga68ktools) so stub loading now finds the table.
+- Trap handler no longer forces SP realignment; Exec allocator now supports reset/reuse and resets to 0x90d0 after boot to mirror vamos. Stack top seeding widened to +256 bytes.
+- Latest mtop run: LVO stubs load (logs show LVOs.i found/stubbed). First AllocMem=0x90d0, A4 links to ~0xc9d4, but exit still fails: after FreeMem, SP ends ~0x8f70 (should be ~0x8e6c) and RTS at 0x119a jumps to 0. No DOS.Open yet. DOS/Exec stub calls log correctly.
+- Seeded the saved original SP at stackTop+4 to help stack restore on exit; still need to verify if MultiTop actually reads it.
 
-## Latest fix (screen pauses)
-- `doPause` now installs a real pagination gate and signals `advanceDisplayFlow` to resume after a keypress. Login/bulletin screens (e.g., `uprough.TXT`) should now pause for input instead of auto-advancing. Restart backend to apply.
-- Added guard so pauseDisplayFlow skips adding a second pause when a screen already set `paginatedScreen` (e.g., QuickNew with `~SP`). Should remove the double pause prompt.
-- Paginated screens now clear `menuPause` when finishing (Y/Enter, N, or NS) so we don’t stack an extra pause prompt after screen-driven pauses (e.g., QuickNew).
-- Added `~SP` to `Screens/uprough.txt` to force a pause on that screen (matches expected behavior).
-- QuickNew screen generation now clears the screen before content (adds ESC[2J ESC[H) so QuickNew displays from a clean screen.
-- Login assets aligned with Sanctuary layout: copied `Node2/Screens` into `Node1/Screens` so sysop gets node-specific AWAIT/LOGON/etc.; renamed `Screens/flt/001-005.flt*` to `.flt` so WORK:bbs/Screens/flt lookups resolve; seeded `Bulletins/lastc.txt` from `bull6.txt` so logon can show last callers until the door generates it.
-- Added initial Batch API (`/api/batches`) to list/load/save batch0–batch6 so sysops can edit batches from the admin UI. Backend wiring only; UI still pending.
-- Added headless 68K door runner (`web/backend/src/scripts/run-amiga-door.ts`) and hooked batch scheduler to run `ntr-lastcallers` via the runner instead of spawning host binaries. MultiTop/SlickTop still pending in the runner path.
-- Batch scheduler now routes `ntr-lastcallers`, `multitop/mtop`, and `slicktop/slicktop` through the 68K runner (node0 placeholder for runner) instead of host spawn. QuickNew stays native. UI still pending.
+## Known gaps / TODO (port 1:1 from express.e)
+- Bulletin generators: confirm `bull1` content matches express.e output and verify the other bulletins (bull2..6) plus SAmiLog/QuickNew flows still match the E sources.
+- Dropfile/playpen parity: confirm NET*/BATCH return codes and dropfile paths match express.e; ensure carrier-drop codes are preserved.
+- Input/output verification: continue validating GETKEY/HK/LI/PM/SM/CO/SO in live doors; ensure CRLF and lineCount behavior match the E sources.
+- System admin/UI: operator paging UI still pending; batch editor dropdown sometimes empty (after restart it should list batch0–batch6).
+- Keep an eye on putch callback cost: we now execute the 68k callback per character; confirm performance is acceptable and no extra output is skipped (console/DOS.Write should reflect it).
 
-## Latest changes (tooltypes parsing)
-- .info tooltypes are now parsed centrally (commented entries skipped) and preserved as an object on command definitions/door metadata. AmigaDoorManager uses the shared parser and exposes every tooltype on DoorInfo.
-- Door objects now carry stack/priority/resident/expert/trap/silent/quick/logInputs/scriptCheck/banner/mimicVer/passParameters/internal plus the full toolTypes map.
-- 68k door launches receive these fields in DoorConfig (stack/priority/flags/toolTypes, etc.) so stack sizes and other tooltype-driven behaviors flow into Moira. Command execution also passes the extra fields to executeDoor.
-- Typecheck: `cd web/backend && npx tsc --noEmit` (pass).
+## Pointers
+- Logs: `logs/door-68k.log` (assigns, DOS open/write traces), `logs/backend.log`.
+- Key code: runner `web/backend/src/scripts/run-amiga-door.ts`; batch scheduler `web/backend/src/services/batch-scheduler.ts`; emu plumbing `web/backend/src/amiga-emulation/{LibraryManager.ts,api/DosLibrary.ts,api/FileManager.ts,session/DoorLifecycleManager.ts}`.
+- Sources for parity: AmiExpress E sources in `AmiExpress-Sources` (use MCP tools: read_express_module/search_express_source).
+- Fresh vamos trace (MultiTop, `vamos -I -r --max-cycles 50 Doors/MultiTop/mtop 1`):
+  - Entry registers: PC=0x210c, SR has Z set, SP=0x8e6c, A0/A5=0x8e74, A6 loaded from 0x4 → 0x133c, D0=2, D2=0x2000.
+  - First Exec AllocMem via jsr(-$c6,A6) returns 0x90d0; size add with D2 (0x3978) moves new stack to ~0xca44, link A4=0xc9d4. -0x40(A4)=0x90d0, -0x28(A4)=ExecBase, -0x18(A4)=0x2216, -0x30(A4)=0xcd8c later.
+  - Stack swap: exg D0/A7 saves old SP (0x8e6c) on new stack, unlk restores A7 to 0x8e6c; RTS at 0x22a0 returns to 0x400 (exit handler) with final SP 0x8e70. Suggests initial stack return should be 0x400 and SP drift above 0x8e6c is wrong.
 
-## Latest updates (68K register)
-- XIM JH_REGISTER now mirrors express.e: command is set to the user’s line length (user.lineLength → pauseLines → lineWrap, fallback 29) before ReplyMsg; data/node/string are echoed unchanged and length defaults to 0x104 when absent.
-- LibraryManager now passes the BBS session into XIMProtocol so register replies and other handlers can see user settings (line length, etc.).
-- Amiga doors now receive live keystrokes: launchAmigaDoor sets `inDoorManager`/`DOOR_RUNNING` and a `doorInputHandler` that routes input to XIM queue (and DOS when not waiting on XIM), then clears it on exit. This should let GetAnswer/Bulls accept prompt input instead of timing out.
-- Door lifecycle guard now extends automatically when a door is waiting for line input (JH_PM/JH_LI/HK); the loop limit grows in 50k steps instead of terminating so the user can respond.
-- GA command path now also sets `inDoorManager`/`DOOR_RUNNING` and installs a doorInputHandler that feeds input into XIM/DOS, with cleanup on exit/error. This was missing before, so GetAnswer was not receiving keystrokes.
-- Persist session after wiring door input: both GA and launchAmigaDoor now call `setSession(socket.id, session)` after setting/clearing doorInputHandler so socket-handlers sees the door flags and routes keystrokes correctly.
-- Added `[DoorFile]` logging in dos.library: Open/Read/Write/Close calls append to `logs/backend.log` with Amiga path, handle, bytes, and real path when available (FileManager branch logs too). This should show up in the admin log dropdown for 68k door debugging.
-- 68k door logs now go to a dedicated `logs/door-68k.log` (DoorDebug/DoorFile/DoorLog/DoorRegs). Admin `/logs` dropdown now includes “68K Doors”, and backend API supports type=door68k (GET/DELETE). Config-app build succeeds.
-- GET /logs now auto-creates the requested log file (including door-68k) if missing so the admin log page won’t error when the file doesn’t exist yet.
+## Next steps
+1) Compare the generated `Bulletins/bull1.txt` content with a known-good express.e run and confirm remaining bulletins (bull2..6) plus SAmiLog/QuickNew runs match expected output/paths.
+2) Validate user-facing output paths: review console output from MultiTop (putch callback) to ensure CR/LF formatting matches real Amiga behavior and performance is acceptable.
+3) Fix per-door argument passing so FILE/A params reach doors; rerun QuickNew with the proper config after the stack poison fix (guard on) to confirm the Write/DateStamp spam disappears.
+4) Add a graphics.library stub/base so OpenLibrary stops returning NULL; re-evaluate whether the open/close/alloc/free loop changes.
+5) Re-run MultiTop/SAmiLog with the cleaned stack init and watch `logs/door-68k.log` for DOS.Open/writes to `Bulletins/bull*`; verify dropfile/playpen return codes for NET/BATCH against express.e.
+6) Continue cross-checking XIM command behaviors with a small door to confirm CRLF/lineCount and input handling; surface operator paging UI and confirm batch editor dropdown population after restart.
 
-## New changes (ZMODEM bridge)
-- Added real ZMODEM scaffolding. Backend now has a `ZmodemTransferManager` (web/backend/src/services/zmodem-transfer.service.ts) that runs zmodem.js over the raw channel, starts ZRQINIT for downloads, and streams real files instead of staging. XIM ZMODEMSEND/RECEIVE/BATCH/NET* now call this manager and push paths through the playpen copy when sending. Raw flags are wired to session transferRawSink/transferRawSend and telnet/SSH handlers bypass cooked commands during transfers.
-- Socket.IO raw channel now uses transfer-raw:data/init/complete; manager cancels on end/cancel events. Telnet/SSH connections set transferRawSend to connection.write and feed raw buffers when transferRawActive is set.
-- Frontend terminal now uses zmodem.js (browser module) to run the negotiation loop. transfer-raw:init builds a Sentry, consumes transfer-raw:data, auto-sends ZRQINIT for uploads, and saves downloads via Browser.save_to_disk. startUpload queues Files for pending send sessions; downloads wait for the BBS to initiate. Old transfer:start/data scaffolding removed.
-- New type shims for zmodem.js added under web/backend/src/types and packages/terminal/src/types; package.json/package-lock updated (backend + terminal) to include zmodem.js.
-- RZ command now starts a real ZMODEM receive into the node playpen, wiring session transferRawActive/transferManager and emitting transfer-raw:init for web clients. Completion messages list received filenames (web/backend/src/handlers/transfer-misc-commands.handler.ts).
-- U/D commands now start ZMODEM transfers directly: U invokes a ZMODEM receive into the node playpen; D streams flagged files via ZMODEM if any are queued, otherwise falls back to the download interface (web/backend/src/handlers/user-commands.handler.ts).
-- Typecheck run: `cd web/backend && npx tsc --noEmit` (pass).
-
-## Current session
-- User asked to restart the backend to pick up Conf.DB overlay + prompt fixes; not restarted here per repo rules—please run `./dev/scripts/start-servers.sh` when ready.
-- Servers restarted by user. Backend log shows BBS root `/Users/spot/Code/amiexpress-web`, dataDir same; SQLite in `web/backend/data/amiexpress.db`.
-- Current conference list from `web/backend/data/amiexpress.db`: 1 General, 2 Tech Support, 3 Announcements, 4–17 “Conference N”, 18–31 “Conference N (Imported)”. Root `Conf.DB` is 0 bytes, so Conf.DB mirroring stays inert until a real Conf.DB is present or `BBS_ROOT` is pointed at Sanctuary data.
-- Need verification after restart: confirm J output matches Conf.DB handles and that VER/WHO/WHD/FS/N no longer require a second Enter.
-- Implemented runtime ConfConfig overlay: during init, we now read `ConfConfig.info` (NCONFS/NAME.n/LOCATION.n) from `BBS_ROOT` and set the conference count/names from there; Conf.DB mirroring is now a fallback only when ConfConfig is absent. This trims the runtime conference list to the 14 Sanctuary names (Lamer Zone … bAUD bOY bATTLE) without mutating Conf.DB. Restart backend to load the change.
-- Fixes to InfoFileParser: dotted keys supported, and tooltypes are now parsed by splitting null-terminated entries (case-insensitive keys, first occurrence wins, parenthesized entries skipped) to mirror icon.library FindToolType semantics. ConfConfig overlay should now read NAME.n/LOCATION.n correctly. Restart required.
-- AEKIT notes expanded: README-now documents 68K door IPC in detail (AEDoorPort handshake, big-endian 32-bit fields, pause rules, ACS screen search, Zmodem/Net transfer codes, account/conf DB helpers). Remaining unknowns flagged (EDITOR_STRUCT/BYPASS_CSI_CHECK/SENTBY, ACP extras).
-- ConfConfig parsing fixed for control-prefixed tooltypes (icon length bytes). Conf names now parse correctly (NCONFS=14, Lamer Zone…bAUD bOY bATTLE) via `InfoFileParser`. Restart backend to apply overlay.
-- Navigation fallbacks now match express.e: `<`/`>` call J when no previous/next conference; `<<`/`>>` call JM when at message-base bounds (no warning prompt). This should align menu flow without extra pauses.
-- Pause handling fixed: flagPause prompts now capture keystrokes via socket handler (line buffer), so F/FR listings should advance on Enter/NS/F/etc. Time command now sets menuPause so T returns to the menu prompt.
-- User’s priorities: MS/conf-scan parity, navigation keys (> < >> <<), and any remaining command/help quirks. Reply prepared with next-action plan.
-
-- **Focus:** Finish command-level parity so every command exits with a single prompt and matches express.e output. Sanctuary data must stay untouched.
-- **Harness status:** `dev/scripts/test-all-commands.ts` was tweaked but remains flaky; manual testing is preferred now.
-- **Manual issues to fix:**
-  - `F`/`FR`: verify they still pause once (recent fix sets menuPause + prompt).
-  - `FS`: already pauses; recheck after other menu-flow changes.
-  - `N`: now prints a press-key prompt; confirm single prompt and return.
-  - `VER`, `WHO`, `WHD`: now print a press-key prompt; confirm single prompt and return.
-  - `T`: now returns without a second pause; confirm single menu prompt.
-  - `S`: now shows a key prompt; ideally invoke userstats door, but confirm clean return.
-  - `?`: now redraws the menu (expert only); confirm matches express.e help behavior.
-  - `X`: now redraws the menu without extra pause; confirm output matches express.e.
-  - `W`: now exits to menu on one Enter; confirm.
-  - Logoff flow: ensure no commands execute after logoff (guard added; needs re-test with real session).
-  - Logoff screens: WORK:bbs/Screens/logoff/002.logoff should resolve via the new WORK: mapping (drops leading "bbs" component).
-  - QuickNew: ~SS_BBS:screens/quicknew.txt should now load (extension stripped); confirm it renders instead of showing raw text.
-- **Partial code changes in progress:**
-  - `web/backend/src/handlers/display-file-commands.handler.ts`: `?` now redraws the menu in expert mode and drops the “Expert menu refreshed” text.
-  - `web/backend/src/handlers/file.handler.ts`: New Files adds a press-key prompt before returning to the menu.
-  - `web/backend/src/handlers/info-commands.handler.ts`: VER/WHO/WHD now emit a press-key prompt and return to the menu.
-  - `web/backend/src/handlers/preference-chat-commands.handler.ts`: X toggle now redraws menu immediately, no extra pause.
-  - `web/backend/src/handlers/navigation-commands.handler.ts`: T no longer adds an extra press-key prompt (returns straight to menu).
-  - `web/backend/src/utils/flag-pause.util.ts` + `server/socket-handlers.ts`: pause prompts now short-circuit command handling via a session flag handler, so F/FR should truly wait for user input.
-  - Earlier fix: `file-listing.handler.ts` pauses and returns to menu after F/FR.
-- **Next steps when resuming:**
-  1) Verify menu prompts are single after VER/WHO/WHD/N/F/FR and adjust finalize/pause usage if needed.
-  2) Make `?` match express.e help behavior exactly (menu redraw in expert; no extra text in non-expert) and confirm prompt.
-  3) Ensure X toggle redraws the menu/prompt once.
-  4) Fix T to emit only one prompt and return to menu cleanly.
-  5) Wire S to the userstats door (or clean menu return) and W to exit on one Enter.
-  6) Decide interim WHO door behavior (simple list vs. 68k door) but keep single-prompt exit.
-
-## Latest changes (current session)
-- Added `MASTERPLAN.md` with a phased, line-referenced roadmap to reach 1:1 parity with express.e and Sanctuary data. All future work should update that file (use strikethrough when tasks complete).
-- Removed temporary `menuNeeded/menuPromptShown` guard so menu drawing is controlled solely by state transitions.
-- In `web/backend/src/handlers/command.handler.ts`, display-flow handling now returns immediately after advancing the bulletin/scan/menu flow to avoid extra menu renders; removed the second `displayMainMenu` call that doubled prompts.
-- Added explicit screen clears for AWAITSCREEN/BBSTITLE/LOGON/BULL/NODE_BULL/CONF_BULL/MENU in `screen.handler.ts`, clearing before first page and full-frame renders to stop screen bleed between AWAIT/BBSTITLE/BBS menu.
-- New user flow alignment started: added real-name/email/sex prompts, default “screen clears” now No unless Y, cleared input buffers between prompts, and adjusted summary prompt to wait for (Y/n). Questionnaire prompts now reset inputBuffer to avoid swallowed Enters.
-- New user fixes in progress: added extra email prompt state and sex/age now advances to questionnaire/account creation; password now enforces min 4 chars; empty passwords now count as invalid during login.
-- Bulletin/screen search now avoids legacy dataDir/BBS to prevent creation of empty BBS/ dir and prefers Conf1 roots; screen loader no longer probes repo-root/Screens when dataDir differs (expects correct dataDir/BBS_DATA_DIR).
-- MCI: Added bare `~SP` handling to set pause/strip output so Sanctuary screens no longer display the code verbatim.
-- MCI pause: `~SP` now triggers an actual pause (minimal pagination with a Pause prompt) before continuing, instead of just stripping the code.
-- Masterplan updated with initial express.e line references: state machine/menu loop (28540–28660), processCommand (~28229), MCI subsystem (5258–6812), new user prompts (~29610+), and data layout expectations (Conf1/Node1 screens, root Screens; avoid Conf01/BBS).
-- Added logon/logoff flow pointer (~28450+) to masterplan notes; registration references start ~29400 with retry/continue ~29610. Phase 0 mapping still in progress; no code changes.
-- Expanded masterplan with a processCommand dispatch map (navigation, messages, files, info/utility) to drive 1:1 alignment; still documenting—no runtime changes yet.
-- Added file listing/new-files references to masterplan (displayFileList/myNewFiles 27580–27860, flagPause at ~28025 controlling `(Pause)...(f)lags, More(Y/n/ns)?`). Still in mapping phase; no code touched.
-- Added message subsystem anchors to masterplan: enterMSG around 10749 (to/subject/private/reply/saveNewMSG), replyPrompt loop ~11040+ for A/D/M/F/R/L/Q/?/??/NS/translation, with wider message ops 9820–11980. Mapping only; behavior unchanged.
-- Phase 0 mapping tasks: marked module mapping and Sanctuary data layout as complete; deviation inventory still pending.
-- Masterplan now includes an initial deviation inventory (menu/prompt issues, screen path overreach, MCI/pause gaps, new-user flow, command mismatches, data integrity concerns). No code changes yet.
-- Added Phase 1 immediate actions checklist (state/pause/menu audit, menu render call tracing, screen loader path order, doPause/menuPause after mail scan/CONF_BULL). Still doc-only; no code touched.
-- Screen loader change: `getConferenceScreensCandidates` now only uses unpadded `Conf{n}` names (drops `Conf01` etc.) to avoid creating/reading padded conference dirs; Sanctuary data uses unpadded paths. No other runtime changes.
-- Command handler tweak: in PROCESS_COMMAND, we now skip calling `showMenuAfterCommand` if a command already changed `session.subState` (prevents overriding states that expect a pause/return, reducing extra menu renders). Minimal change; rest of menu flow unchanged.
-- Menu display alignment: `displayMainMenu` now always emits the menu prompt (even in expert mode or when MENU screen missing) and sets READ_COMMAND/READ_SHORTCUTS after the prompt; `displayMenuPrompt` no longer forces subState. This should reduce missing/duplicate prompts and better match express.e flow.
-- Amiga door sessions now expose the current BBS session globally during startup (and clear it on termination) so Kickstart ROM/AEDoor.library loaders can emit red terminal warnings to the sysop when critical assets are missing.
-- Menu flow tightening:
-  - Removed direct `displayMainMenu` calls in chat completion/exit; now set DISPLAY_MENU + menuPause and let the display loop render.
-  - Conference/message-base selection and read-command empty input now set DISPLAY_MENU (+menuPause where appropriate) without invoking displayMainMenu immediately.
-  - Door exits now return to DISPLAY_MENU with menuPause to mirror express.e pause-before-menu behavior.
-  - Input-handlers: After command processing, if still in PROCESS_COMMAND we now set DISPLAY_MENU + menuPause and return (no direct displayMainMenu), keeping DISPLAY_MENU as the sole render path.
-- Added a centralized `notifySysop` utility and wired it into screen loading, Kickstart/AEDoor library loading, and door executable reading so any missing file or library emits a red notification directly in the BBS terminal.
-- DISPLAY_MENU handler now returns immediately after displaying the menu, avoiding re-entry and extra prompts during the display flow.
-- CONF_SCAN now sets menuPause before DISPLAY_CONF_BULL to retain pause-before-menu cadence like express.e.
-- pauseDisplayFlow now calls doPause (was a stub), restoring express.e pauses after BULL/NODE_BULL/CONF_BULL when screens are shown.
-- Next checkpoints: verify post-mail-scan/CONF_BULL pause timing (single pause/prompt), audit screen loader for stray writes (no BBS/extensionless), then move to command-level parity once menu flow is stable.
-
-## Outstanding investigations
-- Verify whether triple menu prompts are resolved after the display-flow return change; if not, trace remaining call sites that trigger `displayMainMenu` multiple times during post-mail-scan.
-- Screen clearing should now precede key screens; confirm visually that AWAITSCREEN → BBSTITLE and subsequent flows no longer leak previous content.
-- New user flow: ensure Enter at questionnaire (NEW_USER_SCRIPT) resumes advancing after pressing Enter on summary/realname/email/sex/age; still need to verify node script continues on blank/Enter per Sanctuary behavior.
-- New user remaining: confirm sex/age proceeds into questionnaire or createAccount when no script present, and that questionnaire scripts load from node dirs; verify password rules match AmiExpress if more constraints exist (currently min 4 chars only).
-
-## Current session (68K door/XIM focus)
-- User prompt: wire the 68K door bridge with AEKIT semantics (transfer/account/NSF/ACS behaviors).
-- jhMessage layout updated to include strptr/filler3 (0x108 length); parser logs new fields and exposes write helpers for string/filler3 pointers.
-- IO handler honors string pointers, fixes JH_LI maxlen ordering, and adds NSF display commands (DISPLAY_FILE/CHECK_TO_DISPLAY) that route through showfile/showgfile in non-stop mode. All prompt/output handlers now pull strings from stringPtr when present.
-- Transfers implemented with path resolution: ZMODEMSEND/BATCH/NETDOWNLOAD return Data=1 when any target exists (0 if none, -2 on carrier drop); RECEIVE/NETUPLOAD acknowledge destination directories and return 1 when a target path is available (no actual upload stream yet; logs a warning).
-- ZMODEMSEND/BATCH/NETDOWNLOAD now stage files into the node Playpen to simulate transfers; uploads/NETUPLOAD create destination dirs and touch a unique placeholder file (Data=1 on success).
-- Account/ConfDB helpers implemented: LOAD_/SAVE_/APPEND_ACCOUNT, SEARCH_ACCOUNT, LAST_ACCOUNTNUM, LOAD_/SAVE_CONFDB, GET_CONFNUM now read/write binary slots in User.data/User.keys/user.misc/Conf.DB (handles BE/LE slot numbers). APPEND seeds provided buffers with zeroed structs and a new slot; SAVE uses slot from struct or msg.data.
-- System commands now read string pointers (Return/Chain/EnvStat/ACP/etc.); ACP_COMMAND is stored in bbsSession.acpCommand for host pickup. AmigaDoorSession exposes getExitState, and door.handler now captures RETURNCOMMAND/CHAIN/PRV/ACP onto the BBSSession after door completion (execution still TODO).
-- Door handler now immediately auto-runs captured commands after door exit (priority CHAIN → RETURN → PRV → ACP) by invoking handleCommand with the returned strings and clearing the fields. Circular import avoided via dynamic require. Conf lookup for GET_CONFNUM now prefers ConfConfig.info entries, then Conf.DB handles, then fallback “Conference N”. ACP_COMMAND capture now includes the numeric code and target node for host-side handling.
-- ACP side effects: door.handler now toggles quiet/chat and forces logoff for specific ACP codes (4 ToggleChat, 5 ExitNode, 10/11 OffHook/QuietNode). All ACP actions are recorded on session.acpLastAction for further host handling.
-- Remaining gaps: transfer “streams” are still simulated via file copies/touches (no actual protocol exchange), many ACP codes remain as TODO, and pause/linecount parity may need revisit. Tests: backend `npx tsc --noEmit` currently passes.
-- New backend scaffold: Socket handler now supports transfer:start/data/end/cancel events for binary upload/download over Socket.IO. Uploads write to resolved Amiga paths (defaulting to Playpen), downloads stream chunks back to the client; state is stored on session.transfer. Still needs a real client-side ZMODEM/WebSocket loop to complete end-to-end transfers.
-- Additional scaffold for future ZMODEM: socket-handlers now expose a “transfer-raw” channel (start/data/end/cancel) and bypass command handling when transferRawActive is set. DOS output now has a raw callback that emits transfer-raw:echo when transferRawActive is true, and LibraryManager registers a session.serialInputHook that feeds raw buffers into dos.library’s input. There is still no true serial tap from the door—output is captured at dos.library Write (console) and input is pushed into queueInput—so this remains preparatory.
-
-## Current session (68K door handshake rework)
-- Removed all proactive AEDoor “startup” pushes: AEDoorLibrary.CreateComm no longer injects a JH_REGISTER message into the reply port, and DoorLifecycleManager no longer auto-sends startup traffic for Bulls. Doors must now initiate XIM traffic via PutMsg, matching express.e’s `Wait/GetMsg/ReplyMsg` loop.
-- XIM replies now mutate the correct jhMessage fields: added `writeCommand()` to the parser and use it so JH_REGISTER sets `Command` to the line-wrap width (defaults to 79) without clobbering Data. Hotkey/quickkey/fetchkey/extHK now set `Command` to the expected port/char code, reset lineCount, and leave Data semantics aligned with express.e (carrier drop returns -1). FetchKey/ExtHK also write Command=0 when no input is present.
-- Quick key/Hotkey handling now tags Command with the XIM port (console=1, serial=2 via bbsSession.logonType). Extended hotkey/fetch-key commands now carry the char code in Command to mirror express.e.
-- Typecheck run after changes: `cd web/backend && npx tsc --noEmit` (pass).
-- Bulls JH_REGISTER reply now writes the line length into `msg.command`, sets NodeID from the session node, and leaves Data untouched (mirrors express.e semantics) to avoid confusing doors that expect their original Data value.
-- Note: user intentionally moved many door assets out of the tree (ByteKiller/FileID/etc. deletions showing in `git status`); do not restore or stage them unless requested.
-- Expanded LVO trap naming: `web/backend/src/amiga-emulation/constants/lvo-map.ts` now mirrors the Exec/DOS offsets from `dev/docs/amiga68ktools-master/tools/LVOs.i`, so trap logs will show correct names across the full vector range.
-- Bulls reroute disabled: PutMsg now honors the door’s chosen port instead of forcing AEDoorPort, to avoid misdelivery during JH_REGISTER.
-- Bulls control block now seeds the door info message with a neutral JH_REGISTER (command=1, data=0, node=current) to match expected structure before the door populates it.
-- Adjusted jhMessage length constant to 0x104 (260 bytes) to align with door-side structures seen in logs/AeDoor includes.
-- Added a TS debug door (`BVDBG` / hotkey `BV`) at `web/backend/src/doors/bullview-debug`. .info registered at `Commands/BBSCmd/BVDBG.info` (Location: `web/backend/src/doors/bullview-debug/index.ts`, Type=TS) so it can be launched to log XIM traffic end-to-end without 68k uncertainty.
-
-## Today (BVDBG/XIM host harness)
-- Added `MoiraEmulator.isInitialized()` so we can guard init without resetting memory.
-- XIMHostService is now an async factory that initializes Moira + Exec, creates a named `AEDoorPort<n>` (node from session), and wires `doorMessageCallback` to the real XIMProtocol so PutMsg/ReplyMsg flows mirror the Amiga path.
-- BVDBG door now allocates its jhMessage via XIMHostService (shared emulator) and drives JH_REGISTER/JH_LI/JH_SHUTDOWN through hostService.transfer with parsed dumps, eliminating the “Emulator not initialized” error and keeping logging aligned with the real XIM parser.
-- Typecheck: `cd web/backend && npx tsc --noEmit` (pass).
-- BVDBG wrapper now imports the TS implementation directly (`Doors/BVDBG/index.ts`), so ts-node will load the updated source once the backend is restarted/reloaded.
-- Bulls reply port is now a named public port (`DoorReplyPort<n>`) via `ensurePublicPort`, so PutMsg to that port triggers `doorMessageCallback` and reaches XIM handlers even when Bulls targets its own reply port.
-- Bulls DoorInfo seeding now forces a sane JH_REGISTER seed: command=1, data=0, node=(session node or 1). This avoids 0xFF sentinel nodes/data causing register loops.
-- XIM JH_REGISTER now mirrors express.e: only sets Command to line length and replies without altering data/node/string.
-- DoorMessageHandler no longer normalizes Bulls messages; it only dumps the first five for debugging.
-- Added Bulls-specific strptr fix: on JH_REGISTER we set StrPtr to the embedded string buffer (echo semantics otherwise unchanged) to avoid null pointers in doors expecting a valid string pointer.
-- Bulls seed message now sets StrPtr and filler1/filler2 to the embedded string buffer in the door info block so the door starts with valid string pointers.
-- BullsDoorHandler now exposes monitorPc(), and DoorLifecycleManager calls it each iteration; PC watchpoints (0x1fca, 0x22ea, 0x2308) will log PC/D0/D1 when hit to diagnose the register loop.
-- Register replies now set StrPtr/filler1/filler2 to the embedded string buffer and, if node==0xFF, normalize node to the session node before replying; everything else is echoed (Command=line length). Logs `RegisterReply` with cmd/data/node/strPtr.
-- DoorMessageHandler now only dumps Bulls messages (no field mutations) to mirror express.e echo behavior.
-- BullsDoorHandler now installs PC watchpoints (0x1fca, 0x22ea, 0x2308) via handleIllegal hook to log PC and D0 when Bulls hits the known loop PCs, to help diagnose the register loop.
-
-## Latest change (2025-11-25)
-- Bulls aggressive handling: JH_REGISTER now forces Command=0x3ea for Bulls (or tiny Command), echoes data/node, and mirrors cmd/data/node into any known Bulls pointer buffers (info/control/handshake/nodeMirror) after ReplyMsg. Bulls logging added in ReplyMsg, loop guard raised to 200k. Typecheck run: `cd web/backend && npx tsc --noEmit` (pass).
-
-## Next steps (68k door/Bulls)
-- Re-run Bulls after backend restart; check RegisterReply and Bulls PutMsg/ReplyMsg logs. If still looping, inspect PC monitor around 0x233e/0x234c with the longer loop guard; confirm d7 becomes nonzero when we mirror into control buffers.
-
-## Disassembly work
-- Saved a clean disassembly of the tiny XIM door `Doors/GetAnswer/GetAnswer` to `disasm/GetAnswer.asm` (raw, no ANSI). This is a small specimen to study proper XIM messaging without Bulls hacks. An earlier coarse annotation exists at `disasm/GetAnswer_annotated.asm` (auto-tagged, rough).
-- Next: manually trace `GetAnswer` to find its jhMessage writes (offsets around 0xdc/0xe0) and PutMsg/WaitPort/GetMsg usage; use it to align our XIM handler and remove remaining Bulls workarounds.
-
-## Latest admin/UI work (2025-11-26)
-- Added new-user defaults to system_config (security level, time/chat limits, lines per screen, expert/ANSI, protocol/screen type/editor, chat/quiet/auto-rejoin, conf access). SystemConfig API + config-app form expose them; new-user flow and /api/config/users now pick up these defaults.
-- Computer Types, Screen Types, File Checkers, Languages, Protocols pages are now fully CRUD with enable toggles and modals. File Checkers include error-pattern management. Protocols page disables Y-Modem toggling and notes it is not yet implemented; default selection now clears other defaults.
-- Deployment & Health page now uses authed API client; health/system/database tabs load data again.
-- Batch editor: added filter/hide-comments, helper inserts (timeout/sleep/wait), validation endpoint `/api/batches/validate` (checks missing executables, known special cases), inline status per line, and CSV export of validation results.
-- Added API client helpers for deployment endpoints and batch validation; config-app build and backend `tsc --noEmit` both pass.
-- System Config page now auto-saves on change (debounced) with a status indicator; manual Save button removed.
-- Uploads: web terminal now prompts for a file when U is pressed (opens a hidden file input) instead of aborting immediately; keeps the ZMODEM session alive until a file is chosen. Terminal build passes.
-- ANSI toggle (M): now flips session/user ansi flag, persists to DB, and server filters ANSI codes when ANSI is disabled. Session ansiMode seeded from user pref at login.
-- Telnet/SSH ports default to 64128/31337; startup now reads system_config unless env overrides and instantiates servers accordingly. start-servers.sh prints telnet/ssh commands. Max nodes default 255.
-- Admin System Config: color scheme removed (BBS stays standard ANSI), language defaults to English/Languages, telnet/ssh defaults shown, nodes default 255.
+## Testing recommendations
+- Backend types: `cd web/backend && npx tsc --noEmit`.
+- Door runner sanity: `cd web/backend && AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Doors/MultiTop/mtop 1` and watch `logs/door-68k.log` for DOS.Open hits.
+- Auth flows: exercise HTTP login/register plus socket login/username-check/new-user flows with mixed-case usernames to confirm normalization and DB writes/readbacks.
