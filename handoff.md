@@ -18,6 +18,7 @@
 - Logoff crash fix: `handleLogoff` now safely closes both socket.io and telnet/SSH sockets (checks for `disconnect`, `end`, `destroy`) to avoid `socket.disconnect is not a function` crashes that were bringing down the server after logoff. Needs backend restart to take effect.
 - Telnet UX: new connections now auto-advance past the connection screen and immediately show the ANSI graphics prompt (no extra Enter required). This should also prevent the first username character from being “eaten” after hitting Enter to continue.
 - Logoff exit for telnet/SSH: the telnet/SSH emitter now exposes `disconnect/end/destroy` to close the underlying transport, so logoff should terminate SSH/telnet sessions instead of hanging after “Disconnecting…”. Requires backend restart.
+- Telnet/SSH login CR+NUL handling: login input now strips NULs before enter/char processing so CR+NUL counts as Enter. Should remove the “press Enter twice” behavior and prevent first-character drop after CR+NUL.
 
 ## Testing
 - `cd web/backend && SAmiLog_Path=bbs:utils/samilog AEDOOR_DISABLE_GUARD=0 AEDOOR_STDOUT=screens:quicknew.txt AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Utils/samilog/SAmiLog 1 '-UC\"1\"' '-O\"BBS:Bulletins/bull6.txt\"15'` → exits cleanly, `Bulletins/bull6.txt` now contains SAmiLog output.
