@@ -15,6 +15,7 @@
 - SSH stability: guarded PTY/window-change accept callbacks to avoid `accept2 is not a function` disconnects after the BBSTITLE screen.
 - Telnet/SSH login flow adjusted: BBSTITLE now followed by explicit `Username:` prompt for text clients; login handler now line-buffers username/password like auth socket, updates node files, runs login batches, and installs ANSI filter for non-ANSI clients. Telnet localhost rejection removed; SSH accept guarded. Latest fix: ANSI prompt now strips NULs so CR+NUL (`\r\0`) from telnet counts as Enter and advances to BBSTITLE/login.
 - Web terminal input fix: `@amiexpress/terminal` now resets state on `prompt-login` without re-running auto-login, and after `login-failed` immediately re-prompts `Username:` with cleared buffers so typing works even when a stale token exists. Also guards duplicate prompts when already in username/password. Rebuilt terminal package and ran `web/frontend npm run build`.
+- Logoff crash fix: `handleLogoff` now safely closes both socket.io and telnet/SSH sockets (checks for `disconnect`, `end`, `destroy`) to avoid `socket.disconnect is not a function` crashes that were bringing down the server after logoff. Needs backend restart to take effect.
 
 ## Testing
 - `cd web/backend && SAmiLog_Path=bbs:utils/samilog AEDOOR_DISABLE_GUARD=0 AEDOOR_STDOUT=screens:quicknew.txt AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Utils/samilog/SAmiLog 1 '-UC\"1\"' '-O\"BBS:Bulletins/bull6.txt\"15'` → exits cleanly, `Bulletins/bull6.txt` now contains SAmiLog output.
