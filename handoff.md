@@ -21,6 +21,9 @@
 ## New updates (QuickNew automation)
 - Batch scheduler now special-cases QuickNew: runs `doors:quicknew/quicknew` with stdout redirected to `screens:quicknew.txt` and raises `AEDOOR_LOOP_LIMIT` to 2,000,000. Env overrides are passed through `runAmigaDoorViaRunner`, and guard remains disabled via tooltypes.
 
+## New updates (graphics stub)
+- Added a minimal `graphics.library` stub in `ExecLibrary`: assigns a base, fills the jump table with RTS, and ensures LVO stubs install via LVOs.i when opened. Prevents doors from failing on missing graphics.library.
+
 ## Recent updates (batch/logon stability)
 - Added `web/backend/src/scripts/run-batch.ts` to run batch scripts via the scheduler (exports `runBatchFile`); used it to run batch0–batch6 and batch000 (`npx tsx src/scripts/run-batch.ts ../../batchX`). `setenv` lines are skipped; drop files for Node1 created; SAmiLog ran. MultiTop/QuickNew remain commented out in batches.
 - Commented out QuickNew auto-runs in all `Node*/logon20.txt` and MultiTop auto-runs in `batch0–batch6` to stop login floods; login prompt returns reliably without unexpected door output.
