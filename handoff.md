@@ -1,74 +1,272 @@
 # Handoff (condensed)
 
-## New updates (door IPC tracing)
-- Added PC-aware OpenLibrary/FindPort logging in ExecLibrary; Bulls standalone run only opens `dos.library` (pc=0xfdd8) and never calls FindPort/AEDoor. BullsDoorHandler now injects AEDoor base into A4+0x988 when available alongside BBS port pointers.
-- Rebuilt backend (`npx tsc`) and reran Bulls via `node web/backend/dist/scripts/run-amiga-door.js Doors/emp_tools/Bulls 1` (stdout → `/tmp/bulls.out`, log → `/tmp/bulls-run.log`). Bulls shows banner only; logs still lack RAWARROW/SV_NEWMSG/FindPort/CreateComm. REGISTER message sent from host, Bulls flips pointers to 0x9688 then closes stdout and crashes to PC=0xa (stack corruption).
-- Sandbox note: run logs contain EPERM writing `/Users/spot/logs/door-68k.log`; stdout capture unaffected.
-- Next focus: why Bulls skips OpenLibrary("AEDoor.library")/FindPort; ensure AEDoor base is registered up front (maybe during loadRealAEDoorLibrary) and trace early PCs (~0x10xx–0x12xx/0x3bxx) to force proper AEDoor IPC startup.
+## Latest (2025-12-02 - Session 5)
+### SIM DOOR PORT IMPLEMENTATION - Partial Progress
+**Changes Made:**
 
-## Latest prompts
-- "hello"
-- Context dump of recent logon behavior/logging needs and batch door activity
-- "ok sounds good go ahead with all 3"
+✅ **Port Creation Fixed** (LibraryManager.ts:125-161):
+- Detects door type from config (default: SIM per express.e:4681)
+- Creates `DoorControl{nodeId}` for SIM/SUP/TIM/IIM doors
+- Creates `AEDoorPort{nodeId}` for XIM doors
+- Per express.e:4316-4320 specification
 
-## Updates
-- Wired environment variables through `run-amiga-door` → `AmigaDoorSession` → `LibraryManager`, so DOS now sees the same env map that Node receives (including `SAmiLog_Path` when exported).
-- Enhanced `dos.library::FindVar` with an env-backed fallback that allocates LocalVar nodes (at 0x94000/0x96000) so Amiga doors can read `SAmiLog_Path`, CLI args, or other configured settings without needing manual CLI vars.
-- Added helper code in `LibraryManager`/`run-amiga-door` to pass the new `env` property, and ensured the SAmiLog test wraps this flow.
-- Prevented batch scheduler from building an unbounded runner-output string by trimming the buffer to the last 256 KB, so Node doesn’t hit `RangeError: Invalid string length` when doors emit lots of data.
-- Added an `exports` map to `@amiexpress/terminal`, rebuilt it, and re-ran the frontend build so Vite can resolve the shared terminal package and the BBS terminal renders the login prompt rather than just the title art.
-- Deleted `web/frontend/node_modules`, reinstalled the frontend dependencies, and rebuilt (`npm run build`) so the terminal package is freshly resolved; developer still needs to relaunch the dev server for the changes to take effect.
-- SSH stability: guarded PTY/window-change accept callbacks to avoid `accept2 is not a function` disconnects after the BBSTITLE screen.
-- Telnet/SSH login flow adjusted: BBSTITLE now followed by explicit `Username:` prompt for text clients; login handler now line-buffers username/password like auth socket, updates node files, runs login batches, and installs ANSI filter for non-ANSI clients. Telnet localhost rejection removed; SSH accept guarded. Latest fix: ANSI prompt now strips NULs so CR+NUL (`\r\0`) from telnet counts as Enter and advances to BBSTITLE/login.
-- Web terminal input fixes: `@amiexpress/terminal` now resets state on `prompt-login` without re-running auto-login, guards duplicate prompts, and no longer writes its own `Username:` prompt (uses backend output) to prevent double prompts and dropped first characters. `login-failed`/`retry-login` only reset state; prompt text comes from backend. Rebuilt terminal package and ran `web/frontend npm run build`.
-- Logoff crash fix: `handleLogoff` now safely closes both socket.io and telnet/SSH sockets (checks for `disconnect`, `end`, `destroy`) to avoid `socket.disconnect is not a function` crashes that were bringing down the server after logoff. Needs backend restart to take effect.
-- Telnet UX: new connections now auto-advance past the connection screen and immediately show the ANSI graphics prompt (no extra Enter required). This should also prevent the first username character from being “eaten” after hitting Enter to continue.
-- Logoff exit for telnet/SSH: the telnet/SSH emitter now exposes `disconnect/end/destroy` to close the underlying transport, so logoff should terminate SSH/telnet sessions instead of hanging after “Disconnecting…”. Requires backend restart.
-- Telnet/SSH login CR+NUL handling: login input now strips NULs before enter/char processing so CR+NUL counts as Enter. Should remove the “press Enter twice” behavior and prevent first-character drop after CR+NUL.
-- ZMODEM: receiver now always sends a ZRQINIT kick for both upload/download and logs the first 32 bytes when Sentry consume fails (helps debug “Upload aborted” in web terminal). Needs backend restart.
-- Downloads: now prefer database-backed file paths (file_entries + file_areas) and flagged file lists. If the user has flagged files, running `D` with no args builds the download list from flagged entries (area path + filename) instead of prompting. Wildcard/filename searches now use DB paths first, falling back to legacy Dir# scanning.
-- Download flagged files improved: pulls flags from FileFlagManager (Partdownload/flagged#), session.tempData.flaggedFiles (DB), and session.flaggedFiles, so pressing `D` with flags present should immediately use them without dropping into hotkey prompt.
-- Batch files (daily logon): batch0–batch6 now have Sanctuary-style logon door calls uncommented: quicknew, multitop variants, slicktop, ntr-lastcallers, glcviewer/glcupdater, SAmiLog, callerslog helpers, and Announce stubs. These will run on logon per day-of-week when the backend restarts.
-- Pre-login: BBSTITLE display now waits for any pending screen command to finish before emitting the ANSI prompt, preserving screen-triggered door runs before prompting.
-- Screen flow logging: screenDebug now defaults to console.log with a `[SCREEN]` prefix; added `[SCREEN FLOW]` console logging for logon/display flow screens (BBSTITLE/LOGON/BULL/NODE_BULL/CONF_BULL/MENU) showing load/parse/runCommands decisions plus display-flow transitions (BULL→NODE_BULL→confScan→CONF_BULL→MENU). Use backend.log to trace which screens ran and which MCIs executed.
-- Conference tool flags default: `noBulls`/`noConfBulls` now default to `false` (matching AmiExpress behavior) instead of suppressing bulletins when no Conf#.info flags are present. This should allow BULL/NODE_BULL/CONF_BULL screens to display unless explicitly disabled.
-- Bulletin screen rendering: BULL/NODE_BULL/CONF_BULL now fall back to `Screens/BULL20!.TXT`, `Node<nodeId>/logon20.txt`, or `Node<nodeId>/logon10.txt` if the named screen is missing; display flow screens skip auto-pagination so they render as a single frame and rely on explicit ~SP pauses (closer to express.e behavior, preventing overlap).
-- ANSI handling: `addAnsiEscapes` no longer double-prefixes existing ESC-coded sequences (only prefixes bare brackets), improving fidelity for Sanctuary ANSI screens like BULLETINS/LASTC.txt.
-- Sanctuary bulletins: added `Screens/NODE_BULL.TXT` (clear + Up Rough logo + pause) and `Screens/CONF_BULL.TXT` (clear + pause) to prevent fallback repetition of LASTC and to show the logo on its own screen in the BULL→NODE_BULL→CONF_BULL flow.
+✅ **Port Lookup Fixed** (AEDoorLibrary.ts:583-602):
+- `findBbsPort()` now tries both port types
+- Priority: DoorControl{n} → AEDoorPort{n} → DoorControl → AEDoorPort
+- Supports both XIM and SIM door library calls
 
-## Latest prompts (this session)
-- “i always want the best solution i don't care about how long it takes to do”
-- Goal: fix Bulls door regression, capture full stdout/stderr, and stay 1:1 with Sanctuary flow using real Kickstart/assigns.
+**Test Results - WHO Door:**
+- ✅ DoorControl1 port created at 0xa0000
+- ✅ DoorControl (simple) created at 0xa0100
+- ❌ Still jumps to ROM at 0xf00080 - "PC out of code region"
 
-## New updates (this session)
-- Library/paths: LibraryManager now resolves BBS root from `BBS_DATA_DIR`/`BBS_ROOT` or session data, loads Kickstart via that root (with fallback search), and initializes PathManager/DOS with that root; DosLibrary gains `setBasePaths` and accepts a root override. DoorDropFileManager can now be retargeted via `setBbsRoot`.
-- Runner: `src/scripts/run-amiga-door.ts` forces `BBS_DATA_DIR/BBS_ROOT` to the repo root, updates DoorDropFileManager, and builds sessions with that root so drop files land under Node#. Ensured type-check/build passes.
-- Moira load: MoiraEmulator now finds `build/moira.js` even from compiled `dist` by checking source and cwd paths; logs selected path.
-- Bulls capture: Built backend and ran `node dist/scripts/run-amiga-door.js ../../Doors/EmP_Tools/Bulls 1` with `BBS_DATA_DIR=/Users/spot/Code/amiexpress-web AEDOOR_STDOUT=/tmp/bulls.out`. Path manager resolved assigns correctly; after fixing absolute paths stdout now lands at `/tmp/bulls.out`. Output matches in-BBS symptom—only the banner text (110 bytes). Execution log shows door closes stdout (handle 2), frees buffers, then crashes with “PC in low memory (0x0) - likely stack corruption”, terminating before menu.
-- Bulls IPC offsets: Added `MESSAGE_HEADER_SIZE=0x14` and dual-offset reads/writes so AEDoor fields write to both canonical offsets and Bulls’ header-biased offsets (data/command/node/line now mirrored at base+0xf0/+0xf4/+0xf8/+0xfc). XIMMessageParser and host-service setters now use the biased writer; Bulls handler dumps/seeds use biased reads/writes as well. Handshake logs now include biased cmd/data/node, but teardown still shows control/info at 0x9228 with zeroed dc/e0/e4, implying the live message pointer (likely ~0x937c) is being replaced/reset before FreeMem/CloseLibrary. Need to pin 0x6c24/0x6c20 to the real WaitPort/GetMsg result and stop reverting to the preallocated control block so seeding can survive teardown.
+**Root Cause Analysis:**
+SIM doors need MORE than just port names. The issue is likely:
+1. Different execution model (express.e:4346-4350 - no BBS message loop)
+2. Different library function behavior for SIM vs XIM
+3. Possibly different message structure or protocol
 
-## Quick pointers
-- Bulls STDOUT capture: now `/tmp/bulls.out` (110 bytes, just banner). Full run trace in terminal output from the latest run with `doorType=XIM`.
-- Path handling: PathManager now treats POSIX absolute paths literally; runner sets BBS roots, infers `doorType=XIM` for Bulls, and Moira loader finds build files from dist.
-- Next debugging angles: investigate Bulls crash after CloseLibrary/FreeMem near PC≈0x1250 (stack corruption) despite XIMProtocol being created; verify XIM replies/drop-file content and prevent Bulls from closing stdout/dos.library prematurely.
+**Files Modified:**
+- web/backend/src/amiga-emulation/LibraryManager.ts - Port creation logic
+- web/backend/src/amiga-emulation/api/AEDoorLibrary.ts - Port lookup logic
 
-## Testing
-- `cd web/backend && SAmiLog_Path=bbs:utils/samilog AEDOOR_DISABLE_GUARD=0 AEDOOR_STDOUT=screens:quicknew.txt AEDOOR_ROM=kickstart npx tsx src/scripts/run-amiga-door.ts ../../Utils/samilog/SAmiLog 1 '-UC\"1\"' '-O\"BBS:Bulletins/bull6.txt\"15'` → exits cleanly, `Bulletins/bull6.txt` now contains SAmiLog output.
-- `cd web/frontend && npm run build` → prebuild script rebuilds `@amiexpress/terminal`, and Vite succeeds instead of failing to scan the dependency entry.
-- `cd web/backend && npx tsc --noEmit` (passes).
-- Quick telnet smoke test: `printf '\r\0a\r\0' | nc localhost 64128` shows connection banners; tailing `logs/backend.log` shows CR+NUL input now transitions from `display_connect` into the ANSI prompt flow instead of being ignored.
+**Next Steps:**
+1. Research why SIM doors jump to ROM after port creation
+2. Investigate AEDoor.library function differences for SIM doors
+3. May need different message handling or execution flow
+4. Consider disassembling WHO door to understand expectations
 
-## Latest prompts (continued)
-- “i always want the best solution i don't care about how long it takes to do”
-- Proceed with next steps for 1:1 door emulation; avoid door-specific hacks, keep generic and batch-safe.
+**Status**: Port infrastructure ready, but SIM doors still crash. Need deeper investigation.
 
-## Bulls / 68K door emu status (most recent)
-- Express.e host behavior: Wait on AEDoorPort, log “msg request: <cmd> / data / string”, processXimMsg, ReplyMsg. REGISTER sets line length (or 29). Bulls runtime log (real AmiExpress coder) shows REGISTER → RAWARROW → SV_NEWMSG → DT_LINELENGTH etc.
-- What’s in place now: JH_REGISTER reply sets line length and clears lineNum (per express.e). DT_LINELENGTH handler exists in data-query. BullsDoorHandler no longer pokes A5/masks/registers; only normalizes message buffers. RAWARROW handler just replies (no synthetic SV_NEWMSG). Added per-message logging in DoorMessageHandler (msg request/data/string). XIMState has optional port fields.
-- Attempts that didn’t work (don’t repeat): synthetic SV_NEWMSG injection after RAWARROW; forcing Bulls A5/mask/register/port values to drive the 0x3f9c path. Both removed to stay express.e-pure.
-- Current Bulls run: `node web/backend/dist/scripts/run-amiga-door.js Doors/emp_tools/Bulls 1` (log `/tmp/bulls-run.log`, stdout `/tmp/bulls.out` banner only). REGISTER reply is correct (cmd=1,len=260, data=nodeStatus, reply=a0400), but Bulls never issues RAWARROW/SV_NEWMSG, closes stdout, then drops to PC=0xa (stack corruption). No WaitPort/GetMsg observed.
+## Previous (2025-12-01 - Session 4)
+### COMPREHENSIVE DOOR TESTING - XIM vs SIM Analysis
+**Test Results Summary:**
 
-## Next steps (to implement)
-1) Add ReplyMsg logging in ExecLibrary.replyMsg to confirm port/target. ✅
-2) Audit port usage: ensure we ReplyMsg to the door-provided replyPort and use the real AEDoorPort<n> (name “AEDoorPort<node>”) for PutMsg, no synthetic ports. (Still to confirm in code/logs; no “msg request” seen yet.)
-3) Re-run Bulls; expect REGISTER→RAWARROW→SV_NEWMSG. If RAWARROW still absent, focus on why the door isn’t seeing the REGISTER reply (port mismatch/ReplyMsg issue).
+✅ **XIM Doors - WORKING:**
+1. **GA (GetAnswer)** - 8.2KB utility door ✅ PERFECT
+   - JH_REGISTER, JH_SM, JH_PM, clean execution
+   - Displays output, prompts for input, searches nodes
+2. **5D-Edit** - 26KB file editor ✅ PERFECT
+   - JH_REGISTER, SV_NEWMSG, DT_* queries, JH_WRITE
+   - Displays "No files available in this conference!"
+   - JH_SHUTDOWN - clean exit
+
+❌ **SIM Doors - FAILING (AEDoor.library interface):**
+3. **WHO** - 14KB user list ❌ FAILS
+   - Jumps to ROM at 0xf00080
+   - "PC out of code region" termination
+4. **WHAT** - 15KB utility ❌ TIMEOUT
+5. **SizeCheck** - 17KB file counter ❌ TIMEOUT
+6. **RTW** - 20KB game ❌ TIMEOUT
+
+❌ **Bulls** - 68K XIM door ❌ FAILS
+   - Runs through init, FreeMem, CloseLibrary
+   - PC goes to 0x0 (stack corruption)
+   - "PC in low memory" termination
+
+### Key Findings:
+- **XIM Protocol**: ✅ Fully working for generic XIM doors!
+  - Message registration (JH_REGISTER)
+  - Output (JH_WRITE, JH_SM)
+  - Input (JH_PM)
+  - Data queries (DT_*, BB_*, SV_*)
+  - Clean shutdown (JH_SHUTDOWN)
+  - ReplyMsg implementation correct
+- **SIM Doors**: ❌ AEDoor.library interface needs work
+  - WHO/RTW/SizeCheck/WHAT all use AEDoor.library
+  - Different initialization pattern than XIM
+  - Generic emulator doesn't handle SIM doors yet
+- **Bulls Issue**: Stack corruption during cleanup
+  - Not a generic XIM issue (GA and 5D-Edit work)
+  - Bulls-specific initialization problem
+
+### Files Examined:
+- web/backend/src/amiga-emulation/xim/io.ts (XIM I/O handlers)
+- web/backend/src/amiga-emulation/xim/messages.ts (Message parsing)
+- web/backend/src/amiga-emulation/xim/types.ts (XIM protocol types)
+- web/backend/src/amiga-emulation/api/ExecLibrary.ts (replyMsg implementation)
+- web/backend/src/amiga-emulation/session/DoorMessageHandler.ts (Message handling)
+
+## Previous (2025-12-01 - Session 3)
+### REMOVED: All Bulls-Specific Code
+- **User request**: "ChatGPT added the Bulls-specific stuff, I never asked for any Bulls-specific code"
+- **Action**: Completely removed all Bulls-specific code, kept only generic door emulation
+- **Deleted**: BullsDoorHandler.ts (2,585 lines of Bulls-specific hacks)
+- **Removed from**:
+  - AmigaDoorSession.ts - import, field, instantiation, all references
+  - DoorLifecycleManager.ts - import, field, constructor, 6 Bulls methods
+  - DoorMessageHandler.ts - import, field, constructor, all Bulls checks
+- **Preserved Generic Logic**:
+  - `door-info.util.ts` - populateDoorInfoStructs() for ALL doors
+  - DoorMessageHandler - sendStartupMessage() now generic for all XIM doors
+  - INIT/STAT message sending is standard XIM protocol, not Bulls-specific
+- **Build Status**: ✅ Zero TypeScript errors, fully generic emulator
+
+### ENHANCED: 68K Door Logging (AmiExpress Format)
+- **User request**: "Check that we log 68k doors properly, the amiexpress coder sent me this to show how he logs them"
+- **Action**: Updated logging to match original AmiExpress express.e format exactly
+- **New Format** (matches express.e):
+  ```
+  msg request: 1 (JH_REGISTER)
+  data: 2
+  string:
+  ```
+- **Features**:
+  - Command number with name lookup from XIMCommand enum
+  - Matches Bulls door log from real Amiga BBS
+  - Clean format (no `[DoorMessageHandler]` prefix for message logs)
+  - All 40+ XIM command names supported
+- **File Modified**: web/backend/src/amiga-emulation/session/DoorMessageHandler.ts
+  - Added `getCommandName()` helper function
+  - Updated `handleDoorMessage()` logging format
+
+## Previous (2025-12-01 - Session 2)
+### FIXED: Bulls Interference with All Doors
+- **Problem**: BullsDoorHandler.monitorPc() was seeding D0/D7 registers for ALL doors, not just Bulls
+- **Root Cause**: DoorLifecycleManager.ts:745 called bullsHandler.monitorPc() without isBullsDoor() check
+- **Fix Applied**: Added `&& this.bullsHandler.isBullsDoor()` checks at lines 745 and 504
+- **Files Modified**:
+  - web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts (2 locations)
+- **Status**: ✅ RESOLVED - GA door now runs without Bulls interference
+
+### GA Door Test Results (WITHOUT Bulls Interference)
+- ✅ **Initialization succeeds**: Libraries opened, ports created, messages sent
+- ✅ **No Bulls register seeding**: "Seeded D0/D7" messages gone
+- ✅ **FindPort("AEDoorPort") succeeds**: Port found at 0xa0100
+- ✅ **PutMsg() sends startup message**: Message queued successfully
+- ❌ **Door enters infinite polling loop**: WaitPort() called 637 times
+- ❌ **Never produces output or exits**: /tmp/ga.out remains empty
+- **Failure mode**: Polling loop (NOT ROM jump like Bulls)
+
+### Comparison: GA vs Bulls Failure Modes
+**Bulls**: Jumps to ROM (0xf00080) after init error → suggests stack corruption
+**GA**: Infinite WaitPort polling loop → suggests message/reply not arriving
+**Pattern**: Different symptoms, may have different root causes
+
+## Previous Session (2025-12-01 - Session 1)
+- Prompt: "it's extremely important that we don't make this customized for the bulls door"
+- User emphasized: Need GENERIC solution for ALL AmiExpress 68K doors (hundreds exist)
+- Removed Bulls-specific PC forcing hack (lines 1394-1413 in BullsDoorHandler.ts)
+- Identified root cause: **Stack corruption during door initialization**
+- Bulls reaches PC=0x11ba with D0=0xffff (error), then RTS at 0x11cc returns to 0xf00080 (ROM) instead of 0x1ff000 (exit trap)
+
+## Current Focus
+- **Generic Issue**: Doors overwrite stack during initialization, corrupting return addresses
+- DoorLoader sets up exit trap at 0x1ff000 with valid return addresses
+- But doors jump to ROM (0xf00080) instead, indicating stack corruption
+- Need to fix stack management generically for ALL doors, not just Bulls
+
+## Test Door Priority (Simple → Complex)
+**Simple doors for initial testing:**
+1. **GA (GetAnswer)** - User recommended as "nice door to test with"
+2. **ED (5D-Edit)** - 25.7 KB, file editor
+3. **SIZE (Counting Files)** - 16.9 KB, file counter
+4. **WHAT** - 15.1 KB, simple utility
+
+**Complex doors for validation:**
+5. **Bulls** - 68K XIM door, complex initialization
+6. **WHO** - User list display
+7. **RTW** - Game door
+
+## Analysis of Bulls Natural Execution (Without Hacks)
+Bulls execution flow WITHOUT forcing:
+1. Starts at entry point, sets up A4 data segment base
+2. Creates 5 message ports (CreateMsgPort called 5x)
+3. Executes init loop at 0x1140-0x116e (natural D7 countdown)
+4. Reaches PC=0x11ba (within string length function)
+5. D0=0xffff (error code - initialization failed!)
+6. Function returns via RTS at 0x11cc
+7. **Jumps to ROM at 0xf00080 instead of exit trap at 0x1ff000**
+
+## Stack Setup by DoorLoader
+```
+exitTrapAddress = 0x1ff000 (contains RTS instruction 0x4e75)
+
+Stack frame (at stackTop):
+  frameBase+0:    0x1ff000  // top-of-stack return
+  frameBase-4:    0x1ff000  // stack return
+  frameBase-24:   0x1ff000  // exit jump (RTS trap)
+
+Initial SP: stackTop - 8 (0x8e6c for Bulls)
+Stack base: 0x6e74, size: 8192 bytes
+```
+
+All return addresses point to exit trap, but Bulls returns to 0xf00080 (ROM).
+**Hypothesis**: Stack corrupted during init, overwriting return addresses.
+
+## Root Cause Analysis
+1. **Messages ARE sent correctly** - JH_INIT and JH_STAT queued to ports
+2. **Bulls never calls WaitPort** - crashes before reaching message handling
+3. **D0=0xffff indicates error** - Bulls detected initialization failure
+4. **Return address corrupted** - Should be 0x1ff000, actually 0xf00080
+
+**Why D0=0xffff?** Likely causes:
+- Expected data structure not populated (DoorInfo, NodeStatus, etc.)
+- Port/library base pointers invalid
+- CLI structure incomplete
+- Missing messages (but we send them - Bulls just crashes first)
+
+## Disassembly Context (Bulls @ 0x11ba)
+```asm
+0x11aa: movem.l d7/a5, -(a7)    ; Save registers to stack
+0x11ae: movea.l a0, a5
+0x11b0: movea.l a5, a0
+0x11b2: tst.b (a0)+             ; String length loop
+0x11b4: bne.b 0x11b2
+0x11b6: subq.l #1, a0
+0x11b8: suba.l a5, a0
+0x11ba: move.l a0, d7           ; <-- Bulls is HERE
+0x11bc: moveq #0xa, d0
+0x11be: cmp.b -0x1(a5,d7.l), d0
+0x11c2: bne.b 0x11c8
+0x11c4: clr.b -0x1(a5,d7.l)
+0x11c8: movem.l (a7)+, d7/a5    ; Restore registers from stack
+0x11cc: rts                      ; RETURN - pops address from stack
+                                 ; Should return to 0x1ff000
+                                 ; Actually returns to 0xf00080 (ROM)
+```
+
+## Next Steps
+1. **Confirm stack corruption hypothesis**:
+   - Add instrumentation to log SP and stack contents at PC=0x11ba
+   - Check what's actually on the stack when RTS executes
+   - Verify if return address is 0xf00080 or something else
+
+2. **Identify where stack gets corrupted**:
+   - Trace Bulls execution from start to 0x11ba
+   - Log all stack writes (SP modifications, PUSH operations)
+   - Find which code overwrites the return addresses
+
+3. **Implement generic fix**:
+   - Protect stack return addresses from corruption
+   - OR fix the code that's corrupting the stack
+   - OR ensure return addresses are restored before RTS
+   - Must work for ALL doors, not just Bulls
+
+4. **Test with simple doors first**:
+   - GA (GetAnswer) - simpler than Bulls
+   - ED, SIZE, WHAT - even simpler utilities
+   - If they work, validates generic solution
+   - Then test complex doors: Bulls, WHO, RTW
+
+## Key Insight from User
+**"it's extremely important that we don't make this customized for the bulls door, it needs to be able to run all amiexpress 68k doors, there are hundreds"**
+
+This means:
+- NO Bulls-specific hacks or forcing logic
+- Fix the UNDERLYING issue that affects all doors
+- Test with MULTIPLE doors to ensure genericity
+- Focus on standard Amiga/AmiExpress door patterns
+
+## Tooling/Commands
+- Build: `cd web/backend && npx tsc -p tsconfig.json`
+- Test Bulls: `cd /Users/spot/Code/amiexpress-web && BBS_DATA_DIR=/Users/spot/Code/amiexpress-web AEDOOR_STDOUT=/tmp/bulls.out AEDOOR_ROM=kickstart node web/backend/dist/scripts/run-amiga-door.js Doors/emp_tools/Bulls 1`
+- Test GA: Replace `Bulls` with path to GA door
+- Disassemble: `r2 -q -c "e asm.arch=m68k; e asm.bits=32; s 0xADDR; pd NN" /path/to/door`
+- Logs: `logs/door-68k.log`, `/tmp/bulls.out`
+- References: `Documentation/4-Door-Developers/Bulls_DISASM_NOTES.md`, express.e via MCP
+
+## Key Files Modified
+- web/backend/src/amiga-emulation/session/BullsDoorHandler.ts (lines 1394-1413)
+  * Disabled Bulls-specific PC forcing hack (commented out)
+  * Now Bulls executes naturally to reveal the real generic issue
