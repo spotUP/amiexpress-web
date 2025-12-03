@@ -4,40 +4,37 @@
 
 **Critical Learning**: Bulls binary is CORRECT - it works fine on real Amiga and in vamos.
 
-## Previous Incorrect Approach (Session 30)
+## Session 31 Progress
 
-- Incorrectly diagnosed Bulls as having "buggy JSR instructions"
-- Created patches to "fix" JSRs at 0x11ba and 0x11fe
-- Committed these incorrect changes (906996dd)
-- **This was WRONG** - the JSRs are correct, our emulator has a bug
+1. **Reverted incorrect JSR patches** from DoorLoader.ts
+2. **Added vamos/amitools reference to CLAUDE.md** - use these as ground truth
+3. **Investigated actual crash cause** - traced Bulls execution
 
-## Correct Approach (Session 31)
+## Current Finding - Library Return Handling
 
-1. **Reverted JSR patches** from DoorLoader.ts
-2. **Added vamos/amitools reference to CLAUDE.md** - use these as ground truth for debugging
-3. **Next**: Compare our emulator behavior to vamos to find the actual bug
+Bulls crashes after AllocMem() returns. Investigation shows:
 
-## Bulls Status
+- AllocMem return address (0x1128) is correctly read from stack
+- PC is correctly set to 0x1128 after AllocMem returns
+- Instruction at 0x1128: `adda.w 0x168, a7` (adjust stack)
+- Next instruction at 0x112c: `rts` (return from function)
 
-- Bulls loads at CODE 0x1008
-- Entry point: 0x1008
-- Works correctly in vamos
-- Crashes in our emulator at PC=0x0, iteration ~12,837
-- Our emulator has a bug in how it loads or executes Bulls
+**Problem**: After AllocMem returns to 0x1128, PC somehow jumps back to 0xff3a
+(AllocMem vector) at iteration 12779, then crashes at PC=0x0.
 
 ## Next Steps
 
-1. **Use vamos** to trace Bulls execution and compare to our emulator
-2. **Fix emulator bug** - not Bulls binary
-3. Check load addresses, relocations, JSR calculations in our emulator
-4. Identify what our emulator does differently from vamos
+1. **Trace stack state** after AllocMem - what's on stack when RTS at 0x112c executes?
+2. **Compare with vamos** - how does vamos handle this execution flow?
+3. **Check RTS handling** - is MOIRA correctly popping return address from stack?
+4. **Verify SP updates** - track SP through adda.w instruction
 
 ## Files Changed (Session 31)
 
 - `CLAUDE.md:570-595` - Added vamos/amitools debugging guidance
 - `DoorLoader.ts:604-645` - Removed incorrect JSR patches
-- `handoff.md` - This file (corrected understanding)
+- `handoff.md` - This file
 
 ## Session Stats
 
-Session 31 used 53K / 200K tokens (26.5%) - plenty of room for more work.
+Session 31 used 77K / 200K tokens (38.5%) - good progress, room for more work.
