@@ -1,69 +1,43 @@
-# Handoff - Bulls XIM Door (2025-12-03 Session 30)
+# Handoff - Bulls XIM Door (2025-12-03 Session 31)
 
-## SUCCESS - Bulls Binary Patching Working!
+## CORRECTION - Bulls Binary is NOT Buggy
 
-Bulls now executes significantly further with buggy JSR patches applied.
+**Critical Learning**: Bulls binary is CORRECT - it works fine on real Amiga and in vamos.
 
-## Root Cause - Bulls Binary is Buggy
+## Previous Incorrect Approach (Session 30)
 
-**Confirmed**: Bulls file contains buggy JSR instructions where normal code should be.
+- Incorrectly diagnosed Bulls as having "buggy JSR instructions"
+- Created patches to "fix" JSRs at 0x11ba and 0x11fe
+- Committed these incorrect changes (906996dd)
+- **This was WRONG** - the JSRs are correct, our emulator has a bug
 
-**Evidence**:
-1. File offset 0x1d6 (runtime 0x11ba): Contains `0x4eba 0x2924` (JSR), should be `0x2e08 0x700a` (move.l/moveq)
-2. File offset 0x21a (runtime 0x11fe): Contains `0x4eba 0x2902` (JSR), should be `0xb02d 0x0001` (cmp.b)
-3. Bulls works in vamos: Displays banner correctly
-4. These JSRs are NOT from relocations (checked relocation table)
+## Correct Approach (Session 31)
 
-## Fix Applied
+1. **Reverted JSR patches** from DoorLoader.ts
+2. **Added vamos/amitools reference to CLAUDE.md** - use these as ground truth for debugging
+3. **Next**: Compare our emulator behavior to vamos to find the actual bug
 
-DoorLoader.ts now scans for and patches known buggy JSRs at startup:
-- 0x11ba: Restore `move.l a0, d7 / moveq 0xa, d0` (strlen function)
-- 0x11fe: Restore `cmp.b 0x1(a5), d0` (string processing)
+## Bulls Status
 
-## Current Status
-
-**Bulls now**:
-1. Loads successfully
-2. Sends JH_INIT and JH_STAT messages
-3. Executes past both buggy JSRs
-4. Calls library functions (AllocMem, FreeMem, AllocSignal)
-5. Gets to iteration ~12,837
-6. Eventually crashes with PC=0x0, SP=0x8e6c, A4=0x0, A5=0x0
-
-**Significant progress** from previous crash at iteration 12,809!
-
-## Why Bulls Still Crashes
-
-Possible causes:
-1. Another buggy JSR not yet discovered
-2. Bulls expects different initialization
-3. Missing library function
-4. Bulls is trying to exit but doing it wrong
+- Bulls loads at CODE 0x1008
+- Entry point: 0x1008
+- Works correctly in vamos
+- Crashes in our emulator at PC=0x0, iteration ~12,837
+- Our emulator has a bug in how it loads or executes Bulls
 
 ## Next Steps
 
-1. **Find remaining buggy JSRs**: Scan entire Bulls binary for JSRs that look suspicious
-2. **Trace final crash**: Log detailed execution before PC=0x0
-3. **Compare with vamos**: See how vamos handles Bulls differently
-4. **Check library calls**: Verify all Exec library functions Bulls needs are implemented
+1. **Use vamos** to trace Bulls execution and compare to our emulator
+2. **Fix emulator bug** - not Bulls binary
+3. Check load addresses, relocations, JSR calculations in our emulator
+4. Identify what our emulator does differently from vamos
 
-## Technical Details
+## Files Changed (Session 31)
 
-- Bulls MD5: ed08a2ca4e9aa526de11e92072285728
-- CODE loads at: 0x1008
-- Entry point: 0x1008
-- Buggy JSRs found: 2 (both patched)
-- Crash iteration: ~12,837 (was 12,809 before)
-
-## Files Changed
-
-- `DoorLoader.ts:604-649` - Buggy JSR scanner and patcher
-- `handoff.md` - This file
+- `CLAUDE.md:570-595` - Added vamos/amitools debugging guidance
+- `DoorLoader.ts:604-645` - Removed incorrect JSR patches
+- `handoff.md` - This file (corrected understanding)
 
 ## Session Stats
 
-Session 30 used 99K / 200K tokens (49.5%) - room for more work.
-
-## Ready to Commit
-
-Changes ready for commit with message about Bulls binary patching breakthrough.
+Session 31 used 53K / 200K tokens (26.5%) - plenty of room for more work.
