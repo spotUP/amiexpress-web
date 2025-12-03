@@ -4068,3 +4068,352 @@
 02-Dec-25 03:35 Door exit: S
 02-Dec-25 18:08 Login: sysop
 02-Dec-25 18:26 Logoff: sysop
+02-Dec-25 20:02 Door: B
+02-Dec-25 20:02 Door exit: B
+02-Dec-25 20:02 Door: S
+02-Dec-25 20:02 Door exit: S
+02-Dec-25 20:46 Login: sysop
+02-Dec-25 20:58 Door: GL
+02-Dec-25 20:58 Door exit: GL
+02-Dec-25 21:08 Door: GL
+02-Dec-25 21:08 Door exit: GL
+02-Dec-25 21:35 Door: GL
+02-Dec-25 21:35 Door exit: GL
+02-Dec-25 21:38 Door: TELNET-FRONT
+02-Dec-25 21:38 Door exit: TELNET-FRONT
+02-Dec-25 21:41 Door: GL
+02-Dec-25 21:41 Door exit: GL
+02-Dec-25 21:47 Door: TELNET-FRONT
+02-Dec-25 21:47 Door exit: TELNET-FRONT
+02-Dec-25 21:47 Door: GL
+02-Dec-25 22:04 Login: sysop
+02-Dec-25 22:23 Logoff: sysop
+02-Dec-25 22:30 Door: TELNET-FRONT
+02-Dec-25 22:30 Door exit: TELNET-FRONT
+02-Dec-25 22:31 Door: GL
+02-Dec-25 22:31 Door exit: GL
+02-Dec-25 22:31 Door: GWALL
+02-Dec-25 22:31 Door exit: GWALL
+02-Dec-25 23:30 Door: TELNET-FRONT
+02-Dec-25 23:30 Door exit: TELNET-FRONT
+02-Dec-25 23:30 Door: GL
+02-Dec-25 23:30 Door exit: GL
+02-Dec-25 23:30 Door: GWALL
+02-Dec-25 23:30 Door exit: GWALL
+02-Dec-25 23:32 Door: FR
+02-Dec-25 23:32 Door exit: FR
+02-Dec-25 23:50 Door: TELNET-FRONT
+02-Dec-25 23:50 Door exit: TELNET-FRONT
+02-Dec-25 23:50 Door: GL
+02-Dec-25 23:50 Door exit: GL
+02-Dec-25 23:50 Door: FR
+02-Dec-25 23:50 Door exit: FR
+02-Dec-25 23:52 Door: TELNET-FRONT
+02-Dec-25 23:52 Door exit: TELNET-FRONT
+02-Dec-25 23:52 Door: GL
+02-Dec-25 23:52 Door exit: GL
+02-Dec-25 23:52 Door: FR
+02-Dec-25 23:52 Door exit: FR
+02-Dec-25 23:54 Door: TELNET-FRONT
+02-Dec-25 23:54 Door exit: TELNET-FRONT
+02-Dec-25 23:54 Door: GL
+02-Dec-25 23:54 Door exit: GL
+02-Dec-25 23:54 Door: FR
+02-Dec-25 23:54 Door exit: FR
+02-Dec-25 23:59 Door: TELNET-FRONT
+02-Dec-25 23:59 Door exit: TELNET-FRONT
+03-Dec-25 00:01 Door: GL
+03-Dec-25 00:01 Door exit: GL
+03-Dec-25 00:01 Door: FR
+03-Dec-25 00:01 Door exit: FR
+03-Dec-25 00:04 Door: TELNET-FRONT
+03-Dec-25 00:04 Door exit: TELNET-FRONT
+03-Dec-25 00:04 Door: GL
+03-Dec-25 00:04 Door exit: GL
+03-Dec-25 00:04 Door: FR
+03-Dec-25 00:04 Door exit: FR
+03-Dec-25 00:09 Door: TELNET-FRONT
+03-Dec-25 00:09 Door exit: TELNET-FRONT
+03-Dec-25 00:09 Door: GL
+03-Dec-25 00:09 Door exit: GL
+03-Dec-25 00:09 Door: FR
+03-Dec-25 00:09 Door exit: FR
+03-Dec-25 00:12 Door: TELNET-FRONT
+03-Dec-25 00:12 Door exit: TELNET-FRONT
+03-Dec-25 00:12 Door: GL
+03-Dec-25 00:12 Door exit: GL
+03-Dec-25 00:12 Door: FR
+03-Dec-25 00:12 Door exit: FR
+03-Dec-25 00:19 Door: TELNET-FRONT
+03-Dec-25 00:19 Door exit: TELNET-FRONT
+03-Dec-25 00:20 Door: GL
+03-Dec-25 00:20 Door exit: GL
+03-Dec-25 00:20 Door: FR
+03-Dec-25 00:20 Door exit: FR
+03-Dec-25 00:24 Door: TELNET-FRONT
+03-Dec-25 00:24 Door exit: TELNET-FRONT
+03-Dec-25 00:24 Door: GL
+03-Dec-25 00:24 Door exit: GL
+03-Dec-25 00:24 Door: FR
+03-Dec-25 00:24 Door exit: FR
+03-Dec-25 00:25 Door: FR
+03-Dec-25 00:25 Door exit: FR
+03-Dec-25 00:28 Door: TELNET-FRONT
+03-Dec-25 00:28 Door exit: TELNET-FRONT
+03-Dec-25 00:28 Door: GL
+03-Dec-25 00:28 Door exit: GL
+03-Dec-25 00:28 Door: FR
+03-Dec-25 00:28 Door exit: FR
+03-Dec-25 00:33 Door: TELNET-FRONT
+03-Dec-25 00:33 Door exit: TELNET-FRONT
+03-Dec-25 00:34 Door: GL
+03-Dec-25 00:34 Door exit: GL
+03-Dec-25 00:34 Door: FR
+03-Dec-25 00:34 Door exit: FR
+03-Dec-25 00:40 Door: TELNET-FRONT
+03-Dec-25 00:40 Door exit: TELNET-FRONT
+03-Dec-25 00:41 Door: GL
+03-Dec-25 00:41 Door exit: GL
+03-Dec-25 00:41 Door: FR
+03-Dec-25 00:41 Door exit: FR
+03-Dec-25 00:47 Door: TELNET-FRONT
+03-Dec-25 00:47 Door exit: TELNET-FRONT
+03-Dec-25 00:47 Door: GL
+03-Dec-25 00:47 Door exit: GL
+03-Dec-25 00:47 Door: FR
+03-Dec-25 00:47 Door exit: FR
+03-Dec-25 00:54 Door: S
+03-Dec-25 00:54 Door exit: S
+03-Dec-25 00:54 Door: N
+03-Dec-25 00:54 Door exit: N
+03-Dec-25 00:54 Door: N
+03-Dec-25 00:54 Door exit: N
+03-Dec-25 00:54 Door: F
+03-Dec-25 00:54 Door exit: F
+03-Dec-25 00:54 Door: F
+03-Dec-25 00:54 Door exit: F
+03-Dec-25 00:55 Door: F
+03-Dec-25 00:55 Door exit: F
+03-Dec-25 00:55 Door: F
+03-Dec-25 00:55 Door exit: F
+03-Dec-25 00:55 Door: ULIST
+03-Dec-25 00:55 Door exit: ULIST
+03-Dec-25 00:56 Door: TLIST
+03-Dec-25 00:56 Door exit: TLIST
+03-Dec-25 00:57 Door: WALL
+03-Dec-25 00:57 Door exit: WALL
+03-Dec-25 01:00 Door: TELNET-FRONT
+03-Dec-25 01:00 Door exit: TELNET-FRONT
+03-Dec-25 01:01 Door: GL
+03-Dec-25 01:01 Door exit: GL
+03-Dec-25 01:01 Door: FR
+03-Dec-25 01:01 Door exit: FR
+03-Dec-25 01:27 Door: TELNET-FRONT
+03-Dec-25 01:27 Door exit: TELNET-FRONT
+03-Dec-25 01:27 Door: GL
+03-Dec-25 01:27 Door exit: GL
+03-Dec-25 01:27 Door: FR
+03-Dec-25 01:27 Door exit: FR
+03-Dec-25 01:28 Door: WHO
+03-Dec-25 01:28 Door exit: WHO
+03-Dec-25 01:31 Door: TELNET-FRONT
+03-Dec-25 01:31 Door exit: TELNET-FRONT
+03-Dec-25 01:31 Door: GL
+03-Dec-25 01:31 Door exit: GL
+03-Dec-25 01:31 Door: FR
+03-Dec-25 01:31 Door exit: FR
+03-Dec-25 02:25 Login: sysop
+03-Dec-25 04:25 Logoff: sysop
+03-Dec-25 06:59 Door: TELNET-FRONT
+03-Dec-25 06:59 Door exit: TELNET-FRONT
+03-Dec-25 06:59 Door: TELNET-FRONT
+03-Dec-25 06:59 Door exit: TELNET-FRONT
+03-Dec-25 06:59 Door: GL
+03-Dec-25 06:59 Door exit: GL
+03-Dec-25 07:00 Door: FR
+03-Dec-25 07:00 Door exit: FR
+03-Dec-25 07:30 Login: sysop
+03-Dec-25 07:35 Logoff: sysop
+03-Dec-25 08:13 Door: TELNET-FRONT
+03-Dec-25 08:13 Door exit: TELNET-FRONT
+03-Dec-25 08:18 Door: TELNET-FRONT
+03-Dec-25 08:18 Door exit: TELNET-FRONT
+03-Dec-25 08:18 Door: GL
+03-Dec-25 08:18 Door exit: GL
+03-Dec-25 08:18 Door: FR
+03-Dec-25 08:18 Door exit: FR
+03-Dec-25 08:25 Login: sysop
+03-Dec-25 08:32 Door: TELNET-FRONT
+03-Dec-25 08:32 Door exit: TELNET-FRONT
+03-Dec-25 08:32 Door: GL
+03-Dec-25 08:32 Door exit: GL
+03-Dec-25 08:32 Door: FR
+03-Dec-25 08:32 Door exit: FR
+03-Dec-25 08:39 Login: sysop
+03-Dec-25 08:53 Door: TELNET-FRONT
+03-Dec-25 08:53 Door exit: TELNET-FRONT
+03-Dec-25 09:02 Door: TELNET-FRONT
+03-Dec-25 09:02 Door exit: TELNET-FRONT
+03-Dec-25 09:02 Door: GL
+03-Dec-25 09:02 Door exit: GL
+03-Dec-25 09:02 Door: FR
+03-Dec-25 09:02 Door exit: FR
+03-Dec-25 09:09 Login: sysop
+03-Dec-25 09:12 Door: TELNET-FRONT
+03-Dec-25 09:12 Door exit: TELNET-FRONT
+03-Dec-25 09:12 Door: GL
+03-Dec-25 09:12 Door exit: GL
+03-Dec-25 09:12 Door: FR
+03-Dec-25 09:12 Door exit: FR
+03-Dec-25 09:19 Login: sysop
+03-Dec-25 09:21 Door: TELNET-FRONT
+03-Dec-25 09:21 Door exit: TELNET-FRONT
+03-Dec-25 09:21 Door: GL
+03-Dec-25 09:22 Door exit: GL
+03-Dec-25 09:22 Door: FR
+03-Dec-25 09:22 Door exit: FR
+03-Dec-25 09:28 Login: sysop
+03-Dec-25 09:36 Logoff: sysop
+03-Dec-25 09:49 Door: TELNET-FRONT
+03-Dec-25 09:49 Door exit: TELNET-FRONT
+03-Dec-25 09:50 Door: GL
+03-Dec-25 09:50 Door exit: GL
+03-Dec-25 09:50 Door: FR
+03-Dec-25 09:50 Door exit: FR
+03-Dec-25 09:57 Login: sysop
+03-Dec-25 10:07 Door: TELNET-FRONT
+03-Dec-25 10:07 Door exit: TELNET-FRONT
+03-Dec-25 10:07 Door: GL
+03-Dec-25 10:07 Door exit: GL
+03-Dec-25 10:07 Door: FR
+03-Dec-25 10:07 Door exit: FR
+03-Dec-25 10:14 Login: sysop
+03-Dec-25 12:38 Door: TELNET-FRONT
+03-Dec-25 12:38 Door exit: TELNET-FRONT
+03-Dec-25 12:39 Door: TELNET-FRONT
+03-Dec-25 12:39 Door exit: TELNET-FRONT
+03-Dec-25 12:39 Door: GL
+03-Dec-25 12:39 Door exit: GL
+03-Dec-25 12:39 Door: FR
+03-Dec-25 12:39 Door exit: FR
+03-Dec-25 12:44 Door: TELNET-FRONT
+03-Dec-25 12:44 Door exit: TELNET-FRONT
+03-Dec-25 12:44 Door: GL
+03-Dec-25 12:44 Door exit: GL
+03-Dec-25 12:44 Door: FR
+03-Dec-25 12:44 Door exit: FR
+03-Dec-25 12:50 Door: TELNET-FRONT
+03-Dec-25 12:50 Door exit: TELNET-FRONT
+03-Dec-25 12:50 Door: GL
+03-Dec-25 12:50 Door exit: GL
+03-Dec-25 12:51 Door: FR
+03-Dec-25 12:51 Door exit: FR
+03-Dec-25 12:55 Door: TELNET-FRONT
+03-Dec-25 12:55 Door exit: TELNET-FRONT
+03-Dec-25 12:55 Door: TELNET-FRONT
+03-Dec-25 12:55 Door exit: TELNET-FRONT
+03-Dec-25 12:56 Door: GL
+03-Dec-25 12:56 Door exit: GL
+03-Dec-25 12:56 Door: FR
+03-Dec-25 12:56 Door exit: FR
+03-Dec-25 13:05 Door: TELNET-FRONT
+03-Dec-25 13:05 Door exit: TELNET-FRONT
+03-Dec-25 13:05 Door: GL
+03-Dec-25 13:05 Door exit: GL
+03-Dec-25 13:05 Door: FR
+03-Dec-25 13:05 Door exit: FR
+03-Dec-25 13:12 Door: TELNET-FRONT
+03-Dec-25 13:12 Door exit: TELNET-FRONT
+03-Dec-25 13:13 Door: GL
+03-Dec-25 13:13 Door exit: GL
+03-Dec-25 13:13 Door: FR
+03-Dec-25 13:13 Door exit: FR
+03-Dec-25 13:17 Door: TELNET-FRONT
+03-Dec-25 13:17 Door exit: TELNET-FRONT
+03-Dec-25 13:17 Door: GL
+03-Dec-25 13:17 Door exit: GL
+03-Dec-25 13:17 Door: FR
+03-Dec-25 13:17 Door exit: FR
+03-Dec-25 13:22 Door: TELNET-FRONT
+03-Dec-25 13:22 Door exit: TELNET-FRONT
+03-Dec-25 13:22 Door: GL
+03-Dec-25 13:22 Door exit: GL
+03-Dec-25 13:22 Door: FR
+03-Dec-25 13:22 Door exit: FR
+03-Dec-25 13:25 Door: FR
+03-Dec-25 13:25 Door exit: FR
+03-Dec-25 13:26 Door: B
+03-Dec-25 13:26 Door exit: B
+03-Dec-25 13:29 Login: sysop
+03-Dec-25 13:36 Door: TELNET-FRONT
+03-Dec-25 13:36 Door exit: TELNET-FRONT
+03-Dec-25 13:36 Door: GL
+03-Dec-25 13:36 Door exit: GL
+03-Dec-25 13:36 Door: FR
+03-Dec-25 13:36 Door exit: FR
+03-Dec-25 13:41 Door: TELNET-FRONT
+03-Dec-25 13:41 Door exit: TELNET-FRONT
+03-Dec-25 13:42 Door: GL
+03-Dec-25 13:42 Door exit: GL
+03-Dec-25 13:42 Door: FR
+03-Dec-25 13:42 Door exit: FR
+03-Dec-25 13:44 Door: TELNET-FRONT
+03-Dec-25 13:44 Door exit: TELNET-FRONT
+03-Dec-25 13:44 Door: GL
+03-Dec-25 13:44 Door exit: GL
+03-Dec-25 13:44 Door: FR
+03-Dec-25 13:44 Door exit: FR
+03-Dec-25 13:49 Door: TELNET-FRONT
+03-Dec-25 13:49 Door exit: TELNET-FRONT
+03-Dec-25 13:49 Door: GL
+03-Dec-25 13:49 Door exit: GL
+03-Dec-25 13:49 Door: FR
+03-Dec-25 13:49 Door exit: FR
+03-Dec-25 13:51 Door: TELNET-FRONT
+03-Dec-25 13:51 Door exit: TELNET-FRONT
+03-Dec-25 13:51 Door: GL
+03-Dec-25 13:51 Door exit: GL
+03-Dec-25 13:51 Door: FR
+03-Dec-25 13:51 Door exit: FR
+03-Dec-25 13:54 Door: TELNET-FRONT
+03-Dec-25 13:54 Door exit: TELNET-FRONT
+03-Dec-25 13:54 Door: GL
+03-Dec-25 13:54 Door exit: GL
+03-Dec-25 13:54 Door: FR
+03-Dec-25 13:54 Door exit: FR
+03-Dec-25 13:57 Door: TELNET-FRONT
+03-Dec-25 13:58 Door exit: TELNET-FRONT
+03-Dec-25 13:58 Door: GL
+03-Dec-25 13:58 Door exit: GL
+03-Dec-25 13:58 Door: FR
+03-Dec-25 13:58 Door exit: FR
+03-Dec-25 14:05 Login: sysop
+03-Dec-25 14:09 Door: TELNET-FRONT
+03-Dec-25 14:09 Door exit: TELNET-FRONT
+03-Dec-25 14:09 Door: GL
+03-Dec-25 14:09 Door exit: GL
+03-Dec-25 14:09 Door: FR
+03-Dec-25 14:09 Door exit: FR
+03-Dec-25 14:13 Door: TELNET-FRONT
+03-Dec-25 14:13 Door exit: TELNET-FRONT
+03-Dec-25 14:14 Door: GL
+03-Dec-25 14:14 Door exit: GL
+03-Dec-25 14:14 Door: FR
+03-Dec-25 14:14 Door exit: FR
+03-Dec-25 14:21 Login: sysop
+03-Dec-25 14:26 Door: TELNET-FRONT
+03-Dec-25 14:26 Door exit: TELNET-FRONT
+03-Dec-25 14:32 Door: TELNET-FRONT
+03-Dec-25 14:32 Door exit: TELNET-FRONT
+03-Dec-25 14:34 Door: TELNET-FRONT
+03-Dec-25 14:35 Door exit: TELNET-FRONT
+03-Dec-25 14:35 Door: GL
+03-Dec-25 14:35 Door exit: GL
+03-Dec-25 14:35 Door: FR
+03-Dec-25 14:35 Door exit: FR
+03-Dec-25 14:39 Door: TELNET-FRONT
+03-Dec-25 14:39 Door exit: TELNET-FRONT
+03-Dec-25 14:39 Door: GL
+03-Dec-25 14:39 Door exit: GL
+03-Dec-25 14:39 Door: FR
+03-Dec-25 14:39 Door exit: FR
