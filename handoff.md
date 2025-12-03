@@ -1,46 +1,49 @@
-# Handoff
+# Handoff - Bulls XIM Door Fix (2025-12-03 Session 29)
 
-## Current State (2025-12-03 - Session 27)
+## BREAKTHROUGH - Bulls Enters XIM Mode!
 
-### Session 27: Complete Math Library Implementation
+**SUCCESS**: Bulls now sends XIM messages to AEDoorPort1! CLI argument pointer injection fixed initialization.
 
-**Enhancement**: Implemented all 6 Amiga math libraries (87 functions total)
+**Evidence**:
+1. Bulls calls CreateMsgPort (creates reply port at 0xa0400) ✓
+2. Bulls sends INIT message (0x100200) to AEDoorPort1 (0xa0000) ✓
+3. Bulls sends STAT message (0x100304) to AEDoorPort1 (0xa0000) ✓
+4. BBS replies by sending messages to Bulls' reply port 0xa0400 ✓
+5. Bulls exits at 0x1250 after sending messages
 
-**New Libraries**:
-- mathffp.library (12 functions): SPFix, SPFlt, SPCmp, SPTst, SPAbs, SPNeg, SPAdd, SPSub, SPMul, SPDiv, SPFloor, SPCeil
-- mathtrans.library (17 functions): SPAtan, SPSin, SPCos, SPTan, SPSincos, SPSinh, SPCosh, SPTanh, SPExp, SPLog, SPPow, SPSqrt, SPTieee, SPFieee, SPAsin, SPAcos, SPLog10
-- mathieeedoubbas.library (12 functions): IEEEDPFix, IEEEDPFlt, IEEEDPCmp, IEEEDPTst, IEEEDPAbs, IEEEDPNeg, IEEEDPAdd, IEEEDPSub, IEEEDPMul, IEEEDPDiv, IEEEDPFloor, IEEEDPCeil
-- mathieeedoubtrans.library (17 functions): Transcendental functions for IEEE double
-- mathieeesingbas.library (12 functions): Basic IEEE single precision
-- mathieeesingtrans.library (17 functions): Transcendental IEEE single
+**What Fixed It**:
+- Injected CLI argument pointer at A4+0x6c16 → 0xd0000 (empty string)
+- Initialized argument buffer at A4+0x510 (200 bytes)
+- Bulls' strcmp check at 0x100c now passes
 
-**Key Implementation Details**:
-- FFP format conversion: 24-bit mantissa + sign/exponent byte (excess-64)
-- IEEE single/double via DataView for native JavaScript float handling
-- Proper condition code setting for comparison/test functions
+## Current Issue - Bulls Exits After Sending XIM Messages
 
-**Files Changed**:
-- `web/backend/src/amiga-emulation/api/MathLibrary.ts` - NEW (943 lines)
-- `web/backend/src/amiga-emulation/api/LibraryTraps.ts` - 6 new vector arrays, setters, install methods
-- `web/backend/src/amiga-emulation/LibraryManager.ts` - Math library instantiation and wiring
+Bulls successfully enters XIM mode but exits immediately after sending INIT and STAT messages. Need to determine:
 
-**Verified Working**:
-- AquaScan: Exit 110, 24 iterations
-- WHO: Exit 0, 1921 iterations
-- TypeScript: Zero errors
-- Total library vectors: 211
+1. **Is Bulls waiting for replies?** Check if Bulls calls GetMsg/WaitPort on reply port 0xa0400
+2. **Are BBS replies correct?** Verify message format matches Bulls' expectations
+3. **Is Bulls polling?** Check if Bulls has message processing loop after XIM registration
 
-### 68K Emulation: COMPLETE
-- 230+ library functions (dos + exec + utility + 6 math libraries)
-- intuition/graphics/layers handled via LVO stubs
-- All production doors working
+## Implementation Status
+
+1. ✅ DoorInfo structure at 0x100000
+2. ✅ AEDoorBase injection at A4+0x988
+3. ✅ DoorInfo pointer at A4+0x6c24
+4. ✅ Reply Port at 11 A4 offsets
+5. ✅ CLI argument pointer at A4+0x6c16
+6. ✅ Argument buffer at A4+0x510
+
+## Next Investigation
+
+```bash
+# Check Bulls message loop after 0x2a18
+r2 -q -c "e asm.arch=m68k; e asm.bits=32; s 0x2a18; pd 100" Doors/emp_tools/Bulls
+
+# Find GetMsg/WaitPort calls
+r2 -q -c "e asm.arch=m68k; af; pdf @ sym.main" Doors/emp_tools/Bulls | grep -E "GetMsg|WaitPort"
+```
 
 ## Key Files
 
-- `web/backend/src/amiga-emulation/api/MathLibrary.ts` - All 6 math libraries
-- `web/backend/src/amiga-emulation/api/LibraryTraps.ts` - 211 library vectors
-- `web/backend/src/amiga-emulation/LibraryManager.ts` - Library initialization
-
-## Next Priorities
-- Test doors in full BBS environment
-- SDK door development
+- `web/backend/src/amiga-emulation/DoorLoader.ts:575-592` - CLI arg fix
+- `Documentation/4-Door-Developers/Bulls_DISASM_NOTES.md`
