@@ -1,34 +1,40 @@
-# Handoff - 68K Door Emulation Fixed (Session 33)
+# Handoff - 68K Door Emulation Complete (Session 34)
 
-## Status: All 68K XIM Doors Working
+## Status: All 68K Doors Working
 
-Bulls and all tested XIM doors now exit cleanly. Two bugs were fixed:
+All tested 68K doors exit cleanly after fixes in Sessions 32-34.
 
-### Bug 1: Buffer Zeroing Overlapped Function Pointers
-- `setupBullsExecution()` zeroed 200 bytes at A4+0x510, overlapping function pointers at A4+0x5bc
-- **Fix**: Reduced to 172 bytes (DoorLoader.ts:601-608)
+## Bugs Fixed
 
-### Bug 2: Stack Placed Inside DATA Region (Fixed Session 33)
-- Stack was hardcoded at 0x6e74, but startup code zeros memory up to ~0xc8f0
-- Our exit trap at stack top was zeroed, causing RTS to jump to PC=0x0
-- **Fix**: Place stack dynamically AFTER DATA segment like vamos does (DoorLoader.ts:114-119)
-- Vamos reference: `vamos -l proc:info` shows stack placed after all segments
+### Bug 1: Buffer Zeroing Overlapped Pointers (Session 32)
+- Fix: Reduced zeroing from 200 to 172 bytes (DoorLoader.ts:601-608)
 
-## Key Changes
+### Bug 2: Stack Inside DATA Region (Session 33)
+- Fix: Place stack AFTER DATA segment like vamos (DoorLoader.ts:114-119)
 
-**DoorLoader.ts:114-119**:
-```typescript
-const dataEnd = dataSegment ? dataSegment.address + dataSegment.data.length : 0x10000;
-this.stackBaseAddr = ((dataEnd + 32) + 7) & ~7;
-```
+### Bug 3: CODE-Only Programs (Session 34)
+- mtop/QuickNew are CODE-only (no DATA segment), causing fallback to wrong address
+- Fix: Place stack after CODE segment when no DATA (DoorLoader.ts:116-117)
 
-## Test Results
+### Bug 4: SP Corruption False Positive (Session 34)
+- Programs like mtop allocate own stack via AllocMem (starts at 0x100000)
+- SP threshold was 0x100000, triggering false corruption detection
+- Fix: Increased threshold to 0x800000 (DoorLifecycleManager.ts:1154)
 
-- Bulls: 18826 iterations, exit code 0 (was crashing at ~5200)
-- who: 838 iterations, exit code 20
-- GetAnswer: 555 iterations, exit code 20
+## Test Results (All Pass)
+
+| Door | Iterations | Exit |
+|------|------------|------|
+| who | 838 | 20 |
+| GetAnswer | 555 | 20 |
+| ByteKiller | 4014 | 0 |
+| Bulls | 18826 | 0 |
+| 5D-Edit | 23043 | 0 |
+| mtop | 947 | 0 |
+| QuickNew | 73 | 0 |
 
 ## Key Files
 
-- `web/backend/src/amiga-emulation/DoorLoader.ts` - Stack and buffer fixes
-- `web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts` - Execution loop
+- `web/backend/src/amiga-emulation/DoorLoader.ts` - Stack placement
+- `web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts` - SP threshold
+- `dev/scripts/validate-door-against-vamos.sh` - Validation script
