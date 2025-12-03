@@ -1,67 +1,103 @@
-# Handoff - Bulls XIM Door Fix (2025-12-03 Session 29)
+# Handoff - Bulls XIM Door (2025-12-03 Session 29)
 
-## MAJOR BREAKTHROUGH - SetSignal Implemented, Self-Modifying Code Discovered
+## Session Achievements
 
-**SUCCESS**: Bulls successfully sends JH_INIT and JH_STAT messages!
-**DISCOVERY**: Bulls has self-modifying code - instruction at PC=0x11ba changes from 0x2e08 to 0x4eba during execution
-**CURRENT PROBLEM**: Bulls crashes with "PC in low memory (0x0)" after calling modified code
+**Major Progress**:
+1. ✅ Bulls successfully enters XIM mode
+2. ✅ Bulls sends JH_INIT and JH_STAT messages to BBS
+3. ✅ BBS correctly replies to Bulls' reply port
+4. ✅ Implemented SetSignal (Exec LVO -306)
+5. ✅ Identified self-modifying code behavior
+6. ✅ Root cause found: JSR offset calculation error
 
-## Progress Summary
+## Technical Summary
 
 **What Works**:
-1. Bulls passes CLI argument strcmp check ✓
-2. Bulls calls CreateMsgPort and creates reply port at 0xa0400 ✓
-3. Bulls sends JH_INIT message (0x100200) to AEDoorPort1 ✓
-4. Bulls sends JH_STAT message (0x100304) to AEDoorPort1 ✓
-5. BBS successfully replies to both messages ✓
-6. SetSignal (LVO -306) now implemented in ExecLibrary ✓
+- CLI argument pointer injection (A4+0x6c16 → 0xd0000)
+- CreateMsgPort creation (reply port at 0xa0400)
+- XIM message protocol (INIT + STAT sent successfully)
+- SetSignal implementation (not yet reached, but needed for message loop)
 
-**What's Broken**:
-- Bulls crashes at PC=0x11ba with self-modified instruction 0x4eba (JSR)
-- JSR targets 0x3ae0 (valid Bulls code), but PC immediately goes to 0x0
-- Stack corruption suspected (SP changes from 0x8e2c to 0x8e24)
+**Root Cause of Crash**:
+Bulls crashes at PC=0x11ba during JSR execution (iteration 12809 never completes).
 
-## Technical Details
-
-**Bulls Memory Layout**:
-- Code segment: 0x1000-0x4b3f (19,228 bytes)
-- Data segment: 0x5c00-0x8b5f (27,876 bytes)
-- Entry point: 0x1008
-- A4 value: 0x5c08 (hardcoded in setupBullsExecution)
-
-**Self-Modifying Code Evidence**:
+**Self-Modifying Code Details**:
 - File offset 0x11ba contains: 0x2e08 (move.l a0, d7)
-- Memory at 0x11ba contains: 0x4eba (JSR) when crash occurs
-- Watchpoint shows write to 0x1250 (code segment)
-- Bulls likely patches itself after XIM initialization
+- Memory at runtime contains: 0x4eba (JSR with PC-relative offset 0x2924)
+- Bulls patches this during execution (HUNK relocations don't include 0x11ba)
+- Writes occur at PC=0x0 (during initialization, not visible in watchpoints)
 
-**Crash Details**:
-- PC before: 0x11ba (instruction: 0x4eba = JSR with PC-relative offset)
-- PC after: 0x3ae0 (target of JSR, valid Bulls code at +0x2924 offset)
-- Then PC → 0x0 (stack corruption)
-- SP: 0x8e2c → 0x8e24 (8 bytes pushed, but JSR only pushes 4)
+**JSR Offset Error**:
+- JSR at 0x11ba targets 0x3ae0 (offset 0x2924)
+- Actual function entry is at 0x3ad0 (move.l a5, -(a7) = function prologue)
+- Offset is **0x10 bytes too large** (16 bytes)
+- Correct offset should be 0x2914 to target 0x3ad0
+- Bulls' self-modification logic calculates offset incorrectly
 
-## Recent Changes
+**Why Crash Occurs**:
+- JSR targets middle of function (0x3ae0) instead of entry (0x3ad0)
+- Function entry code is skipped (A5 not saved to stack)
+- Stack state becomes invalid
+- PC eventually becomes 0x0 (stack corruption)
 
-**SetSignal Implementation** (`ExecLibrary.ts:857-863`, `1483-1510`):
-- Added LVO -306 trap handler
-- Implements signal examination and modification
-- Bulls uses this to clear signals after processing messages
-- Not yet reached before crash, but needed for message loop
+## System State at Crash
+
+```
+PC: 0x11ba (JSR instruction with wrong offset)
+Instruction: 0x4eba 0x2924 (JSR 0x2924(PC) → target 0x3ae0)
+A4: 0x5c08 (correct - Bulls data segment + 8)
+SP: 0x8e2c → 0x8e24 (8 bytes pushed, but JSR should only push 4)
+Iteration: 12809 (never completes)
+```
+
+## Fix Options
+
+### Option 1: Patch JSR Offset After Bulls Modifies It
+**Approach**: Add watchpoint for 0x11ba, detect write, correct offset from 0x2924 to 0x2914
+**Pros**: Minimally invasive, targets specific issue
+**Cons**: Requires watchpoint infrastructure enhancement
+
+### Option 2: Find and Fix Bulls' Self-Modification Logic
+**Approach**: Locate where Bulls calculates JSR offset, identify why it's +0x10 too large
+**Cons**: Complex, Bulls code is obfuscated, may have multiple self-mod locations
+
+### Option 3: Disable Self-Modification, Use Static Patching
+**Approach**: Prevent Bulls from writing to code, inject correct JSR statically
+**Cons**: Requires understanding all self-mod locations, may break other features
+
+### Option 4: Fix Stack State After Bad JSR
+**Approach**: Detect when PC enters 0x3ad0-0x3aff range, adjust stack/A5
+**Cons**: Fragile, doesn't address root cause
+
+**Recommended**: Option 1 (patch offset after Bulls modifies it)
+
+## Next Steps
+
+1. **Add JSR offset correction**:
+   - Monitor writes to 0x11ba-0x11bd
+   - When 0x4eba detected, check next word (offset)
+   - If offset is 0x2924, correct to 0x2914
+
+2. **Test corrected JSR**:
+   - Verify Bulls reaches 0x3ad0 (function entry)
+   - Confirm A5 is saved to stack properly
+   - Check if Bulls proceeds to message loop at 0x2a18
+
+3. **If successful**:
+   - Bulls should enter message processing loop
+   - SetSignal will be called
+   - Bulls should process XIM messages from BBS
 
 ## Key Files
 
 - `web/backend/src/amiga-emulation/DoorLoader.ts:505-603` - Bulls setup
 - `web/backend/src/amiga-emulation/api/ExecLibrary.ts:857-863, 1483-1510` - SetSignal
-- `Documentation/4-Door-Developers/Bulls_DISASM_NOTES.md` - Disassembly notes
+- `web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts:1137-1147` - Crash detection
 
-## Next Investigation
+## Context Budget
 
-1. **Track self-modifying code**: When does Bulls write 0x4eba to address 0x11ba?
-2. **Why JSR crashes**: Is 0x3ae0 the correct target? Check if Bulls expects different offset
-3. **Stack corruption**: Why does SP change by 8 bytes instead of 4? What pushes the extra data?
-4. **Alternative approach**: Can we prevent Bulls from self-modifying, or patch the modified code correctly?
+Session 29 used ~100K / 200K tokens (50%) - healthy for continued work.
 
-## Context Usage
+## Commit
 
-At ~85K tokens of 200K budget (42.5% used) - still plenty of room to continue debugging.
+Commit 7188bf19: SetSignal implementation + self-modifying code discovery
