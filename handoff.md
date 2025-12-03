@@ -1,40 +1,48 @@
 # Handoff - Bulls XIM Door (2025-12-03 Session 31)
 
-## CORRECTION - Bulls Binary is NOT Buggy
+## MAJOR FINDING - Prefetch Queue Bug
 
-**Critical Learning**: Bulls binary is CORRECT - it works fine on real Amiga and in vamos.
+**Root Cause Identified**: Library function returns don't call `refillPrefetch()` after setting PC!
 
-## Session 31 Progress
+##Summary Session 31 discovered that when library functions return by setting PC to return address,
+the MOIRA prefetch queue contains stale instructions from the library vector address.
 
-1. **Reverted incorrect JSR patches** from DoorLoader.ts
-2. **Added vamos/amitools reference to CLAUDE.md** - use these as ground truth
-3. **Investigated actual crash cause** - traced Bulls execution
+## The Bug
 
-## Current Finding - Library Return Handling
+In LibraryTraps.ts, after calling library functions like AllocMem(), we:
+1. Read return address from stack
+2. Set PC to return address: `this.emulator.setRegister(16, returnAddr)`
+3. **BUG**: Don't call `this.emulator.refillPrefetch()`!
 
-Bulls crashes after AllocMem() returns. Investigation shows:
+Without refillPrefetch(), MOIRA's Instruction Register (IRD) has wrong opcodes.
 
-- AllocMem return address (0x1128) is correctly read from stack
-- PC is correctly set to 0x1128 after AllocMem returns
-- Instruction at 0x1128: `adda.w 0x168, a7` (adjust stack)
-- Next instruction at 0x112c: `rts` (return from function)
+## Fix Applied
 
-**Problem**: After AllocMem returns to 0x1128, PC somehow jumps back to 0xff3a
-(AllocMem vector) at iteration 12779, then crashes at PC=0x0.
+Added `this.emulator.refillPrefetch()` after every `setRegister(16, ...)` call in LibraryTraps.ts:
+- Line 1656: Supervisor() function
+- Line 2805: Unimplemented exec function RTS
+- Line 2827: Unimplemented DOS function RTS
+- Line 3078: Normal library return (main fix)
+- Line 3262: AEDoor library return
+
+## Current Status
+
+Fix applied but Bulls still crashes. refillPrefetch() IS being called, but IRD still shows
+wrong opcode (0x4cdf instead of 0xdefc). Need to investigate:
+- Is refillPrefetch() working in WASM MOIRA module?
+- Is memory at 0x1128 actually corrupted?
+
+## Files Changed
+
+- `LibraryTraps.ts` - Added refillPrefetch() calls (5 locations)
+- `MoiraEmulator.ts:426` - Added logging to refillPrefetch()
 
 ## Next Steps
 
-1. **Trace stack state** after AllocMem - what's on stack when RTS at 0x112c executes?
-2. **Compare with vamos** - how does vamos handle this execution flow?
-3. **Check RTS handling** - is MOIRA correctly popping return address from stack?
-4. **Verify SP updates** - track SP through adda.w instruction
-
-## Files Changed (Session 31)
-
-- `CLAUDE.md:570-595` - Added vamos/amitools debugging guidance
-- `DoorLoader.ts:604-645` - Removed incorrect JSR patches
-- `handoff.md` - This file
+1. Check if memory at 0x1128 is corrupted
+2. Verify refillPrefetch() in WASM module works correctly
+3. May need to rebuild MOIRA WASM with refillPrefetch() support
 
 ## Session Stats
 
-Session 31 used 77K / 200K tokens (38.5%) - good progress, room for more work.
+Session 31: 102K / 200K tokens (51%) - excellent progress on root cause analysis!
