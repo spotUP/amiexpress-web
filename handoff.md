@@ -1,40 +1,39 @@
-# Handoff - 68K Door Emulation Complete (Session 34)
+# Handoff - Session 43
 
-## Status: All 68K Doors Working
+## Status: PETSCII Support Complete with Shift Mode
 
-All tested 68K doors exit cleanly after fixes in Sessions 32-34.
+### Completed This Session
 
-## Bugs Fixed
+**1. Comprehensive PETSCII Control Code Support**
+Completely rewrote `web/backend/src/utils/petscii.util.ts`:
+- Full shift mode support (0x0E=shifted/text, 0x8E=unshifted/graphics)
+- PUA mapping: 0xE000-0xE0FF (unshifted), 0xE100-0xE1FF (shifted)
+- All 16 C64 colors mapped to ANSI equivalents
+- Cursor movement codes (up/down/left/right/home)
+- Screen control (clear, insert, delete)
+- Reverse video (0x12 on, 0x92 off)
+- Function key handling (ignored in terminal context)
 
-### Bug 1: Buffer Zeroing Overlapped Pointers (Session 32)
-- Fix: Reduced zeroing from 200 to 172 bytes (DoorLoader.ts:601-608)
+### Previous Session Work (Preserved)
 
-### Bug 2: Stack Inside DATA Region (Session 33)
-- Fix: Place stack AFTER DATA segment like vamos (DoorLoader.ts:114-119)
+**PETSCII Bug Fix**: `.seq` files detected via `isPetsciiSeqFile()` check in `screen.handler.ts:915-920`
 
-### Bug 3: CODE-Only Programs (Session 34)
-- mtop/QuickNew are CODE-only (no DATA segment), causing fallback to wrong address
-- Fix: Place stack after CODE segment when no DATA (DoorLoader.ts:116-117)
+**C64 Terminal Support**: Auto-detection via telnet TTYPE, auto-skip graphics prompt, `getOutputEvent()` helper
 
-### Bug 4: SP Corruption False Positive (Session 34)
-- Programs like mtop allocate own stack via AllocMem (starts at 0x100000)
-- SP threshold was 0x100000, triggering false corruption detection
-- Fix: Increased threshold to 0x800000 (DoorLifecycleManager.ts:1154)
+**TypeScript Door PETSCII**: `BBSApi.ts` methods: `isPetsciiMode()`, `writePetscii()`, `writeAuto()`, `clearScreenAuto()`
 
-## Test Results (All Pass)
+**PETSCII Demo Door**: `web/backend/src/doors/petscii-demo/index.ts` with command `Commands/BBSCmd/PETSCII.info`
 
-| Door | Iterations | Exit |
-|------|------------|------|
-| who | 838 | 20 |
-| GetAnswer | 555 | 20 |
-| ByteKiller | 4014 | 0 |
-| Bulls | 18826 | 0 |
-| 5D-Edit | 23043 | 0 |
-| mtop | 947 | 0 |
-| QuickNew | 73 | 0 |
+### To Test
 
-## Key Files
+1. Restart server: `./dev/scripts/start-servers.sh`
+2. Connect and select **P** for PETSCII mode
+3. After login, type **PETSCII** to run the demo door
+4. Graphics should display correctly with proper shift mode handling
 
-- `web/backend/src/amiga-emulation/DoorLoader.ts` - Stack placement
-- `web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts` - SP threshold
-- `dev/scripts/validate-door-against-vamos.sh` - Validation script
+### Key Files Modified
+
+- `web/backend/src/utils/petscii.util.ts` - Complete rewrite with shift mode
+- `web/backend/src/handlers/screen.handler.ts` - PETSCII detection fix
+- `web/backend/src/handlers/command-handler/pre-login.ts` - C64 auto-detect
+- `web/backend/src/doors/BBSApi.ts` - PETSCII output methods
