@@ -4456,3 +4456,730 @@
 03-Dec-25 15:09 Door exit: GL
 03-Dec-25 15:09 Door: FR
 03-Dec-25 15:09 Door exit: FR
+03-Dec-25 15:12 Door: TELNET-FRONT
+03-Dec-25 15:12 Door exit: TELNET-FRONT
+03-Dec-25 15:12 Door: GL
+03-Dec-25 15:12 Door exit: GL
+03-Dec-25 15:12 Door: FR
+03-Dec-25 15:12 Door exit: FR
+03-Dec-25 15:19 Login: sysop
+03-Dec-25 20:42 Door: TELNET-FRONT
+03-Dec-25 20:42 Door exit: TELNET-FRONT
+03-Dec-25 20:42 Door: GL
+03-Dec-25 20:43 Door exit: GL
+03-Dec-25 20:43 Door: B
+03-Dec-25 20:43 Door exit: B
+03-Dec-25 20:49 Login: sysop
+03-Dec-25 20:50 Logoff: sysop
+03-Dec-25 20:51 Door: TELNET-FRONT
+03-Dec-25 20:51 Door exit: TELNET-FRONT
+03-Dec-25 20:51 Door: GL
+03-Dec-25 20:51 Door exit: GL
+03-Dec-25 20:51 Door: FR
+03-Dec-25 20:51 Door exit: FR
+03-Dec-25 20:58 Login: sysop
+03-Dec-25 21:02 Door: FR
+03-Dec-25 21:02 Door exit: FR
+03-Dec-25 21:03 Door: F
+03-Dec-25 21:03 Door exit: F
+03-Dec-25 21:03 Door: CS
+03-Dec-25 21:03 Door exit: CS
+03-Dec-25 21:03 Door: NSU
+03-Dec-25 21:03 Door exit: NSU
+03-Dec-25 21:03 Door: SCAN
+03-Dec-25 21:03 Door exit: SCAN
+03-Dec-25 21:03 Door: N
+03-Dec-25 21:03 Door exit: N
+03-Dec-25 21:04 Door: CS
+03-Dec-25 21:04 Door exit: CS
+03-Dec-25 23:09 Door: TELNET-FRONT
+03-Dec-25 23:09 Door exit: TELNET-FRONT
+03-Dec-25 23:18 Login: sysop
+03-Dec-25 23:18 Login: sysop
+03-Dec-25 23:18 Logoff: sysop
+03-Dec-25 23:57 Door: TELNET-FRONT
+03-Dec-25 23:57 Door exit: TELNET-FRONT
+03-Dec-25 23:57 Door: GL
+03-Dec-25 23:57 Door exit: GL
+03-Dec-25 23:57 Door: FR
+03-Dec-25 23:57 Door exit: FR
+04-Dec-25 00:25 Door: TELNET-FRONT
+04-Dec-25 00:25 Door exit: TELNET-FRONT
+04-Dec-25 00:25 Door: GL
+04-Dec-25 00:25 Door exit: GL
+04-Dec-25 00:25 Door: FR
+04-Dec-25 00:25 Door exit: FR
+04-Dec-25 00:26 Door: N
+04-Dec-25 00:26 Door exit: N
+04-Dec-25 00:26 Door: F
+04-Dec-25 00:26 Door exit: F
+04-Dec-25 00:35 Door: TELNET-FRONT
+04-Dec-25 00:35 Door exit: TELNET-FRONT
+04-Dec-25 00:48 Door: TELNET-FRONT
+04-Dec-25 00:48 Door exit: TELNET-FRONT
+04-Dec-25 00:48 Door: GL
+04-Dec-25 00:48 Door exit: GL
+04-Dec-25 00:48 Door: FR
+04-Dec-25 00:48 Door exit: FR
+04-Dec-25 00:48 Door: F
+04-Dec-25 00:48 Door exit: F
+04-Dec-25 00:48 Door: N
+04-Dec-25 00:48 Door exit: N
+04-Dec-25 00:50 Door: B
+04-Dec-25 00:50 Door exit: B
+04-Dec-25 00:50 Door: S
+04-Dec-25 00:50 Door exit: S
+04-Dec-25 00:59 Door: TELNET-FRONT
+04-Dec-25 00:59 Door exit: TELNET-FRONT
+04-Dec-25 00:59 Door: GL
+04-Dec-25 00:59 Door exit: GL
+04-Dec-25 00:59 Door: FR
+04-Dec-25 00:59 Door exit: FR
+04-Dec-25 01:08 Door: TELNET-FRONT
+04-Dec-25 01:08 Door exit: TELNET-FRONT
+04-Dec-25 01:08 Door: GL
+04-Dec-25 01:08 Door exit: GL
+04-Dec-25 01:08 Door: FR
+04-Dec-25 01:08 Door exit: FR
+04-Dec-25 01:14 Login: sysop
+04-Dec-25 01:17 Door: TELNET-FRONT
+04-Dec-25 01:17 Door exit: TELNET-FRONT
+04-Dec-25 01:18 Door: GL
+04-Dec-25 01:18 Door exit: GL
+04-Dec-25 01:18 Door: FR
+04-Dec-25 01:18 Door exit: FR
+04-Dec-25 01:18 Door: FR
+04-Dec-25 01:18 Door exit: FR
+04-Dec-25 01:22 Door: TELNET-FRONT
+04-Dec-25 01:22 Door exit: TELNET-FRONT
+04-Dec-25 01:23 Door: GL
+04-Dec-25 01:23 Door exit: GL
+04-Dec-25 01:23 Door: FR
+04-Dec-25 01:23 Door exit: FR
+04-Dec-25 01:24 Door: TELNET-FRONT
+04-Dec-25 01:24 Door exit: TELNET-FRONT
+04-Dec-25 01:25 Door: GL
+04-Dec-25 01:25 Door exit: GL
+04-Dec-25 01:25 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 01:25 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 01:25 Door exit: FR
+04-Dec-25 01:29 Door: TELNET-FRONT
+04-Dec-25 01:30 Door exit: TELNET-FRONT
+04-Dec-25 01:30 Door: GL
+04-Dec-25 01:30 Door exit: GL
+04-Dec-25 01:30 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 01:30 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 01:30 Door exit: FR
+04-Dec-25 02:06 Door: TELNET-FRONT
+04-Dec-25 02:06 Door exit: TELNET-FRONT
+04-Dec-25 02:14 Door: GL
+04-Dec-25 02:14 Door exit: GL
+04-Dec-25 02:14 Door: ARCL
+04-Dec-25 02:14 Door exit: ARCL
+04-Dec-25 02:14 Door: ASSN
+04-Dec-25 02:14 Door exit: ASSN
+04-Dec-25 02:14 Door: B
+04-Dec-25 02:14 Door exit: B
+04-Dec-25 02:15 Door: BBSC
+04-Dec-25 02:15 Door exit: BBSC
+04-Dec-25 02:15 Door: BCR
+04-Dec-25 02:15 Door exit: BCR
+04-Dec-25 02:15 Door: BORD
+04-Dec-25 02:15 Door exit: BORD
+04-Dec-25 02:15 Door: BRE
+04-Dec-25 02:15 Door exit: BRE
+04-Dec-25 02:15 Door: SIZE
+04-Dec-25 02:15 Door exit: SIZE
+04-Dec-25 02:15 Door: ARCL
+04-Dec-25 02:15 Door exit: ARCL
+04-Dec-25 02:15 Door: ASSN
+04-Dec-25 02:15 Door exit: ASSN
+04-Dec-25 02:15 Door: B
+04-Dec-25 02:15 Door exit: B
+04-Dec-25 02:15 Door: BBSC
+04-Dec-25 02:15 Door exit: BBSC
+04-Dec-25 02:15 Door: BCR
+04-Dec-25 02:15 Door exit: BCR
+04-Dec-25 02:15 Door: BORD
+04-Dec-25 02:15 Door exit: BORD
+04-Dec-25 02:16 Door: BRE
+04-Dec-25 02:16 Door exit: BRE
+04-Dec-25 02:16 Door: SIZE
+04-Dec-25 02:16 Door exit: SIZE
+04-Dec-25 02:16 Door: CTOP
+04-Dec-25 02:16 Door exit: CTOP
+04-Dec-25 02:16 Door: DARK
+04-Dec-25 02:16 Door exit: DARK
+04-Dec-25 02:16 Door: DEL
+04-Dec-25 02:16 Door exit: DEL
+04-Dec-25 02:16 Door: DKNS
+04-Dec-25 02:16 Door exit: DKNS
+04-Dec-25 02:16 Door: DMAS
+04-Dec-25 02:16 Door exit: DMAS
+04-Dec-25 02:16 Door: DMUD
+04-Dec-25 02:16 Door exit: DMUD
+04-Dec-25 02:16 Door: FALC
+04-Dec-25 02:16 Door exit: FALC
+04-Dec-25 02:16 Door: FHON
+04-Dec-25 02:16 Door exit: FHON
+04-Dec-25 02:16 Door: FISH
+04-Dec-25 02:16 Door exit: FISH
+04-Dec-25 02:16 Door: GGAM
+04-Dec-25 02:16 Door exit: GGAM
+04-Dec-25 02:16 Door: GL
+04-Dec-25 02:16 Door exit: GL
+04-Dec-25 02:17 Door: GWALL
+04-Dec-25 02:17 Door exit: GWALL
+04-Dec-25 02:17 Door: GWAR
+04-Dec-25 02:17 Door exit: GWAR
+04-Dec-25 02:17 Door: HACK
+04-Dec-25 02:17 Door exit: HACK
+04-Dec-25 02:17 Door: JUNK
+04-Dec-25 02:17 Door exit: JUNK
+04-Dec-25 02:17 Door: LEGN
+04-Dec-25 02:17 Door exit: LEGN
+04-Dec-25 02:17 Door: LINKMENU
+04-Dec-25 02:17 Door exit: LINKMENU
+04-Dec-25 02:18 Door: LINKWALL
+04-Dec-25 02:18 Door exit: LINKWALL
+04-Dec-25 02:18 Door: LMON
+04-Dec-25 02:18 Door exit: LMON
+04-Dec-25 02:18 Door: LORD
+04-Dec-25 02:18 Door exit: LORD
+04-Dec-25 02:18 Door: LORD2
+04-Dec-25 02:18 Door exit: LORD2
+04-Dec-25 02:18 Door: LUNA
+04-Dec-25 02:18 Door exit: LUNA
+04-Dec-25 02:18 Door: MEGA
+04-Dec-25 02:18 Door exit: MEGA
+04-Dec-25 02:18 Door: MMOT
+04-Dec-25 02:18 Door exit: MMOT
+04-Dec-25 02:18 Door: MRC
+04-Dec-25 02:18 Door exit: MRC
+04-Dec-25 02:18 Door: MRCSTAT1
+04-Dec-25 02:18 Door exit: MRCSTAT1
+04-Dec-25 02:18 Door: MRCSTAT2
+04-Dec-25 02:18 Door exit: MRCSTAT2
+04-Dec-25 02:18 Door: MZKL
+04-Dec-25 02:18 Door exit: MZKL
+04-Dec-25 02:18 Door: NETR
+04-Dec-25 02:18 Door exit: NETR
+04-Dec-25 02:19 Door: OLM
+04-Dec-25 02:26 Door: TELNET-FRONT
+04-Dec-25 02:26 Door exit: TELNET-FRONT
+04-Dec-25 02:28 Door: TELNET-FRONT
+04-Dec-25 02:28 Door exit: TELNET-FRONT
+04-Dec-25 02:28 Door: GL
+04-Dec-25 02:28 Door exit: GL
+04-Dec-25 02:37 Door: TELNET-FRONT
+04-Dec-25 02:37 Door exit: TELNET-FRONT
+04-Dec-25 02:37 Door: TELNET-FRONT
+04-Dec-25 02:37 Door exit: TELNET-FRONT
+04-Dec-25 02:37 Door: GL
+04-Dec-25 02:37 Door exit: GL
+04-Dec-25 02:37 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 02:37 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 02:37 Door exit: FR
+04-Dec-25 02:37 Door: FR
+04-Dec-25 02:37 Door exit: FR
+04-Dec-25 02:38 Door: FR
+04-Dec-25 02:38 Door exit: FR
+04-Dec-25 02:38 Door: FR
+04-Dec-25 02:38 Door exit: FR
+04-Dec-25 02:45 Door: TELNET-FRONT
+04-Dec-25 02:45 Door exit: TELNET-FRONT
+04-Dec-25 02:45 Door: GL
+04-Dec-25 02:45 Door exit: GL
+04-Dec-25 02:57 Door: TELNET-FRONT
+04-Dec-25 02:57 Door exit: TELNET-FRONT
+04-Dec-25 02:58 Door: GL
+04-Dec-25 02:58 Door exit: GL
+04-Dec-25 02:59 Door: TELNET-FRONT
+04-Dec-25 03:00 Door exit: TELNET-FRONT
+04-Dec-25 03:04 Door: TELNET-FRONT
+04-Dec-25 03:04 Door exit: TELNET-FRONT
+04-Dec-25 03:04 Door: GL
+04-Dec-25 03:04 Door exit: GL
+04-Dec-25 03:04 Door: FR
+04-Dec-25 03:05 Door exit: FR
+04-Dec-25 03:12 Door: TELNET-FRONT
+04-Dec-25 03:12 Door exit: TELNET-FRONT
+04-Dec-25 03:14 Door: GL
+04-Dec-25 03:14 Door exit: GL
+04-Dec-25 03:14 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 Door exit: FR
+04-Dec-25 03:14 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 Door exit: FR
+04-Dec-25 03:14 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 03:14 Door exit: FR
+04-Dec-25 05:10 Logoff: kurt
+04-Dec-25 07:00 Door: TELNET-FRONT
+04-Dec-25 07:00 Door exit: TELNET-FRONT
+04-Dec-25 07:00 Door: TELNET-FRONT
+04-Dec-25 07:00 Door exit: TELNET-FRONT
+04-Dec-25 07:00 Door: GL
+04-Dec-25 07:00 Door exit: GL
+04-Dec-25 07:00 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 07:00 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 07:00 Door exit: FR
+04-Dec-25 07:18 Door: TELNET-FRONT
+04-Dec-25 07:18 Door exit: TELNET-FRONT
+04-Dec-25 07:26 Door: TELNET-FRONT
+04-Dec-25 07:26 Door exit: TELNET-FRONT
+04-Dec-25 07:28 Door: TELNET-FRONT
+04-Dec-25 07:28 Door exit: TELNET-FRONT
+04-Dec-25 07:31 Door: GL
+04-Dec-25 07:31 Door exit: GL
+04-Dec-25 07:31 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 07:31 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 07:31 Door exit: FR
+04-Dec-25 08:03 Login: sysop
+04-Dec-25 08:23 Door: TELNET-FRONT
+04-Dec-25 08:23 Door exit: TELNET-FRONT
+04-Dec-25 08:23 Door: TELNET-FRONT
+04-Dec-25 08:23 Door exit: TELNET-FRONT
+04-Dec-25 08:34 Door: TELNET-FRONT
+04-Dec-25 08:34 Door exit: TELNET-FRONT
+04-Dec-25 08:39 Door: TELNET-FRONT
+04-Dec-25 08:39 Door exit: TELNET-FRONT
+04-Dec-25 08:39 Door: TELNET-FRONT
+04-Dec-25 08:39 Door exit: TELNET-FRONT
+04-Dec-25 09:02 Door: TELNET-FRONT
+04-Dec-25 09:02 Door exit: TELNET-FRONT
+04-Dec-25 09:20 Door: TELNET-FRONT
+04-Dec-25 09:20 Door exit: TELNET-FRONT
+04-Dec-25 09:21 Door: TELNET-FRONT
+04-Dec-25 09:21 Door exit: TELNET-FRONT
+04-Dec-25 09:30 Door: TELNET-FRONT
+04-Dec-25 09:30 Door exit: TELNET-FRONT
+04-Dec-25 09:30 Door: GL
+04-Dec-25 09:30 Door exit: GL
+04-Dec-25 09:30 Door: PETSCII
+04-Dec-25 09:33 Door: TELNET-FRONT
+04-Dec-25 09:33 Door exit: TELNET-FRONT
+04-Dec-25 09:38 Door: TELNET-FRONT
+04-Dec-25 09:38 Door exit: TELNET-FRONT
+04-Dec-25 09:44 Door: TELNET-FRONT
+04-Dec-25 09:45 Door exit: TELNET-FRONT
+04-Dec-25 09:47 Door: TELNET-FRONT
+04-Dec-25 09:47 Door exit: TELNET-FRONT
+04-Dec-25 10:07 Door: TELNET-FRONT
+04-Dec-25 10:08 Door exit: TELNET-FRONT
+04-Dec-25 10:13 Door: TELNET-FRONT
+04-Dec-25 10:13 Door exit: TELNET-FRONT
+04-Dec-25 10:24 Door: TELNET-FRONT
+04-Dec-25 10:24 Door exit: TELNET-FRONT
+04-Dec-25 10:29 Door: TELNET-FRONT
+04-Dec-25 10:29 Door exit: TELNET-FRONT
+04-Dec-25 10:34 Door: TELNET-FRONT
+04-Dec-25 10:35 Door exit: TELNET-FRONT
+04-Dec-25 10:50 Door: TELNET-FRONT
+04-Dec-25 10:50 Door exit: TELNET-FRONT
+04-Dec-25 10:50 Door: GL
+04-Dec-25 10:50 Door exit: GL
+04-Dec-25 10:50 Door: GA
+04-Dec-25 10:50 Door exit: GA
+04-Dec-25 10:50 Door: GA
+04-Dec-25 10:50 Door exit: GA
+04-Dec-25 10:57 Door: TELNET-FRONT
+04-Dec-25 10:57 Door exit: TELNET-FRONT
+04-Dec-25 11:02 Door: TELNET-FRONT
+04-Dec-25 11:02 Door exit: TELNET-FRONT
+04-Dec-25 11:07 Door: TELNET-FRONT
+04-Dec-25 11:07 Door exit: TELNET-FRONT
+04-Dec-25 11:11 Door: TELNET-FRONT
+04-Dec-25 11:11 Door exit: TELNET-FRONT
+04-Dec-25 11:13 Door: TELNET-FRONT
+04-Dec-25 11:13 Door exit: TELNET-FRONT
+04-Dec-25 11:21 Door: TELNET-FRONT
+04-Dec-25 11:21 Door exit: TELNET-FRONT
+04-Dec-25 11:41 Door: TELNET-FRONT
+04-Dec-25 11:41 Door exit: TELNET-FRONT
+04-Dec-25 11:44 Door: GL
+04-Dec-25 11:44 Door exit: GL
+04-Dec-25 11:44 Door: WHO
+04-Dec-25 11:44 Door exit: WHO
+04-Dec-25 11:49 Door: TELNET-FRONT
+04-Dec-25 11:49 Door exit: TELNET-FRONT
+04-Dec-25 11:50 Door: GL
+04-Dec-25 11:50 Door exit: GL
+04-Dec-25 11:50 Door: ULIST
+04-Dec-25 11:50 Door exit: ULIST
+04-Dec-25 11:57 Door: TELNET-FRONT
+04-Dec-25 11:57 Door exit: TELNET-FRONT
+04-Dec-25 11:57 Door: GL
+04-Dec-25 11:57 Door exit: GL
+04-Dec-25 11:57 Door: ULIST
+04-Dec-25 11:57 Door exit: ULIST
+04-Dec-25 12:04 Login: sysop
+04-Dec-25 12:09 Door: N
+04-Dec-25 12:09 Door exit: N
+04-Dec-25 12:09 Door: N
+04-Dec-25 12:09 Door exit: N
+04-Dec-25 12:09 Door: N
+04-Dec-25 12:09 Door exit: N
+04-Dec-25 12:09 Door: ULIST
+04-Dec-25 12:09 Door exit: ULIST
+04-Dec-25 12:23 Door: TELNET-FRONT
+04-Dec-25 12:23 Door exit: TELNET-FRONT
+04-Dec-25 12:24 Door: GL
+04-Dec-25 12:24 Door exit: GL
+04-Dec-25 12:24 Door: ULIST
+04-Dec-25 12:24 Door exit: ULIST
+04-Dec-25 12:24 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 12:24 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 12:24 Door exit: FR
+04-Dec-25 12:25 Door: B
+04-Dec-25 12:25 Door exit: B
+04-Dec-25 12:31 Login: sysop
+04-Dec-25 12:35 Door: TELNET-FRONT
+04-Dec-25 12:35 Door exit: TELNET-FRONT
+04-Dec-25 12:35 Door: GL
+04-Dec-25 12:35 Door exit: GL
+04-Dec-25 12:35 Door: ULIST
+04-Dec-25 12:35 Door exit: ULIST
+04-Dec-25 12:36 Door: ULIST
+04-Dec-25 12:36 Door exit: ULIST
+04-Dec-25 12:36 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 12:36 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 12:36 Door exit: FR
+04-Dec-25 12:36 Door: GA
+04-Dec-25 12:36 Door exit: GA
+04-Dec-25 12:42 Login: sysop
+04-Dec-25 12:48 Door: TELNET-FRONT
+04-Dec-25 12:48 Door exit: TELNET-FRONT
+04-Dec-25 12:48 Door: GL
+04-Dec-25 12:48 Door exit: GL
+04-Dec-25 12:48 Door: ULIST
+04-Dec-25 12:48 Door exit: ULIST
+04-Dec-25 12:55 Door: S
+04-Dec-25 12:55 Door exit: S
+04-Dec-25 12:56 Door: TELNET-FRONT
+04-Dec-25 12:56 Door exit: TELNET-FRONT
+04-Dec-25 12:56 Door: GL
+04-Dec-25 12:56 Door exit: GL
+04-Dec-25 12:57 Door: ULIST
+04-Dec-25 12:57 Door exit: ULIST
+04-Dec-25 13:04 Login: sysop
+04-Dec-25 13:07 Door: TELNET-FRONT
+04-Dec-25 13:07 Door exit: TELNET-FRONT
+04-Dec-25 13:07 Door: TELNET-FRONT
+04-Dec-25 13:07 Door exit: TELNET-FRONT
+04-Dec-25 13:07 Door: GL
+04-Dec-25 13:07 Door exit: GL
+04-Dec-25 13:07 Door: ULIST
+04-Dec-25 13:07 Door exit: ULIST
+04-Dec-25 13:09 Door: TELNET-FRONT
+04-Dec-25 13:09 Door exit: TELNET-FRONT
+04-Dec-25 13:10 Door: GL
+04-Dec-25 13:10 Door exit: GL
+04-Dec-25 13:10 Door: ULIST
+04-Dec-25 13:10 Door exit: ULIST
+04-Dec-25 13:12 Door: TELNET-FRONT
+04-Dec-25 13:12 Door exit: TELNET-FRONT
+04-Dec-25 13:12 Door: GL
+04-Dec-25 13:12 Door exit: GL
+04-Dec-25 13:12 Door: ULIST
+04-Dec-25 13:12 Door exit: ULIST
+04-Dec-25 13:13 Door: ULIST
+04-Dec-25 13:13 Door exit: ULIST
+04-Dec-25 13:14 Door: TELNET-FRONT
+04-Dec-25 13:14 Door exit: TELNET-FRONT
+04-Dec-25 13:14 Door: GL
+04-Dec-25 13:14 Door exit: GL
+04-Dec-25 13:14 Door: ULIST
+04-Dec-25 13:14 Door exit: ULIST
+04-Dec-25 13:16 Door: TELNET-FRONT
+04-Dec-25 13:16 Door exit: TELNET-FRONT
+04-Dec-25 13:16 Door: GL
+04-Dec-25 13:16 Door exit: GL
+04-Dec-25 13:16 Door: ULIST
+04-Dec-25 13:16 Door exit: ULIST
+04-Dec-25 13:23 Door: TELNET-FRONT
+04-Dec-25 13:24 Door exit: TELNET-FRONT
+04-Dec-25 13:39 Door: GL
+04-Dec-25 13:39 Door exit: GL
+04-Dec-25 13:39 Door: WHAT
+04-Dec-25 13:39 Door exit: WHAT
+04-Dec-25 13:47 Login: sysop
+04-Dec-25 13:51 Door: TELNET-FRONT
+04-Dec-25 13:51 Door exit: TELNET-FRONT
+04-Dec-25 13:54 Door: GL
+04-Dec-25 13:54 Door exit: GL
+04-Dec-25 13:54 Door: B
+04-Dec-25 13:54 Door exit: B
+04-Dec-25 13:54 Door: N
+04-Dec-25 13:54 Door exit: N
+04-Dec-25 13:55 Door: WALL
+04-Dec-25 13:55 Door exit: WALL
+04-Dec-25 13:55 Door: WALL
+04-Dec-25 13:55 Door exit: WALL
+04-Dec-25 14:02 Login: sysop
+04-Dec-25 16:04 Door: TELNET-FRONT
+04-Dec-25 16:04 Door exit: TELNET-FRONT
+04-Dec-25 16:04 Door: TELNET-FRONT
+04-Dec-25 16:04 Door exit: TELNET-FRONT
+04-Dec-25 16:04 Door: GL
+04-Dec-25 16:04 Door exit: GL
+04-Dec-25 16:04 Door: ULIST
+04-Dec-25 16:04 Door exit: ULIST
+04-Dec-25 16:06 Login: sysop
+04-Dec-25 16:31 Door: TELNET-FRONT
+04-Dec-25 16:31 Door exit: TELNET-FRONT
+04-Dec-25 16:31 Door: GL
+04-Dec-25 16:31 Door exit: GL
+04-Dec-25 16:31 Door: WHO
+04-Dec-25 16:31 Door exit: WHO
+04-Dec-25 16:32 Door: GA
+04-Dec-25 16:32 Door exit: GA
+04-Dec-25 16:32 Door: RTW
+04-Dec-25 16:32 Door exit: RTW
+04-Dec-25 16:32 Door: ULIST
+04-Dec-25 16:32 Door exit: ULIST
+04-Dec-25 16:33 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 16:33 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 16:33 Door exit: FR
+04-Dec-25 16:33 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 16:33 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 16:33 Door exit: FR
+04-Dec-25 16:38 Login: sysop
+04-Dec-25 16:49 Door: TELNET-FRONT
+04-Dec-25 16:49 Door exit: TELNET-FRONT
+04-Dec-25 16:49 Door: GL
+04-Dec-25 16:49 Door exit: GL
+04-Dec-25 16:49 Door: ULIST
+04-Dec-25 16:49 Door exit: ULIST
+04-Dec-25 16:56 Login: sysop
+04-Dec-25 17:13 Door: TELNET-FRONT
+04-Dec-25 17:13 Door exit: TELNET-FRONT
+04-Dec-25 17:13 Door: GL
+04-Dec-25 17:13 Door exit: GL
+04-Dec-25 17:13 Door: ULIST
+04-Dec-25 17:13 Door exit: ULIST
+04-Dec-25 17:14 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 17:14 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 17:14 Door exit: FR
+04-Dec-25 17:15 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 17:15 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 17:15 Door exit: FR
+04-Dec-25 17:21 Login: sysop
+04-Dec-25 17:32 Door: PETSCII
+04-Dec-25 18:26 Door: TELNET-FRONT
+04-Dec-25 18:26 Door exit: TELNET-FRONT
+04-Dec-25 18:30 Door: TELNET-FRONT
+04-Dec-25 18:30 Door exit: TELNET-FRONT
+04-Dec-25 18:30 Door: GL
+04-Dec-25 18:30 Door exit: GL
+04-Dec-25 18:31 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 Door exit: FR
+04-Dec-25 18:31 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 Door exit: FR
+04-Dec-25 18:31 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 	Directory Scan with AquaScan by Aquarius
+
+04-Dec-25 18:31 Door exit: FR
+04-Dec-25 18:38 Login: sysop
+04-Dec-25 18:46 Door: TELNET-FRONT
+04-Dec-25 18:46 Door exit: TELNET-FRONT
+04-Dec-25 18:49 Door: TELNET-FRONT
+04-Dec-25 18:49 Door exit: TELNET-FRONT
+04-Dec-25 18:54 Door: TELNET-FRONT
+04-Dec-25 18:54 Door exit: TELNET-FRONT
+04-Dec-25 19:12 Door: TELNET-FRONT
+04-Dec-25 19:12 Door exit: TELNET-FRONT
+04-Dec-25 19:32 Door: TELNET-FRONT
+04-Dec-25 19:32 Door exit: TELNET-FRONT
+05-Dec-25 06:58 Door: TELNET-FRONT
+05-Dec-25 06:58 Door exit: TELNET-FRONT
+05-Dec-25 07:06 Login: sysop
+05-Dec-25 07:17 Door: TELNET-FRONT
+05-Dec-25 07:17 Door exit: TELNET-FRONT
+05-Dec-25 07:17 Door: GL
+05-Dec-25 07:17 Door exit: GL
+05-Dec-25 07:17 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 07:17 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 07:17 Door exit: FR
+05-Dec-25 07:18 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 07:18 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 07:18 Door exit: FR
+05-Dec-25 07:24 Login: sysop
+05-Dec-25 08:04 Door: TELNET-FRONT
+05-Dec-25 08:04 Door exit: TELNET-FRONT
+05-Dec-25 08:04 Door: GL
+05-Dec-25 08:04 Door exit: GL
+05-Dec-25 08:04 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:04 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:04 Door exit: FR
+05-Dec-25 08:10 Door: TELNET-FRONT
+05-Dec-25 08:10 Door exit: TELNET-FRONT
+05-Dec-25 08:10 Door: GL
+05-Dec-25 08:10 Door exit: GL
+05-Dec-25 08:10 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:10 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:10 Door exit: FR
+05-Dec-25 08:17 Login: sysop
+05-Dec-25 08:21 Door: TELNET-FRONT
+05-Dec-25 08:21 Door exit: TELNET-FRONT
+05-Dec-25 08:22 Door: GL
+05-Dec-25 08:22 Door exit: GL
+05-Dec-25 08:22 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:22 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:22 Door exit: FR
+05-Dec-25 08:22 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:22 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:22 Door exit: FR
+05-Dec-25 08:29 Login: sysop
+05-Dec-25 08:45 Door: TELNET-FRONT
+05-Dec-25 08:45 Door exit: TELNET-FRONT
+05-Dec-25 08:45 Door: GL
+05-Dec-25 08:45 Door exit: GL
+05-Dec-25 08:45 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:45 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:45 Door exit: FR
+05-Dec-25 08:45 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:45 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 08:45 Door exit: FR
+05-Dec-25 08:47 Door: TELNET-FRONT
+05-Dec-25 08:47 Door exit: TELNET-FRONT
+05-Dec-25 09:04 Door: TELNET-FRONT
+05-Dec-25 09:04 Door exit: TELNET-FRONT
+05-Dec-25 09:05 Door: GL
+05-Dec-25 09:05 Door exit: GL
+05-Dec-25 09:05 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:05 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:05 Door exit: FR
+05-Dec-25 09:11 Login: sysop
+05-Dec-25 09:19 Door: TELNET-FRONT
+05-Dec-25 09:19 Door exit: TELNET-FRONT
+05-Dec-25 09:19 Door: GL
+05-Dec-25 09:19 Door exit: GL
+05-Dec-25 09:20 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:20 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:20 Door exit: FR
+05-Dec-25 09:25 Door: TELNET-FRONT
+05-Dec-25 09:25 Door exit: TELNET-FRONT
+05-Dec-25 09:25 Door: GL
+05-Dec-25 09:26 Door exit: GL
+05-Dec-25 09:26 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:26 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:26 Door exit: FR
+05-Dec-25 09:29 Door: TELNET-FRONT
+05-Dec-25 09:29 Door exit: TELNET-FRONT
+05-Dec-25 09:29 Door: GL
+05-Dec-25 09:29 Door exit: GL
+05-Dec-25 09:34 Door: TELNET-FRONT
+05-Dec-25 09:34 Door exit: TELNET-FRONT
+05-Dec-25 09:34 Door: GL
+05-Dec-25 09:34 Door exit: GL
+05-Dec-25 09:34 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:34 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 09:34 Door exit: FR
+05-Dec-25 09:41 Login: sysop
+05-Dec-25 10:01 Door: TELNET-FRONT
+05-Dec-25 10:01 Door exit: TELNET-FRONT
+05-Dec-25 10:02 Door: GL
+05-Dec-25 10:02 Door exit: GL
+05-Dec-25 10:03 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 10:03 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 10:03 Door exit: FR
+05-Dec-25 10:03 Door: FR
+	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 10:03 	Directory Scan with AquaScan by Aquarius
+
+05-Dec-25 10:03 Door exit: FR
+05-Dec-25 10:11 Login: sysop
