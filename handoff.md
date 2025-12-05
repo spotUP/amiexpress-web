@@ -115,7 +115,14 @@ grep -i "error\|fail\|not found" logs/door-68k-AquaScan*
 **Status**: Render will auto-deploy backend (commit 0ceaf530 enabled autoDeploy)
 
 **Commits in this deployment**:
-- fa97aac7: Initial deployment fixes
-- 214dcdcb: SDK preview frontend build fix
+- fa97aac7: Initial deployment fixes (SDK/admin builds, SYSOP menu)
+- 214dcdcb: SDK preview frontend build fix (CRITICAL)
 - 0ceaf530: Auto-deploy enabled for backend
 - 7ade0379: Repository cleanup (removed 157KB temp files)
+- 20630a21: Conf*/Files/ .gitkeep (file uploads)
+- d408684e: Node*/ .gitkeep (door compatibility - CRITICAL)
+
+**Critical Directory Fixes**:
+- Conf*/Files/ now preserved (file uploads will work)
+- Node0-40/ now preserved (DOOR.SYS generation will work)
+- All 541 door files deployed (lowercase 'doors/' in git)
