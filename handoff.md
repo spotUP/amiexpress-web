@@ -1,39 +1,91 @@
-# Handoff - Session 43
+# Handoff - Session 46 Continued
 
-## Status: PETSCII Support Complete with Shift Mode
+## Status: System-Wide Case-Insensitive File Operations - Migration Complete
 
-### Completed This Session
+### Latest Work (Session 46 - Current)
 
-**1. Comprehensive PETSCII Control Code Support**
-Completely rewrote `web/backend/src/utils/petscii.util.ts`:
-- Full shift mode support (0x0E=shifted/text, 0x8E=unshifted/graphics)
-- PUA mapping: 0xE000-0xE0FF (unshifted), 0xE100-0xE1FF (shifted)
-- All 16 C64 colors mapped to ANSI equivalents
-- Cursor movement codes (up/down/left/right/home)
-- Screen control (clear, insert, delete)
-- Reverse video (0x12 on, 0x92 off)
-- Function key handling (ignored in terminal context)
+**Bug #9: AquaScan Door Path Case Sensitivity - CRITICAL**
 
-### Previous Session Work (Preserved)
+**Problem**: AquaScan showed "Nothing found!" because door binary couldn't be loaded
+**Root Cause**: amigaDoorManager.ts hardcoded lowercase directory names in assigns (line 120: `'Doors:': path.join(this.bbsRoot, 'Doors')`)
+**Actual Directory**: `/Users/spot/Code/amiexpress-web/Doors/` (capital D)
+**Attempted Path**: `/Users/spot/Code/amiexpress-web/doors/aquascan/AquaScan` (lowercase d)
 
-**PETSCII Bug Fix**: `.seq` files detected via `isPetsciiSeqFile()` check in `screen.handler.ts:915-920`
+**How Found**: Checked logs as specified in updated CLAUDE.md debugging protocol:
+```bash
+grep -i "error\|fail\|not found" logs/door-68k-AquaScan* | tail -30
+# Found: Failed to read binary: .../doors/aquascan/AquaScan (lowercase!)
+```
 
-**C64 Terminal Support**: Auto-detection via telnet TTYPE, auto-skip graphics prompt, `getOutputEvent()` helper
+**Fix**: `web/backend/src/doors/amigaDoorManager.ts:118-140`
+- Changed `initializeAssigns()` to use `resolveCaseInsensitivePath()` utility
+- Now correctly finds `Doors/` (capital D) instead of hardcoding lowercase `doors/`
+- Applied to all assigns: Doors, Screens, Storage, NODE0-3, Protocols, Utils, Libs
 
-**TypeScript Door PETSCII**: `BBSApi.ts` methods: `isPetsciiMode()`, `writePetscii()`, `writeAuto()`, `clearScreenAuto()`
+**Files Modified**:
+- `web/backend/src/doors/amigaDoorManager.ts:118-140` - Case-insensitive assign resolution
+- `CLAUDE.md:15-58` - Added 68K debugging protocol (ALWAYS CHECK LOGS FIRST)
 
-**PETSCII Demo Door**: `web/backend/src/doors/petscii-demo/index.ts` with command `Commands/BBSCmd/PETSCII.info`
+### CLAUDE.md Update - 68K Debugging Protocol
 
-### To Test
+Added critical section at top of CLAUDE.md (lines 15-58):
 
-1. Restart server: `./dev/scripts/start-servers.sh`
-2. Connect and select **P** for PETSCII mode
-3. After login, type **PETSCII** to run the demo door
-4. Graphics should display correctly with proper shift mode handling
+**68K DOOR EMULATION DEBUGGING - ALWAYS CHECK LOGS FIRST**
 
-### Key Files Modified
+1. **MANDATORY**: Check existing logs BEFORE implementing new features
+2. **Log files**: `logs/door-68k-{DOORNAME}-{TIMESTAMP}.-N{NODE}.log`
+3. **Find logs**: `ls -t logs/door-68k-{DOORNAME}* | head -3`
+4. **Search for errors**: `grep -i "error\|fail\|not found" logs/door-68k-*`
+5. **Look for**: File not found, ENVSTAT issues, assigns, XIM messages, AmigaDOS errors
 
-- `web/backend/src/utils/petscii.util.ts` - Complete rewrite with shift mode
-- `web/backend/src/handlers/screen.handler.ts` - PETSCII detection fix
-- `web/backend/src/handlers/command-handler/pre-login.ts` - C64 auto-detect
-- `web/backend/src/doors/BBSApi.ts` - PETSCII output methods
+**Why This Matters**: I wasted time implementing new XIM debug logging when existing logs already showed the error. This protocol prevents that.
+
+### Previous Fixes (Session 46)
+
+**Bugs 1-4**: BBS path resolution, ARGS tooltype, Context-aware DT_NAME, ENVSTAT
+**Bug 5**: FR command was disabled (re-enabled in internal-commands.ts)
+**Bug 6**: Dir parser bug - variable-width file sizes (adopted express.e technique)
+**Bug 7**: Stuck door processes (aggressive 3-stage kill in batch-scheduler.ts)
+**Bug 8**: XIM debug logging added (but wasn't needed - logs already existed!)
+
+### Key Files
+
+**Door Loading**:
+- `web/backend/src/doors/amigaDoorManager.ts` - FIXED: Case-insensitive assigns
+- `web/backend/src/utils/fs-amiga.util.js` - Case-insensitive path resolution utilities
+
+**Logging**:
+- `logs/door-68k-{DOORNAME}-{TIMESTAMP}.-N{NODE}.log` - Per-door execution logs
+- `web/backend/src/amiga-emulation/DoorLogger.ts` - Door logging class
+
+**Documentation**:
+- `CLAUDE.md:15-58` - NEW: 68K debugging protocol
+
+### Testing
+
+**Logs Checked**:
+```bash
+ls -lS logs/door-68k-AquaScan* | head -3
+# Found largest logs with most detail
+
+grep -i "error\|fail\|not found" logs/door-68k-AquaScan*
+# Result: ENOENT: no such file or directory, open '.../doors/aquascan/AquaScan'
+#         (lowercase 'doors' - FOUND THE BUG!)
+```
+
+**System-Wide Solution COMPLETE**:
+1. Created `web/backend/src/utils/amigafs.ts` - comprehensive wrapper with 22 functions
+2. Added missing functions found in codebase: chmodSync, rmSync, openSync, truncateSync, utimesSync, linkSync, symlinkSync, readlinkSync
+3. Created migration guide: `Documentation/3-Developers/AMIGAFS_MIGRATION.md`
+4. Updated CLAUDE.md to MANDATE amigafs usage (lines 114-148, now lists all 22 functions)
+5. Executed migration script on priority files (6 files migrated)
+6. Fixed import paths (../../utils/amigafs from nested directories)
+7. TypeScript compilation: PASSES with no errors
+8. Tests: ALL PASS
+   - test-amigafs.ts: Basic case-insensitivity (Doors/doors/DOORS)
+   - test-amigafs-extreme.ts: Every character case-insensitive (aQuAscan.000)
+   - test-amigafs-complete.ts: All 20 functions tested, 100% pass rate
+
+**Result**: Every character in paths is case-insensitive. aMiGa.eXe = AMIGA.exe = amiga.EXE
+
+**Next**: Test AquaScan FR command with live server
