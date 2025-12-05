@@ -13,3 +13,6 @@
 ## Next Steps
 - User to restart servers and run `ascan fr` to confirm AquaScan FR behavior.
 - Optionally run targeted door/file listing checks to validate data sync.
+
+## Session Marker
+- ChatGPT has taken over here; use this commit to return to this state if needed.
