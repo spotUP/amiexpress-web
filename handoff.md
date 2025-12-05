@@ -116,11 +116,20 @@ grep -i "error\|fail\|not found" logs/door-68k-AquaScan*
 
 **Commits in this deployment**:
 - fa97aac7: Initial deployment fixes (SDK/admin builds, SYSOP menu)
-- 214dcdcb: SDK preview frontend build fix (CRITICAL)
+- 214dcdcb: SDK preview frontend build fix
 - 0ceaf530: Auto-deploy enabled for backend
 - 7ade0379: Repository cleanup (removed 157KB temp files)
 - 20630a21: Conf*/Files/ .gitkeep (file uploads)
 - d408684e: Node*/ .gitkeep (door compatibility - CRITICAL)
+- ddd970e2: Terminal package build fix (CRITICAL - fixes SDK preview build)
+
+**Build Order Fix (ddd970e2)**:
+1. packages/terminal (shared terminal components) - NEW
+2. sdk (door SDK)
+3. sdk/tools/preview/frontend (depends on terminal)
+4. web/frontend (depends on terminal)
+5. web/config-app (admin UI)
+6. web/backend (backend server)
 
 **Critical Directory Fixes**:
 - Conf*/Files/ now preserved (file uploads will work)
