@@ -110,5 +110,12 @@ grep -i "error\|fail\|not found" logs/door-68k-AquaScan*
 
 **Result**: Every character in paths is case-insensitive. aMiGa.eXe = AMIGA.exe = amiga.EXE
 
-**Deployed**: All Session 46 fixes committed (fa97aac7) and pushed to GitHub
-**Status**: Awaiting Render rebuild, then test live site
+**Deployed**: All Session 46 fixes committed and pushed to GitHub
+**Latest Commit**: 7ade0379 (repository cleanup + all fixes)
+**Status**: Render will auto-deploy backend (commit 0ceaf530 enabled autoDeploy)
+
+**Commits in this deployment**:
+- fa97aac7: Initial deployment fixes
+- 214dcdcb: SDK preview frontend build fix
+- 0ceaf530: Auto-deploy enabled for backend
+- 7ade0379: Repository cleanup (removed 157KB temp files)
