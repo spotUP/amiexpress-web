@@ -24,3 +24,9 @@
   - Latest log: `ls -t logs/door-68k-AquaScan* | head -1` then `cat <file>`
   - Backend snippet: `tail -n 200 logs/backend.log`
 - Harness alternative (needs full access): `TMPDIR=$PWD/tmp web/backend/node_modules/.bin/tsx web/backend/src/scripts/run-amiga-door.ts Doors/aquascan/AquaScan.000 1 --doortype XIM --doorId FR`
+
+## Session Rules (per user)
+- Only focus on fixing AquaScan FR; no other scope.
+- No door-specific hacks; solution must be generic and correct for all doors.
+- Follow express.e and provided docs; no guessing or speculative changes.
+- Use real evidence (logs, vAmiga/Vamos) to match real Amiga behavior before changes.
