@@ -1,20 +1,26 @@
 # Handoff - Session 46 Continued
 
-## Status: Live Site Fixes + Case-Insensitive File System - DEPLOYED
+## Status: All Fixes Deployed to Production - TESTING PHASE
 
 ### Latest Work (Session 46 - Current)
 
-**CRITICAL LIVE SITE FIXES - DEPLOYED**:
+**CRITICAL LIVE SITE FIXES - DEPLOYED (commit fa97aac7)**:
 1. Fixed render.yaml to build SDK, admin, and frontend for unified deployment
-   - SDK route now accessible: http://bbs.uprough.net/sdk/
-   - Admin system page now accessible: http://bbs.uprough.net/admin/system
+   - SDK route: http://bbs.uprough.net/sdk/ (should work after Render rebuild)
+   - Admin system page: http://bbs.uprough.net/admin/system (should work after Render rebuild)
    - All frontends built during deployment
 
-2. User Editor Already Implemented:
-   - Available as **Command 1** from main menu (sysop-only)
+2. SYSOP Menu Fixed:
+   - Now lists all 6 numbered internal commands (0-5)
+   - Command 1: Account Editing (user editor - already implemented)
+   - Access via: Type "SYSOP" at main menu, then "1"
+   - web/backend/src/handlers/sysop-menu.handler.ts
+
+3. User Editor (Command 1):
    - Located: web/backend/src/handlers/user-editor.handler.ts
    - Security level 250+ required
    - Full account editing: username, real name, security, credits, etc.
+   - 1:1 AmiExpress compatible (internal command, not door)
 
 ### Previous Work (Session 46 - AquaScan Bug)
 
@@ -102,4 +108,5 @@ grep -i "error\|fail\|not found" logs/door-68k-AquaScan*
 
 **Result**: Every character in paths is case-insensitive. aMiGa.eXe = AMIGA.exe = amiga.EXE
 
-**Next**: Test AquaScan FR command with live server
+**Deployed**: All Session 46 fixes committed (fa97aac7) and pushed to GitHub
+**Status**: Awaiting Render rebuild, then test live site
