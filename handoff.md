@@ -4,11 +4,12 @@
 
 ### Latest Work (Session 46 - Current)
 
-**CRITICAL LIVE SITE FIXES - DEPLOYED (commit fa97aac7)**:
-1. Fixed render.yaml to build SDK, admin, and frontend for unified deployment
-   - SDK route: http://bbs.uprough.net/sdk/ (should work after Render rebuild)
-   - Admin system page: http://bbs.uprough.net/admin/system (should work after Render rebuild)
-   - All frontends built during deployment
+**CRITICAL LIVE SITE FIXES - DEPLOYED (commit 214dcdcb)**:
+1. Fixed render.yaml to build SDK preview frontend, admin, and frontend
+   - SDK route: http://bbs.uprough.net/sdk/ (builds sdk/tools/preview/frontend/dist)
+   - Admin system page: http://bbs.uprough.net/admin/system (builds web/config-app/dist)
+   - BBS frontend: http://bbs.uprough.net/ (builds web/frontend/dist)
+   - CRITICAL FIX in 214dcdcb: Added SDK preview frontend build (was missing in fa97aac7)
 
 2. SYSOP Menu Fixed:
    - Now lists all 6 numbered internal commands (0-5)
