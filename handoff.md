@@ -1,8 +1,22 @@
 # Handoff - Session 46 Continued
 
-## Status: System-Wide Case-Insensitive File Operations - Migration Complete
+## Status: Live Site Fixes + Case-Insensitive File System - DEPLOYED
 
 ### Latest Work (Session 46 - Current)
+
+**CRITICAL LIVE SITE FIXES - DEPLOYED**:
+1. Fixed render.yaml to build SDK, admin, and frontend for unified deployment
+   - SDK route now accessible: http://bbs.uprough.net/sdk/
+   - Admin system page now accessible: http://bbs.uprough.net/admin/system
+   - All frontends built during deployment
+
+2. User Editor Already Implemented:
+   - Available as **Command 1** from main menu (sysop-only)
+   - Located: web/backend/src/handlers/user-editor.handler.ts
+   - Security level 250+ required
+   - Full account editing: username, real name, security, credits, etc.
+
+### Previous Work (Session 46 - AquaScan Bug)
 
 **Bug #9: AquaScan Door Path Case Sensitivity - CRITICAL**
 
