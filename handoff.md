@@ -1,15 +1,14 @@
 # Handoff
-## Current State (2025-12-05)
-- Documentation now relies on clean summary files under `Documentation/1-6` plus per-folder `archive/` buckets (e.g., user, sysop, developer, door, reference, progress) and the raw reference sources consolidated in `Documentation/7-Reference Sources/`.
-- Door/AquaScan logs still show ASCII art/pause glitches, SIM-style 68K doors remain blocked on the port handshake, and npm registry access is still blocked in this sandbox.
-- Previously scattered SDK, dev script, MCP, and door readmes now live under the appropriate archive folders (e.g., `Documentation/3-Developers/archive/sdk`, `Documentation/3-Developers/archive/dev-scripts`, `Documentation/4-Door-Developers/archive/doors`, `Documentation/5-Reference/archive/mcp-server`) with inline pointers in the original code directories.
-- All test harnesses were centralized under `Scripts/` (with per-category subfolders) and the `Scripts/README.md` now guides AI agents to the right runner; the root `README.md`, `Documentation/README.md`, and `CLAUDE.md` all mention this map so navigation is explicit.
+## Current State (2025-12-07)
+- AquaScan FR listing now pauses immediately when the user’s screen height is reached because `displayFileEntry` calls `flagPause` after every row; ASCII art still streams as continuation lines so the primary metadata line stays clean.
+- Backend type-check rebuilt via `./node_modules/.bin/tsc`, and the door harness was rerun with `DEBUG_XIM_OUTPUT=1`; the only visible door error is still `Config error: Tooltype DOORUSE missing` because the standalone harness invocation doesn’t set `DOORUSE` like the BBS would.
 
 ## Recent Work (Session 1)
-- Rebuilt the user/sysop/developer/door/reference documentation to be concise summaries, archived every legacy `.md` inside `Documentation/*/archive/`, and relocated door/emulator sources (`Doors_with_Source`, `vAmiga`) into the dedicated `7-Reference Sources` directory.
-- Updated the progress tracking artifacts (`CURRENT_STATUS.md`, `MILESTONES.md`, `KNOWN_ISSUES.md`, `MASTERPLAN.md`) to describe the consolidation and the outstanding issues mentioned above.
+- Updated `FileListingHandler` so the pagination counter increments per line and returns early if the pause prompt stops the flow, matching express.e’s screen-height pause behavior instead of waiting until the whole entry finishes.
+- Recompiled the backend dist and reran `node dist/scripts/run-amiga-door.js Doors/AquaScan/AquaScan.000 1 1 REVSCAN` (logs stored in `logs/door-68k-*` and `logs/xim-output.log`) to ensure the code still executes end-to-end.
+- Consulted the archived AquaScan analysis docs to confirm the real AmiExpress behavior: the pause happens when a screenful of lines is emitted, not after each entry, so the new per-line pause is faithful to express.e.
 
 ## Next Steps
-1. Resolve the remaining AquaScan FR pagination/pause art issues so the output matches express.e’s behavior exactly.
-2. Revisit SIM-style door emulation once the port/FindPort sequence is understood, using the archived disassembly notes for reference.
-3. Restore network connectivity (npm/registry access) or provide offline packages so validation and font downloads can complete locally.
+1. Trigger FR through the full BBS flow (so `DOORUSE=FR/REVSCAN` is supplied) and capture the resulting display/logs to confirm the ASCII art stays aligned and press-<RETURN> prompts appear on every page.
+2. If the harness output still differs after the real run, capture the full `logs/xim-output.log` and `logs/door-68k-AquaScan_*` to compare against the express.e trace referenced in `Documentation/4-Door-Developers/archive/AQUASCAN_ANALYSIS_SUMMARY.md`.
+3. Keep tracking the remaining AquaScan FR items listed in `Documentation/6-Progress/MASTERPLAN.md` (art alignment, Dir1 creation, SIM door port handshake) and update that summary once those go green.
