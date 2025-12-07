@@ -1,32 +1,16 @@
 # Handoff
 
-## Current State (2025-12-05)
-- AquaScan FR fix in DosLibrary (DirN pseudo-directories return fib_DirEntryType=2) is merged; awaiting user test after server restart.
-- Repo clean; pushed commits: `docs: add aquascan investigation and disk migration notes`, `feat: expand bbs config loading and health checks`, `chore:data sync conference listings and logs`.
-- Large Conf*/Dir* data sync (Dir deletions/NumULs updates, quicknew screen, caller logs, AquaScan.Date) is intended per user.
+## Current State (2025-12-07)
+- AquaScan FR now lists entries with intact ASCII art; captured a short ANSI-output log to confirm the current textarea/pause behavior.
+- All Conf*/Dir1 files were refreshed from **/Users/spot/Downloads/BBS_COPY** so the data matches the original AmiExpress listings again.
+- TypeScript still builds cleanly (`./web/backend/node_modules/.bin/tsc --project web/backend/tsconfig.json`).
 
-## Recent Work
-- Added AquaScan investigation docs and disk/dataset audit notes; updated handoff and CLAUDE.md.
-- Added backend services (bbs-config-file, conference setup, health checks, file-areas loader, message-file util) plus config-app HealthCheck page and related handler updates.
-- Synced BBS data files and logs; TypeScript check passed on commits; push to origin main succeeded.
+## Recent Work (Session 6)
+- Added optional debug socket that dumps every `ansi-output` emission when `DEBUG_XIM_OUTPUT=1`, ran AquaScan via the harness (door command FR) to observe how the ANSI stream/pause prompt behaves.
+- Reviewed `logs/backend.log` slices around `BB_NONSTOPTEXT/BB_LINECOUNT` to understand the protocol timing that drives pagination.
+- Ensured instrumentation artefacts were cleaned up (`logs/xim-output.log`, `/tmp/run-output.log`, temp helper scripts) before ending the session.
 
 ## Next Steps
-- User to restart servers and run `ascan fr` to confirm AquaScan FR behavior.
-- Optionally run targeted door/file listing checks to validate data sync.
-
-## Session Marker
-- ChatGPT has taken over here; use this commit to return to this state if needed.
-
-## Restart Notes
-- To continue debugging AquaScan FR without sandbox limits, start Codex with:
-  `codex --sandbox_mode danger-full-access --network_access enabled --approval_policy on-request`
-- For evidence: run `ascan fr` on the live BBS (after `./dev/scripts/start-servers.sh`) and share:
-  - Latest log: `ls -t logs/door-68k-AquaScan* | head -1` then `cat <file>`
-  - Backend snippet: `tail -n 200 logs/backend.log`
-- Harness alternative (needs full access): `TMPDIR=$PWD/tmp web/backend/node_modules/.bin/tsx web/backend/src/scripts/run-amiga-door.ts Doors/aquascan/AquaScan.000 1 --doortype XIM --doorId FR`
-
-## Session Rules (per user)
-- Only focus on fixing AquaScan FR; no other scope.
-- No door-specific hacks; solution must be generic and correct for all doors.
-- Follow express.e and provided docs; no guessing or speculative changes.
-- Use real evidence (logs, vAmiga/Vamos) to match real Amiga behavior before changes.
+1. Re-run FR with the debug harness once npm/network is stable to collect a complete capture of every screen break and `press <RETURN>` pause handshake.
+2. Continue aligning `emitText`/`looksLikeAsciiArt` with express.e so complex logos neither break nor increment the pause counter unexpectedly.
+3. Once instrumentation confirms correct pagination, re-validate via `node web/backend/dist/scripts/run-amiga-door.js Doors/AquaScan/AquaScan.000 1 REVSCAN` (no debug flag) to keep the door log consistent for future comparison.
