@@ -1,9 +1,10 @@
 # Handoff
 
-## Current State (2025-12-07)
+-## Current State (2025-12-07)
 - AquaScan FR now receives the user's true terminal height/width and a 80‑column wrap, so the door should pause after each full screen and avoid arbitrary breaks at column 79.
 - New DIR file writes now emit classic Amiga CR line endings, matching the files AquaScan expects and preventing the ascii logo blobs from gluing themselves into single lines.
 - The frontend now resolves fonts through Vite’s `BASE_URL`, so deployments hosted under non‑root paths can load every `.ttf` without 404s.
+- Logoff in PETSCII mode randomly pulls one of the new `Screens/logoff/NNN.logoff.seq` files thanks to the new `Screens/Logoff.seq` driver, so every logout shows a fresh PETSCII art card before the NO CARRIER message.
 - `npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/AquaScan/AquaScan.000 1 1 REVSCAN` still can’t run locally because the sandbox can’t reach `registry.npmjs.org`, so door validation remains blocked.
 
 ## Recent Work (Session 9)
