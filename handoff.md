@@ -1,16 +1,17 @@
 # Handoff
 
 ## Current State (2025-12-07)
-- AquaScan FR now lists entries with intact ASCII art; captured a short ANSI-output log to confirm the current textarea/pause behavior.
-- All Conf*/Dir1 files were refreshed from **/Users/spot/Downloads/BBS_COPY** so the data matches the original AmiExpress listings again.
-- TypeScript still builds cleanly (`./web/backend/node_modules/.bin/tsc --project web/backend/tsconfig.json`).
+- AquaScan FR now receives the user's true terminal height/width and a 80‑column wrap, so the door should pause after each full screen and avoid arbitrary breaks at column 79.
+- New DIR file writes now emit classic Amiga CR line endings, matching the files AquaScan expects and preventing the ascii logo blobs from gluing themselves into single lines.
+- The frontend now resolves fonts through Vite’s `BASE_URL`, so deployments hosted under non‑root paths can load every `.ttf` without 404s.
+- `npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/AquaScan/AquaScan.000 1 1 REVSCAN` still can’t run locally because the sandbox can’t reach `registry.npmjs.org`, so door validation remains blocked.
 
-## Recent Work (Session 6)
-- Added optional debug socket that dumps every `ansi-output` emission when `DEBUG_XIM_OUTPUT=1`, ran AquaScan via the harness (door command FR) to observe how the ANSI stream/pause prompt behaves.
-- Reviewed `logs/backend.log` slices around `BB_NONSTOPTEXT/BB_LINECOUNT` to understand the protocol timing that drives pagination.
-- Ensured instrumentation artefacts were cleaned up (`logs/xim-output.log`, `/tmp/run-output.log`, temp helper scripts) before ending the session.
+## Recent Work (Session 9)
+- Added helpers in `web/backend/src/handlers/door.handler.ts` to pick a positive terminal height/width from session data and feed them into `pauseLines`, `lineWrap`, and `lineCount` so `XIMProtocol` gets a real 80×N screen geometry.
+- Taught `XIMProtocol` to default to an 80‑column wrap instead of 79 once a width isn’t supplied.
+- Converted DIR entry helpers to append `\r` instead of `\n`, keeping generated DIR files Amiga‑styled and freeing the 68K door from misreading the continuation art.
+- Updated the frontend preload links, CSS, and `main.tsx` so font paths are computed via `import.meta.env.BASE_URL`, exposing CSS variables for each font in case the SPA loads from a subpath.
 
 ## Next Steps
-1. Re-run FR with the debug harness once npm/network is stable to collect a complete capture of every screen break and `press <RETURN>` pause handshake.
-2. Continue aligning `emitText`/`looksLikeAsciiArt` with express.e so complex logos neither break nor increment the pause counter unexpectedly.
-3. Once instrumentation confirms correct pagination, re-validate via `node web/backend/dist/scripts/run-amiga-door.js Doors/AquaScan/AquaScan.000 1 REVSCAN` (no debug flag) to keep the door log consistent for future comparison.
+1. Retry the AquaScan FR door run once `tsx` can be installed to confirm the offset pause/pagination is now honoured.
+2. Monitor the door logs for `press <RETURN>` prompts and the `BB_NONSTOPTEXT`/line wrap sequence to ensure the ASCII logos stay intact without manual postprocessing.
