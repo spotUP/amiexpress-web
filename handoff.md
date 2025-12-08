@@ -2,7 +2,7 @@
 
 ## Current State (2025-12-08)
 
-**Major Refactoring Complete - Phase 1 Done, Phase 2 Started**
+**Major Refactoring Complete - Phase 1 Done, Phase 2.2 Done**
 
 ### ✅ Phase 1 Complete (Committed & Pushed)
 All Phase 1 safe infrastructure improvements are complete:
@@ -18,56 +18,61 @@ All Phase 1 safe infrastructure improvements are complete:
 3. **BaseRepository Class** (~150 lines saved)
    - Created `BaseRepository<T>` base class
    - Refactored all 9 repositories to extend it
-   - Eliminated database boilerplate
 
-**Total Phase 1 Impact**: ~390 lines of duplicate code eliminated
+**Total Phase 1 Impact**: ~390 lines eliminated
 
-### 🔄 Phase 2 Started (Analysis Phase)
-Working on file organization to comply with 2,000 line rule:
+### ✅ Phase 2.2 Complete (Committed & Pushed)
+Completed `index.ts` file organization:
 
-**Files requiring splitting**:
-- `command.handler.ts` - 3,812 lines (partially modularized)
-- `index.ts` - 2,474 lines (monolithic)
-- Message handlers - 4 files, 2,389 total lines
+1. **Created `server/routes-setup.ts`** (361 lines)
+   - Extracted all HTTP route definitions from index.ts
+   - Auth, sessions, config, upload, download routes
+   - Static file serving (SDK, Admin, BBS Frontend)
 
-**Status**: Analysis complete, documented in `PHASE2_STATUS.md`
+2. **Refactored `index.ts`** (2,474 → 1,022 lines, 58% reduction)
+   - Removed duplicate `initializeData()` (now in server/initialization.ts)
+   - Removed duplicate database helpers (now in server/database-helpers.ts)
+   - Removed duplicate dependency injection calls
+   - Imported from modular server/ components
 
-## Recent Work (Session 11)
+**Total Phase 2.2 Impact**: 1,452 lines eliminated from index.ts
 
-**Part 1: Refactoring Analysis**
-1. Created comprehensive refactoring plan in `REFACTORING_PLAN.md`
-2. Analyzed duplicate code (AmigaFS, CRC-16, repositories)
-3. Planned Phase 1-4 implementation strategy
+### 🔄 Phase 2 Remaining
+Files still requiring work:
 
-**Part 2: Phase 1 Implementation**
-1. Consolidated AmigaFS (removed fs-amiga.util duplicates)
-2. Extracted protocol utilities (CRC-16, CONTROL_CHARS)
-3. Created BaseRepository class with transaction support
-4. Refactored 9 repositories (user, file, message, conference, session, config, webhook, chat, bulletin)
+- `command.handler.ts` - 3,812 lines (PRIORITY 1)
+  - Already partially modularized in `command-handler/` subdirectory
+  - Needs further splitting, requires express.e verification
+- Message handlers - 4 files, 2,389 total lines (PRIORITY 2)
+  - Consolidate into `handlers/message/` subdirectory
 
-**Part 3: Phase 2 Analysis**
-1. Analyzed command.handler.ts structure (3,812 lines)
-2. Identified existing modularization in `command-handler/` subdirectory
-3. Documented Phase 2 plan in `PHASE2_STATUS.md`
+## Recent Work (Session 12)
+
+**Phase 2.2 Implementation - index.ts Refactoring**
+1. Analyzed index.ts structure (2,474 lines) - found extensive duplication
+2. Created `server/routes-setup.ts` (361 lines) extracting all HTTP routes
+3. Removed duplicate `initializeData()` from index.ts (already in server/initialization.ts)
+4. Removed duplicate database helpers (already in server/database-helpers.ts)
+5. Removed duplicate dependency injection (already in server/initialization.ts)
+6. Updated index.ts to import from modular components
+7. Result: index.ts reduced from 2,474 → 1,022 lines (58% reduction, 1,452 lines eliminated)
+8. Verified TypeScript compilation passes
+9. Committed and pushed to GitHub
 
 ## Next Steps
 
 **Continue Phase 2 File Organization**:
-1. Split `command.handler.ts` (3,812 → ~300 lines)
+1. Split `command.handler.ts` (3,812 → ~300 lines) - PRIORITY 1
    - Extract routing logic to `command-router.ts`
    - Extract state management to `command-state.ts`
    - **CRITICAL**: Verify against express.e
 
-2. Split `index.ts` (2,474 → ~200 lines)
-   - Extract to server/ subdirectory
-   - express-setup.ts, middleware-setup.ts, routes-setup.ts, socket-setup.ts
-
-3. Organize handlers by feature
-   - Create `message/` subdirectory (consolidate 4 files)
-   - Create `file/` subdirectory (organize file handlers)
+2. Consolidate message handlers (4 files, 2,389 lines) - PRIORITY 2
+   - Create `handlers/message/` subdirectory
+   - Merge: message-entry, message-scan, messaging, message-commands
 
 ## Key Files
+- `web/backend/src/server/routes-setup.ts` - HTTP routes (new)
+- `web/backend/src/index.ts` - Main entry (1,022 lines, down from 2,474)
 - `Documentation/6-Progress/REFACTORING_PLAN.md` - Full refactoring strategy
 - `Documentation/6-Progress/PHASE2_STATUS.md` - Phase 2 detailed analysis
-- `web/backend/src/database/BaseRepository.ts` - New base class
-- `web/backend/src/utils/transfer-protocol.util.ts` - Extracted utilities
