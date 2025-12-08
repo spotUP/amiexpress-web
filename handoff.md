@@ -2,7 +2,7 @@
 
 ## Current State (2025-12-09)
 
-**Major Refactoring Complete - Phases 1, 2, and 3 Done**
+**Major Refactoring Complete - Phases 1-4 Done**
 
 ### ✅ Phase 1 Complete
 Infrastructure improvements (390 lines eliminated):
@@ -12,59 +12,49 @@ Infrastructure improvements (390 lines eliminated):
 
 ### ✅ Phase 2 Complete (Session 13)
 Handler consolidation - 25 files (14,127 lines):
-- handlers/message/ - 4 files (2,389 lines)
-- handlers/file/ - 5 files (3,183 lines)
-- handlers/chat/ - 6 files (3,124 lines)
-- handlers/commands/ - 10 files (5,431 lines)
+- handlers/message/, file/, chat/, commands/ created
 - index.ts refactoring (1,452 lines eliminated)
 - Total: 1,873 lines eliminated + 14,127 reorganized
 
-### ✅ Phase 3 Complete (Session 13 continued)
-Additional handler consolidation - 12 files (5,145 lines):
-- handlers/user/ - 4 files (2,556 lines)
-- handlers/admin/ - 3 files (1,194 lines)
-- handlers/content/ - 3 files (939 lines)
-- handlers/transfer/ - 2 files (758 lines)
-- handlers/operations/ - 3 files (698 lines)
+### ✅ Phase 3 Complete (Session 13)
+Additional handlers - 12 files (5,145 lines):
+- handlers/user/, admin/, content/, transfer/, operations/ created
 
-## Recent Work (Session 13)
+### ✅ Phase 4 Complete (Session 13)
+Services consolidation - 3 files (3,684 lines):
+- arexx.ts -> services/arexx.service.ts (2,053 lines)
+- qwk.ts -> services/qwk.service.ts (946 lines)
+- nodes.ts -> services/node-manager.service.ts (685 lines)
 
-**Phase 2 (2.3-2.6)**: 25 handler files reorganized
-**Phase 3 (3.1-3.5)**: 12 handler files reorganized
+## Session 13 Summary
 
-**Grand Total**: 1,873 lines eliminated + 19,272 lines reorganized (37 files)
+**Total Reorganization**: 40 files (22,956 lines) in 10 feature-based directories
+**Lines Eliminated**: 1,873 lines
+**Commits**: 10 (all pushed to GitHub)
+**TypeScript**: 0 errors throughout
 
-## Handlers Now Organized By Feature
+## Current Architecture
 
-**All Subdirectories Complete**:
-- `handlers/message/` - 4 files (2,389 lines)
-- `handlers/file/` - 5 files (3,183 lines)
-- `handlers/chat/` - 6 files (3,124 lines)
-- `handlers/commands/` - 10 files (5,431 lines)
-- `handlers/user/` - 4 files (2,556 lines)
-- `handlers/admin/` - 3 files (1,194 lines)
-- `handlers/content/` - 3 files (939 lines)
-- `handlers/transfer/` - 2 files (758 lines)
-- `handlers/operations/` - 3 files (698 lines)
-- `handlers/command-handler/` - 3 files (infrastructure)
+**Handlers** (9 subdirectories + 4 core files):
+- handlers/message/, file/, chat/, commands/, user/, admin/, content/, transfer/, operations/
+- Core: command.handler.ts, door.handler.ts, screen.handler.ts, command-execution.handler.ts
 
-**Total Organized**: 37 handler files (19,272 lines) in feature-based structure
+**Services** (38 files consolidated):
+- All large root files now in services/
+- Includes: arexx, qwk, node-manager, config, import, export, batch, etc.
 
-**Remaining in handlers/ root**:
-- command.handler.ts (3,781 lines) - Core routing (needs express.e verification)
-- door.handler.ts (2,168 lines) - Door execution engine
-- screen.handler.ts (1,648 lines) - Screen rendering engine
-- command-execution.handler.ts (370 lines) - Command dispatcher
+**Database** (modular repository pattern):
+- Separate repositories for users, messages, files, conferences, etc.
 
 ## Next Steps
 
-**Phase 3 Complete** - All movable handlers organized
+**All Movable Code Organized** - Infrastructure complete
 
-**Remaining Work**:
-1. Split large core handlers (command, door, screen) - requires express.e verification
-2. Database modularization (separate effort)
+**Future Work**:
+1. Split large core handlers (requires express.e verification)
+2. Continue database modularization as needed
 
-## Key Files
-- `web/backend/src/handlers/*` - 9 feature subdirectories + 4 core handlers
-- `web/backend/src/server/routes-setup.ts` - HTTP routes
-- `web/backend/src/index.ts` - Main entry (1,022 lines)
+## Key Metrics
+- Handlers: 37 files in 9 feature dirs + 4 core
+- Services: 38 files consolidated
+- handoff.md: 2.8KB (under 5KB limit)
