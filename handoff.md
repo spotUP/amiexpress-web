@@ -1,14 +1,15 @@
 # Handoff
-## Current State (2025-12-07)
-- The massive documentation reorg is now tracked: `Documentation/1-6` holds the summary guides, `archive/` subfolders retain the historical investigations, and `Documentation/7-Reference Sources/` keeps the reference archives verbatim.
-- Every conference directory now carries the updated `Menu.txt_.txt`, `Screens/BBSTITLE.TXT`, and `Screens/Logoff.seq` assets, and `menu250.txt.GR` reflects the corrected `.GR` data from the prior `.ans` version.
-- The codebase still needs the live AquaScan FR validation, SIM door handshake finishing, and the sandbox network fix before door emulation can move forward, but the repo is now clean and ready for that work.
 
-## Recent Work (Session 3)
-- Inventoried the untracked directories, staged the documentation restructure plus the new conference screens/menus, and rewrote `Documentation/6-Progress/MASTERPLAN.md` to point at the reorganized docs plus the outstanding door tasks.
-- Locked down the `.GR` filenames, ensured `hammer` files (menus, screens) match the new structure, and recorded the cleanup context in this handoff so future sessions can pick up the new repo layout without redoing the audit.
+## Current State (2025-12-07)
+- The security-screen lookup now tries `.TXT.GR` before plain `.TXT`, so high-security menus such as `menu250.txt.GR` resolve cleanly when `displayScreen(SCREEN_MENU)` runs.
+- The command pipeline no longer has a dedicated SYSOP menu; inputs flow through the standard Sys/BBS/Internal priority logic and only `inDoorManager` prevents the routine exit back to the menu.
+- Each `Conf*/menu250.txt.GR` file is now the normalized graphically styled menu (renamed from the `.GR.ans` sources and purged of stray copies).
+
+## Recent Work (Session 10)
+- Added the `.TXT.GR` extension list in `web/backend/src/utils/screen-security.util.ts` and updated the command handler layers to drop the old `SYSOP` menu wiring (`command.handler.ts`, `command-handler/core.ts`, `command-handler/command-execution.ts`, `command-handler/input-handlers.ts`, `command-handler/types.ts`, `web/backend/src/index.ts`).
+- Deleted the unused `web/backend/src/handlers/sysop-menu.handler.ts`, leaving the existing `sysop-commands.handler.ts` flows untouched.
+- Renamed/cleaned the Conf directories so they now expose the canonical `menu250.txt.GR` assets (e.g., `Conf10/menu250.txt.GR`).
 
 ## Next Steps
-1. Run AquaScan FR from the full BBS flow (ensuring `DOORUSE=FR/REVSCAN` and `DEBUG_XIM_OUTPUT=1`) to confirm the ASCII art pauses at each screen as the express.e trace dictates.
-2. Finish the SIM door handshake by following the `FindPort`/`DoorControl` sequence noted in `Documentation/4-Door-Developers/archive` so the 68K door can complete its init/stat message flow.
-3. Restore sandbox network access to `registry.npmjs.org` so fonts and npm packages resolve, enabling door tests, frontend font loads, and CLI commands that fetch dependencies.
+1. When npm access is restored, rerun `npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/AquaScan/AquaScan.000 1 1 REVSCAN` to verify the door now lands on the security-specific menu and respects pagination.
+2. Inspect `logs/backend.log` (and any new `door-68k` captures) after that run to ensure no missing-screen errors or wrap/pause regressions appear now that security-level menu selection is active.
