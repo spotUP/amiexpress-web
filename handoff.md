@@ -2,30 +2,33 @@
 
 ## Current State (2025-12-09)
 
-**Major Refactoring Complete - Phase 1 Done, Phase 2 Complete**
+**Major Refactoring Complete - Phase 1 & 2 Done**
 
-### ✅ Phase 1 Complete (Committed & Pushed)
-All Phase 1 safe infrastructure improvements are complete:
+### ✅ Phase 1 Complete
+Infrastructure improvements (390 lines eliminated):
+1. AmigaFS Consolidation (~200 lines)
+2. Protocol Utilities (~40 lines)
+3. BaseRepository Class (~150 lines)
 
-1. **AmigaFS Consolidation** (~200 lines saved)
-2. **Protocol Utilities** (~40 lines saved)
-3. **BaseRepository Class** (~150 lines saved)
+### ✅ Phase 2 Complete
+File organization and handler consolidation (1,483 lines eliminated + reorganization):
 
-**Total Phase 1 Impact**: ~390 lines eliminated
-
-### ✅ Phase 2 Complete (Committed & Pushed)
-File organization and handler consolidation complete:
+**Phase 2.5 - Chat Handler Consolidation** (Session 13)
+- Created `handlers/chat/` subdirectory
+- Moved 6 chat handlers (3,124 lines):
+  * chat.handler.ts (276 lines)
+  * chat-commands.handler.ts (536 lines)
+  * group-chat.handler.ts (660 lines)
+  * internode-chat.handler.ts (925 lines)
+  * preference-chat-commands.handler.ts (277 lines)
+  * room-commands.handler.ts (450 lines)
+- Updated imports in 10 files
+- TypeScript: 0 errors
 
 **Phase 2.4 - File Handler Consolidation** (Session 13)
 - Created `handlers/file/` subdirectory
-- Moved 5 file handler files (3,183 lines total):
-  * file.handler.ts (1,111 lines)
-  * file-listing.handler.ts (323 lines)
-  * file-maintenance.handler.ts (930 lines)
-  * file-status.handler.ts (197 lines)
-  * download.handler.ts (622 lines)
+- Moved 5 file handlers (3,183 lines)
 - Updated imports in 6 files
-- TypeScript: 0 errors
 
 **Phase 2.3 - Message Handler Consolidation** (Session 13)
 - Created `handlers/message/` subdirectory
@@ -40,45 +43,47 @@ File organization and handler consolidation complete:
 - Eliminated duplicate dependency injection
 - command.handler.ts: 3,812 → 3,781 lines (31 lines eliminated)
 
-**Total Phase 2 Impact**: 1,483 lines eliminated + infrastructure reorganization
-
-### 🔄 Phase 2 Remaining (Optional)
-- `command.handler.ts` - 3,781 lines (still large)
-  - handleCommand() function: ~2,640 lines
-  - Requires express.e verification
-  - Defer to later session or leave as-is
+**Total Impact**: 1,873 lines eliminated
 
 ## Recent Work (Session 13)
 
 **Part 1: Phase 2.3 - Message Handlers**
-1. Moved 4 message handlers to handlers/message/
-2. Updated 7 import references
-3. Fixed relative paths (../ → ../../)
+- Moved 4 files (2,389 lines) to handlers/message/
 
 **Part 2: Phase 2.4 - File Handlers**
-1. Moved 5 file handlers to handlers/file/
-2. Updated 6 import references
-3. Fixed relative paths and cross-references
+- Moved 5 files (3,183 lines) to handlers/file/
 
-**Session Impact**: Infrastructure reorganization of 9 handler files (5,572 lines)
+**Part 3: Phase 2.5 - Chat Handlers**
+- Moved 6 files (3,124 lines) to handlers/chat/
+- Fixed 10 import references including dynamic imports
+- Fixed relative paths (../ → ../../)
 
-**Grand Total**: 1,873 lines eliminated across all phases
+**Session Impact**: 15 handler files (8,696 lines) reorganized
+
+**Grand Total**: 1,873 lines eliminated + 8,696 lines reorganized
+
+## Handlers Now Organized By Feature
+
+**Completed Subdirectories**:
+- `handlers/message/` - 4 files (2,389 lines)
+- `handlers/file/` - 5 files (3,183 lines)
+- `handlers/chat/` - 6 files (3,124 lines)
+- `handlers/command-handler/` - Existing subdirectory
+
+**Total Organized**: 15 handler files (8,696 lines) in feature-based structure
 
 ## Next Steps
 
-**Phase 2 Complete** - Handlers now organized by feature:
-- `handlers/message/` - 4 files (2,389 lines)
-- `handlers/file/` - 5 files (3,183 lines)
-- `handlers/command-handler/` - Existing subdirectory
+**Phase 2 Complete** - Handler organization done
 
-**Potential Future Work**:
-1. Consolidate chat handlers (5 files) into handlers/chat/
-2. Further split command.handler.ts (requires express.e verification)
-3. Continue handler organization by feature
+**Optional Future Work**:
+1. Further split command.handler.ts (3,781 lines)
+   - Requires express.e verification
+2. Continue feature-based organization for remaining handlers
 
 ## Key Files
 - `web/backend/src/handlers/message/` - Message handlers
 - `web/backend/src/handlers/file/` - File handlers
+- `web/backend/src/handlers/chat/` - Chat handlers
 - `web/backend/src/server/routes-setup.ts` - HTTP routes
 - `web/backend/src/index.ts` - Main entry (1,022 lines)
-- `Documentation/6-Progress/REFACTORING_PLAN.md` - Full strategy
