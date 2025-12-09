@@ -29,14 +29,21 @@
 **Docs**: CI_CD.md, DOCKER.md, RENDER_DOCKER_MIGRATION.md, RENDER_SECRETS_SETUP.md
 
 ## Recent Work (Session 15)
-1. ✅ Simplified Render guides (removed automation parts)
-2. ✅ Removed Option B (unified service only)
-3. ✅ Fixed headers error (removed from render.yaml)
-4. ✅ Fixed Dockerfile (6 build stages for all components)
-5. ✅ ChatSessionUseCase + ChatHandler DI conversion
+**Render Docker Deployment - 9 Errors Fixed**:
+1. ✅ Headers not supported → Removed from render.yaml
+2. ✅ Missing dist directories → Added 6 build stages
+3. ✅ SDK prepare script fails → Use --ignore-scripts
+4. ✅ Frontend prebuild needs terminal → Reorder stages (terminal first)
+5. ✅ Backend postinstall in build → Use --ignore-scripts
+6. ✅ Backend postinstall in prod → Use --ignore-scripts
+7. ✅ Backend dist doesn't exist → Backend uses tsx runtime
+8. ✅ CMD references dist → Changed to npx tsx src/index.ts
+9. ✅ ChatSessionUseCase + ChatHandler DI conversion
+
+**Documentation**: Simplified Render guides (460→130 lines, 222→78 lines)
 
 ## Next Steps
-**Immediate**: Verify Render deployment succeeds with fixed Dockerfile
+**Immediate**: Verify Render deployment completes (local Docker build works)
 **Optional**: Convert remaining handlers to DI (18+ remaining)
 
 ## Key Metrics
