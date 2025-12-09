@@ -25,18 +25,20 @@
 - Prevents crashes, allows graceful door failure handling
 - NO stubs called in actual door execution (verified via log grep)
 
-## AquaScan FR Output Analysis
+## AquaScan FR Output Fixed (Session 24)
 
-**Issue**: Double line breaks in FR (reverse file listing) output
+**Issue**: AquaScan FR stopped after header, no file listings displayed
 
-**Root Cause** (web/backend/src/amiga-emulation/xim/io.ts:794-806):
-- AquaScan outputs contain embedded blank lines (`\n\n`)
-- emitText() only removes ONE trailing empty line (line 804-806)
-- Multiple consecutive blank lines preserved, causing double spacing
+**Root Cause** (web/backend/src/amiga-emulation/xim/io.ts:302, 251):
+- autoPause=true was interrupting door output after ~22 lines
+- AquaScan handles its own pagination ("More? (Y/n/ns)...")
+- BBS autoPause was interfering with door's pagination system
+- When autoPause triggered, remaining output was discarded (early return at line 848)
 
-**Fix Location**: web/backend/src/amiga-emulation/xim/io.ts:804-806
-- Current: Removes single trailing empty line
-- Needed: Strip ALL consecutive empty lines OR preserve door's original formatting
+**Fix Applied** (io.ts:251, 304):
+- Changed `emitText(text, addNewline, true, true, msg)` to `autoPause=false`
+- Doors now handle their own pagination without BBS interference
+- Both JH_WRITE and JH_SM handlers updated
 
 ## CRITICAL BUG FIX: Loop Guard
 
