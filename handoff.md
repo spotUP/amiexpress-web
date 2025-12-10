@@ -1,34 +1,18 @@
 # Handoff
 
 ## Current State (2025-12-10)
+- Slowmo MCI (~SMO/~SMC) matches express.e: streams ~60fps with 256-byte cap; positive speeds 1-5 mirror AmiExpress, web-only negatives (-1..-3) are slower; state resets after each screen. `Screens/BBSTITLE.txt` uses `~SMO-3|`.
+- Modem emulation exists but is **disabled for screen rendering** to avoid ANSI corruption; session defaults modem off (`modemBps=0`, `modemEmulationEnabled=false`). W menu option 17 stores baud choice list (0=off/max, 1200..56k plus HST labels); login applies saved baud if >0. Doors are excluded from modem throttling.
+- W command now clears pagination/pause/shortcuts before showing the menu and echoes input for option/modem-speed prompts; should behave like express.e lineInput (ref express.e:25820-25940).
+- Added `baud` column to SQLite (amiexpress.db) and wired repo mapping/insert/migration; W modem speed no longer crashes when saving.
+- Re-enabled modem emulation on screen output using session.modemBps/baud with escape-safe tokenization; throttles at ~bps/10 bytes/sec when user enables it (still off by default). Slowmo frames now cap to modem speed only if the modem link is slower; otherwise slowmo pacing is left untouched.
 
-### Session 31: Bulls XIM Door Working
+## Recent Work
+- Cleared lingering pagination, menuPause, queued screen commands when entering W; ensured cmdShortcuts off.
+- Added input echo/backspace for W option select and modem speed input to avoid “hotkey mode” feel.
+- MCP server still broken; reading local `Documentation/7-Reference Sources/AmiExpress-Sources/express.e` instead.
 
-**Bulls Door Status: WORKING**
-- Bulls XIM door successfully produces output:
-  - `$VER: Bulls 2.2  [/X DOOR]  (07-01-94) - (c)1994: EMPiRE/MYSTiC`
-  - `Bulls 2.2 is a XIM DOOR for AmiExpress 3.xx`
-- Exits cleanly with return code 0
-- All library traps firing correctly (AllocMem, FindTask, OpenLibrary, etc.)
-
-**Debugging Session Findings:**
-1. **Address Mapping**: radare2 file addr + 0xFE4 = memory addr (CODE loads at 0x1008, file offset 0x24)
-2. **Bulls execution flow**: Entry 0x1008 -> BSS clear loop (~12768 iters) -> library init -> XIM output -> exit
-3. All AllocMem calls succeeding with valid addresses (0x100000+)
-4. Previous session fixes (signal reset, door type detection) are working
-
-**RTW Door** (still to investigate):
-- RTW exits with code 20 after only 754 iterations WITHOUT calling FindPort
-- vamos shows RTW DOES call FindPort, then AllocSignal, then "Couldn't create reply port"
-- Key difference: RTW never reaches FindPort call in our emulator
-- Root cause TBD
-
-## Key Files
-- Bulls binary: `doors/EmP_Tools/Bulls` (21828 bytes, 2 segments: CODE at 0x1008, DATA at 0x5c08)
-- RTW binary: `doors/RTW/RTW` (20964 bytes, 4 segments)
-- XIM handler: `web/backend/src/amiga-emulation/session/DoorMessageHandler.ts`
-- Door lifecycle: `web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts`
-
-## Metrics
-- handoff.md: 1.5KB (under 5KB limit)
-- TypeScript errors: 0
+## Next Steps
+1) If modem emulation is needed again, re-enable throttle in `screen.handler.ts` with escape-aware chunking so ANSI/slowmo aren’t split.  
+2) Re-test W menu in a live session: numbers should echo, no `(Pause)...` interception, option 17 visible and saves.  
+3) Keep BBSTITLE slowmo at -3 unless the user requests retuning.  
