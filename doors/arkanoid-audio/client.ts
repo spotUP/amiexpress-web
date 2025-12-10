@@ -1,13 +1,11 @@
 /**
- * ARKANOID - Classic Breakout Game for BBS Terminals
+ * ARKANOID - Hybrid Door Client Component
  *
- * A fully-featured Arkanoid clone with:
- * - 20 levels with unique brick patterns
- * - Power-ups (expand paddle, multi-ball, slow, etc.)
- * - Persistent highscores
- * - ANSI block graphics
- * - Audio feedback
- * - Difficulty modes
+ * This is a port of the original server-side Arkanoid to the SDK client runtime.
+ * It runs in the browser with:
+ * - Real Web Audio sounds via SDK AudioEngine
+ * - RPC calls to server for highscore persistence
+ * - Same gameplay as the original
  *
  * Controls:
  * - Mouse: Move paddle (hover), Launch ball (click)
@@ -16,8 +14,12 @@
  * - Q: Quit to menu
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import {
+  ClientDoor,
+  AudioEngine,
+  AnsiColor,
+  KeyStateTracker,
+} from '@amiexpress/bbs-door-sdk/client';
 
 // =============================================================================
 // ANSI Escape Codes and Colors
@@ -27,7 +29,6 @@ const ESC = '\x1b';
 const CSI = `${ESC}[`;
 
 const ANSI = {
-  // Cursor control
   hide: `${CSI}?25l`,
   show: `${CSI}?25h`,
   home: `${CSI}H`,
@@ -35,7 +36,6 @@ const ANSI = {
   clearLine: `${CSI}2K`,
   goto: (x: number, y: number) => `${CSI}${y};${x}H`,
 
-  // Colors (foreground)
   fg: {
     black: `${CSI}30m`,
     red: `${CSI}31m`,
@@ -55,7 +55,6 @@ const ANSI = {
     brightWhite: `${CSI}97m`,
   },
 
-  // Colors (background)
   bg: {
     black: `${CSI}40m`,
     red: `${CSI}41m`,
@@ -81,15 +80,14 @@ const ANSI = {
   blink: `${CSI}5m`,
 };
 
-// Block characters for rendering
 const BLOCK = {
-  full: '\u2588',      // Full block
-  upper: '\u2580',     // Upper half block
-  lower: '\u2584',     // Lower half block
-  light: '\u2591',     // Light shade
-  medium: '\u2592',    // Medium shade
-  dark: '\u2593',      // Dark shade
-  space: ' ',          // Space with background color
+  full: '\u2588',
+  upper: '\u2580',
+  lower: '\u2584',
+  light: '\u2591',
+  medium: '\u2592',
+  dark: '\u2593',
+  space: ' ',
 };
 
 // =============================================================================
@@ -110,7 +108,7 @@ const PADDLE_WIDTH_DEFAULT = 10;
 const PADDLE_WIDTH_SMALL = 6;
 const PADDLE_WIDTH_LARGE = 14;
 const PADDLE_Y = GAME_BOTTOM - 1;
-const PADDLE_SPEED = 6; // Doubled from 3 for better responsiveness
+const PADDLE_SPEED = 3;
 
 const BALL_SPEED_DEFAULT = 1;
 const BALL_SPEED_FAST = 1.5;
@@ -127,13 +125,8 @@ const INITIAL_LIVES = 3;
 const MAX_HIGHSCORES = 10;
 
 // =============================================================================
-// Types and Interfaces
+// Types
 // =============================================================================
-
-interface Vec2 {
-  x: number;
-  y: number;
-}
 
 interface Ball {
   x: number;
@@ -210,198 +203,30 @@ interface GameData {
 }
 
 // =============================================================================
-// Level Definitions
+// Level Patterns
 // =============================================================================
 
 const LEVEL_PATTERNS: string[][] = [
-  // Level 1 - Simple rows
-  [
-    '111111111111',
-    '222222222222',
-    '333333333333',
-    '444444444444',
-  ],
-  // Level 2 - Checkerboard
-  [
-    '1.1.1.1.1.1.',
-    '.2.2.2.2.2.2',
-    '3.3.3.3.3.3.',
-    '.4.4.4.4.4.4',
-    '1.1.1.1.1.1.',
-  ],
-  // Level 3 - Pyramid
-  [
-    '......11......',
-    '.....2222.....',
-    '....333333....',
-    '...44444444...',
-    '..1111111111..',
-  ],
-  // Level 4 - Invader
-  [
-    '..1......1..',
-    '...1....1...',
-    '..11111111..',
-    '.11.1111.11.',
-    '111111111111',
-    '1.11111111.1',
-    '1.1......1.1',
-    '...11..11...',
-  ],
-  // Level 5 - Diamond
-  [
-    '......1.....',
-    '.....222....',
-    '....33333...',
-    '...4444444..',
-    '....33333...',
-    '.....222....',
-    '......1.....',
-  ],
-  // Level 6 - Stripes
-  [
-    '121212121212',
-    '212121212121',
-    '343434343434',
-    '434343434343',
-    '121212121212',
-    '212121212121',
-  ],
-  // Level 7 - Heart
-  [
-    '.11....11...',
-    '1111..1111..',
-    '111111111111',
-    '.1111111111.',
-    '..11111111..',
-    '...111111...',
-    '....1111....',
-    '.....11.....',
-  ],
-  // Level 8 - Castle
-  [
-    '1..1..1..1..',
-    '111111111111',
-    '111111111111',
-    '1111..111111',
-    '1111..111111',
-    '111111111111',
-  ],
-  // Level 9 - Skull
-  [
-    '..22222222..',
-    '.2222222222.',
-    '2233223322..',
-    '222222222222',
-    '.2222222222.',
-    '..2..2..2...',
-    '..22222222..',
-  ],
-  // Level 10 - Boss Level (with unbreakable)
-  [
-    'XXXXXXXXXXXX',
-    '111111111111',
-    '222222222222',
-    '333333333333',
-    '444444444444',
-    'XXXXXXXXXXXX',
-  ],
-  // Level 11 - Zigzag
-  [
-    '111.........',
-    '...222......',
-    '......333...',
-    '.........444',
-    '......333...',
-    '...222......',
-    '111.........',
-  ],
-  // Level 12 - Cross
-  [
-    '....1111....',
-    '....1111....',
-    '222211112222',
-    '222211112222',
-    '....1111....',
-    '....1111....',
-  ],
-  // Level 13 - Spiral
-  [
-    '111111111111',
-    '............1',
-    '1111111111.1',
-    '1..........1',
-    '1.111111111.',
-    '1.1.........',
-    '1.1111111111',
-  ],
-  // Level 14 - Random strength
-  [
-    '123412341234',
-    '234123412341',
-    '341234123412',
-    '412341234123',
-    '123412341234',
-  ],
-  // Level 15 - Fortress
-  [
-    'X111111111X.',
-    'X1........X.',
-    'X1.222222.X.',
-    'X1.2....2.X.',
-    'X1.2....2.X.',
-    'X1.222222.X.',
-    'X1........X.',
-    'X111111111X.',
-  ],
-  // Level 16 - Wave
-  [
-    '1.......1...',
-    '.2.....2....',
-    '..3...3.....',
-    '...4.4......',
-    '....4.......',
-    '...4.4......',
-    '..3...3.....',
-    '.2.....2....',
-  ],
-  // Level 17 - Letters BBS
-  [
-    '111.111.222.',
-    '1..1.1.2...2',
-    '111..1..222.',
-    '1..1.1....2.',
-    '111.111.222.',
-  ],
-  // Level 18 - Maze
-  [
-    'X1X1X1X1X1X1',
-    '1.1.1.1.1.1.',
-    'X1X1X1X1X1X1',
-    '.1.1.1.1.1.1',
-    'X1X1X1X1X1X1',
-    '1.1.1.1.1.1.',
-  ],
-  // Level 19 - Boss Revenge
-  [
-    'XXXXXXXXXXXX',
-    'X1111111111X',
-    'X2222222222X',
-    'X3333333333X',
-    'X4444444444X',
-    'XXXXXXXXXXXX',
-  ],
-  // Level 20 - Final Challenge
-  [
-    '4X4X4X4X4X4X',
-    'X4X4X4X4X4X4',
-    '3X3X3X3X3X3X',
-    'X3X3X3X3X3X3',
-    '2X2X2X2X2X2X',
-    'X2X2X2X2X2X2',
-    '1X1X1X1X1X1X',
-    'X1X1X1X1X1X1',
-  ],
+  ['111111111111', '222222222222', '333333333333', '444444444444'],
+  ['1.1.1.1.1.1.', '.2.2.2.2.2.2', '3.3.3.3.3.3.', '.4.4.4.4.4.4', '1.1.1.1.1.1.'],
+  ['......11......', '.....2222.....', '....333333....', '...44444444...', '..1111111111..'],
+  ['..1......1..', '...1....1...', '..11111111..', '.11.1111.11.', '111111111111', '1.11111111.1', '1.1......1.1', '...11..11...'],
+  ['......1.....', '.....222....', '....33333...', '...4444444..', '....33333...', '.....222....', '......1.....'],
+  ['121212121212', '212121212121', '343434343434', '434343434343', '121212121212', '212121212121'],
+  ['.11....11...', '1111..1111..', '111111111111', '.1111111111.', '..11111111..', '...111111...', '....1111....', '.....11.....'],
+  ['1..1..1..1..', '111111111111', '111111111111', '1111..111111', '1111..111111', '111111111111'],
+  ['..22222222..', '.2222222222.', '2233223322..', '222222222222', '.2222222222.', '..2..2..2...', '..22222222..'],
+  ['XXXXXXXXXXXX', '111111111111', '222222222222', '333333333333', '444444444444', 'XXXXXXXXXXXX'],
+  ['111.........', '...222......', '......333...', '.........444', '......333...', '...222......', '111.........'],
+  ['....1111....', '....1111....', '222211112222', '222211112222', '....1111....', '....1111....'],
+  ['111111111111', '............1', '1111111111.1', '1..........1', '1.111111111.', '1.1.........', '1.1111111111'],
+  ['123412341234', '234123412341', '341234123412', '412341234123', '123412341234'],
+  ['X111111111X.', 'X1........X.', 'X1.222222.X.', 'X1.2....2.X.', 'X1.2....2.X.', 'X1.222222.X.', 'X1........X.', 'X111111111X.'],
+  ['1.......1...', '.2.....2....', '..3...3.....', '...4.4......', '....4.......', '...4.4......', '..3...3.....', '.2.....2....'],
+  ['111.111.222.', '1..1.1.2...2', '111..1..222.', '1..1.1....2.', '111.111.222.'],
+  ['X1X1X1X1X1X1', '1.1.1.1.1.1.', 'X1X1X1X1X1X1', '.1.1.1.1.1.1', 'X1X1X1X1X1X1', '1.1.1.1.1.1.'],
+  ['XXXXXXXXXXXX', 'X1111111111X', 'X2222222222X', 'X3333333333X', 'X4444444444X', 'XXXXXXXXXXXX'],
+  ['4X4X4X4X4X4X', 'X4X4X4X4X4X4', '3X3X3X3X3X3X', 'X3X3X3X3X3X3', '2X2X2X2X2X2X', 'X2X2X2X2X2X2', '1X1X1X1X1X1X', 'X1X1X1X1X1X1'],
 ];
 
 const BRICK_COLORS: Record<string, { fg: string; bg: string; hits: number; points: number }> = {
@@ -410,7 +235,7 @@ const BRICK_COLORS: Record<string, { fg: string; bg: string; hits: number; point
   '3': { fg: ANSI.fg.white, bg: ANSI.bg.green, hits: 2, points: 30 },
   '4': { fg: ANSI.fg.white, bg: ANSI.bg.blue, hits: 2, points: 40 },
   '5': { fg: ANSI.fg.black, bg: ANSI.bg.magenta, hits: 3, points: 50 },
-  'X': { fg: ANSI.fg.white, bg: ANSI.bg.brightBlack, hits: 999, points: 0 }, // Unbreakable
+  'X': { fg: ANSI.fg.white, bg: ANSI.bg.brightBlack, hits: 999, points: 0 },
 };
 
 const POWERUP_COLORS: Record<PowerUpType, { fg: string; bg: string; char: string }> = {
@@ -423,42 +248,6 @@ const POWERUP_COLORS: Record<PowerUpType, { fg: string; bg: string; char: string
   laser: { fg: ANSI.fg.black, bg: ANSI.bg.brightYellow, char: '!' },
   sticky: { fg: ANSI.fg.white, bg: ANSI.bg.brightBlue, char: '~' },
 };
-
-// =============================================================================
-// Audio System (using terminal bell and frequency hints)
-// =============================================================================
-
-class AudioSystem {
-  private enabled: boolean = true;
-
-  playBounce(): string {
-    return this.enabled ? '\x07' : ''; // Terminal bell
-  }
-
-  playBrickHit(): string {
-    return this.enabled ? '\x07' : '';
-  }
-
-  playPowerUp(): string {
-    return this.enabled ? '\x07\x07' : ''; // Double beep
-  }
-
-  playLifeLost(): string {
-    return this.enabled ? '\x07\x07\x07' : ''; // Triple beep
-  }
-
-  playLevelComplete(): string {
-    return this.enabled ? '\x07\x07\x07\x07' : '';
-  }
-
-  playGameOver(): string {
-    return this.enabled ? '\x07\x07\x07\x07\x07' : '';
-  }
-
-  toggle(): void {
-    this.enabled = !this.enabled;
-  }
-}
 
 // =============================================================================
 // Renderer
@@ -501,30 +290,39 @@ class Renderer {
 }
 
 // =============================================================================
-// Game Engine
+// Arkanoid Game (Client Version)
 // =============================================================================
 
 class ArkanoidGame {
-  private data: GameData;
+  private door: ClientDoor;
+  private audio: AudioEngine;
   private renderer: Renderer;
-  private audio: AudioSystem;
-  private socket: any;
-  private bbsSession: any;
-  private user: any;
-  private gameLoop: NodeJS.Timeout | null = null;
+  private data: GameData;
   private lastUpdate: number = 0;
-  private highscorePath: string;
+  private musicStarted: boolean = false;
+  private keyTracker: KeyStateTracker;
 
-  constructor(doorSession: any) {
-    this.socket = doorSession.socket;
-    this.bbsSession = doorSession.bbsSession;
-    this.user = doorSession.user;
+  constructor() {
+    this.door = new ClientDoor({
+      name: 'Arkanoid',
+      version: '2.0.0',
+      author: 'AmiExpress-Web',
+      description: 'Classic Arkanoid/Breakout game with audio and music',
+      runtime: 'hybrid',
+      hybrid: true,
+    });
+
+    this.audio = new AudioEngine({
+      masterVolume: 0.7,
+      musicVolume: 0.4,
+      sfxVolume: 0.8,
+    });
+
     this.renderer = new Renderer();
-    this.audio = new AudioSystem();
-    this.highscorePath = path.join(process.cwd(), 'doors', 'arkanoid', 'highscores.json');
-
     this.data = this.createInitialGameData();
-    this.loadHighscores();
+    this.keyTracker = new KeyStateTracker();
+
+    this.setupEventHandlers();
   }
 
   private createInitialGameData(): GameData {
@@ -540,7 +338,7 @@ class ArkanoidGame {
       powerUps: [],
       highscores: [],
       menuSelection: 0,
-      playerName: this.user?.username?.substring(0, 10) || 'PLAYER',
+      playerName: 'PLAYER',
       startTime: 0,
       shineTimer: 0,
       comboCount: 0,
@@ -574,58 +372,82 @@ class ArkanoidGame {
 
   private getBallSpeed(): number {
     let speed = BALL_SPEED_DEFAULT;
-
     switch (this.data.difficulty) {
       case 'easy': speed *= 0.8; break;
       case 'hard': speed *= 1.2; break;
     }
-
-    // Increase speed with levels
     speed += (this.data.level - 1) * 0.05;
-
     return Math.min(speed, 2);
   }
 
-  private loadHighscores(): void {
-    try {
-      if (fs.existsSync(this.highscorePath)) {
-        const data = fs.readFileSync(this.highscorePath, 'utf-8');
-        this.data.highscores = JSON.parse(data);
+  private setupEventHandlers(): void {
+    this.door.onConnect(async (user) => {
+      this.data.playerName = user.name?.substring(0, 10) || 'PLAYER';
+      await this.loadHighscores();
+      this.door.send(this.render());
+
+      // Start key state tracker for instant paddle movement (no delay!)
+      this.keyTracker.start((key) => {
+        // Only handle paddle movement during gameplay
+        if (this.data.state === 'playing') {
+          if (key === 'arrowleft' || key === 'a') {
+            this.movePaddle(-1);
+          } else if (key === 'arrowright' || key === 'd') {
+            this.movePaddle(1);
+          }
+        }
+      }, 16); // 60fps key repeat rate
+    });
+
+    this.door.onInput((user, key) => {
+      // Handle non-movement keys (space, q, enter, etc.)
+      const k = key.key?.toLowerCase() || '';
+
+      // Ignore arrow keys - handled by KeyStateTracker
+      if (k === 'arrowleft' || k === 'arrowright' || k === 'a' || k === 'd') {
+        return;
       }
+
+      this.handleInput(k);
+      if (this.data.state !== 'playing') {
+        this.door.send(this.render());
+      }
+    });
+
+    this.door.onUpdate((delta) => {
+      if (this.data.state === 'playing') {
+        this.update(delta);
+        this.door.send(this.render());
+      }
+    });
+  }
+
+  private async loadHighscores(): Promise<void> {
+    try {
+      const result = await this.door.rpc('getHighscores', {});
+      this.data.highscores = result.highscores || [];
     } catch (e) {
+      console.warn('Failed to load highscores:', e);
       this.data.highscores = [];
     }
   }
 
-  private saveHighscores(): void {
+  private async saveHighscore(): Promise<void> {
     try {
-      const dir = path.dirname(this.highscorePath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      fs.writeFileSync(this.highscorePath, JSON.stringify(this.data.highscores, null, 2));
+      await this.door.rpc('saveHighscore', {
+        name: this.data.playerName,
+        score: this.data.score,
+        level: this.data.level,
+      });
+      await this.loadHighscores();
     } catch (e) {
-      // Ignore save errors
+      console.warn('Failed to save highscore:', e);
     }
   }
 
   private isHighScore(): boolean {
     if (this.data.highscores.length < MAX_HIGHSCORES) return true;
     return this.data.score > this.data.highscores[this.data.highscores.length - 1].score;
-  }
-
-  private addHighScore(): void {
-    const entry: HighScore = {
-      name: this.data.playerName.substring(0, 10).toUpperCase(),
-      score: this.data.score,
-      level: this.data.level,
-      date: new Date().toISOString().split('T')[0],
-    };
-
-    this.data.highscores.push(entry);
-    this.data.highscores.sort((a, b) => b.score - a.score);
-    this.data.highscores = this.data.highscores.slice(0, MAX_HIGHSCORES);
-    this.saveHighscores();
   }
 
   private initLevel(levelNum: number): void {
@@ -637,14 +459,12 @@ class ArkanoidGame {
     this.data.shineTimer = 0;
     this.data.comboCount = 0;
 
-    // Adjust paddle size for difficulty
     if (this.data.difficulty === 'easy') {
       this.data.paddle.width = PADDLE_WIDTH_LARGE;
     } else if (this.data.difficulty === 'hard') {
       this.data.paddle.width = PADDLE_WIDTH_SMALL;
     }
 
-    // Load level pattern
     const patternIndex = Math.min(levelNum - 1, LEVEL_PATTERNS.length - 1);
     const pattern = LEVEL_PATTERNS[patternIndex];
 
@@ -669,7 +489,6 @@ class ArkanoidGame {
           shineFrame: 0,
         };
 
-        // Add power-up chance (15% for normal bricks)
         if (char !== 'X' && Math.random() < 0.15) {
           const types: PowerUpType[] = ['expand', 'slow', 'multi', 'life', 'sticky'];
           if (this.data.difficulty !== 'easy') {
@@ -689,8 +508,6 @@ class ArkanoidGame {
 
     if (newX >= GAME_LEFT && newX + paddle.width <= GAME_RIGHT) {
       paddle.x = newX;
-
-      // Move attached ball with paddle
       for (const ball of this.data.balls) {
         if (!ball.active) {
           ball.x = paddle.x + Math.floor(paddle.width / 2);
@@ -709,8 +526,18 @@ class ArkanoidGame {
     }
   }
 
-  private updateBalls(deltaTime: number): string {
-    let output = '';
+  private update(deltaTime: number): void {
+    this.updateBalls(deltaTime);
+    this.updatePowerUps();
+    this.updateShineEffect();
+
+    if (this.checkLevelComplete()) {
+      this.playSound('levelComplete');
+      this.nextLevel();
+    }
+  }
+
+  private updateBalls(deltaTime: number): void {
     const paddle = this.data.paddle;
 
     for (let i = this.data.balls.length - 1; i >= 0; i--) {
@@ -722,7 +549,6 @@ class ArkanoidGame {
         continue;
       }
 
-      // Move ball
       const moveX = ball.vx * ball.speed;
       const moveY = ball.vy * ball.speed;
 
@@ -733,17 +559,17 @@ class ArkanoidGame {
       if (ball.x <= GAME_LEFT) {
         ball.x = GAME_LEFT + 1;
         ball.vx = Math.abs(ball.vx);
-        output += this.audio.playBounce();
+        this.playSound('hit');
       }
       if (ball.x >= GAME_RIGHT) {
         ball.x = GAME_RIGHT - 1;
         ball.vx = -Math.abs(ball.vx);
-        output += this.audio.playBounce();
+        this.playSound('hit');
       }
       if (ball.y <= GAME_TOP) {
         ball.y = GAME_TOP + 1;
         ball.vy = Math.abs(ball.vy);
-        output += this.audio.playBounce();
+        this.playSound('hit');
       }
 
       // Paddle collision
@@ -751,9 +577,8 @@ class ArkanoidGame {
           ball.y >= paddle.y - 1 && ball.y <= paddle.y &&
           ball.x >= paddle.x && ball.x <= paddle.x + paddle.width) {
 
-        // Calculate angle based on hit position
         const hitPos = (ball.x - paddle.x) / paddle.width;
-        const angle = (hitPos - 0.5) * 1.2; // -0.6 to 0.6
+        const angle = (hitPos - 0.5) * 1.2;
 
         ball.vx = angle * 2;
         ball.vy = -Math.abs(ball.vy);
@@ -764,7 +589,7 @@ class ArkanoidGame {
           paddle.sticky = false;
         }
 
-        output += this.audio.playBounce();
+        this.playSound('hit');
         this.data.comboCount = 0;
       }
 
@@ -775,7 +600,6 @@ class ArkanoidGame {
         if (ball.x >= brick.x && ball.x < brick.x + brick.width &&
             ball.y >= brick.y && ball.y < brick.y + brick.height) {
 
-          // Determine collision side
           const fromLeft = ball.x - brick.x;
           const fromRight = brick.x + brick.width - ball.x;
           const fromTop = ball.y - brick.y;
@@ -790,20 +614,19 @@ class ArkanoidGame {
             ball.vy = -ball.vy;
           }
 
-          // Damage brick
           brick.hits--;
           if (brick.hits <= 0) {
             brick.destroyed = true;
             this.data.score += brick.points * (1 + Math.floor(this.data.comboCount / 3));
             this.data.comboCount++;
 
-            // Spawn power-up
             if (brick.powerUp) {
               this.spawnPowerUp(brick.x + brick.width / 2, brick.y, brick.powerUp);
             }
+            this.playSound('explosion');
+          } else {
+            this.playSound('hit');
           }
-
-          output += this.audio.playBrickHit();
           break;
         }
       }
@@ -814,12 +637,9 @@ class ArkanoidGame {
           this.data.balls.splice(i, 1);
         } else {
           this.loseLife();
-          output += this.audio.playLifeLost();
         }
       }
     }
-
-    return output;
   }
 
   private spawnPowerUp(x: number, y: number, type: PowerUpType): void {
@@ -834,8 +654,7 @@ class ArkanoidGame {
     });
   }
 
-  private updatePowerUps(): string {
-    let output = '';
+  private updatePowerUps(): void {
     const paddle = this.data.paddle;
 
     for (let i = this.data.powerUps.length - 1; i >= 0; i--) {
@@ -844,25 +663,19 @@ class ArkanoidGame {
 
       pu.y += 0.3;
 
-      // Collect power-up
       if (pu.y >= paddle.y && pu.y <= paddle.y + 1 &&
           pu.x >= paddle.x && pu.x <= paddle.x + paddle.width) {
-
         this.applyPowerUp(pu.type);
         pu.active = false;
-        output += this.audio.playPowerUp();
+        this.playSound('powerup');
       }
 
-      // Remove if off screen
       if (pu.y > GAME_BOTTOM) {
         pu.active = false;
       }
     }
 
-    // Clean up inactive power-ups
     this.data.powerUps = this.data.powerUps.filter(p => p.active);
-
-    return output;
   }
 
   private applyPowerUp(type: PowerUpType): void {
@@ -916,11 +729,12 @@ class ArkanoidGame {
   private loseLife(): void {
     this.data.lives--;
     this.data.comboCount = 0;
+    this.playSound('gameover');
 
     if (this.data.lives <= 0) {
       this.data.state = 'gameover';
+      this.stopMusic();
     } else {
-      // Reset ball
       this.data.balls = [this.createBall(true)];
       this.data.paddle.sticky = false;
       this.data.paddle.laser = false;
@@ -935,18 +749,17 @@ class ArkanoidGame {
   private nextLevel(): void {
     if (this.data.level >= 20) {
       this.data.state = 'victory';
+      this.stopMusic();
     } else {
-      this.data.score += 1000 * this.data.level; // Level bonus
+      this.data.score += 1000 * this.data.level;
       this.initLevel(this.data.level + 1);
     }
   }
 
   private updateShineEffect(): void {
     this.data.shineTimer++;
-    if (this.data.shineTimer > 300) { // Every ~5 seconds at 60fps
+    if (this.data.shineTimer > 300) {
       this.data.shineTimer = 0;
-
-      // Start shine animation
       let delay = 0;
       for (const brick of this.data.bricks) {
         if (!brick.destroyed) {
@@ -956,11 +769,65 @@ class ArkanoidGame {
       }
     }
 
-    // Update shine frames
     for (const brick of this.data.bricks) {
       if (brick.shineFrame > 0) {
         brick.shineFrame--;
       }
+    }
+  }
+
+  // =============================================================================
+  // Audio
+  // =============================================================================
+
+  private async playSound(type: 'hit' | 'explosion' | 'powerup' | 'gameover' | 'levelComplete'): Promise<void> {
+    try {
+      await this.audio.init();
+
+      switch (type) {
+        case 'hit':
+          this.audio.playSound('hit', { frequency: 440, duration: 0.05 });
+          break;
+        case 'explosion':
+          this.audio.playSound('explosion', { frequency: 200, duration: 0.2 });
+          break;
+        case 'powerup':
+          this.audio.playSound('powerup', { frequency: 880, duration: 0.15 });
+          break;
+        case 'gameover':
+          this.audio.playSound('gameover', { frequency: 110, duration: 0.5 });
+          break;
+        case 'levelComplete':
+          this.audio.playSound('coin', { frequency: 660, duration: 0.1 });
+          break;
+      }
+    } catch (e) {
+      // Audio not available, silently fail
+    }
+  }
+
+  private async startMusic(): Promise<void> {
+    if (this.musicStarted) return;
+    try {
+      await this.audio.init();
+      await this.audio.generateMusic({
+        prompt: 'upbeat arcade game chiptune',
+        tempo: 140,
+        pattern: 'x-x-x-x-',
+        instruments: ['square', 'triangle'],
+      });
+      this.musicStarted = true;
+    } catch (e) {
+      // Music not available, silently fail
+    }
+  }
+
+  private stopMusic(): void {
+    try {
+      this.audio.stopMusic();
+      this.musicStarted = false;
+    } catch (e) {
+      // Ignore
     }
   }
 
@@ -995,11 +862,7 @@ class ArkanoidGame {
   private renderMenu(): string {
     this.renderer.add(ANSI.clear + ANSI.home + ANSI.hide);
 
-    // Title
-    const title = [
-      ' ARKANOID ',
-      '  BLOCKS  ',
-    ];
+    const title = [' ARKANOID ', '  BLOCKS  '];
 
     let y = 4;
     for (const line of title) {
@@ -1012,13 +875,11 @@ class ArkanoidGame {
       );
     }
 
-    // Decorative bricks
     const colors = [ANSI.bg.red, ANSI.bg.yellow, ANSI.bg.green, ANSI.bg.cyan, ANSI.bg.magenta];
     for (let i = 0; i < 5; i++) {
       this.renderer.drawBlock(20 + i * 8, 7, colors[i], 6);
     }
 
-    // Menu options
     const options = [
       'START GAME',
       'DIFFICULTY: ' + this.data.difficulty.toUpperCase(),
@@ -1040,7 +901,6 @@ class ArkanoidGame {
       );
     }
 
-    // Instructions
     this.renderer.drawText(20, 18, 'Use UP/DOWN to select, ENTER to confirm', ANSI.fg.brightBlack);
     this.renderer.drawText(30, 20, 'Classic Arcade Action!', ANSI.fg.cyan);
 
@@ -1050,12 +910,10 @@ class ArkanoidGame {
   private renderGame(): string {
     this.renderer.add(ANSI.hide);
 
-    // Clear game area
     for (let row = GAME_TOP; row <= GAME_BOTTOM; row++) {
       this.renderer.drawBlock(GAME_LEFT, row, ANSI.bg.black, GAME_WIDTH);
     }
 
-    // Draw borders
     for (let row = GAME_TOP - 1; row <= GAME_BOTTOM + 1; row++) {
       this.renderer.drawBlock(GAME_LEFT - 1, row, ANSI.bg.brightBlack, 1);
       this.renderer.drawBlock(GAME_RIGHT + 1, row, ANSI.bg.brightBlack, 1);
@@ -1064,73 +922,48 @@ class ArkanoidGame {
       this.renderer.drawBlock(col, GAME_TOP - 1, ANSI.bg.brightBlack, 1);
     }
 
-    // Draw bricks
     for (const brick of this.data.bricks) {
       if (brick.destroyed) continue;
-
       let bg = brick.bgColor;
-
-      // Shine effect
       if (brick.shineFrame > 0 && brick.shineFrame < 5) {
         bg = ANSI.bg.brightWhite;
       }
-
-      // Show damage on multi-hit bricks
       if (brick.maxHits > 1 && brick.hits < brick.maxHits) {
         const damage = brick.maxHits - brick.hits;
-        if (damage === 1) bg = brick.bgColor.replace('4', '10'); // Slightly brighter
+        if (damage === 1) bg = brick.bgColor.replace('4', '10');
       }
-
       this.renderer.drawBlock(brick.x, brick.y, bg, brick.width);
     }
 
-    // Draw power-ups
     for (const pu of this.data.powerUps) {
       if (!pu.active) continue;
       const colors = POWERUP_COLORS[pu.type];
-      this.renderer.drawText(
-        Math.floor(pu.x),
-        Math.floor(pu.y),
-        colors.char,
-        colors.fg,
-        colors.bg
-      );
+      this.renderer.drawText(Math.floor(pu.x), Math.floor(pu.y), colors.char, colors.fg, colors.bg);
     }
 
-    // Draw paddle
     const paddle = this.data.paddle;
     let paddleBg = paddle.bgColor;
     if (paddle.sticky) paddleBg = ANSI.bg.brightGreen;
     if (paddle.laser) paddleBg = ANSI.bg.brightRed;
     this.renderer.drawBlock(paddle.x, paddle.y, paddleBg, paddle.width);
 
-    // Draw balls
     for (const ball of this.data.balls) {
-      this.renderer.drawBlock(
-        Math.floor(ball.x),
-        Math.floor(ball.y),
-        ANSI.bg.brightWhite,
-        1
-      );
+      this.renderer.drawBlock(Math.floor(ball.x), Math.floor(ball.y), ANSI.bg.brightWhite, 1);
     }
 
-    // Draw HUD
     this.renderer.drawText(2, 1, `SCORE: ${this.data.score.toString().padStart(8, '0')}`, ANSI.fg.brightYellow);
     this.renderer.drawText(30, 1, `LEVEL: ${this.data.level}/20`, ANSI.fg.brightCyan);
     this.renderer.drawText(50, 1, `LIVES: ${'*'.repeat(this.data.lives)}`, ANSI.fg.brightRed);
 
-    // Combo indicator
     if (this.data.comboCount > 2) {
       this.renderer.drawText(65, 1, `x${this.data.comboCount} COMBO!`, ANSI.fg.brightMagenta);
     }
 
-    // Pause overlay
     if (this.data.state === 'paused') {
       this.renderer.drawText(35, 12, '  PAUSED  ', ANSI.fg.black, ANSI.bg.yellow);
       this.renderer.drawText(32, 14, 'Press SPACE to resume', ANSI.fg.white);
     }
 
-    // Ball launch hint
     if (this.data.balls.some(b => !b.active)) {
       this.renderer.drawText(28, GAME_BOTTOM, 'Press SPACE to launch ball', ANSI.fg.brightBlack);
     }
@@ -1161,7 +994,6 @@ class ArkanoidGame {
     this.renderer.drawText(28, 9, 'You completed all 20 levels!', ANSI.fg.brightYellow);
     this.renderer.drawText(30, 12, `Final Score: ${this.data.score}`, ANSI.fg.brightCyan);
 
-    // Victory animation
     const colors = [ANSI.bg.red, ANSI.bg.yellow, ANSI.bg.green, ANSI.bg.cyan, ANSI.bg.magenta];
     for (let i = 0; i < 10; i++) {
       this.renderer.drawBlock(15 + i * 5, 14, colors[i % 5], 4);
@@ -1257,45 +1089,22 @@ class ArkanoidGame {
   // Input Handling
   // =============================================================================
 
-  /**
-   * Translate raw terminal escape sequences to readable key names
-   */
-  private translateKey(key: string): string {
-    // ANSI escape sequences for arrow keys
-    const keyMap: Record<string, string> = {
-      '\x1b[A': 'arrowup',
-      '\x1b[B': 'arrowdown',
-      '\x1b[C': 'arrowright',
-      '\x1b[D': 'arrowleft',
-      '\x1bOA': 'arrowup',    // Application mode
-      '\x1bOB': 'arrowdown',
-      '\x1bOC': 'arrowright',
-      '\x1bOD': 'arrowleft',
-      '\r': 'enter',
-      '\n': 'enter',
-      '\x7f': 'backspace',
-      '\x08': 'backspace',
-      ' ': 'space',
-    };
-    return keyMap[key] || key.toLowerCase();
-  }
-
   private handleInput(key: string): void {
-    const k = this.translateKey(key);
-    console.log('[Arkanoid] Key input:', JSON.stringify(key), '→', k, 'state:', this.data.state);
+    const k = key.toLowerCase();
 
     switch (this.data.state) {
       case 'menu':
-        this.handleMenuInput(k, key);
+        this.handleMenuInput(k);
         break;
       case 'playing':
-        this.handleGameInput(k, key);
+        this.handleGameInput(k);
         break;
       case 'paused':
         if (k === ' ' || k === 'space') {
           this.data.state = 'playing';
         } else if (k === 'q') {
           this.data.state = 'menu';
+          this.stopMusic();
         }
         break;
       case 'gameover':
@@ -1318,7 +1127,7 @@ class ArkanoidGame {
     }
   }
 
-  private handleMenuInput(k: string, key: string): void {
+  private handleMenuInput(k: string): void {
     const maxOptions = 4;
 
     if (k === 'arrowup' || k === 'up' || k === 'w') {
@@ -1327,26 +1136,16 @@ class ArkanoidGame {
       this.data.menuSelection = (this.data.menuSelection + 1) % (maxOptions + 1);
     } else if (k === 'enter' || k === '\r' || k === '\n') {
       switch (this.data.menuSelection) {
-        case 0: // Start Game
-          this.startGame();
-          break;
-        case 1: // Difficulty
-          this.cycleDifficulty();
-          break;
-        case 2: // High Scores
-          this.data.state = 'highscores';
-          break;
-        case 3: // Help
-          this.data.state = 'help';
-          break;
-        case 4: // Quit
-          this.quit();
-          break;
+        case 0: this.startGame(); break;
+        case 1: this.cycleDifficulty(); break;
+        case 2: this.data.state = 'highscores'; break;
+        case 3: this.data.state = 'help'; break;
+        case 4: this.quit(); break;
       }
     }
   }
 
-  private handleGameInput(k: string, key: string): void {
+  private handleGameInput(k: string): void {
     if (k === 'arrowleft' || k === 'left' || k === 'a') {
       this.movePaddle(-1);
     } else if (k === 'arrowright' || k === 'right' || k === 'd') {
@@ -1359,13 +1158,14 @@ class ArkanoidGame {
       }
     } else if (k === 'q') {
       this.data.state = 'menu';
+      this.stopMusic();
     }
   }
 
-  private handleNameInput(key: string): void {
+  private async handleNameInput(key: string): Promise<void> {
     if (key === 'enter' || key === '\r' || key === '\n') {
       if (this.data.playerName.length > 0) {
-        this.addHighScore();
+        await this.saveHighscore();
         this.data.state = 'highscores';
       }
     } else if (key === 'backspace' || key === '\x7f') {
@@ -1373,59 +1173,6 @@ class ArkanoidGame {
     } else if (key.length === 1 && this.data.playerName.length < 10) {
       if (/[a-zA-Z0-9]/.test(key)) {
         this.data.playerName += key.toUpperCase();
-      }
-    }
-  }
-
-  private handleMouseInput(event: { type: string; x: number; y: number; button?: number }): void {
-    // Mouse events: mouse-hover, mouse-click, mouse-drag, mouse-up
-    // x and y are 1-indexed terminal coordinates
-    console.log('[Arkanoid] Mouse event:', event.type, 'x:', event.x, 'y:', event.y, 'state:', this.data.state);
-
-    if (this.data.state === 'playing') {
-      // Map mouse X position to paddle position
-      // Mouse x is 1-indexed, game area is GAME_LEFT to GAME_RIGHT
-      const mouseX = event.x;
-      const paddle = this.data.paddle;
-      const paddleHalfWidth = paddle.width / 2;
-
-      // Center the paddle on the mouse position
-      let newPaddleX = mouseX - paddleHalfWidth;
-
-      // Clamp to game boundaries
-      newPaddleX = Math.max(GAME_LEFT, Math.min(GAME_RIGHT - paddle.width + 1, newPaddleX));
-
-      paddle.x = newPaddleX;
-
-      // Move attached ball with paddle
-      for (const ball of this.data.balls) {
-        if (!ball.active) {
-          ball.x = paddle.x + Math.floor(paddle.width / 2);
-        }
-      }
-
-      // Click to launch ball or shoot (if sticky paddle has ball)
-      if (event.type === 'mouse-click') {
-        if (this.data.balls.some(b => !b.active)) {
-          this.launchBall();
-        }
-      }
-    } else if (this.data.state === 'menu' && event.type === 'mouse-click') {
-      // Menu click handling - check Y position for menu items
-      const menuStartY = 10;
-      const clickY = event.y;
-
-      if (clickY >= menuStartY && clickY <= menuStartY + 4) {
-        const selection = clickY - menuStartY;
-        this.data.menuSelection = selection;
-
-        switch (selection) {
-          case 0: this.startGame(); break;
-          case 1: this.cycleDifficulty(); break;
-          case 2: this.data.state = 'highscores'; break;
-          case 3: this.data.state = 'help'; break;
-          case 4: this.quit(); break;
-        }
       }
     }
   }
@@ -1442,110 +1189,27 @@ class ArkanoidGame {
     this.data.startTime = Date.now();
     this.initLevel(1);
     this.data.state = 'playing';
+    this.startMusic();
   }
 
   private quit(): void {
-    // Show cursor and reset colors before cleanup
-    this.socket.emit('ansi-output', ANSI.show + ANSI.reset);
-    this.socket.emit('ansi-output', ANSI.clear + ANSI.home);
-    this.socket.emit('ansi-output', '\x1b[32mThanks for playing ARKANOID!\x1b[0m\r\n');
-
-    this.cleanup();
-    this.socket.emit('door-exit');
+    this.door.send(ANSI.show + ANSI.reset);
+    this.door.send(ANSI.clear + ANSI.home);
+    this.door.send('\x1b[32mThanks for playing ARKANOID!\x1b[0m\r\n');
+    this.stopMusic();
+    this.keyTracker.stop();
+    this.door.shutdown();
   }
 
-  private cleanup(): void {
-    if (this.gameLoop) {
-      clearInterval(this.gameLoop);
-      this.gameLoop = null;
-    }
-
-    // Disable mouse events
-    this.bbsSession.mouseEventsEnabled = false;
-
-    // Clear input handler
-    this.bbsSession.doorInputHandler = null;
-  }
-
-  // =============================================================================
-  // Game Loop
-  // =============================================================================
-
-  async run(): Promise<void> {
-    // Enable mouse events for paddle control
-    this.bbsSession.mouseEventsEnabled = true;
-
-    const inputHandler = (data: any) => {
-      // Check if this is a mouse event (JSON string)
-      if (typeof data === 'string' && data.startsWith('{')) {
-        try {
-          const mouseEvent = JSON.parse(data);
-          this.handleMouseInput(mouseEvent);
-          return;
-        } catch (e) {
-          // Not a mouse event, continue with keyboard handling
-        }
-      }
-
-      // Data can be either a string (direct key) or an object with key property
-      const key = typeof data === 'string' ? data : (data?.key || '');
-      this.handleInput(key);
-
-      // Immediate render for menu/non-game states
-      if (this.data.state !== 'playing') {
-        this.socket.emit('ansi-output', this.render());
-      }
-    };
-
-    this.bbsSession.doorInputHandler = inputHandler;
-
-    // Initial render
-    this.socket.emit('ansi-output', this.render());
-
-    // Game loop
-    const FPS = 30;
-    const frameTime = 1000 / FPS;
-
-    this.gameLoop = setInterval(() => {
-      if (this.data.state === 'playing') {
-        const now = Date.now();
-        const deltaTime = (now - this.lastUpdate) / 1000;
-        this.lastUpdate = now;
-
-        // Update game state
-        let output = this.updateBalls(deltaTime);
-        output += this.updatePowerUps();
-        this.updateShineEffect();
-
-        // Check level complete
-        if (this.checkLevelComplete()) {
-          output += this.audio.playLevelComplete();
-          this.nextLevel();
-        }
-
-        // Render
-        this.socket.emit('ansi-output', output + this.render());
-      }
-    }, frameTime);
-
-    // Wait for game to end
-    await new Promise<void>((resolve) => {
-      const closeHandler = () => {
-        this.cleanup();
-        resolve();
-      };
-
-      this.socket.once('door:close', closeHandler);
-      this.socket.once('disconnect', closeHandler);
-    });
+  public start(): void {
+    this.door.setFPS(30);
+    this.door.start();
   }
 }
 
 // =============================================================================
-// Door Entry Point
+// Entry Point
 // =============================================================================
 
-export async function runDoor(doorSession: any): Promise<void> {
-  const game = new ArkanoidGame(doorSession);
-  await game.run();
-}
+const game = new ArkanoidGame();
+game.start();
