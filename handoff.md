@@ -11,6 +11,7 @@
 - Operator chat path fixed: sockets now use same-origin (or VITE_SOCKET_URL), sysop emits correct events, and rooms are joined so page/accept/message fan-out works (`web/backend/src/handlers/operator-chat.handler.ts`, `web/config-app/src/pages/OperatorChatPage.tsx`).
 - Render deploy failure was due to CRLF in `docker-entrypoint.sh` causing “no such file or directory”; converted to LF so entrypoint executes in container.
 - Sysop availability now defaults to AVAILABLE and is set on connect/disconnect for secLevel >=100 sockets, so paging works without manual status toggles (`web/backend/src/database/operator-chat.repository.ts`, operator chat handler).
+- Computer type creation fixed: config.service now imports the Zod schemas (ComputerTypeSchema, etc.) instead of referencing undefined exports, eliminating “ComputerTypeSchema is not defined” at runtime.
 
 ## Recent Work
 - Fixed Render build break: `web/config-app` now declares `socket.io-client` (^4.8.1); `npm run build` passes locally.
