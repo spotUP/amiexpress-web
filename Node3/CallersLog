@@ -9721,3 +9721,56 @@ User RaGe already on another node!
 10-Dec-25 19:05 Door: GL
 10-Dec-25 19:05 Door exit: GL
 10-Dec-25 19:10 Login: sysop
+10-Dec-25 20:42 Door: TELNET-FRONT
+10-Dec-25 20:42 Door exit: TELNET-FRONT
+10-Dec-25 20:43 Door: GL
+10-Dec-25 20:43 Door exit: GL
+10-Dec-25 20:43 Door: ARKANOID2
+10-Dec-25 20:49 Login: sysop
+10-Dec-25 20:50 Logoff: sysop
+10-Dec-25 20:57 Door: TELNET-FRONT
+10-Dec-25 20:57 Door exit: TELNET-FRONT
+10-Dec-25 20:57 Door: GL
+10-Dec-25 20:57 Door exit: GL
+10-Dec-25 21:04 Login: sysop
+10-Dec-25 21:10 Door: DRAWCUBE
+10-Dec-25 21:11 Door exit: DRAWCUBE
+10-Dec-25 21:39 Door: TELNET-FRONT
+10-Dec-25 21:39 Door exit: TELNET-FRONT
+10-Dec-25 21:39 Door: GL
+10-Dec-25 21:39 Door exit: GL
+10-Dec-25 21:40 Door: ARKANOID2
+10-Dec-25 21:45 Logoff: sysop
+10-Dec-25 21:46 Login: sysop
+10-Dec-25 23:55 Door: TELNET-FRONT
+10-Dec-25 23:56 Door exit: TELNET-FRONT
+10-Dec-25 23:56 Door: GL
+10-Dec-25 23:56 Door exit: GL
+10-Dec-25 23:56 Door: B
+10-Dec-25 23:56 Door exit: B
+11-Dec-25 00:02 Login: sysop
+11-Dec-25 00:03 Logoff: sysop
+11-Dec-25 00:34 Door: TELNET-FRONT
+11-Dec-25 00:34 Door exit: TELNET-FRONT
+11-Dec-25 00:38 Door: GL
+11-Dec-25 00:38 Door exit: GL
+11-Dec-25 00:38 Door: B
+11-Dec-25 00:38 Door exit: B
+11-Dec-25 00:38 Door: J
+11-Dec-25 00:38 Door exit: J
+11-Dec-25 00:42 Door: J
+11-Dec-25 00:42 Door exit: J
+11-Dec-25 00:44 Login: sysop
+11-Dec-25 00:56 Door: TELNET-FRONT
+11-Dec-25 00:56 Door exit: TELNET-FRONT
+11-Dec-25 00:56 Door: GL
+11-Dec-25 00:56 Door exit: GL
+11-Dec-25 00:56 Door: ARKANOID2
+11-Dec-25 01:02 Login: sysop
+11-Dec-25 12:56 Door: TELNET-FRONT
+11-Dec-25 12:56 Door exit: TELNET-FRONT
+11-Dec-25 12:56 Door: GL
+11-Dec-25 12:56 Door exit: GL
+11-Dec-25 12:56 Door: ARKANOID
+11-Dec-25 13:01 Login: sysop
+11-Dec-25 13:03 Door exit: ARKANOID
