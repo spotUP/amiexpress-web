@@ -14,6 +14,8 @@
 - Computer type creation fixed: config.service now imports the Zod schemas (ComputerTypeSchema, etc.) instead of referencing undefined exports, eliminating “ComputerTypeSchema is not defined” at runtime.
 - Deployment/health API now uses proper auth middleware (`authenticateToken(db), requireSysop()`) so admin Deployment & Health page should load.
 - Session log terminal view now strips destructive ANSI control codes but keeps color, so content should display instead of clearing.
+- Added default sysop row to operator status table and ensured sysop sockets join their user room on connect; should help operator pages reach admin UI.
+- Batch editor now searches the project root as well as dataDir/BBS_ROOT so batch0–batch6 should populate in admin.
 
 ## Recent Work
 - Fixed Render build break: `web/config-app` now declares `socket.io-client` (^4.8.1); `npm run build` passes locally.
