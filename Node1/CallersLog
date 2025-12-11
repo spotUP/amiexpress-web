@@ -4326,3 +4326,111 @@
 11-Dec-25 12:55 Door: ARKANOID2
 11-Dec-25 13:00 Login: sysop
 11-Dec-25 13:01 Logoff: sysop
+11-Dec-25 13:15 Door: TELNET-FRONT
+11-Dec-25 13:15 Door exit: TELNET-FRONT
+11-Dec-25 13:16 Door: GL
+11-Dec-25 13:16 Door exit: GL
+11-Dec-25 13:16 Door: TETRIS
+11-Dec-25 13:23 Login: sysop
+11-Dec-25 13:23 Logoff: sysop
+11-Dec-25 13:30 Door: TELNET-FRONT
+11-Dec-25 13:30 Door exit: TELNET-FRONT
+11-Dec-25 13:31 Door: TELNET-FRONT
+11-Dec-25 13:31 Door exit: TELNET-FRONT
+11-Dec-25 13:31 Door: GL
+11-Dec-25 13:31 Door exit: GL
+11-Dec-25 13:37 Login: sysop
+11-Dec-25 13:38 Door: TELNET-FRONT
+11-Dec-25 13:38 Door exit: TELNET-FRONT
+11-Dec-25 13:39 Door: GL
+11-Dec-25 13:39 Door exit: GL
+11-Dec-25 13:45 Login: sysop
+11-Dec-25 14:35 Door: TELNET-FRONT
+11-Dec-25 14:35 Door exit: TELNET-FRONT
+11-Dec-25 14:38 Door: TELNET-FRONT
+11-Dec-25 14:38 Door exit: TELNET-FRONT
+11-Dec-25 16:28 Door: FRONTEND
+11-Dec-25 16:33 Door exit: FRONTEND
+11-Dec-25 17:06 Door: FRONTEND
+11-Dec-25 17:06 Door exit: FRONTEND
+11-Dec-25 17:34 Door: FRONTEND
+11-Dec-25 17:34 Door exit: FRONTEND
+11-Dec-25 17:34 Door: GL
+11-Dec-25 17:34 Door exit: GL
+11-Dec-25 17:40 Door: FRONTEND
+11-Dec-25 17:40 Door exit: FRONTEND
+11-Dec-25 17:41 Door: GL
+11-Dec-25 17:41 Door exit: GL
+11-Dec-25 17:45 Door: FRONTEND
+11-Dec-25 17:45 Door exit: FRONTEND
+11-Dec-25 17:46 Door: FRONTEND
+11-Dec-25 17:46 Door exit: FRONTEND
+11-Dec-25 17:56 Door: FRONTEND
+11-Dec-25 17:56 Door exit: FRONTEND
+11-Dec-25 18:05 Door: FRONTEND
+11-Dec-25 18:05 Door exit: FRONTEND
+11-Dec-25 18:05 Door: GL
+11-Dec-25 18:05 Door exit: GL
+11-Dec-25 18:05 Door: ARKANOID2
+11-Dec-25 18:12 Login: sysop
+11-Dec-25 18:51 Door: FRONTEND
+11-Dec-25 18:51 Door exit: FRONTEND
+11-Dec-25 18:53 Door: GL
+11-Dec-25 18:53 Door exit: GL
+11-Dec-25 18:53 Door: ARKANOID2
+11-Dec-25 18:58 Door: FRONTEND
+11-Dec-25 18:58 Door exit: FRONTEND
+11-Dec-25 18:58 Door: GL
+11-Dec-25 18:58 Door exit: GL
+11-Dec-25 18:58 Door: ARKANOID2
+11-Dec-25 18:58 Door: ARKANOID2
+11-Dec-25 18:58 Door exit: ARKANOID2
+11-Dec-25 19:05 Login: sysop
+11-Dec-25 19:25 Door: FRONTEND
+11-Dec-25 19:25 Door exit: FRONTEND
+11-Dec-25 19:25 Door: GL
+11-Dec-25 19:25 Door exit: GL
+11-Dec-25 19:25 Door: ARKANOID2
+11-Dec-25 19:25 Door: ARKANOID2
+11-Dec-25 19:25 Door exit: ARKANOID2
+11-Dec-25 19:28 Door: FRONTEND
+11-Dec-25 19:28 Door exit: FRONTEND
+11-Dec-25 19:36 Door: FRONTEND
+11-Dec-25 19:36 Door exit: FRONTEND
+11-Dec-25 19:36 Door: GL
+11-Dec-25 19:36 Door exit: GL
+11-Dec-25 19:40 Login: sysop
+11-Dec-25 19:40 Door: FRONTEND
+11-Dec-25 19:40 Door exit: FRONTEND
+11-Dec-25 19:41 Door: GL
+11-Dec-25 19:41 Door exit: GL
+11-Dec-25 19:47 Login: sysop
+11-Dec-25 20:00 Door: FRONTEND
+11-Dec-25 20:00 Door exit: FRONTEND
+11-Dec-25 20:07 Login: sysop
+11-Dec-25 20:09 Door: FRONTEND
+11-Dec-25 20:09 Door exit: FRONTEND
+11-Dec-25 20:09 Door: GL
+11-Dec-25 20:09 Door exit: GL
+11-Dec-25 20:09 Door: GWALL
+11-Dec-25 20:10 Door exit: GWALL
+11-Dec-25 20:11 Door: 2048
+11-Dec-25 20:11 Door exit: 2048
+11-Dec-25 20:11 Door: ANSI-EDIT
+11-Dec-25 20:11 Door exit: ANSI-EDIT
+11-Dec-25 20:12 Door: ANSI-SDK
+11-Dec-25 20:12 Door exit: ANSI-SDK
+11-Dec-25 20:12 Door: ARKANOID2
+11-Dec-25 20:12 Door: ARKANOID2
+11-Dec-25 20:12 Door exit: ARKANOID2
+11-Dec-25 20:20 Door: FRONTEND
+11-Dec-25 20:20 Door exit: FRONTEND
+11-Dec-25 20:23 Login: sysop
+11-Dec-25 20:41 Door: FRONTEND
+11-Dec-25 20:41 Door exit: FRONTEND
+11-Dec-25 20:41 Door: GL
+11-Dec-25 20:41 Door exit: GL
+11-Dec-25 20:41 Door: GWALL
+11-Dec-25 20:41 Door exit: GWALL
+11-Dec-25 20:47 Login: sysop
+11-Dec-25 20:48 Logoff: sysop
