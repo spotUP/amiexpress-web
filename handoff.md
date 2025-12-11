@@ -9,6 +9,7 @@
 - Config app build now succeeds locally after adding missing `socket.io-client` dependency used by `OperatorChatPage`.
 - Connection banner (welcome/reg info with “Web port by Spot/Up Rough”) now persists: we stopped clearing before AWAITSCREEN so the banner shows before the await screen/telefront run.
 - Operator chat path fixed: sockets now use same-origin (or VITE_SOCKET_URL), sysop emits correct events, and rooms are joined so page/accept/message fan-out works (`web/backend/src/handlers/operator-chat.handler.ts`, `web/config-app/src/pages/OperatorChatPage.tsx`).
+- Render deploy failure was due to CRLF in `docker-entrypoint.sh` causing “no such file or directory”; converted to LF so entrypoint executes in container.
 
 ## Recent Work
 - Fixed Render build break: `web/config-app` now declares `socket.io-client` (^4.8.1); `npm run build` passes locally.
@@ -25,3 +26,4 @@
 4) Let Render redeploy with new config-app dependency; watch for any remaining Vite externals warnings.
 5) Verify connection banner shows before AWAITSCREEN now that the clear-before-await flag is removed.  
 6) Test O (page sysop) end-to-end: admin /admin/operator-chat should receive `operator:page`, accept joins room, and messages flow both ways.
+7) Redeploy to confirm entrypoint now runs (CRLF -> LF fix).
