@@ -12,6 +12,8 @@
 - Render deploy failure was due to CRLF in `docker-entrypoint.sh` causing “no such file or directory”; converted to LF so entrypoint executes in container.
 - Sysop availability now defaults to AVAILABLE and is set on connect/disconnect for secLevel >=100 sockets, so paging works without manual status toggles (`web/backend/src/database/operator-chat.repository.ts`, operator chat handler).
 - Computer type creation fixed: config.service now imports the Zod schemas (ComputerTypeSchema, etc.) instead of referencing undefined exports, eliminating “ComputerTypeSchema is not defined” at runtime.
+- Deployment/health API now uses proper auth middleware (`authenticateToken(db), requireSysop()`) so admin Deployment & Health page should load.
+- Session log terminal view now strips destructive ANSI control codes but keeps color, so content should display instead of clearing.
 
 ## Recent Work
 - Fixed Render build break: `web/config-app` now declares `socket.io-client` (^4.8.1); `npm run build` passes locally.
