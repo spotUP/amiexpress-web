@@ -4434,3 +4434,165 @@
 11-Dec-25 20:41 Door exit: GWALL
 11-Dec-25 20:47 Login: sysop
 11-Dec-25 20:48 Logoff: sysop
+11-Dec-25 21:34 Door: FRONTEND
+11-Dec-25 21:34 Door exit: FRONTEND
+11-Dec-25 21:42 Login: sysop
+11-Dec-25 22:00 Door: FRONTEND
+11-Dec-25 22:01 Door exit: FRONTEND
+11-Dec-25 22:01 Door: GL
+11-Dec-25 22:01 Door exit: GL
+11-Dec-25 22:01 Door: GWALL
+11-Dec-25 22:01 Door exit: GWALL
+11-Dec-25 22:02 Door: TTT
+11-Dec-25 22:02 Door exit: TTT
+11-Dec-25 22:04 Door: FRONTEND
+11-Dec-25 22:04 Door exit: FRONTEND
+11-Dec-25 22:04 Door: GL
+11-Dec-25 22:04 Door exit: GL
+11-Dec-25 22:04 Door: GWALL
+11-Dec-25 22:04 Door exit: GWALL
+11-Dec-25 22:04 Door: TTT
+11-Dec-25 22:04 Door exit: TTT
+11-Dec-25 22:11 Login: sysop
+11-Dec-25 22:24 Door: FRONTEND
+11-Dec-25 22:24 Door exit: FRONTEND
+11-Dec-25 22:24 Door: GL
+11-Dec-25 22:24 Door exit: GL
+11-Dec-25 22:24 Door: GWALL
+11-Dec-25 22:24 Door exit: GWALL
+11-Dec-25 22:24 Door: J
+11-Dec-25 22:25 Door exit: J
+11-Dec-25 22:57 Door: FRONTEND
+11-Dec-25 22:57 Door exit: FRONTEND
+11-Dec-25 23:02 Door: GL
+11-Dec-25 23:02 Door exit: GL
+11-Dec-25 23:02 Door: GWALL
+11-Dec-25 23:02 Door exit: GWALL
+11-Dec-25 23:03 Door: TTT
+11-Dec-25 23:03 Door exit: TTT
+11-Dec-25 23:04 Door: FRONTEND
+11-Dec-25 23:04 Door exit: FRONTEND
+11-Dec-25 23:06 Door: FRONTEND
+11-Dec-25 23:06 Door exit: FRONTEND
+11-Dec-25 23:08 Door: GL
+11-Dec-25 23:08 Door exit: GL
+11-Dec-25 23:08 Door: GWALL
+11-Dec-25 23:08 Door exit: GWALL
+11-Dec-25 23:08 Door: B
+11-Dec-25 23:08 Door exit: B
+11-Dec-25 23:08 Door: TTT
+11-Dec-25 23:11 Door: FRONTEND
+11-Dec-25 23:11 Door exit: FRONTEND
+11-Dec-25 23:12 Door: GL
+11-Dec-25 23:12 Door exit: GL
+11-Dec-25 23:12 Door: GWALL
+11-Dec-25 23:12 Door exit: GWALL
+11-Dec-25 23:12 Door: TTT
+11-Dec-25 23:14 Door: FRONTEND
+11-Dec-25 23:14 Door exit: FRONTEND
+11-Dec-25 23:16 Door: GL
+11-Dec-25 23:16 Door exit: GL
+11-Dec-25 23:16 Door: GWALL
+11-Dec-25 23:16 Door exit: GWALL
+11-Dec-25 23:16 Door: TTT
+11-Dec-25 23:16 Door exit: TTT
+11-Dec-25 23:19 Door: FRONTEND
+11-Dec-25 23:19 Door exit: FRONTEND
+11-Dec-25 23:29 Door: FRONTEND
+11-Dec-25 23:29 Door exit: FRONTEND
+11-Dec-25 23:30 Door: GL
+11-Dec-25 23:30 Door exit: GL
+11-Dec-25 23:30 Door: GWALL
+11-Dec-25 23:30 Door exit: GWALL
+11-Dec-25 23:30 Door: ARKANOID
+11-Dec-25 23:31 Door exit: ARKANOID
+11-Dec-25 23:31 Door: ARKANOID2
+11-Dec-25 23:31 Door: ARKANOID2
+11-Dec-25 23:31 Door exit: ARKANOID2
+11-Dec-25 23:36 Login: sysop
+12-Dec-25 00:02 Door: FRONTEND
+12-Dec-25 00:02 Door exit: FRONTEND
+12-Dec-25 00:03 Door: GL
+12-Dec-25 00:03 Door exit: GL
+12-Dec-25 00:03 Door: GWALL
+12-Dec-25 00:03 Door exit: GWALL
+12-Dec-25 00:03 Door: ARKANOID2
+12-Dec-25 00:03 Door: ARKANOID2
+12-Dec-25 00:03 Door exit: ARKANOID2
+12-Dec-25 00:09 Login: sysop
+12-Dec-25 00:43 Logoff: sysop
+12-Dec-25 01:01 Door: FRONTEND
+12-Dec-25 01:01 Door exit: FRONTEND
+12-Dec-25 01:02 Door: GL
+12-Dec-25 01:02 Door exit: GL
+12-Dec-25 01:02 Door: GWALL
+12-Dec-25 01:02 Door exit: GWALL
+12-Dec-25 01:02 Door: OLM
+12-Dec-25 01:02 Door exit: OLM
+12-Dec-25 01:04 Door: ED
+12-Dec-25 01:04 Door exit: ED
+12-Dec-25 01:04 Door: WHAT
+	Transfer Activities v2.0 by Bobo/Mystic
+
+12-Dec-25 01:04 	Transfer Activities v2.0 by Bobo/Mystic
+
+12-Dec-25 01:04 Door exit: WHAT
+12-Dec-25 01:05 Door: TLIST
+12-Dec-25 01:05 Door exit: TLIST
+12-Dec-25 01:09 Door: FRONTEND
+12-Dec-25 01:09 Door exit: FRONTEND
+12-Dec-25 01:09 Door: GL
+12-Dec-25 01:09 Door exit: GL
+12-Dec-25 01:09 Door: GWALL
+12-Dec-25 01:09 Door exit: GWALL
+12-Dec-25 01:09 Door: OLM
+12-Dec-25 01:15 Door: FRONTEND
+12-Dec-25 01:15 Door exit: FRONTEND
+12-Dec-25 01:15 Door: GL
+12-Dec-25 01:15 Door exit: GL
+12-Dec-25 01:15 Door: GWALL
+12-Dec-25 01:15 Door exit: GWALL
+12-Dec-25 01:15 Door: WHO
+12-Dec-25 01:15 Door exit: WHO
+12-Dec-25 01:15 Door: OLM
+12-Dec-25 01:17 Door exit: OLM
+12-Dec-25 01:17 Door: WHO
+12-Dec-25 01:17 Door exit: WHO
+12-Dec-25 01:18 Door: FRONTEND
+12-Dec-25 01:18 Door exit: FRONTEND
+12-Dec-25 01:31 Door: GL
+12-Dec-25 01:31 Door exit: GL
+12-Dec-25 01:31 Door: GWALL
+12-Dec-25 03:28 Login: sysop
+12-Dec-25 03:33 Logoff: sysop
+12-Dec-25 12:50 Door: FRONTEND
+12-Dec-25 12:50 Door exit: FRONTEND
+12-Dec-25 12:52 Door: FRONTEND
+12-Dec-25 12:52 Door exit: FRONTEND
+12-Dec-25 12:52 Door: GL
+12-Dec-25 12:52 Door exit: GL
+12-Dec-25 12:52 Door: GWALL
+12-Dec-25 12:52 Door exit: GWALL
+12-Dec-25 12:58 Login: sysop
+12-Dec-25 12:58 Logoff: sysop
+12-Dec-25 13:13 Door: FRONTEND
+12-Dec-25 13:13 Door exit: FRONTEND
+12-Dec-25 13:13 Door: GL
+12-Dec-25 13:13 Door exit: GL
+12-Dec-25 13:13 Door: GWALL
+12-Dec-25 13:13 Door exit: GWALL
+12-Dec-25 13:13 Door: DASHBOARD
+12-Dec-25 13:13 Door exit: DASHBOARD
+12-Dec-25 13:14 Door: NEODEMO
+12-Dec-25 13:14 Door exit: NEODEMO
+12-Dec-25 13:14 Door: NEOSHOWCASE
+12-Dec-25 13:14 Door exit: NEOSHOWCASE
+12-Dec-25 13:18 Login: sysop
+12-Dec-25 13:25 Door: FRONTEND
+12-Dec-25 13:25 Door exit: FRONTEND
+12-Dec-25 13:26 Door: GL
+12-Dec-25 13:26 Door exit: GL
+12-Dec-25 13:26 Door: GWALL
+12-Dec-25 13:26 Door exit: GWALL
+12-Dec-25 13:26 Door: DASHBOARD
+12-Dec-25 13:26 Door exit: DASHBOARD
