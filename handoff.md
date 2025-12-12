@@ -3,6 +3,7 @@
 - Reviewed `AGENTS.md` and `CLAUDE.md` to lock in Amiga-focused rules, no-background-process policy, and deployment expectations.
 - Read the Render deployment guide (`Documentation/7-Reference Sources/reference/RENDER_DEPLOYMENT.md`), deployment scripts guide (`Documentation/7-Reference Sources/reference/DEPLOYMENT_SCRIPTS.md`), Docker deployment plan (`DOCKER_DEPLOYMENT_PLAN.md`), and Claude’s recent migration brief (`Documentation/2-Sysops/RENDER_DOCKER_MIGRATION.md`).
 - Render blueprint still needs to be created, but GitHub secrets are configured and the SDK build now ships its own `socket.io` type declarations so the Docker `sdk-builder` stage can succeed.
+ - `.dockerignore` now allows the `Doors` directory so Docker can copy door binaries during the build (fixes the cache-key failure).
 
 ## Recent Work
 - Captured the Claude-authored Render/Docker checklist, added the Render credentials, and taught the SDK to resolve its `socket.io` types (`sdk/types/socket.io.d.ts` plus the broader `typeRoots` change to `sdk/tsconfig.json`).
