@@ -1,4 +1,4 @@
-BBSCMD=CHAT
+BBSCMD=IRC
 TYPE=TS
 LOCATION=sdk/doors/livechat
 DESCRIPTION=Multi-user chat (alias for LIVECHAT)
