@@ -1,82 +1,74 @@
-# Session Handoff - 2025-12-15
+# Session Handoff - 2025-12-16
 
-## Critical Architectural Fix: Real AEDoor.library Implementation
+## Latest: vbcc-only SDK + XIM Door Compilation
 
-**Status**: COMPLETE - Fixed fundamental design flaw from Dec 11 commits onward
+**Status**: vbcc migration complete, XIM door compiled
 
-### What Was Fixed
+### Completed This Session
 
-**Problem**: TypeScript trap-based reimplementation of AEDoor.library
-- Commits after Dec 11 used ILLEGAL instruction traps
-- TypeScript AEDoorLibrary class reimplemented library functions
-- Duplicated functionality from real binary (./Libs/AEDoor.library)
-- C door SDK had non-functional stub implementations
+1. **Removed all gcc references from SDK**
+   - Updated sdk/68k/README.md, BUILD_GUIDE.md
+   - Rewrote dev/c-doors/README.md, 68K_DOOR_DEVELOPMENT.md
+   - Updated all Makefiles to use vbcc only
+   - Removed gcc-related source files and obsolete Makefiles
+   - Updated build scripts (build-all-test-doors.sh, test-door.sh, verify-api.sh)
 
-**Solution**: Use REAL AEDoor.library binary execution
-- Load actual 1128-byte Amiga binary via LibraryLoader
-- CPU executes real 68K code when doors call library functions
-- Bridge ONLY message port I/O (PutMsg/GetMsg) to XIMProtocol
-- No TypeScript reimplementation needed
+2. **Compiled working XIM door with vbcc**
+   - Created xim-vbcc.c based on AEKIT101 XIM protocol
+   - Fixed SysBase conflict (use extern, not define)
+   - Successfully compiled: `Doors/XIMVBCC/xim-vbcc` (3652 bytes)
+   - Created .info files for BBS registration
 
-### Changes Made (Commit 8e25d2ffd)
+3. **vbcc NDK Headers**
+   - NDK headers at: `sdk/68k/ndk-includes/`
+   - Include with: `-I/path/to/sdk/68k/ndk-includes`
+   - Contains: exec/, dos/, clib/, proto/, etc.
 
-**Phase 1**: ExecLibrary.loadRealAEDoorLibrary() enhancement
-- Uses LibraryLoader for proper HUNK parsing and relocations
-- Loads real library at startup, registers in library list
+---
 
-**Phase 2**: Disabled TypeScript traps in LibraryTraps.ts
-- Commented out AEDOOR_VECTORS array (19 trap handlers)
-- Modified installAEDoorVectors() to skip trap installation
-- CPU now executes real library code instead of TypeScript
+## Test Now
 
-**Phase 3**: Verified message port bridge
-- ExecLibrary.putMsg() intercepts library's PutMsg calls
-- Routes to XIMProtocol.handleMessage() via doorMessageCallback
-- ExecLibrary.getMsg() returns BBS replies to library
-- Complete message flow validated
-
-**Phase 4**: Documentation and deprecation
-- Added warnings to AEDoorLibrary.ts (methods now unused)
-- Added warnings to glue-amiga.c (stub implementations wrong)
-- Created AEDOOR_ARCHITECTURE_FIX.md (complete plan)
-- Created C_DOOR_ARCHITECTURE_ISSUES.md (C SDK problems)
-
-### Architecture Flow
-
-```
-Door calls CreateComm()
-  → CPU executes real AEDoor.library 68K code
-  → Library calls PutMsg(AEDoorPort, msg)
-  → ExecLibrary.putMsg() intercepts
-  → doorMessageCallback invoked
-  → XIMProtocol.handleMessage(msg)
-  → BBS processes XIM command
-  → replyMsg() called
-  → putMsg(replyPort, reply)
-  → Library calls GetMsg(replyPort)
-  → ExecLibrary.getMsg() returns reply
-  → Library returns result to door
+```bash
+./dev/scripts/kill-servers.sh
+./dev/scripts/start-servers.sh
+telnet localhost 2323
+XIMVBCC
 ```
 
-### Files Modified
+**Expected**: XIM door should register, display output, query user data.
 
-- web/backend/src/amiga-emulation/api/ExecLibrary.ts
-- web/backend/src/amiga-emulation/api/LibraryTraps.ts
-- web/backend/src/amiga-emulation/api/AEDoorLibrary.ts
-- dev/c-doors/src/glue-amiga.c
-- AEDOOR_ARCHITECTURE_FIX.md (new)
-- C_DOOR_ARCHITECTURE_ISSUES.md (new)
+---
 
-### Impact
+## vbcc Compilation (Quick Reference)
 
-- Real library does all the work (1:1 AmigaOS compatibility)
-- TypeScript AEDoorLibrary.ts methods now deprecated/unused
-- Message port IPC is the ONLY bridge point
-- Minimal code, maximum correctness
+```bash
+# Set environment
+export VBCC=/opt/homebrew/opt/vbcc
 
-### References
+# Compile door
+vc +aos68k -O2 -I/path/to/sdk/68k/ndk-includes mydoor.c -o mydoor -lamiga
 
-- Real library: ./Libs/AEDoor.library (1128 bytes, 18 May 1996)
-- Architecture: AEDOOR_ARCHITECTURE_FIX.md
-- C door issues: C_DOOR_ARCHITECTURE_ISSUES.md
-- Baseline commit: 25ed673cb (Dec 11, 2025)
+# Key points:
+# - Use 'extern struct ExecBase *SysBase;' (NOT 'SysBase = NULL')
+# - vbcc startup code handles SysBase initialization
+# - Include amiga library: -lamiga
+```
+
+---
+
+## Key Files Modified
+
+- `sdk/68k/README.md` - Removed gcc section
+- `sdk/68k/BUILD_GUIDE.md` - vbcc-only
+- `dev/c-doors/README.md` - Completely rewritten for vbcc
+- `dev/c-doors/68K_DOOR_DEVELOPMENT.md` - vbcc-only
+- `dev/c-doors/Makefile` - vbcc-only
+- `dev/c-doors/doors/xim-vbcc/xim-vbcc.c` - New XIM door
+- `Doors/XIMVBCC/` - Installed door
+
+## Previous Fixes Still In Place
+
+1. ExecBase at 0x4 AND 0xC (SAS/C pattern)
+2. JMP table at negative offsets (LVO -84 -> WriteStr etc)
+3. OpenLibrary register fix (A1 not A0)
+4. PutMsg trap handler (LVO -366)

@@ -9854,3 +9854,300 @@ User RaGe already on another node!
 12-Dec-25 16:54 Door: ARKANOID2
 12-Dec-25 16:54 Door exit: ARKANOID2
 12-Dec-25 17:01 Logoff: sysop
+15-Dec-25 16:28 Door: FRONTEND
+15-Dec-25 16:28 Door exit: FRONTEND
+15-Dec-25 16:28 Door: GL
+15-Dec-25 16:28 Door exit: GL
+15-Dec-25 16:28 Door: GWALL
+15-Dec-25 16:28 Door exit: GWALL
+15-Dec-25 16:28 Door: MINIMAL
+15-Dec-25 16:28 Door exit: MINIMAL
+15-Dec-25 16:28 Door: SDKTEST
+15-Dec-25 16:28 Door exit: SDKTEST
+15-Dec-25 16:28 Door: SDKTEST
+15-Dec-25 16:28 Door exit: SDKTEST
+15-Dec-25 16:32 Login: sysop
+15-Dec-25 20:55 Door: FRONTEND
+15-Dec-25 20:56 Door exit: FRONTEND
+15-Dec-25 20:56 Door: GL
+15-Dec-25 20:56 Door exit: GL
+15-Dec-25 20:56 Door: GWALL
+15-Dec-25 20:56 Door exit: GWALL
+15-Dec-25 20:56 Door: WHO
+15-Dec-25 20:56 Door exit: WHO
+15-Dec-25 20:56 Door: DASHBOARD
+15-Dec-25 20:56 Door exit: DASHBOARD
+15-Dec-25 21:01 Login: sysop
+16-Dec-25 00:38 Door: FRONTEND
+16-Dec-25 00:38 Door exit: FRONTEND
+16-Dec-25 00:38 Door: GL
+16-Dec-25 00:38 Door exit: GL
+16-Dec-25 00:38 Door: GWALL
+16-Dec-25 00:38 Door exit: GWALL
+16-Dec-25 01:26 Door: FRONTEND
+16-Dec-25 01:26 Door exit: FRONTEND
+16-Dec-25 06:46 Door: FRONTEND
+16-Dec-25 06:46 Door exit: FRONTEND
+16-Dec-25 07:37 Door: FRONTEND
+16-Dec-25 07:37 Door exit: FRONTEND
+16-Dec-25 07:37 Door: GL
+16-Dec-25 07:37 Door exit: GL
+16-Dec-25 07:37 Door: GWALL
+16-Dec-25 07:37 Door exit: GWALL
+16-Dec-25 07:37 Door: DIAGNOSTIC
+16-Dec-25 07:37 Door exit: DIAGNOSTIC
+16-Dec-25 07:42 Login: sysop
+16-Dec-25 11:45 Door: FRONTEND
+16-Dec-25 11:45 Door exit: FRONTEND
+16-Dec-25 11:45 Door: GL
+16-Dec-25 11:45 Door exit: GL
+16-Dec-25 11:45 Door: GWALL
+16-Dec-25 11:45 Door exit: GWALL
+16-Dec-25 11:46 Door: DIAGNOSTIC
+16-Dec-25 11:46 Door exit: DIAGNOSTIC
+16-Dec-25 11:52 Login: sysop
+16-Dec-25 12:48 Door: FRONTEND
+16-Dec-25 12:48 Door exit: FRONTEND
+16-Dec-25 12:48 Door: GL
+16-Dec-25 12:48 Door exit: GL
+16-Dec-25 12:48 Door: GWALL
+16-Dec-25 12:49 Door exit: GWALL
+16-Dec-25 12:49 Door: DIAGNOSTIC
+16-Dec-25 12:49 Door exit: DIAGNOSTIC
+16-Dec-25 12:53 Login: sysop
+16-Dec-25 14:28 Door: FRONTEND
+16-Dec-25 14:28 Door exit: FRONTEND
+16-Dec-25 14:28 Door: GL
+16-Dec-25 14:28 Door exit: GL
+16-Dec-25 14:28 Door: GWALL
+16-Dec-25 14:28 Door exit: GWALL
+16-Dec-25 14:28 Door: WHO
+16-Dec-25 14:28 Door exit: WHO
+16-Dec-25 14:28 Door: B
+16-Dec-25 14:33 Door exit: B
+16-Dec-25 14:34 Login: sysop
+16-Dec-25 16:20 Door: FRONTEND
+16-Dec-25 16:20 Door exit: FRONTEND
+16-Dec-25 16:20 Door: GL
+16-Dec-25 16:20 Door exit: GL
+16-Dec-25 16:20 Door: GWALL
+16-Dec-25 16:20 Door exit: GWALL
+16-Dec-25 16:20 Door: AEDOOR
+16-Dec-25 16:20 Door exit: AEDOOR
+16-Dec-25 16:21 Door: AEHELP
+16-Dec-25 16:21 Door exit: AEHELP
+16-Dec-25 16:23 Door: J
+16-Dec-25 16:26 Login: sysop
+16-Dec-25 16:44 Door: FRONTEND
+16-Dec-25 16:44 Door exit: FRONTEND
+16-Dec-25 16:44 Door: GL
+16-Dec-25 16:44 Door exit: GL
+16-Dec-25 16:44 Door: GWALL
+16-Dec-25 16:44 Door exit: GWALL
+16-Dec-25 16:44 Door: AEDOOR
+16-Dec-25 16:44 Door exit: AEDOOR
+16-Dec-25 16:44 Door: AEHELP
+16-Dec-25 16:44 Door exit: AEHELP
+16-Dec-25 16:51 Login: sysop
+16-Dec-25 17:33 Logoff: sysop
+16-Dec-25 18:45 Door: FRONTEND
+16-Dec-25 18:45 Door exit: FRONTEND
+16-Dec-25 20:29 Door: FRONTEND
+16-Dec-25 20:29 Door exit: FRONTEND
+16-Dec-25 20:43 Door: FRONTEND
+16-Dec-25 20:43 Door exit: FRONTEND
+16-Dec-25 20:47 Door: FRONTEND
+16-Dec-25 20:47 Door exit: FRONTEND
+16-Dec-25 20:53 Door: FRONTEND
+16-Dec-25 20:53 Door exit: FRONTEND
+16-Dec-25 21:31 Door: FRONTEND
+16-Dec-25 21:31 Door exit: FRONTEND
+16-Dec-25 21:48 Door: FRONTEND
+16-Dec-25 21:48 Door exit: FRONTEND
+16-Dec-25 22:14 Door: FRONTEND
+16-Dec-25 22:14 Door exit: FRONTEND
+16-Dec-25 22:15 Door: FRONTEND
+16-Dec-25 22:15 Door exit: FRONTEND
+16-Dec-25 22:15 Door: GL
+16-Dec-25 22:15 Door exit: GL
+16-Dec-25 22:15 Door: GWALL
+16-Dec-25 22:15 Door exit: GWALL
+16-Dec-25 22:22 Login: sysop
+16-Dec-25 23:46 Door: FRONTEND
+16-Dec-25 23:46 Door exit: FRONTEND
+16-Dec-25 23:47 Door: GL
+16-Dec-25 23:47 Door exit: GL
+16-Dec-25 23:47 Door: GWALL
+16-Dec-25 23:47 Door exit: GWALL
+16-Dec-25 23:47 Door: ADVTEST
+16-Dec-25 23:47 Door exit: ADVTEST
+17-Dec-25 00:13 Door: FRONTEND
+17-Dec-25 00:13 Door exit: FRONTEND
+17-Dec-25 00:13 Door: GL
+17-Dec-25 00:13 Door exit: GL
+17-Dec-25 00:13 Door: GWALL
+17-Dec-25 00:13 Door exit: GWALL
+17-Dec-25 00:13 Door: IRC
+17-Dec-25 00:20 Login: sysop
+17-Dec-25 01:45 Door: FRONTEND
+17-Dec-25 01:45 Door exit: FRONTEND
+17-Dec-25 07:44 Door: FRONTEND
+17-Dec-25 07:44 Door exit: FRONTEND
+17-Dec-25 08:12 Door: FRONTEND
+17-Dec-25 08:12 Door exit: FRONTEND
+17-Dec-25 08:12 Door: GL
+17-Dec-25 08:12 Door exit: GL
+17-Dec-25 08:12 Door: GWALL
+17-Dec-25 08:12 Door exit: GWALL
+17-Dec-25 08:12 Door: IRC
+17-Dec-25 08:18 Login: sysop
+17-Dec-25 08:23 Door: FRONTEND
+17-Dec-25 08:23 Door exit: FRONTEND
+17-Dec-25 08:24 Door: GL
+17-Dec-25 08:24 Door exit: GL
+17-Dec-25 08:24 Door: GWALL
+17-Dec-25 08:24 Door exit: GWALL
+17-Dec-25 08:24 Door: IRC
+17-Dec-25 08:29 Login: sysop
+17-Dec-25 08:35 Door: FRONTEND
+17-Dec-25 08:35 Door exit: FRONTEND
+17-Dec-25 08:35 Door: GL
+17-Dec-25 08:35 Door exit: GL
+17-Dec-25 08:35 Door: IRC
+17-Dec-25 08:42 Login: spot
+17-Dec-25 09:04 Door: FRONTEND
+17-Dec-25 09:04 Door exit: FRONTEND
+17-Dec-25 09:09 Login: sysop
+17-Dec-25 09:10 Logoff: spot
+17-Dec-25 09:11 Login: spot
+17-Dec-25 09:11 Login: spot
+17-Dec-25 09:36 Door: FRONTEND
+17-Dec-25 09:36 Door exit: FRONTEND
+17-Dec-25 09:37 Door: FRONTEND
+17-Dec-25 09:37 Door exit: FRONTEND
+17-Dec-25 09:42 Login: sysop
+17-Dec-25 09:44 Login: sysop
+17-Dec-25 09:44 Logoff: sysop
+17-Dec-25 10:21 Door: FRONTEND
+17-Dec-25 10:21 Door exit: FRONTEND
+17-Dec-25 10:21 Door: GL
+17-Dec-25 10:21 Door exit: GL
+17-Dec-25 10:21 Door: IRC
+17-Dec-25 10:27 Login: spot
+17-Dec-25 10:37 Door: FRONTEND
+17-Dec-25 10:37 Door exit: FRONTEND
+17-Dec-25 10:37 Door: FRONTEND
+17-Dec-25 10:37 Door exit: FRONTEND
+17-Dec-25 10:37 Door: GL
+17-Dec-25 10:37 Door exit: GL
+17-Dec-25 10:37 Door: IRC
+17-Dec-25 10:43 Login: spot
+17-Dec-25 10:47 Door: FRONTEND
+17-Dec-25 10:47 Door exit: FRONTEND
+17-Dec-25 10:47 Door: GL
+17-Dec-25 10:47 Door exit: GL
+17-Dec-25 10:47 Door: GWALL
+17-Dec-25 10:47 Door exit: GWALL
+17-Dec-25 10:47 Door: NEOSHOWCASE
+17-Dec-25 10:47 Door exit: NEOSHOWCASE
+17-Dec-25 10:47 Door: IRC
+17-Dec-25 10:53 Login: sysop
+17-Dec-25 10:54 Logoff: sysop
+17-Dec-25 11:25 Door: FRONTEND
+17-Dec-25 11:25 Door exit: FRONTEND
+17-Dec-25 11:25 Door: GL
+17-Dec-25 11:25 Door exit: GL
+17-Dec-25 11:25 Door: GWALL
+17-Dec-25 11:25 Door exit: GWALL
+17-Dec-25 11:25 Door: NEOSHOWCASE
+17-Dec-25 11:31 Login: sysop
+17-Dec-25 11:36 Logoff: sysop
+17-Dec-25 12:10 Door: FRONTEND
+17-Dec-25 12:10 Door exit: FRONTEND
+17-Dec-25 12:10 Door: GL
+17-Dec-25 12:10 Door exit: GL
+17-Dec-25 12:10 Door: GWALL
+17-Dec-25 12:10 Door exit: GWALL
+17-Dec-25 12:10 Door: NEOSHOWCASE
+17-Dec-25 12:15 Login: sysop
+17-Dec-25 12:27 Door: FRONTEND
+17-Dec-25 12:27 Door exit: FRONTEND
+17-Dec-25 12:27 Door: GL
+17-Dec-25 12:27 Door exit: GL
+17-Dec-25 12:27 Door: GWALL
+17-Dec-25 12:27 Door exit: GWALL
+17-Dec-25 12:27 Door: NEOSHOWCASE
+17-Dec-25 12:33 Login: sysop
+17-Dec-25 13:00 Door: FRONTEND
+17-Dec-25 13:00 Door exit: FRONTEND
+17-Dec-25 13:00 Door: GL
+17-Dec-25 13:00 Door exit: GL
+17-Dec-25 13:00 Door: GWALL
+17-Dec-25 13:00 Door exit: GWALL
+17-Dec-25 13:01 Door: NEOSHOWCASE
+17-Dec-25 13:11 Door: FRONTEND
+17-Dec-25 13:11 Door exit: FRONTEND
+17-Dec-25 13:12 Door: GL
+17-Dec-25 13:12 Door exit: GL
+17-Dec-25 13:12 Door: GWALL
+17-Dec-25 13:12 Door exit: GWALL
+17-Dec-25 13:12 Door: NEOSHOWCASE
+17-Dec-25 13:34 Door: FRONTEND
+17-Dec-25 13:34 Door exit: FRONTEND
+17-Dec-25 13:40 Door: FRONTEND
+17-Dec-25 13:40 Door exit: FRONTEND
+17-Dec-25 13:51 Login: sysop
+17-Dec-25 13:52 Login: sysop
+17-Dec-25 14:06 Door: FRONTEND
+17-Dec-25 14:06 Door exit: FRONTEND
+17-Dec-25 14:08 Door: FRONTEND
+17-Dec-25 14:08 Door exit: FRONTEND
+17-Dec-25 14:08 Door: GL
+17-Dec-25 14:08 Door exit: GL
+17-Dec-25 14:08 Door: GWALL
+17-Dec-25 14:08 Door exit: GWALL
+17-Dec-25 14:10 Door: FRONTEND
+17-Dec-25 14:10 Door exit: FRONTEND
+17-Dec-25 14:12 Door: FRONTEND
+17-Dec-25 14:12 Door exit: FRONTEND
+17-Dec-25 14:12 Door: FRONTEND
+17-Dec-25 14:12 Door exit: FRONTEND
+17-Dec-25 14:12 Door: GL
+17-Dec-25 14:12 Door exit: GL
+17-Dec-25 14:12 Door: GWALL
+17-Dec-25 14:12 Door exit: GWALL
+17-Dec-25 14:24 Door: FRONTEND
+17-Dec-25 14:24 Door exit: FRONTEND
+17-Dec-25 14:24 Door: GL
+17-Dec-25 14:24 Door exit: GL
+17-Dec-25 14:24 Door: GWALL
+17-Dec-25 14:24 Door exit: GWALL
+17-Dec-25 14:25 Door: AEDOOR
+17-Dec-25 14:25 Door exit: AEDOOR
+17-Dec-25 14:25 Door: AMIGAGCC
+17-Dec-25 14:25 Door exit: AMIGAGCC
+17-Dec-25 14:25 Door: AMIGA68K
+17-Dec-25 14:26 Door exit: AMIGA68K
+17-Dec-25 14:26 Door: ARKANOID2
+17-Dec-25 14:26 Door: ARKANOID2
+17-Dec-25 14:26 Door exit: ARKANOID2
+17-Dec-25 14:29 Door: FRONTEND
+17-Dec-25 14:29 Door exit: FRONTEND
+17-Dec-25 16:20 Door: FRONTEND
+17-Dec-25 16:20 Door exit: FRONTEND
+17-Dec-25 16:25 Door: FRONTEND
+17-Dec-25 16:25 Door exit: FRONTEND
+17-Dec-25 16:49 Door: FRONTEND
+17-Dec-25 16:49 Door exit: FRONTEND
+17-Dec-25 17:00 Login: sysop
+17-Dec-25 17:01 Login: sysop
+17-Dec-25 17:14 Door: FRONTEND
+17-Dec-25 17:14 Door exit: FRONTEND
+17-Dec-25 17:17 Door: FRONTEND
+17-Dec-25 17:17 Door exit: FRONTEND
+17-Dec-25 17:22 Login: sysop
+17-Dec-25 17:23 Login: sysop
+17-Dec-25 17:25 Door: FRONTEND
+17-Dec-25 17:25 Door exit: FRONTEND
+17-Dec-25 17:41 Door: FRONTEND
+17-Dec-25 17:41 Door exit: FRONTEND
