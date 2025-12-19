@@ -1,0 +1,373 @@
+**************************************************************
+05-28-23 (16:33:35) [423] RaGe (CONNECT 19200) UK
+	Telnet login address: uddi-31-b2-v4wan-163594-cust1259.vm12.cable.virginm.net (92.236.156.236)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Directory Scan with AquaScan by Aquarius
+05-28-23 (16:34:26) RaGe Off Normally
+**************************************************************
+10-11-23 (13:35:52) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: i53873C86.versanet.de (83.135.60.134)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	Uploading AR-2301_1.DM 526480 bytes
+	Uploading MIR-B18A.LHA 25601632 bytes
+	Uploading MIR-B18B.LHA 25601633 bytes
+	Uploading MIR-B18C.LHA 25601632 bytes
+	Uploading MIR-B18D.LHA 25601632 bytes
+	Uploading MIR-B18E.LHA 25601633 bytes
+	Uploading MIR-B18F.LHA 25601634 bytes
+	Uploading MIR-B18G.LHA 25601633 bytes
+	Uploading MIR-B18H.LHA 25601634 bytes
+	Uploading MIR-B18I.LHA 25601633 bytes
+	Uploading MIR-B18J.LHA 25601632 bytes
+	Uploading MIR-B18K.LHA 25601630 bytes
+	Uploading MIR-B18L.LHA 18941194 bytes
+	Uploading MIR-B18M.NFO 7878 bytes
+	 14 file(s), 294036k bytes, 27 minute(s). 50 second(s), 180295 cps, 9390% efficiency.
+	Skipped AMFX04AA.LHA
+	Skipped AMFX04AR.LHA
+	Skipped AMFX0420.LHA
+	Skipped AMFX0464.LHA
+	Skipped AMFX0468.LHA
+	Skipped AMTR03AA.LHA
+	Skipped AMTR03AR.LHA
+	Skipped AMTR03MO.LHA
+	Skipped AMTR0320.LHA
+	Skipped AMTR0364.LHA
+	Skipped AR-2301.DMS
+	Skipped BD2400M.LHA
+	Skipped D3PUAC65.LHA
+	Skipped GIBACO10.LHA
+	Skipped RESHOOT3.LHA
+	Skipped SDL22284.LHA
+	Skipped SDLDEMOS.LHA
+	Skipped TP7A0410.ZIP
+	Skipped VASM19E.ZIP
+	Skipped VSMAA110.LHA
+	Skipped VSMAC110.LHA
+	Skipped VSMAM110.LHA
+	Skipped WORW4932.LHA
+	Skipped WORW6932.LHA
+	**Input timed out **
+	Upload moved to BBS:Conf2/LCFILES/AR-2301_1.DMS
+	Upload moved to BBS:Conf2/Upload/MIR-B18A.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18B.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18C.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18D.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18E.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18F.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18G.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18H.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18I.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18J.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18K.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18L.LHA
+	Upload moved to BBS:Conf2/Upload/MIR-B18M.NFO
+	**Input timed out **
+10-11-23 (14:15:31) diNO Off Normally
+**************************************************************
+12-16-23 (15:39:46) [194] Tom-Cat (CONNECT 19200) Maribor, Slovenia
+	Telnet login address: cpe-90-157-197-109.static.amis.net (90.157.197.109)
+	FTP Command >: SYST
+	FTP Command >: FEAT
+	FTP Command >: HELP SITE
+	FTP Command >: OPTS UTF8 ON
+	FTP Command >: PWD
+	FTP Command >: TYPE A
+	FTP Command >: PASV
+12-16-23 (15:49:24) Tom-Cat Off Normally
+**************************************************************
+12-19-23 (09:20:31) [471] kiFla (CONNECT 19200) Zagreb
+	Telnet login address: cpe-188-129-73-194.dynamic.amis.hr (188.129.73.194)
+	FTP Command >: CWD /
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: PORT 192,168,100,126,56,144
+12-19-23 (09:34:12) kiFla Off Normally
+**************************************************************
+06-18-24 (15:53:24) [455] Akira (CONNECT 19200) NY
+	Telnet login address: pool-108-30-133-60.nycmny.fios.verizon.net (108.30.133.60)
+	FTP Command >: CWD /001-Amiga Warez!
+	Amiga Warez! (2) Conference Joined
+	FTP Command >: TYPE I
+	FTP Command >: PASV
+	FTP Command >: RETR TRSI-TO1.DMS
+	Downloading BBS:Conf2/Upload/TRSI-TO1.DMS 613269 bytes
+	 1 files, 598k bytes, 0 minutes 0 seconds 1135683 cps, N/A % efficiency.
+	FTP Command >: PASV
+	FTP Command >: RETR TRSI-TO2.DMS
+	Downloading BBS:Conf2/Upload/TRSI-TO2.DMS 420529 bytes
+	 1 files, 410k bytes, 0 minutes 0 seconds 955747 cps, N/A % efficiency.
+	FTP Command >: PWD
+	FTP Command >: 
+06-18-24 (15:54:52) Akira Off Normally
+**************************************************************
+08-10-24 (09:04:15) [398] Viceroy (CONNECT 19200) Sunderland
+	Telnet login address:  (5.133.46.84)
+	Conference 2: Amiga Warez! Auto-ReJoined
+	**Input timed out **
+08-10-24 (09:27:13) Viceroy Off Loss Carrier
+**************************************************************
+11-27-24 (08:56:13) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: i53873C86.versanet.de (83.135.60.134)
+	FTP Command >: SYST
+	FTP Command >: TYPE A
+	FTP Command >: REST 1
+	FTP Command >: REST 0
+	FTP Command >: FEAT
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: MLSD
+11-27-24 (09:01:14) diNO Off Normally
+**************************************************************
+12-11-24 (07:28:27) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: dynamic-077-191-088-009.77.191.pool.telefonica.de (77.191.88.9)
+	FTP Command >: SYST
+	FTP Command >: TYPE A
+	FTP Command >: FEAT
+	FTP Command >: PWD
+	FTP Command >: CWD /
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: PORT 192,168,178,40,24,22
+12-11-24 (07:33:28) diNO Off Normally
+**************************************************************
+12-11-24 (09:25:11) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: dynamic-077-191-088-009.77.191.pool.telefonica.de (77.191.88.9)
+	FTP Command >: SYST
+	FTP Command >: TYPE A
+	FTP Command >: FEAT
+	FTP Command >: PWD
+	FTP Command >: CWD /
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: PORT 192,168,178,40,27,15
+12-11-24 (09:30:12) diNO Off Normally
+**************************************************************
+12-11-24 (11:11:21) [390] diNO (CONNECT 19200) \O/:UP::dS!::TY:\O/
+	Telnet login address: dynamic-176-000-017-001.176.0.pool.telefonica.de (176.0.17.1)
+	FTP Command >: SYST
+	FTP Command >: TYPE A
+	FTP Command >: FEAT
+	FTP Command >: PWD
+	FTP Command >: CWD /
+	FTP Command >: PWD
+	FTP Command >: PASV
+	FTP Command >: PORT 172,20,10,2,30,32
+12-11-24 (11:16:22) diNO Off Normally
+**************************************************************
+12-11-24 (21:50:11) [326] JACKTORY (CONNECT 19200) oOItalyOo RAMJAM
+	Telnet login address: adsl-ull-125-114.49-151.wind.it (151.49.114.125)
+	Conference 4: /X Section Auto-ReJoined
+	**Input timed out **
+12-11-24 (22:01:05) JACKTORY Off Normally
+	**Input timed out **
+24-Nov-25 15:10 Logoff: tomte
+24-Nov-25 16:14 Login: sysop
+24-Nov-25 16:15 Door: TLIST
+24-Nov-25 16:15 Door exit: TLIST
+24-Nov-25 16:15 Door: ULIST
+24-Nov-25 16:15 Door exit: ULIST
+24-Nov-25 16:17 Door: GWALL
+24-Nov-25 16:17 Door exit: GWALL
+26-Nov-25 07:41 Login: sysop
+27-Nov-25 23:29 Login: sysop
+27-Nov-25 23:29 Logoff: sysop
+28-Nov-25 22:06 Login: sysop
+28-Nov-25 22:06 Logoff: sysop
+29-Nov-25 00:07 Login: sysop
+29-Nov-25 00:07 Logoff: sysop
+30-Nov-25 23:03 Login: sysop
+30-Nov-25 23:05 Door: GWALL
+30-Nov-25 23:05 Door exit: GWALL
+30-Nov-25 23:07 Logoff: sysop
+03-Dec-25 20:37 Door: TELNET-FRONT
+03-Dec-25 20:37 Door exit: TELNET-FRONT
+03-Dec-25 20:37 Door: GL
+03-Dec-25 20:37 Door exit: GL
+03-Dec-25 20:37 Door: SCAN
+03-Dec-25 20:37 Door exit: SCAN
+03-Dec-25 20:37 Door: B
+03-Dec-25 20:37 Door exit: B
+03-Dec-25 23:12 Door: TELNET-FRONT
+03-Dec-25 23:12 Door exit: TELNET-FRONT
+03-Dec-25 23:13 Door: GL
+03-Dec-25 23:13 Door exit: GL
+03-Dec-25 23:13 Door: WHO
+03-Dec-25 23:13 Door exit: WHO
+03-Dec-25 23:14 Door: GA
+03-Dec-25 23:14 Door exit: GA
+03-Dec-25 23:14 Door: GA
+03-Dec-25 23:14 Door exit: GA
+03-Dec-25 23:15 Door: RTW
+03-Dec-25 23:15 Door exit: RTW
+03-Dec-25 23:16 Door: FR
+03-Dec-25 23:16 Door exit: FR
+03-Dec-25 23:18 Login: sysop
+04-Dec-25 11:25 Login: sysop
+05-Dec-25 22:12 Login: sysop
+05-Dec-25 22:12 Door: GL
+05-Dec-25 22:12 Door: N
+05-Dec-25 22:12 Door exit: N
+05-Dec-25 22:12 Door: N
+05-Dec-25 22:12 Door exit: N
+05-Dec-25 22:12 Door: N
+05-Dec-25 22:12 Door exit: N
+06-Dec-25 22:53 Door: TELNET-FRONT
+06-Dec-25 22:53 Door exit: TELNET-FRONT
+06-Dec-25 22:53 Door: TELNET-FRONT
+06-Dec-25 22:53 Door exit: TELNET-FRONT
+06-Dec-25 22:53 Login: sysop
+06-Dec-25 22:53 Door: GL
+06-Dec-25 22:53 Door exit: GL
+06-Dec-25 22:53 Door: BUGTRACK
+06-Dec-25 22:53 Door exit: BUGTRACK
+07-Dec-25 20:46 Door: TELNET-FRONT
+07-Dec-25 20:46 Door exit: TELNET-FRONT
+07-Dec-25 20:48 Door: TELNET-FRONT
+07-Dec-25 20:48 Door exit: TELNET-FRONT
+07-Dec-25 20:51 Door: TELNET-FRONT
+07-Dec-25 20:51 Door exit: TELNET-FRONT
+07-Dec-25 20:51 Door: GL
+07-Dec-25 20:51 Door exit: GL
+10-Dec-25 14:10 Door: TELNET-FRONT
+10-Dec-25 14:10 Door exit: TELNET-FRONT
+11-Dec-25 00:03 Door: TELNET-FRONT
+11-Dec-25 00:03 Door exit: TELNET-FRONT
+11-Dec-25 00:05 Door: GL
+11-Dec-25 00:05 Door exit: GL
+11-Dec-25 00:05 Door: ED
+11-Dec-25 00:05 Door exit: ED
+11-Dec-25 00:06 Door: GL
+11-Dec-25 00:06 Door exit: GL
+11-Dec-25 00:06 Door: GWALL
+11-Dec-25 00:06 Door exit: GWALL
+11-Dec-25 00:06 Door: I
+11-Dec-25 00:06 Door exit: I
+11-Dec-25 00:06 Door: I
+11-Dec-25 00:06 Door exit: I
+11-Dec-25 00:06 Door: J
+11-Dec-25 00:06 Door exit: J
+11-Dec-25 00:07 Door: INVADERS
+11-Dec-25 00:08 Door exit: INVADERS
+11-Dec-25 00:08 Door: MRC
+11-Dec-25 00:08 Door exit: MRC
+11-Dec-25 00:09 Door: MRCSTAT1
+11-Dec-25 00:09 Door exit: MRCSTAT1
+11-Dec-25 00:09 Door: OLM
+11-Dec-25 00:57 Door: TELNET-FRONT
+11-Dec-25 00:57 Door exit: TELNET-FRONT
+11-Dec-25 00:57 Door: GL
+11-Dec-25 00:57 Door exit: GL
+11-Dec-25 00:58 Door: B
+11-Dec-25 00:58 Door exit: B
+11-Dec-25 00:58 Door: B
+11-Dec-25 01:00 Door exit: B
+11-Dec-25 01:00 Door: B
+11-Dec-25 18:56 Door: FRONTEND
+11-Dec-25 18:56 Door exit: FRONTEND
+12-Dec-25 00:39 Door: FRONTEND
+12-Dec-25 00:39 Door exit: FRONTEND
+12-Dec-25 00:39 Door: GL
+12-Dec-25 00:39 Door exit: GL
+12-Dec-25 00:39 Door: GWALL
+12-Dec-25 00:39 Door exit: GWALL
+12-Dec-25 00:44 Login: sysop
+12-Dec-25 00:44 Logoff: sysop
+12-Dec-25 22:04 Door: FRONTEND
+12-Dec-25 22:04 Door exit: FRONTEND
+12-Dec-25 22:04 Door: GL
+12-Dec-25 22:04 Door exit: GL
+12-Dec-25 22:04 Door: GWALL
+12-Dec-25 22:04 Door exit: GWALL
+12-Dec-25 22:04 Door: J
+16-Dec-25 08:07 Door: FRONTEND
+16-Dec-25 08:08 Door exit: FRONTEND
+16-Dec-25 18:47 Door: FRONTEND
+16-Dec-25 18:47 Door exit: FRONTEND
+16-Dec-25 18:47 Door: GL
+16-Dec-25 18:47 Door exit: GL
+16-Dec-25 18:47 Door: GWALL
+16-Dec-25 18:47 Door exit: GWALL
+16-Dec-25 19:20 Login: sysop
+16-Dec-25 20:00 Logoff: sysop
+17-Dec-25 09:04 Door: FRONTEND
+17-Dec-25 09:04 Door exit: FRONTEND
+17-Dec-25 09:04 Door: GL
+17-Dec-25 09:04 Door exit: GL
+17-Dec-25 09:04 Door: GWALL
+17-Dec-25 09:04 Door exit: GWALL
+17-Dec-25 09:04 Door: IRC
+17-Dec-25 09:10 Login: sysop
+17-Dec-25 14:26 Door: FRONTEND
+17-Dec-25 14:26 Door exit: FRONTEND
+17-Dec-25 14:26 Door: GL
+17-Dec-25 14:26 Door exit: GL
+17-Dec-25 14:26 Door: GWALL
+17-Dec-25 14:26 Door exit: GWALL
+17-Dec-25 14:26 Door: ARKANOID
+17-Dec-25 14:26 Door exit: ARKANOID
+17-Dec-25 14:26 Door: BESTCONF.INFO
+17-Dec-25 14:27 Door exit: BESTCONF.INFO
+17-Dec-25 14:27 Door: CDEMO
+17-Dec-25 14:27 Door exit: CDEMO
+17-Dec-25 14:27 Door: COMPTEST
+17-Dec-25 14:27 Door exit: COMPTEST
+17-Dec-25 19:10 Door: FRONTEND
+17-Dec-25 19:10 Door exit: FRONTEND
+17-Dec-25 19:22 Door: FRONTEND
+17-Dec-25 19:22 Door exit: FRONTEND
+17-Dec-25 19:22 Door: GL
+17-Dec-25 19:22 Door exit: GL
+17-Dec-25 19:22 Door: GWALL
+17-Dec-25 19:22 Door exit: GWALL
+17-Dec-25 20:31 Door: FRONTEND
+17-Dec-25 20:32 Door exit: FRONTEND
+17-Dec-25 20:34 Door: GL
+17-Dec-25 20:34 Door exit: GL
+17-Dec-25 20:34 Door: GWALL
+17-Dec-25 20:34 Door exit: GWALL
+17-Dec-25 20:40 Login: sysop
+19-Dec-25 01:56 Door: FRONTEND
+19-Dec-25 01:56 Door exit: FRONTEND
+19-Dec-25 01:56 Door: GL
+19-Dec-25 01:56 Door exit: GL
+19-Dec-25 01:56 Door: GWALL
+19-Dec-25 01:56 Door exit: GWALL
+19-Dec-25 01:56 Door: DASHBOARD
+19-Dec-25 01:56 Door exit: DASHBOARD
+19-Dec-25 01:56 Door: DEL
+19-Dec-25 01:56 Door exit: DEL
+19-Dec-25 01:56 Door: DIAGNOSTIC
+19-Dec-25 01:56 Door exit: DIAGNOSTIC
+19-Dec-25 01:57 Door: ED
+19-Dec-25 01:57 Door exit: ED
+19-Dec-25 01:57 Door: FILETEST
+19-Dec-25 01:57 Door exit: FILETEST
+19-Dec-25 02:01 Logoff: sysop
+19-Dec-25 02:02 Login: sysop
+19-Dec-25 02:07 Door: I
+19-Dec-25 02:07 Door exit: I
+19-Dec-25 02:08 Door: MRC
+19-Dec-25 02:08 Door exit: MRC
+19-Dec-25 02:08 Door: TTT
+19-Dec-25 02:08 Door exit: TTT
+19-Dec-25 02:08 Door: REQ
+19-Dec-25 02:08 Door exit: REQ
+19-Dec-25 02:08 Door: CHAT
+19-Dec-25 02:08 Door exit: CHAT
+19-Dec-25 02:08 Door: TC
+19-Dec-25 02:08 Door exit: TC
+19-Dec-25 02:09 Door: TC
+19-Dec-25 02:09 Door exit: TC
+19-Dec-25 02:09 Door: TELNET-FRONT
+19-Dec-25 02:09 Door exit: TELNET-FRONT
+19-Dec-25 02:09 Door: PHREAKWARS
+19-Dec-25 02:09 Door exit: PHREAKWARS
+19-Dec-25 02:09 Door: HELLOVBCC
+19-Dec-25 02:09 Door exit: HELLOVBCC
+19-Dec-25 02:09 Door: HELLOOUT
+19-Dec-25 02:09 Door exit: HELLOOUT
+19-Dec-25 02:09 Door: GWWALL
+19-Dec-25 02:15 Logoff: sysop
+19-Dec-25 15:46 Door: FRONTEND
+19-Dec-25 15:46 Door exit: FRONTEND

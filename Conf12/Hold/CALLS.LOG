@@ -1,0 +1,9 @@
+// C+ = connection start (host name) 
+// C# = called host
+// UL = upload (name, size, duration, cps)
+// DL = download (name, size, duration, cps)
+// C- = connection end
+// (N/A means 'not available')
+08.05.2020 09:28:35  C+: sanctuary.zapto.org:1541
+08.05.2020 09:28:35  C#: sanctuary.zapto.org:1541
+08.05.2020 09:31:12  DL: BS1-79.ZIP       81.02 MB, 1:16 min, 1091.7 KB/sec (Zmodem)
