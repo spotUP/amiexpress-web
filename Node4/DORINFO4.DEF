@@ -4,9 +4,9 @@ Sysop
 LOCAL
 115200 BAUD,N,8,1
 0
-Sysop
+sysop
 
-Unknown
+hh
 1
 255
 999
