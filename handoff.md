@@ -1,5 +1,12 @@
 # Session Handoff - 2025-12-16
 
+## Update - 2025-12-18
+
+- Read all SDK 2.0/SDK-related markdowns (root `SDK_V2_STATUS.md`, `SDK_V2_EXAMPLE.md`, `SDK_REVIEW.md`, `SDK_ELEMENT_*`, `Documentation/4-Door-Developers/SDK_V2_*`, `Documentation/4-Door-Developers/TYPESCRIPT_DOOR_GUIDE.md`, `sdk/README.md`, `sdk/docs/NEO_BLESSED_GUIDE.md`, `sdk/engines/ui/blessed/*.md`, `sdk/NEOBLESSED_SHOWCASE_IMPLEMENTATION_PROMPT.md`, `sdk/BBS_LIVE_DASHBOARD_IMPLEMENTATION_PROMPT.md`, `sdk/68k/*.md`, `sdk/68k/doors/diagnostic/*.md`, `sdk/examples/neo-blessed-showcase/README.md`).
+- No code changes made.
+- Noted doc mismatch: `sdk/README.md` references `sdk/docs/GAME_DEVELOPMENT_GUIDE.md`, but the file is missing.
+- Last prompts: “read agents.md claude.md and recent markdowns”, “read all SDK 2.0 markdowns”.
+
 ## Latest: vbcc-only SDK + XIM Door Compilation
 
 **Status**: vbcc migration complete, XIM door compiled
