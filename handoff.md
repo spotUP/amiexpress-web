@@ -92,3 +92,34 @@ vc +aos68k -O2 -I/path/to/sdk/68k/ndk-includes mydoor.c -o mydoor -lamiga
   - Added fallback ActionType map in `Doors/card-lobby/index.ts` to avoid undefined ActionType when SDK cache is stale.
   - Bound listbar callbacks to avoid `runAction` context errors.
 - Last prompts: “fix deal showing nothing + runAction errors + why BBS commands execute in door”, “ask about neo‑blessed docking support”.
+
+## Update - 2025-12-20 (ROM fallback)
+
+- `LibraryManager` now supports AROS ROM fallback (combined aros-rom.bin + aros-ext.bin) when Kickstart is missing, and attempts best-effort romtool extraction from the combined image.
+- Kickstart remains preferred; AROS is used only when Kickstart is absent.
+
+## Update - 2025-12-20 (ROM library extraction)
+
+- `LibraryManager.ensureRomLibrariesExtracted` now extracts all ROM modules by extension:
+  - `.library` → `Libs/` and `System/Libs/`
+  - `.device` → `Devs/` and `System/Devs/`
+  - `.resource` → `Resources/` and `System/Resources/`
+  - `.datatype` → `Classes/Datatypes/` and `System/Classes/Datatypes/`
+- Extraction is cached by ROM path/mtime/size stamp in `tmp/rom-extract/.stamp`.
+
+## Update - 2025-12-20 (Expanded ROM extraction + assigns)
+
+- ROM extraction now also handles:
+  - `.handler` / `.filesystem` → `L/` and `System/L/`
+  - `.keymap` → `Devs/Keymaps/` and `System/Devs/Keymaps/`
+  - `.monitor` → `Devs/Monitors/` and `System/Devs/Monitors/`
+  - `.font` → `Fonts/` and `System/Fonts/`
+  - `.prefs` → `Prefs/` and `System/Prefs/`
+  - `.catalog` → `Locale/Catalogs/` and `System/Locale/Catalogs/`
+  - `.locale` / `.language` → `Locale/` and `System/Locale/`
+  - everything else → `ROM/` and `System/ROM/` fallback
+- Added standard assigns in `PathManager`: `l:`, `fonts:`, `locale:`, `prefs:`, `classes:`.
+
+## Update - 2025-12-20 (AROS ROM startup copy)
+
+- Added startup copy step to mirror `web/backend/data/amiga-roms/aros-*.bin` into `data/amiga-roms/` if missing, so AROS fallback works on deploy where root `data/` is excluded.
