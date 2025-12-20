@@ -79,3 +79,16 @@ vc +aos68k -O2 -I/path/to/sdk/68k/ndk-includes mydoor.c -o mydoor -lamiga
 2. JMP table at negative offsets (LVO -84 -> WriteStr etc)
 3. OpenLibrary register fix (A1 not A0)
 4. PutMsg trap handler (LVO -366)
+
+---
+
+## Update - 2025-12-18 (Card Lobby/SDK fixes)
+
+- Fixed poker ActionType runtime export in `sdk/engines/poker/poker-engine.ts` and rebuilt SDK so ActionType is a real runtime map.
+- Added default blue hover/active styling for buttons/listbars in `sdk/engines/ui/blessed/widgets/button.ts` and `sdk/engines/ui/blessed/widgets/listbar.ts`.
+- Added keyboard navigation guidance to `sdk/docs/NEO_BLESSED_GUIDE.md` and `sdk/engines/ui/blessed/NEO_BLESSED_GUIDE.md`, plus checklist updates in `AGENTS.md`.
+- Card Lobby changes:
+  - Added keyboard focus cycling (tab/shift-tab) and hotkeys for lobby actions.
+  - Added fallback ActionType map in `Doors/card-lobby/index.ts` to avoid undefined ActionType when SDK cache is stale.
+  - Bound listbar callbacks to avoid `runAction` context errors.
+- Last prompts: “fix deal showing nothing + runAction errors + why BBS commands execute in door”, “ask about neo‑blessed docking support”.
