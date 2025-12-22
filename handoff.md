@@ -1,18 +1,18 @@
 # Handoff
 ## Current State (2025-12-22)
-- Door exits now emit a manual menu display that records the resulting read state, and `advanceDisplayFlow` skips any redisplay within a short window so the prompt only appears once and the first keystroke goes into `READ_COMMAND`.
-- Session objects carry the target `LoggedOnSubState` and timestamp of the most recent manual menu render, giving the display flow enough context to avoid redundant prompts after TypeScript/Amiga doors.
-- Local workspace still contains the pre-existing `User.data`, `User.keys`, and `user.misc` edits; those are being committed alongside the new handler changes per the latest request.
+- Manual menu renders now set `skipNextDisplayFlowMenu` plus a target state so the display-flow loop immediately returns instead of redrawing the menu, keeping the first post-door keystroke in `READ_COMMAND`.
+- New BBSSession metadata fields hold the skip flag and desired destination state for the next display flow tick, allowing the flow controller to know when the menu already ran.
+- Workspace still keeps the pre-existing `User.data`, `User.keys`, and `user.misc` diffs, which are part of the committed snapshot alongside the handler adjustments.
 
 ## Recent Work
-- `web/backend/src/index.ts`: extended `BBSSession` with `skipNextDisplayFlowMenuState` and `manualMenuDisplayTimestamp` so the manual menu display can communicate its post-menu state to the display flow.
-- `web/backend/src/handlers/command-handler/menu.ts`: after rendering the menu/prompt, capture the new read-mode substate and timestamp; this feeds the display-flow skip logic.
-- `web/backend/src/handlers/command.handler.ts`: introduced a short skip window plus conditional logic in `advanceDisplayFlow` so it short-circuits the `DISPLAY_MENU` branch when a recent manual render already ran.
+- `web/backend/src/index.ts`: swapped the timestamp-based fields for the boolean/target-state metadata used by the skip logic.
+- `web/backend/src/handlers/command-handler/menu.ts`: mark the manual menu display and record the planned follow-up substate so `advanceDisplayFlow` can skip when it re-checks `DISPLAY_MENU`.
+- `web/backend/src/handlers/command.handler.ts`: added the skip-path guard in `advanceDisplayFlow`, so the automatic flow honors the manual render instead of printing the prompt twice.
 
 ## Next Steps
-- Re-run FR/J (and optionally `Doors/arkanoid2`) to confirm the menu prompt only prints once and the first key after the door exit reaches `READ_COMMAND`; inspect `logs/backend.log` around `[DISPLAY FLOW] advance state=display_menu` for confirmation.
-- If duplicate prompts persist, capture the backend log snippet and verify the skip window is firing; extend the window if the repetition occurs outside the current threshold.
-- Ensure the repository is clean after the commit/push so the newly tracked binaries and handler changes have been recorded.
+- Re-run FR/J (and optionally `Doors/arkanoid2`) and inspect `logs/backend.log` near `[DISPLAY FLOW] advance state=display_menu` to confirm only one prompt is emitted and the first keystroke immediately enters `READ_COMMAND`.
+- If duplicate prompts persist, capture the backend log snippet to confirm the skip flag is being set and cleared; adjust the hook as needed so the manual display effectively preempts the automatic flow.
+- Keep the repo clean so the newly committed handler changes plus the tracked data files stay aligned with `main`.
 
 ## Last Prompts
-- User: "commit ALL local changes in logical chunks and push"
+- User: "you need to fix the root cause not do workarounds"
