@@ -1,12 +1,16 @@
-# Handoff - December 22, 2024
+# Handoff - December 23, 2024
 
 ## Current State
 
 **Working Directory:** `/Users/spot/Code/amiexpress-web` (main development directory)
 
-**Latest Work:** Neo-Blessed UI enhancements and neoshowcase door fixes (commit 9f241385)
+**Latest Work:** Frontend build error resolution (commit e6015aaab)
 
 ### What's Working
+- **Frontend Build**: All build errors resolved, production build successful ✅
+- **Backend TypeScript**: Compiles with zero errors ✅
+- **Config App Build**: Builds successfully (858 KB bundle) ✅
+- **Terminal Package**: SDK client imports working, builds successfully ✅
 - **Neo-Blessed Rendering**: Shadow and scrollbar rendering fixed in Screen._renderElement()
 - **Transparency**: 50% color blending working (ANSI → RGB → blend → ANSI)
 - **Neoshowcase Door**: All 30 menu items, 6 scrollable widgets fixed, new features demo added
@@ -16,37 +20,69 @@
 
 ---
 
-## Recent Session (Dec 22 - PM)
+## Recent Session (Dec 23 - Early AM)
 
-### Neo-Blessed Enhancements ✅
+### Frontend Build Resolution ✅
 
-**What Changed:**
-1. **Neoshowcase Door** - Enhanced to demo all new blessed features:
-   - Menu item 27: "New Features" - demonstrates shadow, transparency, hover text, fixed positioning, baseLimit
-   - Fixed 6 broken scrollable widgets (Menu, ScrollableBox, ScrollableText, Log, Markdown, Results)
-   - All scrollbars now visible: thumb `█`, track `│`, proper colors
-   - Added vi navigation (j/k keys) to all scrollable widgets
+**Problem:** Continued from previous session with SDK client import errors preventing frontend build
 
-2. **SDK Type Definitions** - Fixed missing properties:
-   - `fixed?: boolean` - Fixed positioning relative to screen (line 61)
-   - `keys?: boolean | string[]` - Keyboard bindings, boolean or custom key array (line 90)
-   - `vi?: boolean` - Vi-style navigation j/k for up/down (line 91)
+**Root Causes Identified:**
+1. Terminal package outdated (built before SDK update)
+2. React Router v7.9.5 severe ESM/CJS compatibility issues with Vite
+3. Vite config pointing to SDK source files instead of dist
+4. Insufficient CommonJS handling for hybrid module resolution
 
-3. **TypeScript Fixes** - Added `as any` casts to 9 contrib widgets (line, bar, stackedBar, donut, gauge x2, gaugeList, lcd, map) for `canvasMode` property compatibility
+**Solutions Applied:**
+
+1. **Terminal Package Rebuild**
+   - Ran `npm install` to symlink SDK
+   - Rebuilt with updated SDK dependencies
+   - Now properly imports `@amiexpress/bbs-door-sdk/client`
+
+2. **React Router Downgrade**
+   - Changed `react-router-dom`: `^7.9.5` → `^6.30.2`
+   - v7 had 300+ ESM export errors with Vite
+   - v6 is stable and provides all needed features
+
+3. **SDK Alias Fixes**
+   - Changed from source: `../../sdk/client/index.ts`
+   - Changed to dist: `../../sdk/dist/client/index.js`
+   - Prevents Vite from bundling server-side SDK code
+
+4. **Enhanced CommonJS Options**
+   ```typescript
+   optimizeDeps: {
+     include: [
+       'zmodem.js/dist/zmodem',
+       '@amiexpress/bbs-door-sdk/client',
+       'react-router-dom',
+       '@xterm/xterm',
+       'socket.io-client'
+     ]
+   },
+   build: {
+     commonjsOptions: {
+       include: [/node_modules/],
+       transformMixedEsModules: true
+     }
+   }
+   ```
+
+**Build Results:**
+```
+Frontend: ✓ built in 1.60s (612 KB main, gzipped 162 KB)
+Backend:  ✓ tsc --noEmit (zero errors)
+Config:   ✓ built in 6.13s (858 KB bundle)
+```
 
 **Files Modified:**
-- `sdk/engines/ui/blessed/core/types.ts` - Type definitions
-- `sdk/doors/neo-blessed-showcase/app.ts` - Enhanced showcase (266 lines added)
-- `sdk/doors/neo-blessed-showcase/package-lock.json` - Updated dependencies
+- `web/frontend/vite.config.ts` - Aliases, CommonJS options
+- `web/frontend/package.json` - React Router downgrade
+- `packages/terminal/package-lock.json` - Dependency refresh
 
-**Commit:** `9f241385` - "feat(sdk): Add new blessed features to neoshowcase and fix scrollbars"
+**Commit:** `e6015aaab` - "fix(frontend): Resolve SDK client import and React Router build errors"
 
-**Testing:**
-- Run `NEOSHOWCASE` command
-- Navigate to menu item 27 to see new features
-- Test scrolling in all widgets - scrollbars should be clearly visible
-- Verify shadow effects render correctly
-- Test transparency blending (red over blue = purple)
+**Documentation:** Created `BUILD_ERROR_INVESTIGATION.md` with full investigation details
 
 ---
 
@@ -54,25 +90,32 @@
 
 1. **SDK Dependencies** - @pokertools packages need install: `cd sdk && npm install`
 2. **LiveChat Refactoring** - app.ts is 2757 lines (needs module splitting)
-3. **Directory Sync** - Working in `/Users/spot/Code/amiexpress-web`, BBS may run from `/Users/spot/Code/amiexpress-web-chatgpt`
+3. **AudioEngine Warning** - Tree-shaking warning in terminal build (harmless, unused import)
 
 ---
 
 ## Next Steps
 
 ### Immediate:
-1. Test neoshowcase new features demo (menu item 27)
-2. Verify all scrollbars visible in neoshowcase
-3. Install SDK poker dependencies if needed: `cd sdk && npm install`
+1. Test frontend in development mode: `./dev/scripts/start-servers.sh`
+2. Verify all UIs load correctly (BBS terminal, admin config, SDK preview)
+3. Test door functionality with updated SDK
 
 ### Short Term:
-1. Create more example doors using new blessed features
-2. Refactor LiveChat into modules (services/, ui/, handlers/)
-3. Document new blessed features in SDK guide
+1. Test neoshowcase new features demo (menu item 27)
+2. Verify all scrollbars visible in neoshowcase
+3. Create more example doors using new blessed features
+4. Refactor LiveChat into modules (services/, ui/, handlers/)
+5. Document new blessed features in SDK guide
 
 ---
 
 ## Key Files Reference
+
+**Build Configuration:**
+- `web/frontend/vite.config.ts` - Vite build config (SDK aliases, CommonJS)
+- `web/frontend/package.json` - Frontend dependencies
+- `packages/terminal/package.json` - Terminal package config
 
 **Neo-Blessed Core:**
 - `sdk/engines/ui/blessed/core/types.ts` - Type definitions
@@ -81,9 +124,9 @@
 - `sdk/engines/ui/blessed/core/colors.ts` - Color blending functions
 
 **Documentation:**
+- `BUILD_ERROR_INVESTIGATION.md` - Complete build error investigation (NEW)
 - `sdk/engines/ui/blessed/SCROLLBAR_FIX.md` - Scrollbar rendering fix details
 - `sdk/engines/ui/blessed/TRANSPARENCY_IMPLEMENTATION.md` - Transparency feature details
-- `Documentation/6-Progress/handoff-2024-12-22-detailed.md` - Full detailed handoff (archived)
 
 **Example Doors:**
 - `sdk/doors/neo-blessed-showcase/app.ts` - Comprehensive blessed widget showcase
@@ -91,6 +134,6 @@
 
 ---
 
-*Last Updated: 2024-12-22 23:00*
-*Session: Neo-Blessed enhancements and neoshowcase fixes*
+*Last Updated: 2024-12-23 00:10*
+*Session: Frontend build error resolution*
 *Working Directory: /Users/spot/Code/amiexpress-web*
