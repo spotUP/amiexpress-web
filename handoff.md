@@ -1,20 +1,19 @@
 # Handoff
 ## Current State (2025-12-22)
-- After doors like FR/J exit, menu redraw now allows the next key to be handled immediately instead of dropping the first keystroke.
-- `MESSAGE_TOTAL_LENGTH` matches the 0x108 SIZEOF `jhMessage`, so strptr/filler3 writes stay within bounds.
-- MCP resources still unavailable via `list_mcp_resources` (returned empty).
+- After XIM doors exit, the menu redisplay now allows the next keystroke to reach `READ_COMMAND` so it is not dropped.
+- `MESSAGE_TOTAL_LENGTH` equals 0x108 (SIZEOF `jhMessage`), keeping strptr/filler writes inside the message.
+- Repository still has many unrelated local modifications; only the door/handler files were staged/committed/pushed.
 
-- `web/backend/src/amiga-emulation/DoorTypes.ts`: set `MESSAGE_TOTAL_LENGTH` to 0x108 (SIZEOF jhMessage) so `strptr`/`filler3` are in-bounds.
-- `web/backend/src/handlers/command.handler.ts`: when transitioning from `DISPLAY_MENU` to `READ_COMMAND`, the keystroke no longer returns early, so the character isn't swallowed by the redisplay.
-- ROM resident scanning + InitResident handling in `web/backend/src/amiga-emulation/api/ExecLibrary.ts`; OpenLibrary checks ROM residents; forced-return on ROM init Alert.
-- Library path/priority tweaks in `web/backend/src/amiga-emulation/LibraryManager.ts` and `web/backend/src/amiga-emulation/loader/LibraryLoader.ts`.
-- XIM/AEDoor message flow fixes and DT_*/BB_* string buffer setup in `web/backend/src/amiga-emulation/xim/*.ts` and `web/backend/src/amiga-emulation/XIMProtocol.ts`.
-- Door INIT/STAT message buffers distinct in `web/backend/src/amiga-emulation/session/DoorMessageHandler.ts`.
+## Recent Work
+- `web/backend/src/amiga-emulation/DoorTypes.ts`: bumped `MESSAGE_TOTAL_LENGTH` to 0x108 to match the `jhMessage` layout from `axcommon.e`.
+- `web/backend/src/handlers/command.handler.ts`: when `displayMainMenu` is triggered, the first keystroke now continues into `READ_COMMAND` instead of bouncing back.
+- Previous ROM/XIM fixes (ExecLibrary, LibraryManager, XIM handlers, DoorMessageHandler) remain in place from earlier sessions.
 
-- Restart backend and re-run FR/J in the UI to confirm the menu prompt no longer redraws and that the first keystroke after the door is not swallowed.
-- If extra prompts persist, capture the BBS logs/screens and compare to `handleCommand`’s flow to see whether `displayMainMenu` is still called twice.
-- Confirm AROS ROM resident handling for non-AUTOINIT `dos.library`; decide on InitResident path.
-- If MCP tools remain unavailable, rely on filesystem reads and note in changes.
+## Next Steps
+- Restart the backend and exercise FR/J to ensure the menu prompt no longer draws twice and the first key after exiting a door is processed.
+- If duplicate prompts persist, capture backend logs/screens and confirm `handleCommand` flows through `READ_COMMAND` instead of returning early.
+- Continue investigating AROS `dos.library` resident handling for non-AUTOINIT builds.
+- If MCP tools stay unavailable, rely on filesystem reads and note the limitation.
 
 ## Last Prompts
 - User: "i ran FR and J now they just exit"
