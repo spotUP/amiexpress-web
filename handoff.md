@@ -1,74 +1,20 @@
-# Session Handoff - 2025-12-16
+# Handoff
+## Current State (2025-12-22)
+- `ExecLibrary.openLibraryHybrid()` still prioritizes Kickstart/AROS residents before disk-based libraries so `InitResident` runs for non-AUTOINIT modules exactly as AmiExpress does.
+- `ClientDoorBridge.endSession()` now resets `inDoorManager`/`doorInputHandler`, disables mouse/game mode, and forces `subState=DISPLAY_MENU` so hybrid doors like Arkanoid2 drop cleanly back to the menu after their exit banner.
+- The singleton `system_config` row now auto-creates the first time it’s queried, so `/api/config/push/vapid-config` can persist new VAPID keys (they were previously lost because the database row didn’t exist) and they reload after a page refresh.
+- `npx tsc --noEmit` still fails with the longstanding `src/doors/amigaDoorManager.ts` issues (same string/Buffer and nullable assignment warnings as before).
 
-## Latest: vbcc-only SDK + XIM Door Compilation
+## Recent Work
+- Reordered native library opening so Kickstart residents gate `InitResident`, logging when a non-AUTOINIT trap is queued while preserving stub fallbacks for missing binaries.
+- Ensured the client-door bridge resets session flags, mouse/game-mode state, and `subState=DISPLAY_MENU` after hybrid doors finish so Arkanoid2 shows the exit banner once and then returns to the menu.
+- Config repository now inserts the singleton `system_config` row when missing so VAPID key saves (PUT `/api/config/push/vapid-config`) actually persist and can be reloaded from GET `/api/config/push/vapid-config`; `npx tsc --noEmit` still hits the same `amigaDoorManager.ts` errors.
 
-**Status**: vbcc migration complete, XIM door compiled
+## Next Steps
+- Re-run FR/J (and Arkanoid2 since it was previously blocked) to sanity-check that the INIT/STAT handshake is delivered and the front-end returns to the menu (watch `logs/backend.log` plus the door-specific logs for any lingering `GetMsg` spins or missing `door:status` events).
+- Verify the operator chat VAPID UI now reloads keys after a save/reload; if not, check the `/api/config/push/vapid-config` GET response and the `system_config` table row to see what values are stored.
+- Address the pre-existing `amigaDoorManager.ts` type errors if a clean `npx tsc --noEmit` becomes a gate for release validation.
 
-### Completed This Session
-
-1. **Removed all gcc references from SDK**
-   - Updated sdk/68k/README.md, BUILD_GUIDE.md
-   - Rewrote dev/c-doors/README.md, 68K_DOOR_DEVELOPMENT.md
-   - Updated all Makefiles to use vbcc only
-   - Removed gcc-related source files and obsolete Makefiles
-   - Updated build scripts (build-all-test-doors.sh, test-door.sh, verify-api.sh)
-
-2. **Compiled working XIM door with vbcc**
-   - Created xim-vbcc.c based on AEKIT101 XIM protocol
-   - Fixed SysBase conflict (use extern, not define)
-   - Successfully compiled: `Doors/XIMVBCC/xim-vbcc` (3652 bytes)
-   - Created .info files for BBS registration
-
-3. **vbcc NDK Headers**
-   - NDK headers at: `sdk/68k/ndk-includes/`
-   - Include with: `-I/path/to/sdk/68k/ndk-includes`
-   - Contains: exec/, dos/, clib/, proto/, etc.
-
----
-
-## Test Now
-
-```bash
-./dev/scripts/kill-servers.sh
-./dev/scripts/start-servers.sh
-telnet localhost 2323
-XIMVBCC
-```
-
-**Expected**: XIM door should register, display output, query user data.
-
----
-
-## vbcc Compilation (Quick Reference)
-
-```bash
-# Set environment
-export VBCC=/opt/homebrew/opt/vbcc
-
-# Compile door
-vc +aos68k -O2 -I/path/to/sdk/68k/ndk-includes mydoor.c -o mydoor -lamiga
-
-# Key points:
-# - Use 'extern struct ExecBase *SysBase;' (NOT 'SysBase = NULL')
-# - vbcc startup code handles SysBase initialization
-# - Include amiga library: -lamiga
-```
-
----
-
-## Key Files Modified
-
-- `sdk/68k/README.md` - Removed gcc section
-- `sdk/68k/BUILD_GUIDE.md` - vbcc-only
-- `dev/c-doors/README.md` - Completely rewritten for vbcc
-- `dev/c-doors/68K_DOOR_DEVELOPMENT.md` - vbcc-only
-- `dev/c-doors/Makefile` - vbcc-only
-- `dev/c-doors/doors/xim-vbcc/xim-vbcc.c` - New XIM door
-- `Doors/XIMVBCC/` - Installed door
-
-## Previous Fixes Still In Place
-
-1. ExecBase at 0x4 AND 0xC (SAS/C pattern)
-2. JMP table at negative offsets (LVO -84 -> WriteStr etc)
-3. OpenLibrary register fix (A1 not A0)
-4. PutMsg trap handler (LVO -366)
+## Last Prompts
+- User: “you need to fix the root cause not do workarounds”
+- User: “are we using the real amiga kickstart and load libraries directly from the kickstart now? this is the root cause of the issues, doors stopped working since we did that change”
