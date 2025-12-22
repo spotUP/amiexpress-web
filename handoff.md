@@ -1,18 +1,16 @@
 # Handoff
 ## Current State (2025-12-22)
-- Manual menu renders now set `skipNextDisplayFlowMenu` plus a target state so the display-flow loop immediately returns instead of redrawing the menu, keeping the first post-door keystroke in `READ_COMMAND`.
-- New BBSSession metadata fields hold the skip flag and desired destination state for the next display flow tick, allowing the flow controller to know when the menu already ran.
-- Workspace still keeps the pre-existing `User.data`, `User.keys`, and `user.misc` diffs, which are part of the committed snapshot alongside the handler adjustments.
+- `ExecLibrary.openLibraryHybrid()` now attempts ROM residents before falling back to disk-loaded natives so non-AUTOINIT modules like `dos.library` schedule their `InitResident` trap just as on real AmiExpress.
+- A `tsc --noEmit` run fails with existing errors in `src/doors/amigaDoorManager.ts` (string/Buffer mismatch and nullable string assignment); these were present before this change.
 
 ## Recent Work
-- `web/backend/src/index.ts`: swapped the timestamp-based fields for the boolean/target-state metadata used by the skip logic.
-- `web/backend/src/handlers/command-handler/menu.ts`: mark the manual menu display and record the planned follow-up substate so `advanceDisplayFlow` can skip when it re-checks `DISPLAY_MENU`.
-- `web/backend/src/handlers/command.handler.ts`: added the skip-path guard in `advanceDisplayFlow`, so the automatic flow honors the manual render instead of printing the prompt twice.
+- Reordered native library opening so Kickstart residents gate `InitResident`, logged when a non-AUTOINIT trap is pending, and kept the legacy loader/stub path intact for libraries missing from ROM.
+- Verified the backend still builds (TypeScript check reports the pre-existing `amigaDoorManager.ts` issues if rerun).
 
 ## Next Steps
-- Re-run FR/J (and optionally `Doors/arkanoid2`) and inspect `logs/backend.log` near `[DISPLAY FLOW] advance state=display_menu` to confirm only one prompt is emitted and the first keystroke immediately enters `READ_COMMAND`.
-- If duplicate prompts persist, capture the backend log snippet to confirm the skip flag is being set and cleared; adjust the hook as needed so the manual display effectively preempts the automatic flow.
-- Keep the repo clean so the newly committed handler changes plus the tracked data files stay aligned with `main`.
+- Run FR, J (and optionally `Doors/arkanoid2`) again now that the resident path is preferred; confirm in `logs/backend.log` and the door-specific logs that the door receives the INIT/STAT handshake, remains running, and no longer swallows the first post-door keystroke.
+- If the TypeScript errors in `amigaDoorManager.ts` still block `npx tsc --noEmit`, address those legacy issues before rerunning the type check as part of the final verification.
 
 ## Last Prompts
-- User: "you need to fix the root cause not do workarounds"
+- User: “you need to fix the root cause not do workarounds”
+- User: “are we using the real amiga kickstart and load libraries directly from the kickstart now? this is the root cause of the issues, doors stopped working since we did that change”
