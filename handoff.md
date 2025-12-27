@@ -1,37 +1,30 @@
 # Handoff - 2025-12-27
 
 ## Current State
-- **ALL 68K XIM DOORS NOW WORKING** - Fixed signal deadlock in AEDoorPort
-- AquaScan (FR), RTW, Bulls, and all other XIM doors can now execute successfully
-- MultiTop fix complete (TYPE=SIM), batch lines still commented out pending re-enable
+- **QuickNew FIXED** - Config1 now completes in ~8 seconds (was 20-30 minutes)
+- **mtop EXIT BUG** - Produces correct bull1.txt but doesn't exit (RawDoFmt loop)
+- XIM doors (AquaScan, RTW, Bulls) all working
 
-## Recent Work (Session 6 - Comprehensive Disk Write Audit + WebSocket Fix)
-- **CRITICAL BUG**: Logoff not saving user data to disk (express.e:8207)
-- **CRITICAL BUG**: Message posting not incrementing messagesPosted (express.e:10127)
-- **CRITICAL BUG**: WebSocket auto-reconnect preventing logoff cleanup
-- Fixed disconnect handler to write user data at logoff (socket-handlers.ts:854-878)
-- Fixed message posting to increment counter and write to disk (message-entry.handler.ts:376-392)
-- Fixed WebSocket auto-reconnect on logoff (BBSTerminal.tsx - listen for 'force-disconnect' event)
-- Created comprehensive audit doc: Documentation/6-Progress/DISK_WRITE_AUDIT_DEC27.md
-- **VERIFIED**: All critical operations now persist to disk correctly
+## Recent Work (Session 8 - Trap-Aware Batch Execution)
+- Implemented executeUntilTrap() in C++ for high-performance batch execution
+- Added trap address tracking to MOIRA using std::unordered_set for O(1) lookup
+- Modified DoorLifecycleManager to use batch execution (10K instructions/yield)
+- Performance improvement: QuickNew Config1 went from 20-30 min to 8 seconds
 
-## Recent Work (Session 5 - Upload/Download Stats Fix)
-- Fixed parseInt bug causing disk writes to fail (user-3 format IDs)
-- Upload/download handlers now write to disk correctly
-- mtop door now shows upload statistics
+## Key Changes
+- moira-wrapper.cpp: Added trapAddresses set, executeUntilTrap(), trap control methods
+- MoiraEmulator.ts: Added TypeScript bindings for trap-aware execution
+- LibraryTraps.ts: Added syncTrapAddressesToMoira() method
+- DoorLifecycleManager.ts: Replaced single-instruction with batch execution
 
-## Recent Work (Session 4 - AquaScan Signal Fix)
-- Created BBS Handler Task to own AEDoorPort
-- Fixed XIM door signal deadlock
-
-## Next Steps
-- Test other 68K XIM doors (RTW, Bulls, etc.) to verify fix
-- Re-enable MultiTop in batch files
-- Document BBS Handler Task architecture
+## mtop Exit Bug
+- Door completes work (writes bull1.txt correctly) but doesn't exit
+- Gets stuck in RawDoFmt calls after file writes complete
+- Iteration count shows batch execution IS working (300K+ iterations in 30s)
+- Not blocking - output is created successfully
 
 ## Key Files
-- web/backend/src/server/socket-handlers.ts (L854-878 - logoff disk write)
-- web/backend/src/handlers/message/message-entry.handler.ts (L376-392 - messagesPosted)
-- web/backend/src/server/file-socket-handlers.ts (L293, L876 - upload/download)
-- packages/terminal/src/components/BBSTerminal.tsx (L87, L938-944, L959-965 - auto-reconnect fix)
-- Documentation/6-Progress/DISK_WRITE_AUDIT_DEC27.md (comprehensive audit)
+- Commands/BBSCmd/MTOP.info (TYPE=SIM)
+- Doors/QuickNew/QuickNew.Config1 (11 conferences, large dirs)
+- web/backend/src/amiga-emulation/cpu/moira-wrapper.cpp
+- web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts
