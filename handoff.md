@@ -1,27 +1,48 @@
 # Handoff - 2025-12-28
 
 ## Current State
-- **Batch utilities 100%** - mtop, Bulls, WHO all working
-- **Interactive doors 100%** - All phases complete with 1:1 express.e parity
-- **AREXX doors 100%** - Full AmiExpress API
+- **Core BBS**: 100% complete (2025-12-28)
+- **68K Doors**: All phases complete, interactive doors working
+- **ASCII Video Streaming**: Phase 1 complete (SDK infrastructure)
 
-## All Phases Complete (2025-12-28)
+## Recent Work: ASCII Video Streaming (Phase 1)
 
-### Phase 1-3: COMPLETE
-- Environment Variables, Signal Handling, DOS Error Codes
-- ReadArgs, DOS/Exec LVOs corrected
-- Memory management, Drop files, Case sensitivity
+Implemented complete SDK infrastructure for real-time ASCII video streaming:
 
-### Phase 4: Final Parity (2025-12-28) - COMPLETE
-- **TIM door protocol**: Full DoorControl{n} port with PG_* commands (express.e:4371-4525)
-- **User field updates**: DT_NAME/DT_LOCATION/DT_PHONENUMBER set operations
-- **checkForPause()**: Proper screen pagination with input waiting (express.e:5181-5201)
-- **CONF_ACCESS**: Checks user's conferenceAccess string (express.e:8499-8512)
+### Completed (Phase 1)
+- Media module (`sdk/media/`): AsciiConverter, FrameCapture, VideoStream (1,340 lines)
+- VideoDisplay neo-blessed widget (406 lines)
+- Door API integration (`ctx.video`)
+- Type definitions and interfaces
+- Documentation (`sdk/docs/VIDEO_STREAMING.md`)
+- Dependencies: fluent-ffmpeg, image-to-ascii, uuid
 
-## Remaining Edge Cases
-- FR output: Rare ASCII art wrap with tabs/unusual punctuation
+### Key Features
+- 16-color ANSI enforcement (CLAUDE.md rule #6)
+- Multi-source support (webcam, file, URL, screen, buffer)
+- Frame buffering for smooth playback
+- FPS monitoring and statistics
+- Auto-cleanup on door close
+
+### Files Created (8)
+- `sdk/media/types.ts`, `AsciiConverter.ts`, `FrameCapture.ts`, `VideoStream.ts`, `index.ts`
+- `sdk/engines/ui/blessed/widgets/video-display.ts`
+- `sdk/core/Video.ts`
+- `sdk/docs/VIDEO_STREAMING.md`
+
+## Next Steps (Phase 2)
+
+Backend implementation needed:
+- `web/backend/src/services/video-stream.service.ts`
+- `web/backend/src/services/ascii-converter.service.ts`
+- `web/backend/src/handlers/video-stream.handler.ts`
+- Socket.IO event handlers for stream lifecycle
+
+See: `IMPLEMENT_ASCII_VIDEO_STREAMING.md` for complete specification
+See: `ASCII_VIDEO_IMPLEMENTATION_SUMMARY.md` for Phase 1 details
 
 ## Key Files
-- TIMDoorHandler: web/backend/src/amiga-emulation/session/TIMDoorMessageHandler.ts
-- DoorMessageHandler: web/backend/src/amiga-emulation/session/DoorMessageHandler.ts
-- DoorLifecycleManager: web/backend/src/amiga-emulation/session/DoorLifecycleManager.ts
+- SDK Media: `sdk/media/`
+- Widget: `sdk/engines/ui/blessed/widgets/video-display.ts`
+- API: `sdk/core/Video.ts`, `sdk/core/Door.ts`
+- Docs: `sdk/docs/VIDEO_STREAMING.md`
