@@ -1,48 +1,51 @@
-# Handoff - 2025-12-28
+# Handoff - 2025-12-29
 
 ## Current State
-- **Core BBS**: 100% complete (2025-12-28)
-- **68K Doors**: All phases complete, interactive doors working
-- **ASCII Video Streaming**: Phase 1 complete (SDK infrastructure)
+- **68K Door Debugging**: AquaScan stuck in polling loop after BB_NONSTOPTEXT
 
-## Recent Work: ASCII Video Streaming (Phase 1)
+## Problem
+AquaScan (conference file scanner) gets stuck after successful JH_REGISTER/ENVSTAT/BB_NONSTOPTEXT sequence. Door continuously polls `GetMsg(AEDoorPort2=0xa0200)` returning "No messages" instead of outputting scan results.
 
-Implemented complete SDK infrastructure for real-time ASCII video streaming:
+## Fixed
+- **strPtr in JH_REGISTER reply**: `system-commands.ts:92-99` now sets strPtr/filler1/filler2 to embedded string buffer before ReplyMsg. Phantasm confirmed doors dereference msg->strptr and hang if NULL.
 
-### Completed (Phase 1)
-- Media module (`sdk/media/`): AsciiConverter, FrameCapture, VideoStream (1,340 lines)
-- VideoDisplay neo-blessed widget (406 lines)
-- Door API integration (`ctx.video`)
-- Type definitions and interfaces
-- Documentation (`sdk/docs/VIDEO_STREAMING.md`)
-- Dependencies: fluent-ffmpeg, image-to-ascii, uuid
+## Key Findings
+1. **Message flow is one-way**: All XIM messages are door->backend. No backend->door proactive messages.
+2. **Door polls wrong port**: After BB_NONSTOPTEXT, door polls AEDoorPort (0xa0200) not its reply port (0xa0300)
+3. **Express.e pattern**: BBS only receives via GetMsg and replies via ReplyMsg - never sends proactively
+4. **xim:analyze findings**: "GetMsg infinite loop" (95%) and "No JH_INIT received" (95% - false positive?)
+5. **DoorMessageHandler**: `sendStartupMessage()` disabled with comment "doors start the conversation"
 
-### Key Features
-- 16-color ANSI enforcement (CLAUDE.md rule #6)
-- Multi-source support (webcam, file, URL, screen, buffer)
-- Frame buffering for smooth playback
-- FPS monitoring and statistics
-- Auto-cleanup on door close
+## CPU Trace Pattern (post BB_NONSTOPTEXT)
+```
+[ExecLibrary][FindPort] "AEDoorPort2" -> 0xa0200
+[ExecLibrary] >>> GetMsg(port=0xa0200)
+[ExecLibrary]   No messages in port
+(repeats indefinitely)
+```
 
-### Files Created (8)
-- `sdk/media/types.ts`, `AsciiConverter.ts`, `FrameCapture.ts`, `VideoStream.ts`, `index.ts`
-- `sdk/engines/ui/blessed/widgets/video-display.ts`
-- `sdk/core/Video.ts`
-- `sdk/docs/VIDEO_STREAMING.md`
+## Hypothesis
+Door expects something after BB_NONSTOPTEXT that we're not providing. Possibilities:
+1. Reply needs specific data field set (not just strPtr)
+2. Door waits for proactive message we don't send
+3. ENVSTAT reply data (currently "8") is wrong
 
-## Next Steps (Phase 2)
+## Next Steps
+1. Check ENVSTAT reply - express.e line 3876 sets `nonStopDisplayFlag` from `msg.data`, verify our reply data
+2. Compare with QuickNew door log (completed successfully in 0.1s) - what's different?
+3. Check if AquaScan uses different polling pattern than other doors
+4. Examine `BB_NONSTOPTEXT` handler in `system-commands.ts` - verify reply format
 
-Backend implementation needed:
-- `web/backend/src/services/video-stream.service.ts`
-- `web/backend/src/services/ascii-converter.service.ts`
-- `web/backend/src/handlers/video-stream.handler.ts`
-- Socket.IO event handlers for stream lifecycle
-
-See: `IMPLEMENT_ASCII_VIDEO_STREAMING.md` for complete specification
-See: `ASCII_VIDEO_IMPLEMENTATION_SUMMARY.md` for Phase 1 details
+## Debug Commands
+```bash
+npm run xim:analyze -- N          # Analyze AquaScan session
+npm run xim:view -- N             # View message flow
+npm run xim:flow -- N             # Bidirectional flow diagram
+ls -t logs/door-68k-* | head -3   # Recent door logs
+```
 
 ## Key Files
-- SDK Media: `sdk/media/`
-- Widget: `sdk/engines/ui/blessed/widgets/video-display.ts`
-- API: `sdk/core/Video.ts`, `sdk/core/Door.ts`
-- Docs: `sdk/docs/VIDEO_STREAMING.md`
+- `web/backend/src/amiga-emulation/xim/system-commands.ts` - XIM command handlers
+- `web/backend/src/amiga-emulation/xim/bbs-info.ts` - BB_* command handlers
+- `web/backend/src/amiga-emulation/session/DoorMessageHandler.ts` - Message handling
+- `logs/door-68k-AquaScan_020-*.log` - AquaScan session logs
