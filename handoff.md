@@ -1,18 +1,20 @@
 # Handoff - 2025-12-31
 
 ## Current State
-- Fixed `UserDatabaseManager.ts` struct sizes to match 68K alignment: USER_SIZE=232, USERKEYS_SIZE=56, USERMISC_SIZE=248.
-- Changed byte order from little-endian to big-endian for 68K compatibility.
-- Added alignment padding after phoneNumber, expert, userName, and newUser.
-- Updated CONF_ACCESS_OFFSET from 135 to 136.
-- Updated all stat field offsets (+1 for phoneNumber padding).
+- **Pong (Fixed)**: Input was working but the screen wasn't updating because `refresh()` was missing from the game loop.
+  - **Action Taken**: Added `refresh()`, adjusted timing to 33ms (30 FPS), and rebuilt.
+- **Arcade Games (Fixed)**: Bulk-applied `door.start()` and fixed backend routing in `door.handler.ts`.
+- **AquaScan N S U**: Still under investigation. 
+  - **Action Taken**: Simplified version string to `"5"` and padded memory buffers.
+
+## Recent Work (Session 2025-12-31)
+- Fixed rendering bug in `ncurses-pong`.
+- Optimized Pong tick rate for network efficiency.
 
 ## Next Steps
-- Delete old user.data/user.keys/user.misc files.
-- Restart servers and login to regenerate user files with correct format.
-- Test AquaScan N door - should complete without stalling after EXPRESS_VERSION.
-- Verify confScan works for conferences 4+.
-
-## Recent Prompts
-- "fix aquascan n"
-
+1. **Restart Servers**: **REQUIRED**.
+   ```bash
+   ./dev/scripts/kill-servers.sh && ./dev/scripts/start-servers.sh
+   ```
+2. **Retest Pong**: Should be fully playable now.
+3. **Retest AquaScan**: Run `N S U`.
