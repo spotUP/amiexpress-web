@@ -22,6 +22,16 @@
 - Modified `web/backend/src/amiga-emulation/api/DosLibrary.ts` to fix Timezone and IO Redirection.
 - Modified `web/backend/src/amiga-emulation/api/library-vectors/dos-vectors.ts` to add `SelectInput`/`SelectOutput`.
 - Modified `web/backend/src/amiga-emulation/xim/bbs-info.ts` to implement `ENVSTAT`.
+- Read `CLAUDE.md`, `AGENTS.md`, and `handoff.md` per user request (MCP server not available via tools, used direct reads).
+- Updated `Commands/SysCmd/quicknew.info` to `TYPE=MCI` with `MCI_TEXT=~SS_BBS:Screens/QuickNew.txt` so `quicknew` displays the generated screen instead of running the QuickNew utility (prevents "Couldn't Open Config-File !").
+- Fixed `parseInfoFile` to honor flag-only tooltypes (e.g., `EXEC_QUICKNEW`) and skip commented `!`/`( ... )` entries so login flow can detect `EXEC_QUICKNEW`.
+- Fixed MCI door handling to `await parseMciCodes()` and use `.parsed` so `content.replace` crash is resolved (`web/backend/src/handlers/door.handler.ts`).
+
+## Recent Prompts
+- "read claude.md agents.md and the handuff"
+- "AmiExpress Web BBS [3:Abandoned Apps] Menu (60 mins left): quicknew ERROR : Couldn't Open Config-File !"
+- "i see this file generated recently but i don't see it during login, is it showing? what is telling it to show? are we missing a pause prompt or something? /Users/spot/Code/amiexpress-web/Screens/quicknew.txt"
+- "here is the full output: ... [ERROR] Door crashed: content.replace is not a function ..."
 
 ## Next Steps
 1. **Restart Server:** Essential to apply the core emulation changes (`DosLibrary.ts` updates).
