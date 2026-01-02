@@ -45,6 +45,12 @@
 
 **Why needed:** Without pauses, all 14 conferences scroll by instantly (too fast to read).
 
+### Fix 6: Font Preference Persistence (COMPLETE)
+**File:** user-repository.ts:190
+- Added `fontPreference: user.fontpreference || 'TopazPlus_a1200'` to mapUserFromDb()
+- Bug: Font was saved to DB but not loaded on login (missing from mapping)
+- Now font preference persists across sessions
+
 ## Debug Logging (can remove after verified)
 
 - `DoorLifecycleManager.ts:1419` - Log EVERY pollXIMMessages call
