@@ -2,10 +2,12 @@
 
 ## FIXES APPLIED
 
-### Fix 1: Internal Command Priority (COMPLETE)
-**File:** command-execution.handler.ts:208-217
-- Check internal commands FIRST before external door lookup
-- Priority: INTERNAL → EXTERNAL (was EXTERNAL only)
+### Fix 1: Command Priority Order (CORRECTED)
+**File:** command-execution.handler.ts:208-224
+- Priority: EXTERNAL (SYSCMD/BBSCMD) → INTERNAL (fallback)
+- express.e:28247-28256 - External commands checked first
+- Internal commands only run if no external command found
+- **FIXED AGAIN:** Was incorrectly checking INTERNAL first (broke J door)
 
 ### Fix 2: processBBSCommand Return Values (COMPLETE)
 **File:** internal-commands.ts
