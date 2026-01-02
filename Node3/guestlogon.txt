@@ -1,1 +1,15 @@
+~
 ~f
+     [36m___/[34m\  [36m__________/[34m\[36m__[34m.  .[36m____   ___[34m.[36m__________/[34m\[36m______________
+     \[34m_   \[36m/  [34m_[36m\   [34m_____  |[36m/[34m\|  _/   [36m\  [34m|  [36m/   [34m____[36m\   [34m_________   \
+      [36m/    [34m\  \[36m/  [34m__/ \/  [36m/  [34m\  \    [36m/  [34m|  [36m\[34m____  \[36m/  [34m__/ \[36m|   /   [34m/
+     [36m/   \    /    '   [34m\         \[32m::[36m/   [34m|  [36m/   '  /    '   [34m\   [36m\   [34m\
+     [36m\[34m___|[36m\[34m___[36m\[34m______  /___/[36m\    [34m/[32m::[36m\[34m_____[36m/[34m_______[36m\[34m______  /___|[36m\   [34m\[36m_
+     [32m::::::::::::::::[34m\/[32m::::::[36m\[34m__/[32m::::::::::::::::::::::::[34m\/[CC][32m::[36m\[34m___/
+
+     [33mWelcome to My Little BBS... Now, just a word of caution. This  is
+     NOT  a  warez  BBS,  we  carry  nothing illegal. Please keep your
+     uploads safe and legal. Also, when asked for a name you  may  use
+     an  alias/nick...and  for  your 'city/state' you may use the name
+     of the group you are in. Or make something up.
+
