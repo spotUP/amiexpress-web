@@ -32,6 +32,17 @@
 **Root Cause:** confScan calling AquaScan DOOR instead of internal `myNewFiles()`.
 **Solution:** 'N' command now runs internal handler → outputs "Scanning..." messages (express.e:27831-27950).
 
+### Fix 5: confScan Pause Logic (COMPLETE)
+**Files:** flag-pause.util.ts, file.handler.ts:746-760, socket-handlers.ts:535-567
+- Added `checkForPause()` function (express.e:5181-5196)
+- After each "Scanning directory X..." line, call appropriate pause:
+  - If `newFilesPauseFlag=TRUE` (confScan), call `checkForPause()`
+  - Otherwise call `flagPause(1)` for manual N command
+- Tracks `lineCount` and pauses every 23 lines (express.e:27934-27938)
+- Added input handler for checkPauseHandler in socket-handlers.ts
+
+**Why needed:** Without pauses, all 14 conferences scroll by instantly (too fast to read).
+
 ## Debug Logging (can remove after verified)
 
 - `DoorLifecycleManager.ts:1419` - Log EVERY pollXIMMessages call
