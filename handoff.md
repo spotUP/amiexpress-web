@@ -1,21 +1,25 @@
 # Handoff
-## Current State (2026-01-04)
-- **SAmiLog Audit:** ✅ Completed 100% feature parity and 1:1 byte compatibility.
-- **Door Execution:** ✅ Fixed `TypeError` in `Doors/ansi-editor`.
-- **System Configuration Audit:** ✅ Resolved root causes of startup errors:
-  - **Missing Directories:** Created `Commands/BBSCmd` and `Commands/SysCmd` for all 14 conferences.
-  - **Conf13 Configuration:** Fixed `NDIRS=7` mismatch in `Conf13.info` (set to 2 to match actual `DLPATH` entries).
-  - **Conf14 Configuration:** Created missing `Conf14.info` (cloned from Conf13, updated paths).
-  - **Path Duplication:** Fixed `amiga-command-parser.util.ts` to avoid redundant `Conf01` vs `Conf1` scanning.
-  - **Tooltype Parsing:** Updated `info-file.util.ts` and `info-file-parser.ts` to support dots in keys (e.g., `DLPATH.1`).
-- **Build Status:** ✅ Backend builds successfully (`npx tsc --noEmit` passes).
+## Current State (2026-01-05)
+- N S U (AquaScan) and J (JoinCnf) doors run but emit no JH_SM output.
+- Evidence points to stack corruption after `dos.library Lock("ENV:JC_PWFAIL.2")` fails with IoErr=205.
+- Return address on stack is outside code region; door jumps to invalid PC and crashes/loops.
 
 ## Recent Work
-- Updated `web/backend/src/utils/amiga-command-parser.util.ts` to eliminate redundant conference directory scans.
-- Fixed `web/backend/src/utils/info-file.util.ts` and `web/backend/src/services/info-file-parser.ts` regex for tooltype keys.
-- Repaired `Conf13.info` and created `Conf14.info`.
-- Standardized directory structure across all conferences (1-14).
+- Read and confirmed `CLAUDE.md` and `AGENTS.md` per user request.
+- Logs previously checked: `logs/backend.log`, `logs/xim-debug.json`, `logs/door-68k-joincnf-*.log`.
+- Files examined: `DosLibrary.ts`, `LibraryTraps.ts`, `dos-vectors.ts`.
+- **ADDED**: Stack corruption detection in `LibraryTraps.ts` (lines 1144-1158).
+  - Validates return address is in range [0x1000-0x1000000]
+  - Logs detailed diagnostics when corruption detected (PC, SP, A6, stack dump)
+  - Will identify exact library call where stack is corrupted
 
 ## Next Steps
-- Verify that `Conf14` is correctly recognized by the BBS at runtime.
-- Monitor logs for any remaining "directory does not exist" messages.
+- **RESTART BACKEND** to enable stack corruption detection (changes in LibraryTraps.ts)
+- Run J command - will log "[STACK_CORRUPT]" with details when corruption hits
+- Analyze which library call has corrupted stack (expect Lock or earlier)
+- Check JSR/RTS implementation if corruption happens on first library call
+- Verify with vamos that JoinCnf works on real Amiga emulator
+- Fix root cause, then re-test N S U and J
+
+## Last Prompts
+- "read claude.md agents.md"
