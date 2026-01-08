@@ -10,40 +10,36 @@
 
 ---
 
-## 68K XIM State (2026-01-08)
+## 68K Door State (2026-01-08)
 
 ### XIM Protocol - FULLY WORKING
 
 **Status**: All tested XIM doors work correctly.
 
-#### Fixes Applied
-- INIT/STAT sent to pr_MsgPort (task port), not AEDoorPort1
-- Added CLI_REQUIRED tooltype for doors needing pr_CLI set
-- WHO door: pr_CLI=0 (BBS mode), exits with code 0
-- AquaScan door: pr_CLI=non-zero (CLI_REQUIRED=YES), completes normally
+### SIM Door cli_DefaultStack - FIXED
 
-#### Key Discoveries
+**Bug**: SIM batch doors (ByteKillHandler, etc.) failed with exit code 20 without printing output.
 
-**Port Architecture:**
-- **AEDoorPort1** = BBS port where DOOR sends messages TO BBS
-- **pr_MsgPort** = Task port where BBS sends startup messages TO DOOR
+**Root Cause**: cli_DefaultStack (CLI struct offset 0x34) was set in bytes but SAS/C startup expects it in longwords. Startup does `lsl.l #2` to convert longwords to bytes, causing overflow.
 
-**pr_CLI Behavior:**
-- Some doors (WHO) expect pr_CLI=0 for BBS mode detection
-- Some doors (AquaScan) check pr_CLI and exit with code 10 if NULL
-- Solution: CLI_REQUIRED=YES tooltype sets pr_CLI for doors that need it
+**Fix** (DoorLoader.ts line 405): Changed `writeCli32(0x34, this.stackSizeBytes)` to `writeCli32(0x34, this.stackSizeBytes >> 2)`.
+
+**pr_CLI Behavior by Door Type:**
+- **XIM doors**: pr_CLI=0 by default (BBS mode), CLI_REQUIRED=YES sets it
+- **SIM doors**: pr_CLI always set to 0x28000 (CLI structure at 0xa0000) by DoorLoader
 
 #### Test Results
-- WHO: pr_CLI=0, exits code 0, 1828 iterations
-- AquaScan: pr_CLI=0x38000 (CLI_REQUIRED=YES), JH_SHUTDOWN, completes normally
+- ByteKillHandler: pr_CLI=0x28000, prints banner, uses TIM/DoorControl protocol
+- WHO (XIM): pr_CLI=0, exits code 0
+- AquaScan (XIM): pr_CLI=0x28000 (CLI_REQUIRED=YES), completes normally
 
 #### Test Commands
 ```bash
-# WHO (works with default pr_CLI=0)
-npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/who/who 1
+# SIM batch door
+npx tsx web/backend/src/scripts/run-amiga-door.ts doors/bytekiller/Bytekillhandler 1 --doortype SIM
 
-# AquaScan (needs CLI_REQUIRED=YES)
-npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/AquaScan/AquaScan.000 1 --tooltypes '{"CLI_REQUIRED":"YES"}'
+# XIM door
+npx tsx web/backend/src/scripts/run-amiga-door.ts Doors/who/who 1
 ```
 
 ---
