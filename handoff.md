@@ -1,29 +1,21 @@
 # Handoff
 
-## Current State (2026-01-09)
+## Current State (2026-01-12)
+- Mail Composer disables game mode and runs composer async so door input loop works.
+- ANSI editor `package.json` now points to `dist/index.js` with `types` entry.
+- Backend asset route uses regex matcher; restart required after changes.
+- Header Dropdown Demo door added with inline menu labels (no buttons).
 
-### AquaScan/FR Door - FIX APPLIED (testing)
+## Recent Work (2026-01-12)
+- Updated `Doors/mail-composer/index.ts` for async composer + disable game mode.
+- Updated `Doors/ansi-editor/package.json` main to `dist/index.js`.
+- Added `Doors/header-dropdown-demo/` (package.json, tsconfig, index.ts).
+- Added `Commands/BBSCmd/HDRDROP.info`.
 
-**Root Cause Found**: Stuck loop detection was killing door after 5 repeated jumps to FindToolType (0xcffd0). Door was reading multiple tooltypes (normal behavior) but loop detector thought it was stuck.
+## Next Steps
+- Restart backend and re-test E door autocomplete and ANSI editor startup.
+- If issues persist, capture `logs/backend.log` tail around the failure.
+- Launch `HDRDROP` and verify header dropdown layout and focus behavior.
 
-**Fix Applied** (`DoorLifecycleManager.ts`):
-- Added library trap address exception to stuck loop detection
-- Jumps to 0x7ff00-0x80000 (exec), 0xaff00-0xb0000 (dos), 0xcff00-0xd0000 (icon), 0xeff00-0xf0000 (utility) now excluded
-- Counter resets when library trap is hit (normal behavior)
-
-**Also Fixed**:
-1. `XIMProtocol.ts`: Unknown commands return 1 (was 0)
-2. `DoorMessageHandler.ts`: BB_MAINLINE/EXPRESS_VERSION per express.e
-
-**Test**: Run FR command - door should now complete library calls and produce output.
-
----
-
-## Previous State (Still Valid)
-
-### Neo-Blessed SDK - STABLE
-All 31 TypeScript doors build.
-
-### 68K XIM/SIM Doors - WORKING
-- cli_DefaultStack fixed (longwords not bytes)
-- pr_CLI behavior: XIM=0, SIM=0x28000, CLI_REQUIRED=YES overrides
+## Latest Prompts
+- User: "write a handoff"
