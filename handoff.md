@@ -1,74 +1,56 @@
-# Handoff
+# Handoff: CP Listan Door - RNG Still Not Working
 
-## Current State (2026-01-13)
+## Achievement
+First working native 68020 assembly door for AmiExpress-Web. Door compiles, runs, outputs text correctly.
 
-Grandmaster (GMASTER) Tetris door had **fourteen issues** - all now fixed:
+## Problem
+Random number generator always produces same result - door shows same string every time.
 
-1. **Space bar not working at logo screen** - Fixed by enabling `grabKeys` on screen.program
-2. **Menu keyboard navigation only works after game** - Fixed by enabling `grabKeys` for proper global input capture
-3. **Help modal ESC closes entire door** - Fixed by adding modal state check to prevent ESC key bubbling
-4. **Screen ghosting from previous door** - Fixed by clearing screen buffers + 200ms delay for modem speeds
-5. **Attract mode missing visual effects** - Fixed by refactoring to use GameScreen directly (eliminated code duplication)
-6. **Visual effects not visible/misaligned** - Fixed animation centering, added missing particle preset, fixed z-ordering
-7. **ESC in main menu causes lockup** - Fixed by adding ESC key handler (ESC = quit)
-8. **Can't type in BBS after exiting** - Fixed by disabling grabKeys/mouse on quit
-9. **Screen ghosting still visible at modem speed** - Fixed by adding 200ms delay after screen clear
-10. **No sound when navigating menus** - Fixed by adding `playSfx('menu_select')` to menu `select item` event
-11. **Settings screen has no sound feedback** - Fixed by adding comprehensive sound effects to all interactions (navigation, selection, value adjustment, confirmation, cancel)
-12. **TetriNET lobby ghosts into main menu** - Fixed by adding clearRegion + 200ms delay to menu.ts (same as app.ts startup)
-13. **TetriNET lobby visible during GMASTER startup** - Fixed by adding clearRegion + 200ms delay to quit() before screen.destroy() to clear buffer on exit
-14. **Junk text visible through GMASTER logo** - Fixed by adding clearRegion to attract-screen setupUI() to clear blessed internal buffer + added `style: { bg: 'black' }` to mainBox
+## What Works
+- Door compiles with vasm (`vasmm68k_mot -Fhunkexe -kick1hunks -nosym -m68020`)
+- Uses correct trapped AEDoor LVOs: CreateComm(-30), DeleteComm(-36), WriteStr(-84)
+- 999 strings embedded with offset table (handles >32KB PC-relative limit)
+- Header displays, door exits cleanly
 
-## Recent Sessions (2-5)
+## RNG Approaches Tried (All Failed)
 
-Sessions 2-4: Input handling, screen ghosting, visual effects centering, menu ESC lockup - all resolved.
+| Approach | Why Failed |
+|----------|------------|
+| dos.library DateStamp() | Not working in emulator |
+| Hardware regs ($DFF006, CIA) | Not emulated |
+| ExecBase counters | Always same values |
+| Memory write to 0x100 | Exception vector area, overwritten |
+| Memory write to 0x400 | Written once at ExecLibrary init, not per-door |
+| D3 register from DoorLoader | Still produces same output |
 
-Session 5: Created **DoorInputManager** class to eliminate input complexity - one enable/disable, automatic cleanup. Migrated GMASTER. All future doors must use this pattern.
+## Current Implementation
 
-## Session 6 Summary
+**DoorLoader.ts:294-296** sets D3:
+```typescript
+const randomSeed = (Date.now() & 0xFFFFFFFF) ^ ((Math.random() * 0xFFFFFFFF) >>> 0);
+this.emulator.setRegister(3, randomSeed); // D3 = random seed
+```
 
-**Sound fixes:** Menu navigation, menu selection (move→menu_ok), settings screen (added 10 playSfx calls - had ZERO feedback), tetrinet special (lock→attack).
+**cplistan.asm start** (current):
+```asm
+start:
+        lea     data_start(pc),a4
+        or.l    #1,d3                   ; D3 from DoorLoader
+        move.l  d3,lfsr_state-data_start(a4)
+        movem.l d0-d7/a0-a6,-(sp)
+```
 
-**Ghosting fixes (3 locations):**
-- menu.ts: clearRegion + 200ms delay to prevent tetrinet lobby bleeding into menu
-- app.ts quit(): clearRegion + 200ms delay to clear screen on exit
-- attract-screen.ts: clearRegion in setupUI() + black background on mainBox (blessed buffer wasn't cleared, text showed through logo)
+## Likely Root Cause
+D3 is being reset between `setRegister(3, seed)` call and actual CPU execution at entry point 0x2008. Need to trace exact register state.
 
-**6 doors migrated** to DoorInputManager. Fixed cleanup bugs in neo-blessed-showcase and header-dropdown-demo.
-
-## Key Files (Session 6)
-
-**SDK**: `door-input-manager.ts`, `DOOR_INPUT_MANAGER_GUIDE.md`
-
-**GMASTER Sound + Ghosting Fixes**:
-- `app.ts` - Pass sounds to SettingsScreen, clearRegion in quit()
-- `menu.ts` - Navigation sound, selection sound fix, clearRegion before menu display
-- `settings-screen.ts` - SoundEngine param, 10 playSfx calls
-- `tetrinet-screen.ts` - Special sound fix (lock → attack)
-- `attract-screen.ts` - **clearRegion in setupUI() + black background on mainBox**
-
-**6 Doors Migrated**: door-manager, doors-menu, neo-blessed-showcase (fixed cleanup bugs), rip-browser, widget-shadow-demo, header-dropdown-demo (fixed cleanup)
-
-**Docs**: 7 progress docs in `Documentation/6-Progress/GRANDMASTER_*_2026-01-13.md`
-
-## Testing Required
-
-**CRITICAL: Restart backend first**: `./dev/scripts/kill-servers.sh && ./dev/scripts/start-servers.sh`
-
-### Priority Tests
-1. **TetriNET lobby ghosting - quit()** (Session 6): Enter GMASTER → select TETRINET → browse modes → ESC to menu → quit GMASTER → enter GMASTER again → **verify no lobby content during startup attract mode**
-2. **TetriNET lobby ghosting - menu** (Session 6): Select TETRINET → browse modes → press ESC to go back to menu → **verify no lobby content visible in main menu**
-3. **Sound** (Session 6): Menu navigation (up/down arrows), settings navigation/selection, value adjustment (left/right), volume adjustment - all should have sound feedback
-4. **Input cleanup** (Session 5): Exit GMASTER → verify you can type in BBS (commands, chat)
-5. **Visual effects** (Session 3): Hard drop, grade-up, section clear animations - all centered
-6. **Navigation** (Sessions 1-2): SPACE at logo, arrow keys in menu, F1 for manual, ESC in modal only
-7. **Exit** (Session 4): ESC in main menu exits cleanly (no lockup)
+## Files
+- `sdk/68k/doors/cplistan/cplistan.asm` - Source
+- `Doors/CPLISTAN/cplistan` - Binary
+- `Commands/BBSCmd/CP.info` - Command
+- `web/backend/src/amiga-emulation/DoorLoader.ts` - Sets D3 at line 296
 
 ## Next Steps
-- **CRITICAL: Restart backend** to load new GMASTER build
-- **Test both tetrinet lobby ghosting fixes:**
-  - Quit scenario: GMASTER → TETRINET → ESC → quit → enter GMASTER again (verify no ghosting during startup)
-  - Menu scenario: TETRINET → ESC back to menu (verify no ghosting in main menu)
-- Test all sound fixes (menu navigation, settings screen, tetrinet special)
-- Verify comprehensive settings screen sound feedback
-- Consider Priority 2-4 sound improvements (5-combo SFX consistency, T-Spin mini sound, game clear sound)
+1. Add debug logging to see D3 value at exact first instruction execution
+2. Check if emulator.run() or refillPrefetch() resets registers
+3. Alternative: Pass seed in argument string (guaranteed to reach door via A0)
+4. Alternative: Use XIM protocol to query BBS for timestamp
