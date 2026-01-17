@@ -1,56 +1,45 @@
-# Handoff: CP Listan Door - RNG Still Not Working
+# Handoff - 2026-01-17
 
-## Achievement
-First working native 68020 assembly door for AmiExpress-Web. Door compiles, runs, outputs text correctly.
+## Current Issue
+JoinCnf door (J command without params) gets stuck at "(Pause)...Space To Resume:" after user selects a conference. Pressing space doesn't continue.
 
-## Problem
-Random number generator always produces same result - door shows same string every time.
+## Fixes Applied This Session
 
-## What Works
-- Door compiles with vasm (`vasmm68k_mot -Fhunkexe -kick1hunks -nosym -m68020`)
-- Uses correct trapped AEDoor LVOs: CreateComm(-30), DeleteComm(-36), WriteStr(-84)
-- 999 strings embedded with offset table (handles >32KB PC-relative limit)
-- Header displays, door exits cleanly
+### 1. msgBaseRJoin Storage (1:1 express.e fix)
+- **Problem**: Stored database ID instead of relative number (1-indexed)
+- **express.e**: Line 5136 `loggedOnUser.msgBaseRJoin:=msgBaseNum`
+- **Fixed**: `conference.handler.ts:119-130`, `command.handler.ts:623-630`
 
-## RNG Approaches Tried (All Failed)
+### 2. RETURNCOMMAND Stub Implemented
+- **Problem**: `DoorMessageHandler.ts:988-997` was a TODO stub
+- **Fixed**: Now stores command in `bbsSession.returnCommand`
 
-| Approach | Why Failed |
-|----------|------------|
-| dos.library DateStamp() | Not working in emulator |
-| Hardware regs ($DFF006, CIA) | Not emulated |
-| ExecBase counters | Always same values |
-| Memory write to 0x100 | Exception vector area, overwritten |
-| Memory write to 0x400 | Written once at ExecLibrary init, not per-door |
-| D3 register from DoorLoader | Still produces same output |
+### 3. Pause Clobbering Fix
+- **Problem**: `executeAmigaDoor` called `displayMainMenu` which cleared `paginatedScreen`
+- **Fixed**: `door.handler.ts:2452-2460` - skips if pause active
 
-## Current Implementation
+### 4. Debug Logging Added
+- `/tmp/bbs-debug.log` traces RETURNCOMMAND, doPause, paginatedScreen
 
-**DoorLoader.ts:294-296** sets D3:
-```typescript
-const randomSeed = (Date.now() & 0xFFFFFFFF) ^ ((Math.random() * 0xFFFFFFFF) >>> 0);
-this.emulator.setRegister(3, randomSeed); // D3 = random seed
-```
+### 5. Stale JS Cleanup
+- Deleted 254 .js + 852 .d.ts/.map files (compiled output in source dirs)
+- Added `dev/scripts/clean-stale-js.sh` - auto-runs on server start
+- Updated `.gitignore` for SDK/Doors compiled output
 
-**cplistan.asm start** (current):
-```asm
-start:
-        lea     data_start(pc),a4
-        or.l    #1,d3                   ; D3 from DoorLoader
-        move.l  d3,lfsr_state-data_start(a4)
-        movem.l d0-d7/a0-a6,-(sp)
-```
+## To Debug Next
+1. User tries J command, selects conference, presses space
+2. Check `/tmp/bbs-debug.log` for:
+   - `RETURNCOMMAND captured: "j X"` - door sent command
+   - `doPause: CALLED` - BBS set up pause
+   - `paginatedScreen=true` - pause not clobbered
+3. If no RETURNCOMMAND: XIM protocol issue
+4. If no doPause: processCommand flow issue
 
-## Likely Root Cause
-D3 is being reset between `setRegister(3, seed)` call and actual CPU execution at entry point 0x2008. Need to trace exact register state.
+## Key Files
+- `door.handler.ts:2376-2460` - RETURNCOMMAND capture/execution
+- `command.handler.ts:615-654` - AUTO_REJOIN flow
+- `conference.handler.ts:98-203` - joinConference
+- `DoorMessageHandler.ts:988-1000` - RETURNCOMMAND handler
 
-## Files
-- `sdk/68k/doors/cplistan/cplistan.asm` - Source
-- `Doors/CPLISTAN/cplistan` - Binary
-- `Commands/BBSCmd/CP.info` - Command
-- `web/backend/src/amiga-emulation/DoorLoader.ts` - Sets D3 at line 296
-
-## Next Steps
-1. Add debug logging to see D3 value at exact first instruction execution
-2. Check if emulator.run() or refillPrefetch() resets registers
-3. Alternative: Pass seed in argument string (guaranteed to reach door via A0)
-4. Alternative: Use XIM protocol to query BBS for timestamp
+## Server
+Running with fixes. Restart to apply: `./dev/scripts/start-servers.sh`
