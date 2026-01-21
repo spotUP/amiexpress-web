@@ -1,0 +1,22 @@
+[DEBUG] DEBUG_OUTPUT: false (from env: false)
+[DEBUG] DOORS_DIR: /Users/spot/Code/amiexpress-web/doors
+[DEBUG] Checking for existing servers on port 8080...
+[OK] No old servers found
+[PACKAGE] Serving React frontend from frontend/dist/
+
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║   [GAME]  AmiExpress BBS Door Preview Server                   ║
+║                                                                ║
+║   Server running at: http://localhost:8080                     ║
+║                                                                ║
+║   Features:                                                    ║
+║   [OK] Live ANSI rendering                                     ║
+║   [OK] Real-time keyboard input                                ║
+║   [OK] Hot reload on file changes                              ║
+║   [OK] Debug console                                           ║
+║                                                                ║
+║   Open your browser and start testing!                         ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+  

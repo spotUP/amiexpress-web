@@ -1,0 +1,28 @@
+=== 68K Door Session Log ===
+Door: slicktop
+Started: 2025-12-04T12:03:45.839Z
+Node: 2
+Log: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N2.log
+=== 68K Door Session Log ===
+==================================================
+
+Door: slicktop
+[+0000.003s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/slicktop/slicktop
+Started: 2025-12-04T12:03:45.841Z
+[+0000.003s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N2.log
+Node: 2
+Log: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N2.log
+==================================================
+
+[+0000.002s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/slicktop/slicktop
+[+0000.002s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N2.log
+[+0000.082s] [INFO] Binary loaded: 24420 bytes
+[+0000.084s] [INFO] Binary loaded: 24420 bytes
+[+0000.086s] [INFO] Parsed 2 segments
+[+0000.083s] [INFO] Parsed 2 segments
+[+0000.087s] [HUNK] Segment 0: CODE at 0x1008, size=23560 bytes
+[+0000.085s] [HUNK] Segment 0: CODE at 0x1008, size=23560 bytes
+[+0000.087s] [HUNK] Segment 1: DATA at 0x6d08, size=25316 bytes
+[+0000.085s] [HUNK] Segment 1: DATA at 0x6d08, size=25316 bytes
+[+0000.093s] [INFO] Entry point: 0x1008
+[+0000.095s] [INFO] Entry point: 0x1008

@@ -1,0 +1,8 @@
+=== 68K Door Session Log ===
+Door: D
+Started: 2026-01-21T21:50:35.014Z
+Node: 5
+Log: /Users/spot/Code/amiexpress-web/logs/door-68k-D-20260121215035.-N5.log
+==================================================
+
+[+0004.120s] [XIM] RX cmd=2 (JH_SHUTDOWN) data=1282368353 str="Sysop"

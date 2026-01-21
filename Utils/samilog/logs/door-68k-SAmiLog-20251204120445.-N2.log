@@ -1,0 +1,30 @@
+=== 68K Door Session Log ===
+Door: SAmiLog
+Started: 2025-12-04T12:04:45.520Z
+Node: 2
+Log: /Users/spot/Code/amiexpress-web/Utils/samilog/logs/door-68k-SAmiLog-20251204120445.-N2.log
+==================================================
+
+[+0000.003s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/utils/samilog/SAmiLog
+[+0000.004s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Utils/samilog/logs/door-68k-SAmiLog-20251204120445.-N2.log
+=== 68K Door Session Log ===
+Door: SAmiLog
+Started: 2025-12-04T12:04:45.542Z
+Node: 2
+Log: /Users/spot/Code/amiexpress-web/Utils/samilog/logs/door-68k-SAmiLog-20251204120445.-N2.log
+==================================================
+
+[+0000.002s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/utils/samilog/SAmiLog
+[+0000.003s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Utils/samilog/logs/door-68k-SAmiLog-20251204120445.-N2.log
+[+0000.064s] [INFO] Binary loaded: 23616 bytes
+[+0000.065s] [INFO] Parsed 1 segments
+[+0000.066s] [HUNK] Segment 0: CODE at 0x1008, size=23580 bytes
+[+0000.070s] [INFO] Entry point: 0x1008
+[+0000.073s] [CPU] PC=0x1008 D0=0x24 A0=0xf0100 SP=0x8c3c A4=0x0 A5=0x8c48 A6=0x10000
+[+0000.073s] [INFO] Args: "-UC"4" -O"BBS:Bulletins/bull6.txt"15" len=36
+[+0000.064s] [INFO] Binary loaded: 23616 bytes
+[+0000.065s] [INFO] Parsed 1 segments
+[+0000.066s] [HUNK] Segment 0: CODE at 0x1008, size=23580 bytes
+[+0000.071s] [INFO] Entry point: 0x1008
+[+0000.074s] [CPU] PC=0x1008 D0=0x24 A0=0xf0100 SP=0x8c3c A4=0x0 A5=0x8c48 A6=0x10000
+[+0000.074s] [INFO] Args: "-UC"4" -O"BBS:Bulletins/bull6.txt"15" len=36

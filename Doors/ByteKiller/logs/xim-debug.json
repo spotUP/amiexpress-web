@@ -1,0 +1,4 @@
+{"timestamp":"2025-12-29T01:40:45.373Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_START","typeCode":0},"context":{"message":"XIM structured logging initialized"}}
+{"timestamp":"2025-12-29T01:40:46.658Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_END","typeCode":0},"context":{"message":"XIM structured logging shutdown","stats":{"messageCount":1,"errorCount":0,"uptime":1285}}}
+{"timestamp":"2025-12-29T01:53:49.263Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_START","typeCode":0},"context":{"message":"XIM structured logging initialized"}}
+{"timestamp":"2025-12-29T01:53:49.925Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_END","typeCode":0},"context":{"message":"XIM structured logging shutdown","stats":{"messageCount":1,"errorCount":0,"uptime":662}}}

@@ -1,0 +1,437 @@
+
+================================================================================
+                     68K DOOR TEST REPORT
+================================================================================
+Generated: 2025-12-30T20:00:30.412Z
+Timeout: 10s per door
+Filter: none
+
+SUMMARY
+-------
+Total Doors:  78
+PASSED:       63 (81%)
+FAILED:       0
+TIMEOUT:      10
+NOT FOUND:    5
+SKIPPED:      0
+
+================================================================================
+                           PASSED DOORS
+================================================================================
+
+[PASS] AEDOOR (XIM)
+  Location: Doors/AEDOOR/aedoor
+  Duration: 1007ms
+  Output: (no output)
+
+[PASS] AMIGAGCC (XIM)
+  Location: DOORS:AMIGAGCC/amiga-gcc-hunk
+  Duration: 1227ms
+  Output: (no output)
+
+[PASS] arcl (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 348ms
+  Output: (no output)
+
+[PASS] assn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 322ms
+  Output: (no output)
+
+[PASS] bbsc (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 339ms
+  Output: (no output)
+
+[PASS] bcr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 361ms
+  Output: (no output)
+
+[PASS] bord (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 320ms
+  Output: (no output)
+
+[PASS] bre (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 342ms
+  Output: (no output)
+
+[PASS] conftop (XIM)
+  Location: DOORS:CONFTOP/CONFTOP020.X
+  Duration: 1568ms
+  Output: (no output)
+
+[PASS] cs (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1286ms
+  Output: (no output)
+
+[PASS] ctop (XIM)
+  Location: DOORS:CONFTOP/ctop
+  Duration: 1210ms
+  Output: (no output)
+
+[PASS] dark (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 332ms
+  Output: (no output)
+
+[PASS] dkns (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 344ms
+  Output: (no output)
+
+[PASS] dmas (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 353ms
+  Output: (no output)
+
+[PASS] dmud (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 305ms
+  Output: (no output)
+
+[PASS] DUPESTART1 (XIM)
+  Location: DOORS:CONFTOP/CONFTOP020.X
+  Duration: 1387ms
+  Output: (no output)
+
+[PASS] ED (XIM)
+  Location: Doors:5D-Edit/5D-Edit
+  Duration: 1400ms
+  Output: (no output)
+
+[PASS] f (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1312ms
+  Output: (no output)
+
+[PASS] fake (XIM)
+  Location: doors:bytekiller/byteComment
+  Duration: 319ms
+  Output: (no output)
+
+[PASS] falc (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 348ms
+  Output: (no output)
+
+[PASS] fhon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 282ms
+  Output: (no output)
+
+[PASS] fish (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 327ms
+  Output: (no output)
+
+[PASS] fr (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1236ms
+  Output: (no output)
+
+[PASS] ga (XIM)
+  Location: Doors:GetAnswer/GetAnswer
+  Duration: 310ms
+  Output: (no output)
+
+[PASS] games (XIM)
+  Location: doors:5D-AdiMenu/5D-AdiMenu
+  Duration: 315ms
+  Output: (no output)
+
+[PASS] ggam (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 388ms
+  Output: (no output)
+
+[PASS] gwar (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 334ms
+  Output: (no output)
+
+[PASS] hack (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 303ms
+  Output: (no output)
+
+[PASS] HELLOVBCC (XIM)
+  Location: Doors/HELLOVBCC/hello-vbcc
+  Duration: 365ms
+  Output: (no output)
+
+[PASS] I (XIM)
+  Location: DOORS:EPUtils/SysInfo/SysInfo
+  Duration: 313ms
+  Output: (no output)
+
+[PASS] J (XIM)
+  Location: Doors:emp_tools/joincnf
+  Duration: 637ms
+  Output: (no output)
+
+[PASS] junk (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 298ms
+  Output: (no output)
+
+[PASS] Kick (XIM)
+  Location: Doors:!!!War!!!/WarKick'Em/WarKick'Em
+  Duration: 338ms
+  Output: (no output)
+
+[PASS] legn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 298ms
+  Output: (no output)
+
+[PASS] linkmenu (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 331ms
+  Output: (no output)
+
+[PASS] linkwall (XIM)
+  Location: Doors:bbslink/bbslinkwall
+  Duration: 315ms
+  Output: (no output)
+
+[PASS] lmon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 353ms
+  Output: (no output)
+
+[PASS] lord (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 345ms
+  Output: (no output)
+
+[PASS] lord2 (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 340ms
+  Output: (no output)
+
+[PASS] luna (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 309ms
+  Output: (no output)
+
+[PASS] mega (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 284ms
+  Output: (no output)
+
+[PASS] mmot (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 336ms
+  Output: (no output)
+
+[PASS] MTOP (SIM)
+  Location: doors:multitop/mtop
+  Duration: 394ms
+  Output: (no output)
+
+[PASS] mzkl (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 316ms
+  Output: (no output)
+
+[PASS] n (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1191ms
+  Output: (no output)
+
+[PASS] netr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 355ms
+  Output: (no output)
+
+[PASS] nsu (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1219ms
+  Output: (no output)
+
+[PASS] nuke (XIM)
+  Location: Doors:Bossnuke/Bossnuke
+  Duration: 288ms
+  Output: (no output)
+
+[PASS] Olm (XIM)
+  Location: DOORS:!!!WAR!!!/WAROLM/WAROLM
+  Duration: 1551ms
+  Output: (no output)
+
+[PASS] ooii (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 307ms
+  Output: (no output)
+
+[PASS] RTW (XIM)
+  Location: DOORS:RTW/RTW
+  Duration: 337ms
+  Output: (no output)
+
+[PASS] S (XIM)
+  Location: doors:ustats/stats
+  Duration: 304ms
+  Output: (no output)
+
+[PASS] scan (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1238ms
+  Output: (no output)
+
+[PASS] SIZE (XIM)
+  Location: DOORS:SizeCheck/SizeCheck
+  Duration: 314ms
+  Output: (no output)
+
+[PASS] teos (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 343ms
+  Output: (no output)
+
+[PASS] TList (XIM)
+  Location: Doors:SRH/TList/TLP2
+  Duration: 1023ms
+  Output: (no output)
+
+[PASS] tw2002 (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 319ms
+  Output: (no output)
+
+[PASS] ulist (XIM)
+  Location: Doors:5D-User/5D-User
+  Duration: 329ms
+  Output: (no output)
+
+[PASS] usrp (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 328ms
+  Output: (no output)
+
+[PASS] vsys (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 329ms
+  Output: (no output)
+
+[PASS] wall (XIM)
+  Location: dOORS:dRE/dRE!WAll/dRE!WAll
+  Duration: 1187ms
+  Output: (no output)
+
+[PASS] WHAT (XIM)
+  Location: DOORS:What/What
+  Duration: 1350ms
+  Output: (no output)
+
+[PASS] Z (XIM)
+  Location: Doors:5D-ZippySearch/5D-ZippySearch
+  Duration: 363ms
+  Output: (no output)
+
+================================================================================
+                           FAILED DOORS
+================================================================================
+
+================================================================================
+                          TIMEOUT DOORS
+================================================================================
+
+[TIMEOUT] AEHELP (XIM)
+  Location: Doors/AEHELP/aehelp
+  Duration: 10022ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] AMIGA68K (XIM)
+  Location: DOORS:SDKTEST/AMIGA68K
+  Duration: 10052ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] B (XIM)
+  Location: DOORS:EmP_Tools/Bulls
+  Duration: 10032ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] CDEMO (XIM)
+  Location: Doors/INTERACTIVE-DEMO/interactive-demo
+  Duration: 10067ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] DEL (XIM)
+  Location: DOORS:-mgs!-MgzListMan/MGZLISTMAN
+  Duration: 10019ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] HELLOOUT (XIM)
+  Location: Doors/HELLOVBCC/hello-output
+  Duration: 10058ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] MRC (XIM)
+  Location: doors:mrc/mrc_door
+  Duration: 10021ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] MRCSTAT1 (XIM)
+  Location: doors:mrc/mrcstat1
+  Duration: 10032ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] mrcstat2 (XIM)
+  Location: doors:mrc/mrcstat2
+  Duration: 10039ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] XIMVBCC (XIM)
+  Location: Doors/XIMVBCC/xim-vbcc
+  Duration: 10027ms (timeout at 10s)
+  Output: (no output)
+
+================================================================================
+                        NOT FOUND DOORS
+================================================================================
+
+[NOT_FOUND] bk (XIM)
+  Location: BBS:doors/bytekiller/bytekiller
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:doors/bytekiller/bytekiller
+
+[NOT_FOUND] DD (XIM)
+  Location: BBS:doors/TurboLister/TurboLister.XiM
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:doors/TurboLister/TurboLister.XiM
+
+[NOT_FOUND] MINIMAL (XIM)
+  Location: DOORS:SDKTEST/MINIMAL
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/Doors/SDKTEST/MINIMAL
+
+[NOT_FOUND] req (XIM)
+  Location: BBS:Doors/Request/Request
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:Doors/Request/Request
+
+[NOT_FOUND] SDKTEST (XIM)
+  Location: DOORS:SDKTEST/SIMPLETEST
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/Doors/SDKTEST/SIMPLETEST
+
+================================================================================
+                        PRIORITY FIX LIST
+================================================================================
+The following doors should be fixed in priority order:
+
+1. AEHELP (XIM) - TIMEOUT: TIMEOUT
+2. AMIGA68K (XIM) - TIMEOUT: TIMEOUT
+3. B (XIM) - TIMEOUT: TIMEOUT
+4. CDEMO (XIM) - TIMEOUT: TIMEOUT
+5. DEL (XIM) - TIMEOUT: TIMEOUT
+6. HELLOOUT (XIM) - TIMEOUT: TIMEOUT
+7. MRC (XIM) - TIMEOUT: TIMEOUT
+8. MRCSTAT1 (XIM) - TIMEOUT: TIMEOUT
+9. mrcstat2 (XIM) - TIMEOUT: TIMEOUT
+10. XIMVBCC (XIM) - TIMEOUT: TIMEOUT
+
+================================================================================
+                              END OF REPORT
+================================================================================

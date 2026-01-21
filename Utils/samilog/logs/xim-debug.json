@@ -1,0 +1,2 @@
+{"timestamp":"2025-12-29T01:41:07.293Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_START","typeCode":0},"context":{"message":"XIM structured logging initialized"}}
+{"timestamp":"2025-12-29T01:41:07.875Z","level":"info","direction":"send","door":"SYSTEM","node":0,"message":{"type":"LOG_END","typeCode":0},"context":{"message":"XIM structured logging shutdown","stats":{"messageCount":1,"errorCount":0,"uptime":582}}}

@@ -1,45 +1,36 @@
 # Handoff - 2026-01-17
 
 ## Current Issue
-JoinCnf door (J command without params) gets stuck at "(Pause)...Space To Resume:" after user selects a conference. Pressing space doesn't continue.
+Resolved critical CORS issue causing 502 errors. Reverted accidental modern GUI additions.
 
 ## Fixes Applied This Session
 
-### 1. msgBaseRJoin Storage (1:1 express.e fix)
-- **Problem**: Stored database ID instead of relative number (1-indexed)
-- **express.e**: Line 5136 `loggedOnUser.msgBaseRJoin:=msgBaseNum`
-- **Fixed**: `conference.handler.ts:119-130`, `command.handler.ts:623-630`
+### 1. CORS 502 Fix (Critical)
+- **Problem**: `crossorigin` assets blocked by CORS returned 500, causing 502 Bad Gateway.
+- **Fix**: `web/backend/src/server/app.ts` - Return 403 on CORS error, log warning with origin.
+- **Fix**: `web/backend/src/server/app.ts` - Fixed global error handler to respect `err.statusCode`.
+- **Impact**: Cross-origin assets now load correctly or fail with 403, preventing 502s.
 
-### 2. RETURNCOMMAND Stub Implemented
-- **Problem**: `DoorMessageHandler.ts:988-997` was a TODO stub
-- **Fixed**: Now stores command in `bbsSession.returnCommand`
+### 2. msgBaseRJoin Storage (1:1 express.e fix)
+- **Problem**: Stored database ID instead of relative number (1-indexed).
+- **Fixed**: `conference.handler.ts:119-130`, `command.handler.ts:623-630`.
 
-### 3. Pause Clobbering Fix
-- **Problem**: `executeAmigaDoor` called `displayMainMenu` which cleared `paginatedScreen`
-- **Fixed**: `door.handler.ts:2452-2460` - skips if pause active
+### 3. RETURNCOMMAND Stub Implemented
+- **Problem**: `DoorMessageHandler.ts:988-997` was a TODO stub.
+- **Fixed**: Now stores command in `bbsSession.returnCommand`.
 
-### 4. Debug Logging Added
-- `/tmp/bbs-debug.log` traces RETURNCOMMAND, doPause, paginatedScreen
+### 4. Pause Clobbering Fix
+- **Problem**: `executeAmigaDoor` called `displayMainMenu` which cleared `paginatedScreen`.
+- **Fixed**: `door.handler.ts:2452-2460` - skips if pause active.
 
 ### 5. Stale JS Cleanup
-- Deleted 254 .js + 852 .d.ts/.map files (compiled output in source dirs)
-- Added `dev/scripts/clean-stale-js.sh` - auto-runs on server start
-- Updated `.gitignore` for SDK/Doors compiled output
+- Deleted 254 .js + 852 .d.ts/.map files (compiled output in source dirs).
+- Added `dev/scripts/clean-stale-js.sh` - auto-runs on server start.
 
-## To Debug Next
-1. User tries J command, selects conference, presses space
-2. Check `/tmp/bbs-debug.log` for:
-   - `RETURNCOMMAND captured: "j X"` - door sent command
-   - `doPause: CALLED` - BBS set up pause
-   - `paginatedScreen=true` - pause not clobbered
-3. If no RETURNCOMMAND: XIM protocol issue
-4. If no doPause: processCommand flow issue
+## Next Steps
+1. Verify live site no longer shows 502 errors.
+2. Continue debugging J command flow (from previous session).
 
 ## Key Files
-- `door.handler.ts:2376-2460` - RETURNCOMMAND capture/execution
-- `command.handler.ts:615-654` - AUTO_REJOIN flow
-- `conference.handler.ts:98-203` - joinConference
-- `DoorMessageHandler.ts:988-1000` - RETURNCOMMAND handler
-
-## Server
-Running with fixes. Restart to apply: `./dev/scripts/start-servers.sh`
+- `web/backend/src/server/app.ts` - CORS and Error Handling.
+- `web/backend/src/config.ts` - CORS configuration.

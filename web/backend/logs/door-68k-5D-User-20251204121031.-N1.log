@@ -1,0 +1,18 @@
+=== 68K Door Session Log ===
+Door: 5D-User
+Started: 2025-12-04T12:10:31.276Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/web/backend/logs/door-68k-5D-User-20251204121031.-N1.log
+==================================================
+
+[+0000.001s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/5D-User/5D-User
+[+0000.002s] [INFO] Log file: /Users/spot/Code/amiexpress-web/web/backend/logs/door-68k-5D-User-20251204121031.-N1.log
+[+0000.068s] [INFO] Binary loaded: 21060 bytes
+[+0000.068s] [INFO] Parsed 3 segments
+[+0000.069s] [HUNK] Segment 0: CODE at 0x1008, size=8540 bytes
+[+0000.069s] [HUNK] Segment 1: CODE at 0x3208, size=4484 bytes
+[+0000.069s] [HUNK] Segment 2: DATA at 0x4408, size=8924 bytes
+[+0000.074s] [INFO] Entry point: 0x1008
+[+0000.077s] [CPU] PC=0x1008 D0=0x1 A0=0xf0100 SP=0xb51c A4=0xc406 A5=0xb528 A6=0x10000
+[+0000.077s] [INFO] Args: "1" len=1
+[+0000.095s] [INFO] Door completed: 5D-User status=ok

@@ -1,0 +1,520 @@
+
+================================================================================
+                     68K DOOR TEST REPORT
+================================================================================
+Generated: 2025-12-30T19:43:37.396Z
+Timeout: 10s per door
+Filter: none
+
+SUMMARY
+-------
+Total Doors:  78
+PASSED:       0 (0%)
+FAILED:       73
+TIMEOUT:      0
+NOT FOUND:    5
+SKIPPED:      0
+
+================================================================================
+                           PASSED DOORS
+================================================================================
+
+================================================================================
+                           FAILED DOORS
+================================================================================
+
+[FAIL] AEDOOR (XIM)
+  Location: Doors/AEDOOR/aedoor
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] AEHELP (XIM)
+  Location: Doors/AEHELP/aehelp
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] AMIGA68K (XIM)
+  Location: DOORS:SDKTEST/AMIGA68K
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] AMIGAGCC (XIM)
+  Location: DOORS:AMIGAGCC/amiga-gcc-hunk
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] arcl (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] assn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] B (XIM)
+  Location: DOORS:EmP_Tools/Bulls
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] bbsc (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] bcr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] bord (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] bre (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] CDEMO (XIM)
+  Location: Doors/INTERACTIVE-DEMO/interactive-demo
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] conftop (XIM)
+  Location: DOORS:CONFTOP/CONFTOP020.X
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] cs (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ctop (XIM)
+  Location: DOORS:CONFTOP/ctop
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] dark (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] DEL (XIM)
+  Location: DOORS:-mgs!-MgzListMan/MGZLISTMAN
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] dkns (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] dmas (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] dmud (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] DUPESTART1 (XIM)
+  Location: DOORS:CONFTOP/CONFTOP020.X
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ED (XIM)
+  Location: Doors:5D-Edit/5D-Edit
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] f (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] fake (XIM)
+  Location: doors:bytekiller/byteComment
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] falc (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] fhon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] fish (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] fr (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ga (XIM)
+  Location: Doors:GetAnswer/GetAnswer
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] games (XIM)
+  Location: doors:5D-AdiMenu/5D-AdiMenu
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ggam (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] gwar (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] hack (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] HELLOOUT (XIM)
+  Location: Doors/HELLOVBCC/hello-output
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] HELLOVBCC (XIM)
+  Location: Doors/HELLOVBCC/hello-vbcc
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] I (XIM)
+  Location: DOORS:EPUtils/SysInfo/SysInfo
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] J (XIM)
+  Location: Doors:emp_tools/joincnf
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] junk (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] Kick (XIM)
+  Location: Doors:!!!War!!!/WarKick'Em/WarKick'Em
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] legn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] linkmenu (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] linkwall (XIM)
+  Location: Doors:bbslink/bbslinkwall
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] lmon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] lord (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] lord2 (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] luna (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] mega (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] mmot (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] MRC (XIM)
+  Location: doors:mrc/mrc_door
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] MRCSTAT1 (XIM)
+  Location: doors:mrc/mrcstat1
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] mrcstat2 (XIM)
+  Location: doors:mrc/mrcstat2
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] MTOP (SIM)
+  Location: doors:multitop/mtop
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] mzkl (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] n (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] netr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] nsu (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] nuke (XIM)
+  Location: Doors:Bossnuke/Bossnuke
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] Olm (XIM)
+  Location: DOORS:!!!WAR!!!/WAROLM/WAROLM
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ooii (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] RTW (XIM)
+  Location: DOORS:RTW/RTW
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] S (XIM)
+  Location: doors:ustats/stats
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] scan (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] SIZE (XIM)
+  Location: DOORS:SizeCheck/SizeCheck
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] teos (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] TList (XIM)
+  Location: Doors:SRH/TList/TLP2
+  Duration: 1ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] tw2002 (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] ulist (XIM)
+  Location: Doors:5D-User/5D-User
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] usrp (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] vsys (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] wall (XIM)
+  Location: dOORS:dRE/dRE!WAll/dRE!WAll
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] WHAT (XIM)
+  Location: DOORS:What/What
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] XIMVBCC (XIM)
+  Location: Doors/XIMVBCC/xim-vbcc
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+[FAIL] Z (XIM)
+  Location: Doors:5D-ZippySearch/5D-ZippySearch
+  Duration: 0ms
+  Error: The "path" argument must be of type string. Received undefined
+  Output: (no output)
+
+================================================================================
+                          TIMEOUT DOORS
+================================================================================
+
+================================================================================
+                        NOT FOUND DOORS
+================================================================================
+
+[NOT_FOUND] bk (XIM)
+  Location: BBS:doors/bytekiller/bytekiller
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:doors/bytekiller/bytekiller
+
+[NOT_FOUND] DD (XIM)
+  Location: BBS:doors/TurboLister/TurboLister.XiM
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:doors/TurboLister/TurboLister.XiM
+
+[NOT_FOUND] MINIMAL (XIM)
+  Location: DOORS:SDKTEST/MINIMAL
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/Doors/SDKTEST/MINIMAL
+
+[NOT_FOUND] req (XIM)
+  Location: BBS:Doors/Request/Request
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:Doors/Request/Request
+
+[NOT_FOUND] SDKTEST (XIM)
+  Location: DOORS:SDKTEST/SIMPLETEST
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/Doors/SDKTEST/SIMPLETEST
+
+================================================================================
+                        PRIORITY FIX LIST
+================================================================================
+The following doors should be fixed in priority order:
+
+1. AEDOOR (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+2. AEHELP (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+3. AMIGA68K (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+4. AMIGAGCC (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+5. arcl (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+6. assn (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+7. B (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+8. bbsc (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+9. bcr (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+10. bord (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+11. bre (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+12. CDEMO (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+13. conftop (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+14. cs (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+15. ctop (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+16. dark (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+17. DEL (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+18. dkns (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+19. dmas (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+20. dmud (XIM) - FAIL: The "path" argument must be of type string. Received undefined
+
+================================================================================
+                              END OF REPORT
+================================================================================

@@ -1,0 +1,83 @@
+
+================================================================================
+                     68K DOOR TEST REPORT
+================================================================================
+Generated: 2025-12-30T19:58:37.846Z
+Timeout: 10s per door
+Filter: b
+
+SUMMARY
+-------
+Total Doors:  8
+PASSED:       5 (63%)
+FAILED:       0
+TIMEOUT:      2
+NOT FOUND:    1
+SKIPPED:      0
+
+================================================================================
+                           PASSED DOORS
+================================================================================
+
+[PASS] bbsc (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 259ms
+  Output: (no output)
+
+[PASS] bcr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 284ms
+  Output: (no output)
+
+[PASS] bord (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 268ms
+  Output: (no output)
+
+[PASS] bre (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 320ms
+  Output: (no output)
+
+[PASS] HELLOVBCC (XIM)
+  Location: Doors/HELLOVBCC/hello-vbcc
+  Duration: 415ms
+  Output: (no output)
+
+================================================================================
+                           FAILED DOORS
+================================================================================
+
+================================================================================
+                          TIMEOUT DOORS
+================================================================================
+
+[TIMEOUT] B (XIM)
+  Location: DOORS:EmP_Tools/Bulls
+  Duration: 10042ms (timeout at 10s)
+  Output: (no output)
+
+[TIMEOUT] XIMVBCC (XIM)
+  Location: Doors/XIMVBCC/xim-vbcc
+  Duration: 10040ms (timeout at 10s)
+  Output: (no output)
+
+================================================================================
+                        NOT FOUND DOORS
+================================================================================
+
+[NOT_FOUND] bk (XIM)
+  Location: BBS:doors/bytekiller/bytekiller
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/BBS:doors/bytekiller/bytekiller
+
+================================================================================
+                        PRIORITY FIX LIST
+================================================================================
+The following doors should be fixed in priority order:
+
+1. B (XIM) - TIMEOUT: TIMEOUT
+2. XIMVBCC (XIM) - TIMEOUT: TIMEOUT
+
+================================================================================
+                              END OF REPORT
+================================================================================

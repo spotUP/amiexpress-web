@@ -1,0 +1,123 @@
+1767760919.10 Node ready
+1767760921.34 server message cmd:153
+1767760921.34 server message data:1
+1767760921.34 server message string:
+1767760923.31 Received: hex $9B 0
+1767760923.31 Received control: hex $30 48
+1767760923.31 Received control: hex $7E 126
+1767760923.31 SYSOP LOGON
+1767760924.19 execute syscmd: ANSI 
+1767760925.32 timeused debug: sysopuser logon same day,  currday 20459, lastday 20459, timeused 644, todays dl 0
+1767760927.17 Received: hex $0D 0
+1767760927.30 execute syscmd: S 
+1767760928.36 Received: hex $63 = c inControl=0
+
+1767760928.40 Received: hex $73 = s inControl=0
+
+1767760929.9  Received: hex $0D 0
+1767760929.42 Received: hex $63 = c inControl=0
+
+1767760929.45 Received: hex $73 = s inControl=0
+
+1767760930.10 Received: hex $0D 0
+1767760930.11 execute bbscmd: CS 
+1767760930.16 setenvmsg: CS
+1767760930.18 run door: Doors:AquaScan/AquaScan.020
+1767760930.22 msg request: 1
+1767760930.22 data: 0
+1767760930.22 string: 
+1767760930.22 msg request: 104
+1767760930.22 data: 1
+1767760930.23 string: 
+1767760930.23 msg request: 163
+1767760930.23 data: 0
+1767760930.23 string: 8
+1767760930.24 msg request: 525
+1767760930.24 data: 1
+1767760930.24 string: 
+1767760930.24 msg request: 501
+1767760930.25 data: 1
+1767760930.25 string: 
+1767760930.25 msg request: 131
+1767760930.25 data: 1
+1767760930.26 string: 
+1767760930.26 msg request: 152
+1767760930.26 data: 1
+1767760930.26 string: CS
+1767760930.29 msg request: 131
+1767760930.30 data: 1
+1767760930.30 string: v5.6
+1767760930.30 msg request: 113
+1767760930.31 data: 1
+1767760930.31 string: CS
+1767760930.31 msg request: 122
+1767760930.31 data: 1
+1767760930.31 string: 1767759277
+1767760930.34 msg request: 100
+1767760930.35 data: 1
+1767760930.35 string: 29
+1767760930.35 msg request: 4
+1767760930.35 data: 1
+1767760930.35 string: 
+[0m[34m--[ [36mAquaScan v1.0 by Aquarius/Outlaws [34m]--------------[ [36m'cs ?' for options [34m]--[0m
+
+1767760930.36 msg request: 105
+1767760930.36 data: 1
+1767760930.36 string: 
+[0m[34m--[ [36mAquaScan v1.0 by Aquarius/Outlaws [34m]--------------[ [36m'cs ?' for options [34m]--[0m
+
+1767760930.40 msg request: 128
+1767760930.41 data: 1
+1767760930.41 string: 100
+1767760930.42 msg request: 128
+1767760930.42 data: 1
+1767760930.42 string: BBS:
+1767760930.42 msg request: 146
+1767760930.42 data: 1
+1767760930.42 string: BBS:
+1767760930.43 msg request: 150
+1767760930.43 data: 1
+1767760930.44 string: 	Conference Scan with AquaScan by Aquarius
+
+1767760930.45 msg request: 510
+1767760930.45 data: 1
+1767760930.46 string: 	Conference Scan with AquaScan by Aquarius
+
+1767760930.46 msg request: 4
+1767760930.46 data: 1
+1767760930.47 string: [36mConference: [34m[ [36mNew Users [34m][0m
+
+1767760930.48 msg request: 4
+1767760930.48 data: 0
+1767760930.48 string: Scanning dir 1 for 01-06-26...
+1767760930.48 msg request: 4
+1767760930.49 data: 1
+1767760930.49 string:  Nothing found!
+1767760930.49 msg request: 4
+1767760930.49 data: 1
+1767760930.49 string: [0m
+1767760931.0  msg request: 4
+1767760931.1  data: 1
+1767760931.1  string: [36mConference: [34m[ [36mAmiga [34m][0m
+
+1767760931.2  msg request: 4
+1767760931.2  data: 0
+1767760931.2  string: Scanning dir 1 for 01-06-26...
+1767760931.4  msg request: 4
+1767760931.4  data: 1
+1767760931.4  string:  Nothing found!
+1767760931.4  msg request: 4
+1767760931.4  data: 1
+1767760931.4  string: [0m
+1767760931.5  msg request: 525
+1767760931.5  data: 0
+1767760931.5  string: 
+1767760931.6  msg request: 2
+1767760931.6  data: 0
+1767760931.6  string: 
+1767760933.22 Received: hex $0D 0
+1767761233.32 input timeout - state=4
+1767761234.16 execute syscmd: LOGOFF 
+1767761234.21 execute syscmd: LOGOFF1 
+1767761234.27 setenvmsg: LOGOFF1
+1767761234.29 run door: BBS:Commands/SYSCmd/LOGOFF1

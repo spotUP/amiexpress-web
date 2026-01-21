@@ -1,0 +1,16 @@
+=== 68K Door Session Log ===
+Door: ntr-lastcallers
+Started: 2025-12-04T12:07:23.727Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/Doors/NTR-LASTCALLERS/logs/door-68k-ntr-lastcallers-20251204120723.-N1.log
+==================================================
+
+[+0000.001s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/ntr-lastcallers/ntr-lastcallers
+[+0000.001s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Doors/NTR-LASTCALLERS/logs/door-68k-ntr-lastcallers-20251204120723.-N1.log
+[+0000.063s] [INFO] Binary loaded: 6792 bytes
+[+0000.063s] [INFO] Parsed 2 segments
+[+0000.064s] [HUNK] Segment 0: CODE at 0x1008, size=76 bytes
+[+0000.064s] [HUNK] Segment 1: CODE at 0x1108, size=6880 bytes
+[+0000.066s] [INFO] Entry point: 0x1008
+[+0000.067s] [CPU] PC=0x1008 D0=0x1 A0=0xf0100 SP=0x306c A4=0x0 A5=0x3078 A6=0x10000
+[+0000.067s] [INFO] Args: "4" len=1

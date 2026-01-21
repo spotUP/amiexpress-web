@@ -1,0 +1,121 @@
+
+================================================================================
+                     68K DOOR TEST REPORT
+================================================================================
+Generated: 2025-12-30T20:40:20.952Z
+Timeout: 15s per door
+Filter: n
+
+SUMMARY
+-------
+Total Doors:  16
+PASSED:       15 (94%)
+FAILED:       0
+TIMEOUT:      0
+NOT FOUND:    1
+SKIPPED:      0
+
+================================================================================
+                           PASSED DOORS
+================================================================================
+
+[PASS] assn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 466ms
+  Output: (no output)
+
+[PASS] conftop (XIM)
+  Location: DOORS:CONFTOP/CONFTOP020.X
+  Duration: 1691ms
+  Output: (no output)
+
+[PASS] dkns (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 371ms
+  Output: (no output)
+
+[PASS] fhon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 326ms
+  Output: (no output)
+
+[PASS] junk (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 389ms
+  Output: (no output)
+
+[PASS] legn (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 382ms
+  Output: (no output)
+
+[PASS] linkmenu (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 396ms
+  Output: (no output)
+
+[PASS] linkwall (XIM)
+  Location: Doors:bbslink/bbslinkwall
+  Duration: 426ms
+  Output: (no output)
+
+[PASS] lmon (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 390ms
+  Output: (no output)
+
+[PASS] luna (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 421ms
+  Output: (no output)
+
+[PASS] n (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1425ms
+  Output: (no output)
+
+[PASS] netr (XIM)
+  Location: Doors:bbslink/bbslink
+  Duration: 372ms
+  Output: (no output)
+
+[PASS] nsu (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1317ms
+  Output: (no output)
+
+[PASS] nuke (XIM)
+  Location: Doors:Bossnuke/Bossnuke
+  Duration: 386ms
+  Output: (no output)
+
+[PASS] scan (XIM)
+  Location: Doors:AquaScan/AquaScan.000
+  Duration: 1045ms
+  Output: (no output)
+
+================================================================================
+                           FAILED DOORS
+================================================================================
+
+================================================================================
+                          TIMEOUT DOORS
+================================================================================
+
+================================================================================
+                        NOT FOUND DOORS
+================================================================================
+
+[NOT_FOUND] MINIMAL (XIM)
+  Location: DOORS:SDKTEST/MINIMAL
+  Error: Door binary not found: /Users/spot/Code/amiexpress-web/Doors/SDKTEST/MINIMAL
+
+================================================================================
+                        PRIORITY FIX LIST
+================================================================================
+The following doors should be fixed in priority order:
+
+
+================================================================================
+                              END OF REPORT
+================================================================================

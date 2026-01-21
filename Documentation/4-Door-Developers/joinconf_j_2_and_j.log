@@ -1,0 +1,289 @@
+1767759260.11 Node ready
+1767759260.13 server message cmd:153
+1767759260.13 server message data:1
+1767759260.14 server message string:
+1767759261.33 Received: hex $9B 0
+1767759261.33 Received control: hex $30 48
+1767759261.33 Received control: hex $7E 126
+1767759261.33 SYSOP LOGON
+1767759262.31 execute syscmd: ANSI 
+1767759263.48 timeused debug: sysopuser logon same day,  currday 20459, lastday 20459, timeused 628, todays dl 0
+1767759265.23 Received: hex $0D 0
+1767759265.35 execute syscmd: S 
+1767759266.36 Received: hex $0D 0
+1767759268.3  Received: hex $6A = j inControl=0
+
+1767759268.16 Received: hex $20 =   inControl=0
+
+1767759268.21 Received: hex $32 = 2 inControl=0
+
+1767759268.36 Received: hex $0D 0
+1767759268.37 execute bbscmd: J 2
+1767759268.43 setenvmsg: J
+1767759268.45 run door: DOORS:EmP_Tools/JoinCnf
+1767759268.49 msg request: 1
+1767759268.49 data: 2
+1767759268.49 string: AEDoorRP.000
+1767759269.0  msg request: 501
+1767759269.0  data: 0
+1767759269.0  string: 
+1767759269.0  msg request: 177
+1767759269.0  data: 0
+1767759269.0  string: JoinCnf 3.5
+1767759269.1  setenvmsg: JoinCnf 3.5
+1767759269.1  msg request: 12
+1767759269.1  data: 1
+1767759269.1  string: JoinCnf 3.5
+1767759269.2  msg request: 100
+1767759269.2  data: 1
+1767759269.2  string: boss
+1767759269.2  msg request: 105
+1767759269.2  data: 1
+1767759269.2  string: sysopuser
+1767759269.3  msg request: 104
+1767759269.3  data: 1
+1767759269.3  string: 100
+1767759269.3  msg request: 131
+1767759269.3  data: 1
+1767759269.3  string: 1
+1767759269.4  msg request: 152
+1767759269.4  data: 1
+1767759269.4  string: J 2
+1767759269.4  msg request: 146
+1767759269.4  data: 1
+1767759269.5  string: v5.6
+1767759269.5  msg request: 122
+1767759269.5  data: 1
+1767759269.5  string: Sysop
+1767759269.5  msg request: 510
+1767759269.6  data: 1
+1767759269.6  string: 29
+1767759269.10 msg request: 136
+1767759269.11 data: 0
+1767759269.11 string: j 2
+1767759269.11 msg request: 501
+1767759269.11 data: 0
+1767759269.11 string: 
+1767759269.11 msg request: 2
+1767759269.12 data: 0
+1767759269.12 string: 
+1767759270.24 Received: hex $0D 0
+1767759271.22 Received: hex $6A = j inControl=0
+
+1767759271.43 Received: hex $0D 0
+1767759271.43 execute bbscmd: J 
+1767759271.47 setenvmsg: J
+1767759271.48 run door: DOORS:EmP_Tools/JoinCnf
+1767759272.3  msg request: 1
+1767759272.3  data: 2
+1767759272.3  string: AEDoorRP.000
+1767759272.3  msg request: 501
+1767759272.3  data: 0
+1767759272.3  string: 
+1767759272.4  msg request: 177
+1767759272.4  data: 0
+1767759272.4  string: JoinCnf 3.5
+1767759272.4  setenvmsg: JoinCnf 3.5
+1767759272.5  msg request: 12
+1767759272.5  data: 1
+1767759272.5  string: JoinCnf 3.5
+1767759272.5  msg request: 100
+1767759272.5  data: 1
+1767759272.5  string: boss
+1767759272.6  msg request: 105
+1767759272.6  data: 1
+1767759272.6  string: sysopuser
+1767759272.6  msg request: 104
+1767759272.6  data: 1
+1767759272.7  string: 100
+1767759272.7  msg request: 131
+1767759272.7  data: 1
+1767759272.7  string: 1
+1767759272.7  msg request: 152
+1767759272.8  data: 1
+1767759272.8  string: J
+1767759272.8  msg request: 146
+1767759272.8  data: 1
+1767759272.8  string: v5.6
+1767759272.8  msg request: 122
+1767759272.9  data: 1
+1767759272.9  string: Sysop
+1767759272.9  msg request: 510
+1767759272.9  data: 1
+1767759272.9  string: 29
+1767759272.13 msg request: 525
+1767759272.13 data: 1
+1767759272.13 string: 1
+1767759272.13 msg request: 4
+1767759272.13 data: 0
+1767759272.14 string: [H[2J
+1767759272.15 msg request: 4
+1767759272.15 data: 0
+1767759272.15 string:   [36m___/\  ___/\  ___/\  ___/\ ___/\  ___/\  ___/\  ___/\  ___/\  ___/\  ___
+1767759272.15 msg request: 4
+1767759272.16 data: 0
+1767759272.16 string: /\
+1767759272.16 msg request: 4
+1767759272.16 data: 1
+1767759272.16 string: 
+1767759272.16 msg request: 4
+1767759272.17 data: 0
+1767759272.17 string:   \[35m_ [36m. \ \_ . \ \_ . \ \  __\\  __\ \_ . \ \  __\ \_ . \ \  . \ \  __
+1767759272.17 msg request: 4
+1767759272.17 data: 0
+1767759272.17 string: \ \  __\
+1767759272.18 msg request: 4
+1767759272.18 data: 1
+1767759272.18 string: 
+1767759272.18 msg request: 4
+1767759272.18 data: 0
+1767759272.19 string:   [35m/  |__\/  |  \/  |  \/  ._l/  ._l_/  |__\/  ._l_/  |  \/  |__\/  ._l_/__
+1767759272.19 msg request: 4
+1767759272.19 data: 0
+1767759272.19 string: .  \
+1767759272.20 msg request: 4
+1767759272.20 data: 1
+1767759272.20 string: 
+1767759272.20 msg request: 4
+1767759272.20 data: 0
+1767759272.21 string:  /   ¡   \  ¡   \  |   \  | /   ¡   \  .   \  ¡   \  |   \  ¡   \  ¡   \  ¡   \
+1767759272.21 msg request: 4
+1767759272.22 data: 1
+1767759272.22 string: 
+1767759272.23 msg request: 4
+1767759272.23 data: 0
+1767759272.23 string:  [34m\_____  /______/__¡_  /__¡ \_____  /__¡_  /____  /__¡_  /____  /____  /__
+1767759272.23 msg request: 4
+1767759272.24 data: 0
+1767759272.24 string: __  /
+1767759272.24 msg request: 4
+1767759272.24 data: 1
+1767759272.24 string: 
+1767759272.24 msg request: 4
+1767759272.25 data: 0
+1767759272.25 string: -------\/------------\/-----------\/-----\/-----\/[Ð!]-\/-----\/-----\/-----\/-
+1767759272.25 msg request: 4
+1767759272.25 data: 1
+1767759272.25 string: 
+1767759272.26 msg request: 4
+1767759272.26 data: 0
+1767759272.26 string: 
+1767759272.26 msg request: 4
+1767759272.26 data: 1
+1767759272.26 string: 
+1767759272.27 msg request: 4
+1767759272.27 data: 0
+1767759272.27 string:   [35m[[36m01[35m] [0m...................... NEW USER
+1767759272.27 msg request: 4
+1767759272.27 data: 0
+1767759272.28 string:    [35m[[36m02[35m] [0m......................... AMiGA
+1767759272.28 msg request: 4
+1767759272.28 data: 1
+1767759272.28 string: 
+1767759272.29 msg request: 4
+1767759272.29 data: 0
+1767759272.29 string: 
+1767759272.29 msg request: 4
+1767759272.29 data: 1
+1767759272.29 string: 
+1767759272.30 msg request: 4
+1767759272.30 data: 0
+1767759272.30 string: [34m--------------------------------------------------------------------------
+1767759272.30 msg request: 4
+1767759272.31 data: 0
+1767759272.31 string: -----[0m
+1767759272.31 msg request: 4
+1767759272.31 data: 1
+1767759272.31 string: 
+1767759272.31 msg request: 4
+1767759272.32 data: 0
+1767759272.32 string:                           [36mCURRENT CONFERENCE:  [0mAmiga
+1767759272.32 msg request: 4
+1767759272.32 data: 1
+1767759272.32 string: 
+1767759272.33 msg request: 4
+1767759272.33 data: 0
+1767759272.33 string: [34m--------------------------------------------------------------------------
+1767759272.33 msg request: 4
+1767759272.33 data: 0
+1767759272.34 string: -----[0m
+1767759272.34 msg request: 4
+1767759272.34 data: 1
+1767759272.34 string: 
+1767759272.35 msg request: 4
+1767759272.35 data: 0
+1767759272.35 string: [57C[34m[[36mJoinCnf 3.5 - EMPiRE[34m]
+1767759272.35 msg request: 4
+1767759272.35 data: 1
+1767759272.35 string: 
+1767759272.36 msg request: 4
+1767759272.36 data: 0
+1767759272.36 string: [H[7B[39C
+1767759272.36 msg request: 4
+1767759272.36 data: 0
+1767759272.37 string:  [32m>[[2C]<
+1767759272.37 msg request: 4
+1767759272.37 data: 0
+1767759272.37 string: [H[12B[0mSelect Conference [35m[[36m1[34m-[36m2[35m] [35m[[36mEnter[
+1767759272.38 msg request: 4
+1767759272.38 data: 0
+1767759272.38 string: 35m][34m=[0mQuit[34m:[0m      [5D
+1767759272.38 msg request: 6
+1767759272.38 data: 0
+1767759272.39 string: 
+1767759273.12 Received: hex $9B 0
+1767759273.13 Received control: hex $44 68
+1767759273.13 Received control: hex $FF -1
+1767759273.13 msg request: 4
+1767759273.13 data: 0
+1767759273.13 string: [H[7B[39C
+1767759273.14 msg request: 4
+1767759273.14 data: 0
+1767759273.14 string:   [35m[[2C] 
+1767759273.14 msg request: 4
+1767759273.14 data: 0
+1767759273.14 string: [H[7B
+1767759273.15 msg request: 4
+1767759273.15 data: 0
+1767759273.15 string:  [32m>[[2C]<
+1767759273.15 msg request: 4
+1767759273.15 data: 0
+1767759273.16 string: [H[12B
+1767759273.16 msg request: 4
+1767759273.16 data: 0
+1767759273.16 string: [0mSelect Conference [35m[[36m1[34m-[36m2[35m] [35m[[36mEnter[35m][34
+1767759273.17 msg request: 4
+1767759273.17 data: 0
+1767759273.17 string: m=[0mQuit[34m: 
+1767759273.17 msg request: 4
+1767759273.18 data: 0
+1767759273.18 string: [0m1    [4D
+1767759273.18 msg request: 6
+1767759273.18 data: 0
+1767759273.18 string: 
+1767759273.32 Received: hex $0D 0
+1767759273.33 msg request: 4
+1767759273.33 data: 0
+1767759273.33 string: 
+1767759273.33 msg request: 4
+1767759273.33 data: 1
+1767759273.34 string: 
+1767759273.34 msg request: 136
+1767759273.34 data: 0
+1767759273.34 string: j 1
+1767759273.34 msg request: 501
+1767759273.35 data: 0
+1767759273.35 string: 
+1767759273.35 msg request: 2
+1767759273.35 data: 0
+1767759273.35 string: 
+1767759274.40 Received: hex $0D 0
+1767759277.3  Received: hex $67 = g inControl=0
+
+1767759277.15 Received: hex $0D 0
+1767759277.15 execute bbscmd: G 
+1767759278.5  execute syscmd: LOGOFF 
+1767759278.11 execute syscmd: LOGOFF1 
+1767759278.18 setenvmsg: LOGOFF1
+1767759278.20 run door: BBS:Commands/SYSCmd/LOGOFF1
+1767760868.46 CTRL-C detected

@@ -1,0 +1,17 @@
+=== 68K Door Session Log ===
+Door: dannounce
+Started: 2026-01-21T21:40:41.002Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/logs/door-68k-dannounce-20260121214041.-N1.log
+==================================================
+
+[+0000.020s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/utils/dannounce
+[+0000.023s] [INFO] Log file: /Users/spot/Code/amiexpress-web/logs/door-68k-dannounce-20260121214041.-N1.log
+[+0000.713s] [INFO] Binary loaded: 8836 bytes
+[+0000.714s] [INFO] Parsed 1 segments
+[+0000.722s] [HUNK] Segment 0: CODE at 0x2008, size=6296 bytes
+[+0000.728s] [INFO] Entry point: 0x2008
+[+0000.749s] [CPU] PC=0x2008 D0=0x12 A0=0xf0100 SP=0x138b4 A4=0xa006 A5=0x138c0 A6=0x80000
+[+0000.781s] [INFO] Args: "1 Sanctuary sysop
+" len=18
+[+0005.672s] [INFO] Door completed: dannounce status=ok

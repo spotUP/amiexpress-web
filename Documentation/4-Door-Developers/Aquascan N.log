@@ -1,0 +1,136 @@
+1767037790 execute syscmd: N S U
+1767037790 setenvmsg: N
+1767037790 run door: Doors:AquaScan/AquaScan.020
+1767037790 msg request: 1
+1767037790 data: 0
+1767037790 string: 
+1767037790 msg request: 104
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 163
+1767037790 data: 0
+1767037790 string: 8
+1767037790 msg request: 525
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 501
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 131
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 152
+1767037790 data: 1
+1767037790 string: N S U
+1767037790 msg request: 131
+1767037790 data: 1
+1767037790 string: v5.3
+1767037790 msg request: 113
+1767037790 data: 1
+1767037790 string: N S U
+1767037790 msg request: 122
+1767037790 data: 1
+1767037790 string: 1767037752
+1767037790 msg request: 100
+1767037790 data: 1
+1767037790 string: 29
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string: 
+--[ AquaScan v1.0 by Aquarius/Outlaws ]---------------[ 'n ?' for options ]--
+
+1767037790 msg request: 105
+1767037790 data: 1
+1767037790 string: 
+--[ AquaScan v1.0 by Aquarius/Outlaws ]---------------[ 'n ?' for options ]--
+
+1767037790 msg request: 127
+1767037790 data: 1
+1767037790 string: 255
+1767037790 msg request: 150
+1767037790 data: 1
+1767037790 string:      Directory Scan with AquaScan by Aquarius
+
+1767037790 msg request: 4
+1767037790 data: 0
+1767037790 string: Scanning dir 3 for 12-29-25...
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string:  Nothing found!
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 525
+1767037790 data: 0
+1767037790 string: 
+1767037790 msg request: 2
+1767037790 data: 0
+1767037790 string: 
+1767037790 execute syscmd: N S U
+1767037790 setenvmsg: N
+1767037790 run door: Doors:AquaScan/AquaScan.020
+1767037790 msg request: 1
+1767037790 data: 0
+1767037790 string: 
+1767037790 msg request: 104
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 163
+1767037790 data: 0
+1767037790 string: 8
+1767037790 msg request: 525
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 501
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 131
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 152
+1767037790 data: 1
+1767037790 string: N S U
+1767037790 msg request: 131
+1767037790 data: 1
+1767037790 string: v5.3
+1767037790 msg request: 113
+1767037790 data: 1
+1767037790 string: N S U
+1767037790 msg request: 122
+1767037790 data: 1
+1767037790 string: 1767037752
+1767037790 msg request: 100
+1767037790 data: 1
+1767037790 string: 29
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string: 
+--[ AquaScan v1.0 by Aquarius/Outlaws ]---------------[ 'n ?' for options ]--
+
+1767037790 msg request: 105
+1767037790 data: 1
+1767037790 string: 
+--[ AquaScan v1.0 by Aquarius/Outlaws ]---------------[ 'n ?' for options ]--
+
+1767037790 msg request: 127
+1767037790 data: 1
+1767037790 string: 255
+1767037790 msg request: 150
+1767037790 data: 1
+1767037790 string:      Directory Scan with AquaScan by Aquarius
+
+1767037790 msg request: 4
+1767037790 data: 0
+1767037790 string: Scanning dir 1 for 12-29-25...
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string:  Nothing found!
+1767037790 msg request: 4
+1767037790 data: 1
+1767037790 string: 
+1767037790 msg request: 525
+1767037790 data: 0
+1767037790 string: 
+1767037790 msg request: 2
+1767037790 data: 0
+1767037790 string: 

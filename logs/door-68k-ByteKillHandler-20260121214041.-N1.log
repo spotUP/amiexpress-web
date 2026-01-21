@@ -1,0 +1,18 @@
+=== 68K Door Session Log ===
+Door: ByteKillHandler
+Started: 2026-01-21T21:40:41.001Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/logs/door-68k-ByteKillHandler-20260121214041.-N1.log
+==================================================
+
+[+0000.043s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/doors/bytekiller/ByteKillHandler
+[+0000.052s] [INFO] Log file: /Users/spot/Code/amiexpress-web/logs/door-68k-ByteKillHandler-20260121214041.-N1.log
+[+0000.717s] [INFO] Binary loaded: 13164 bytes
+[+0000.718s] [INFO] Parsed 2 segments
+[+0000.722s] [HUNK] Segment 0: CODE at 0x2008, size=11908 bytes
+[+0000.727s] [HUNK] Segment 1: DATA at 0x4f08, size=1472 bytes
+[+0000.735s] [INFO] Entry point: 0x2008
+[+0000.741s] [CPU] PC=0x2008 D0=0x15 A0=0xf0100 SP=0x154dc A4=0xcf06 A5=0x154e8 A6=0x80000
+[+0000.746s] [INFO] Args: "bbs:node3/callerslog
+" len=21
+[+0003.028s] [INFO] Door completed: ByteKillHandler status=ok

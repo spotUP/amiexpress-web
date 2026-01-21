@@ -1,0 +1,11 @@
+    99.1ms (setup:1113): 2025-11-17 16:45:19
+    99.2ms (setup:1114): /opt/homebrew/bin/pipx list
+    99.2ms (setup:1115): pipx version is 1.8.0
+    99.2ms (setup:1116): Default python interpreter is '/opt/homebrew/opt/python@3.13/libexec/bin/python'
+    99.3ms (mkdir:76): creating directory /Users/spot/Code/amiexpress-web/.pipx/venvs
+    99.6ms (mkdir:76): creating directory /Users/spot/Code/amiexpress-web/.pipx/bin
+    99.8ms (mkdir:76): creating directory /Users/spot/Code/amiexpress-web/.pipx/.cache
+   100.0ms (mkdir:76): creating directory /Users/spot/Code/amiexpress-web/.pipx/py
+   100.2ms (setup:1130): Adding CACHEDIR.TAG to cache directory
+   100.5ms (setup:1130): Adding CACHEDIR.TAG to cache directory
+   101.2ms (cli:1192): pipx finished.

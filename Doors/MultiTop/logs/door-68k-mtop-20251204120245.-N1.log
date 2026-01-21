@@ -1,0 +1,9 @@
+=== 68K Door Session Log ===
+Door: mtop
+Started: 2025-12-04T12:02:45.735Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/Doors/MultiTop/logs/door-68k-mtop-20251204120245.-N1.log
+==================================================
+
+[+0000.002s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/multitop/mtop
+[+0000.002s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Doors/MultiTop/logs/door-68k-mtop-20251204120245.-N1.log

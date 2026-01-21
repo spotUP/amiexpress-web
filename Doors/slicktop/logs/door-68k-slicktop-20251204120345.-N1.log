@@ -1,0 +1,14 @@
+=== 68K Door Session Log ===
+Door: slicktop
+Started: 2025-12-04T12:03:45.839Z
+Node: 1
+Log: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N1.log
+==================================================
+
+[+0000.003s] [INFO] Session initialized for /Users/spot/Code/amiexpress-web/Doors/slicktop/slicktop
+[+0000.003s] [INFO] Log file: /Users/spot/Code/amiexpress-web/Doors/slicktop/logs/door-68k-slicktop-20251204120345.-N1.log
+[+0000.080s] [INFO] Binary loaded: 24420 bytes
+[+0000.081s] [INFO] Parsed 2 segments
+[+0000.081s] [HUNK] Segment 0: CODE at 0x1008, size=23560 bytes
+[+0000.082s] [HUNK] Segment 1: DATA at 0x6d08, size=25316 bytes
+[+0000.088s] [INFO] Entry point: 0x1008
