@@ -1,42 +1,0 @@
-=== 68K Door Session Log ===
-Door: WALL
-Started: 2026-01-21T21:46:51.818Z
-Node: 1
-Log: /Users/spot/Code/amiexpress-web/logs/door-68k-WALL-20260121214651.-N1.log
-==================================================
-
-[+0003.223s] [XIM] RX cmd=1 (JH_REGISTER) data=2 str=""
-[+0004.372s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="
-"
-[+0004.901s] [XIM] RX cmd=8 (JH_SF (Show File)) data=0 str="dOORS:dRE/dRE!WAll/dRE!WAll.StYlE.1"
-[+0005.115s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[0 p"
-[+0005.569s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[1 p"
-[+0005.964s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="
-"
-[+0006.271s] [XIM] RX cmd=8 (JH_SF (Show File)) data=0 str="dOORS:dRE/dRE!WAll/dRE!WAll.StYlE.1"
-[+0006.492s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[22;0H [36mdRE[0m![36mWAll[0m v[33m2.0 [34m[[32mUNREGiStEREd VERSiON[34m][0m ([37mC[0m) [33m1994[0m bY [36mdR.dRE[0m ([36mtRSi [0m/[36mX[0m·[36miNNOVAtiON[0m)"
-[+0006.948s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[23;1H[36mEnter a Line to the Wall [32m([33mY[34m/[33mn[32m)[0m :"
-[+0007.206s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=73 str=""
-[+0007.560s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[23;1H                                [23;1H"
-[+0007.790s] [XIM] RX cmd=105 (DT_SECSTATUS) data=1 str="[23;1H                                [23;1H"
-[+0008.108s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[36mWrite Anonymous ? [32m([33mN[34m/[33my[32m)[0m :"
-[+0008.415s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=59 str=""
-[+0008.674s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[23;1H                         [23;1H"
-[+0009.007s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[36mEnter your Line[0m: "
-[+0009.509s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=26 str=""
-[+0011.008s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="s"
-[+0011.341s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=1 str=""
-[+0011.666s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="y"
-[+0012.111s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=1 str=""
-[+0012.411s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="s"
-[+0012.777s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=1 str=""
-[+0013.045s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="o"
-[+0013.273s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=1 str=""
-[+0013.630s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="p"
-[+0014.002s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=1 str=""
-[+0014.408s] [XIM] RX cmd=100 (DT_NAME) data=1 str=""
-[+0014.867s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[0 p"
-[+0015.238s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[5;0H[0mHello from Athens and thanks for the nice stuff!!!           kokkiklhs        "
-[+0015.608s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[1 p"
-[+0016.014s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[26;0H"
-[+0016.267s] [XIM] RX cmd=2 (JH_SHUTDOWN) data=8 str="[26;0H"

@@ -1,21 +1,0 @@
-=== 68K Door Session Log ===
-Door: WALL
-Started: 2026-01-21T21:50:35.369Z
-Node: 5
-Log: /Users/spot/Code/amiexpress-web/logs/door-68k-WALL-20260121215035.-N5.log
-==================================================
-
-[+0002.728s] [XIM] RX cmd=1 (JH_REGISTER) data=2 str=""
-[+0003.705s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="
-"
-[+0004.327s] [XIM] RX cmd=8 (JH_SF (Show File)) data=0 str="dOORS:dRE/dRE!WAll/dRE!WAll.StYlE.2"
-[+0004.486s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[0 p"
-[+0004.914s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[1 p"
-[+0005.278s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="
-"
-[+0005.635s] [XIM] RX cmd=8 (JH_SF (Show File)) data=0 str="dOORS:dRE/dRE!WAll/dRE!WAll.StYlE.2"
-[+0005.809s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[22;0H [36mdRE[0m![36mWAll[0m v[33m2.0 [34m[[32mUNREGiStEREd VERSiON[34m][0m ([37mC[0m) [33m1994[0m bY [36mdR.dRE[0m ([36mtRSi [0m/[36mX[0m·[36miNNOVAtiON[0m)"
-[+0006.233s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[23;1H[36mEnter a Line to the Wall [32m([33mY[34m/[33mn[32m)[0m :"
-[+0006.697s] [XIM] RX cmd=6 (JH_HK (Hotkey)) data=73 str=""
-[+0007.301s] [XIM] RX cmd=3 (JH_WRITE) data=0 str="[26;0H"
-[+0007.654s] [XIM] RX cmd=2 (JH_SHUTDOWN) data=7 str="[26;0H"
