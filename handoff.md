@@ -1,36 +1,40 @@
-# Handoff - 2026-01-17
+# Handoff - 2026-01-27
 
-## Current Issue
-Resolved critical CORS issue causing 502 errors. Reverted accidental modern GUI additions.
+## Completed: BBSLink Integration
 
-## Fixes Applied This Session
+### TELNET_CONNECT (XIM 706) - COMPLETE
+Implemented in `web/backend/src/amiga-emulation/XIMProtocol.ts`:
+- TCP connection to remote telnet servers
+- Telnet IAC protocol filtering
+- Auto-login support via TELNET_USERNAME/PASSWORD commands
+- ESC key disconnects session
+- Blocking call (emulator pauses until session ends)
 
-### 1. CORS 502 Fix (Critical)
-- **Problem**: `crossorigin` assets blocked by CORS returned 500, causing 502 Bad Gateway.
-- **Fix**: `web/backend/src/server/app.ts` - Return 403 on CORS error, log warning with origin.
-- **Fix**: `web/backend/src/server/app.ts` - Fixed global error handler to respect `err.statusCode`.
-- **Impact**: Cross-origin assets now load correctly or fail with 403, preventing 502s.
+### BsdSocketLibrary fd_set Fix - COMPLETE
+Fixed `web/backend/src/amiga-emulation/api/BsdSocketLibrary.ts`:
+- Changed bit indexing from `31 - (fd % 32)` to `fd % 32`
+- WaitSelect now correctly detects ready sockets
 
-### 2. msgBaseRJoin Storage (1:1 express.e fix)
-- **Problem**: Stored database ID instead of relative number (1-indexed).
-- **Fixed**: `conference.handler.ts:119-130`, `command.handler.ts:623-630`.
+### BBSLink TypeScript Door - WORKING
+The TypeScript BBSLink door at `Doors/bbslink/` is now the primary implementation:
+- Command: `BBSLINK` (renamed from LINKMENU)
+- Game-specific commands also work: LORD, LUNA, TW2002, etc.
+- Config: `Doors/bbslink/bbslink.cfg` with SYSCODE, AUTHCODE, SCHEMECODE
 
-### 3. RETURNCOMMAND Stub Implemented
-- **Problem**: `DoorMessageHandler.ts:988-997` was a TODO stub.
-- **Fixed**: Now stores command in `bbsSession.returnCommand`.
+### 68K Door Removal - COMPLETE
+- Removed old 68K bbslink and bbslinkwall binaries from `Doors/bbslink/`
+- Renamed command from LINKMENU to BBSLINK
+- Updated `Commands/BBSCmd/bbslink.info` with new command name
+- Updated door metadata in `index.ts`
 
-### 4. Pause Clobbering Fix
-- **Problem**: `executeAmigaDoor` called `displayMainMenu` which cleared `paginatedScreen`.
-- **Fixed**: `door.handler.ts:2452-2460` - skips if pause active.
-
-### 5. Stale JS Cleanup
-- Deleted 254 .js + 852 .d.ts/.map files (compiled output in source dirs).
-- Added `dev/scripts/clean-stale-js.sh` - auto-runs on server start.
-
-## Next Steps
-1. Verify live site no longer shows 502 errors.
-2. Continue debugging J command flow (from previous session).
+### BBSLink Credentials (in Doors/bbslink/bbslink.cfg)
+- SYSCODE=uprough
+- AUTHCODE=Z9cqbH1LX2vI
+- SCHEMECODE=RXy8MhGaPw9k
 
 ## Key Files
-- `web/backend/src/server/app.ts` - CORS and Error Handling.
-- `web/backend/src/config.ts` - CORS configuration.
+- `web/backend/src/amiga-emulation/XIMProtocol.ts` - TELNET_CONNECT handler
+- `web/backend/src/amiga-emulation/api/BsdSocketLibrary.ts` - Socket implementation
+- `Doors/bbslink/index.ts` - TypeScript BBSLink door
+- `Doors/bbslink/bbslink.cfg` - Credentials config
+- `Commands/BBSCmd/bbslink.info` - Command registration
