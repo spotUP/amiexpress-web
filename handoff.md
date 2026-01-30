@@ -1,36 +1,28 @@
 # Handoff - 2026-01-30
 
-## Current Session: MRC Investigation Complete
+## Current Session: Door Testing Complete
 
-### Status: MRC Works - 30s Lag is Door's Design
+### All 68K Doors Tested
+- **Working: 45** doors fully functional
+- **Partial: 10** doors run but have config/data issues
+- **Broken: 3** doors (path/binary issues)
+- **Complex/Deferred: 1** (MRC - network timeout by design)
+- **Needs Testing: 1** (WHAT - needs multi-node transfer)
+- **Untested: 0**
 
-**Final Finding:** The 30-second input lag is MRC's network polling timeout, NOT an emulation bug. MRC is a chat client that waits for network data (30s timeout) before checking keyboard. Without active chat server traffic, this creates perceived input lag.
+### Doors Removed from BBS
+CDEMO, AMIGAGCC, SDKTEST, AMIGA68K, XIMVBCC, MINIMAL (test/demo doors)
 
-**What Was Fixed:**
-1. GETKEY/JH_CK (cmd 500) - now only peeks at inputQueue, doesn't consume
-2. Fixed duplicate switch case bug: JH_CK matched before GETKEY (both = 500)
-3. Removed debug logging that was slowing down UI rendering
+### Partial Doors Summary
+- ctop, DEL, Kick - exit silently or show goodbye only
+- Olm, mrcstat2 - scrambled node data
+- DUPESTART1 - date range config error
+- bk - needs ACP.Icon config
+- ulist, fake, I (SysInfo) - need specific files/data
 
-**Verification:**
-- Removing logging made UI draw fast
-- But 30s input lag persists
-- This confirms lag is door behavior, not our code
-
-### Commits Pushed (9 total)
-1. fix(xim): GETKEY/JH_CK now peeks without consuming input
-2. docs: update 68K door status and MRC investigation notes
-3. feat(emulation): DOS library enhancements and vector updates
-4. feat(handlers): command handler improvements
-5. feat(handlers): message, user, file, UI handler improvements
-6. feat(database): database and utility improvements
-7. feat(server): server initialization and socket handler updates
-8. fix: screen and command fixes
-9. docs: add DOS LVO audit and parity reports
-
-### Doors to Test Next
-- **ctop** - Conference top
-- **nuke** - Bossnuke
-- **TList** - T-List file lister
+### Broken Doors
+- wall - data corruption
+- AEDOOR, AEHELP - path resolution issues
 
 ### Memory
 - `server-restart-rules.md` - Claude should NEVER restart servers
