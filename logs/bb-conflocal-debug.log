@@ -21668,3 +21668,57 @@
 [BB_CONFLOCAL WRITE] 2026-01-21T11:58:50.507Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x103664 stringOffset=0x14
 [BB_CONFLOCAL] 2026-01-21T11:59:14.741Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x103664
 [BB_CONFLOCAL WRITE] 2026-01-21T11:59:14.742Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x103664 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:23:53.224Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x123094
+[BB_CONFLOCAL WRITE] 2026-01-29T15:23:53.227Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123094 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:24:04.178Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x123094
+[BB_CONFLOCAL WRITE] 2026-01-29T15:24:04.182Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123094 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:36:09.552Z confId=2 value="BBS:Conf2/" incomingString="[0m
+[0;35m- --- -----[ [33m5D-ZippySearch v0.03 [35m]----- --- - ---- - ----- -----[ [33msTc/5D [35m]---
+
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:36:09.555Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:36:16.807Z confId=2 value="BBS:Conf2/" incomingString="
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:36:16.810Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:50:42.623Z confId=2 value="BBS:Conf2/" incomingString="[0m
+[0;35m- --- -----[ [33m5D-ZippySearch v0.03 [35m]----- --- - ---- - ----- -----[ [33msTc/5D [35m]---
+
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:50:42.626Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:50:50.613Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x123094
+[BB_CONFLOCAL WRITE] 2026-01-29T15:50:50.614Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123094 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:51:01.131Z confId=2 value="BBS:Conf2/" incomingString="[0m
+[0;35m- --- -----[ [33m5D-ZippySearch v0.03 [35m]----- --- - ---- - ----- -----[ [33msTc/5D [35m]---
+
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:51:01.134Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:51:10.024Z confId=2 value="BBS:Conf2/" incomingString="[0m
+[0;35m- --- -----[ [33m5D-ZippySearch v0.03 [35m]----- --- - ---- - ----- -----[ [33msTc/5D [35m]---
+
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:51:10.024Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T15:51:15.170Z confId=2 value="BBS:Conf2/" incomingString="
+" msgAddr=0x122d34
+[BB_CONFLOCAL WRITE] 2026-01-29T15:51:15.173Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x122d34 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-29T22:38:20.429Z confId=1 value="BBS:Conf1/" incomingString="" msgAddr=0x122d3c
+[BB_CONFLOCAL WRITE] 2026-01-29T22:38:20.434Z wrote="BBS:Conf1/" verify="BBS:Conf1/" msgAddr=0x122d3c stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T00:17:41.321Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T00:17:41.342Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T00:17:41.342Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T00:29:22.774Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T00:29:23.139Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T00:29:23.140Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T00:29:44.910Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T00:29:45.288Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T00:29:45.288Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T01:10:17.882Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T01:10:18.359Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T01:10:18.359Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T01:37:02.318Z confId=2 value="BBS:Conf2/" incomingString="DUPESTART1" msgAddr=0x123f48
+[BB_CONFLOCAL WRITE] 2026-01-30T01:37:02.321Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123f48 stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T11:52:11.851Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T11:52:12.282Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T11:52:12.283Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL WRITE] 2026-01-30T12:10:10.027Z wrote="BBS:" verify="BBS:" msgAddr=0x128272 stringOffset=0x14
+[BB_CONFLOCAL] 2026-01-30T12:10:10.507Z confId=2 value="BBS:Conf2/" incomingString="Main" msgAddr=0x128272
+[BB_CONFLOCAL WRITE] 2026-01-30T12:10:10.509Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x128272 stringOffset=0x14
