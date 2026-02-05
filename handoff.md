@@ -1,46 +1,32 @@
 # Handoff - 2026-02-06
 
-## Current Issue: RAM Optimization for Render.com
+## Session Summary
 
-Implemented RAM optimization to stay within Render.com's 512MB limit.
+### 1. RAM Optimization (commit de8216f73)
+Implemented memory optimization for Render.com's 512MB limit:
+- Emulator memory: 16MB -> 4MB default (EMULATOR_MEMORY_MB)
+- FileCache: 16MB -> 4MB default (FILE_CACHE_MB)
+- AmigaFileCache: Unbounded -> 2MB with LRU eviction (AMIGA_FILE_CACHE_MB)
+- Added cleanup() methods to ExecLibrary and DosLibrary
 
-### Changes Applied This Session
+### 2. SDK node_modules Fix (commit 451879bc2)
+Fixed "Cannot find module 'tone'" error:
+- Dockerfile was only copying sdk/dist, not sdk/node_modules
+- Added: `COPY --from=sdk-builder /app/sdk/node_modules ./sdk/node_modules`
 
-| File | Change |
-|------|--------|
-| AmigaDoorSession.ts | Configurable emulator memory (EMULATOR_MEMORY_MB, default 4MB vs 16MB) |
-| AmigaFileCache.ts | Added LRU eviction with size limit (AMIGA_FILE_CACHE_MB, default 2MB) |
-| file-cache.util.ts | Reduced default from 16MB to 4MB (FILE_CACHE_MB configurable) |
-| ExecLibrary.ts | Added cleanup() method to release tracked allocations |
-| DosLibrary.ts | Added cleanup() method to clear tracked state |
-| AmigaDoorSession.ts | Call cleanup() on both libraries in terminate() |
-| render.yaml | Added memory environment variables |
+**Note:** `tone` is browser-only (Web Audio API). Import works but actual audio playback requires client-side handling.
 
-### Expected Memory Savings
+## Current Deploy Status
+- Both commits pushed to main
+- Render should auto-deploy or trigger manually
 
-| Component | Before | After | Savings |
-|-----------|--------|-------|---------|
-| Emulator memory | 16MB/door | 4MB/door | 12MB/door |
-| FileCache | 16MB | 4MB | 12MB |
-| AmigaFileCache | Unbounded | 2MB max | Variable |
-| Session cleanup | Leaks | No leaks | Prevents growth |
-
-### Rollback Instructions
-
-If doors crash with 4MB emulator, increase in Render dashboard:
+## If Doors Still Crash
+Increase emulator memory in Render dashboard:
 ```
-EMULATOR_MEMORY_MB=8  # or 16 for full compatibility
+EMULATOR_MEMORY_MB=8
 ```
 
-### Deploy
-
-```bash
-git add -A && git commit -m "fix(memory): RAM optimization for 512MB Render limit"
-git push origin main
-```
-
-### What to Watch For
-
-- `[HEARTBEAT]` logs show memory usage - target <350MB
-- If doors crash: increase EMULATOR_MEMORY_MB
-- `[AmigaDoorSession] Emulator memory: XMB` shows configured memory per door
+## What to Watch For
+- `[AmigaDoorSession] Emulator memory: 4MB` confirms RAM optimization active
+- `[HEARTBEAT]` logs show memory usage
+- dRE!Wall and other 68K doors should work with 4MB (increase to 8 if not)
