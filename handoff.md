@@ -1,41 +1,40 @@
-# Handoff - 2026-02-05
+# Handoff - 2026-02-06
 
-## Latest Session: TypeScript Door Deployment Fixes
+## Current Issue: Server Crashing on Render
 
-### Problems Fixed
-1. **SDK package.json missing** - Node.js couldn't resolve SDK module
-2. **Old door versions on persistent disk** - Doors still used legacy `runDoor` pattern
-3. **rip-browser door** - Still used old `runDoor` export pattern
+The BBS server was crashing periodically on Render.com, causing 502 Bad Gateway errors.
 
-### Root Causes
-| Issue | Cause | Fix |
-|-------|-------|-----|
-| "no default export" | SDK package.json not copied to Docker image | Dockerfile: Copy sdk/package.json |
-| "doorModule keys: runDoor" | Persistent disk had old door versions | Added FORCE_REINIT_DOORS env var |
-| rip-browser outdated | Source file used old export pattern | Updated to ServerDoor pattern |
+### Root Cause Identified
+The 68K emulator batch execution blocks Node.js event loop via C++ N-API. If batches take too long, health checks timeout (30s default) and Render restarts the container.
 
-### Fixes Applied
+### Fixes Applied This Session
 | Commit | Description |
 |--------|-------------|
-| 1b1b8cf6d | Add legacy runDoor fallback + FORCE_REINIT_DOORS + fix rip-browser |
-| ba0e98cb2 | Copy SDK package.json for module resolution |
-| d506f7780 | Create SDK symlinks for TS doors at startup |
-| e59b6e25b | Path symlinks /app/Doors -> $BBS_DATA_DIR/Doors |
+| e45183ec0 | Health check fix: /health endpoint, smaller batches (2000), faster yields (5ms), SIGTERM logging |
+| fc93f25da | Add deploy.sh script |
+| 611617947 | Ignore unrecognized terminal escape sequences |
+| 34100cb17 | Convert web terminal key codes to Amiga codes |
 
-### Door Audit Results
-All TypeScript doors now use modern `export default door` pattern:
-- ansi-editor, bbs-dashboard, bbslinkwall, fire-emblem-v2, glc-viewer
-- Gwall, phreakwars, telnet-front, telnet, whip, rip-browser
+### Key Changes (e45183ec0)
+1. **healthCheckPath: /health** - Fast JSON response instead of full SPA at /
+2. **Batch size: 5000 -> 2000** - Less event loop blocking
+3. **Yield interval: 10ms -> 5ms** - More responsive to health checks
+4. **SIGTERM handler** - Logs when Render kills container (helps diagnose future issues)
 
-### Deployment Instructions
-1. Trigger manual deploy on Render
-2. Check logs for:
-   - `FORCE_REINIT_DOORS=1 - Re-copying all Doors...`
-   - `SDK symlinks created for N TypeScript doors`
-3. After success, set in Render dashboard:
-   - `FORCE_REINIT_DOORS=0`
-   - `FORCE_REINIT_CONFIG=0`
-   - `FORCE_REINIT_ROMS=0`
+### Deploy Instructions
+```bash
+git push origin main
+```
+Then trigger deploy in Render dashboard.
 
-### Status
-All fixes committed and pushed. Ready for deploy.
+### Post-Deployment
+After stable deployment, set in Render dashboard:
+- `FORCE_REINIT_DOORS=0`
+- `FORCE_REINIT_CONFIG=0`
+- `FORCE_REINIT_ROMS=0`
+
+### What to Watch For
+- `[HEARTBEAT]` logs should appear every 60s
+- `[SHUTDOWN] SIGTERM received` indicates Render killed process
+- `[MEMORY WARNING]` indicates approaching 512MB limit
+- If crashes continue: may need even smaller batch size or Render plan upgrade
