@@ -1,40 +1,46 @@
 # Handoff - 2026-02-06
 
-## Current Issue: Server Crashing on Render
+## Current Issue: RAM Optimization for Render.com
 
-The BBS server was crashing periodically on Render.com, causing 502 Bad Gateway errors.
+Implemented RAM optimization to stay within Render.com's 512MB limit.
 
-### Root Cause Identified
-The 68K emulator batch execution blocks Node.js event loop via C++ N-API. If batches take too long, health checks timeout (30s default) and Render restarts the container.
+### Changes Applied This Session
 
-### Fixes Applied This Session
-| Commit | Description |
-|--------|-------------|
-| e45183ec0 | Health check fix: /health endpoint, smaller batches (2000), faster yields (5ms), SIGTERM logging |
-| fc93f25da | Add deploy.sh script |
-| 611617947 | Ignore unrecognized terminal escape sequences |
-| 34100cb17 | Convert web terminal key codes to Amiga codes |
+| File | Change |
+|------|--------|
+| AmigaDoorSession.ts | Configurable emulator memory (EMULATOR_MEMORY_MB, default 4MB vs 16MB) |
+| AmigaFileCache.ts | Added LRU eviction with size limit (AMIGA_FILE_CACHE_MB, default 2MB) |
+| file-cache.util.ts | Reduced default from 16MB to 4MB (FILE_CACHE_MB configurable) |
+| ExecLibrary.ts | Added cleanup() method to release tracked allocations |
+| DosLibrary.ts | Added cleanup() method to clear tracked state |
+| AmigaDoorSession.ts | Call cleanup() on both libraries in terminate() |
+| render.yaml | Added memory environment variables |
 
-### Key Changes (e45183ec0)
-1. **healthCheckPath: /health** - Fast JSON response instead of full SPA at /
-2. **Batch size: 5000 -> 2000** - Less event loop blocking
-3. **Yield interval: 10ms -> 5ms** - More responsive to health checks
-4. **SIGTERM handler** - Logs when Render kills container (helps diagnose future issues)
+### Expected Memory Savings
 
-### Deploy Instructions
+| Component | Before | After | Savings |
+|-----------|--------|-------|---------|
+| Emulator memory | 16MB/door | 4MB/door | 12MB/door |
+| FileCache | 16MB | 4MB | 12MB |
+| AmigaFileCache | Unbounded | 2MB max | Variable |
+| Session cleanup | Leaks | No leaks | Prevents growth |
+
+### Rollback Instructions
+
+If doors crash with 4MB emulator, increase in Render dashboard:
+```
+EMULATOR_MEMORY_MB=8  # or 16 for full compatibility
+```
+
+### Deploy
+
 ```bash
+git add -A && git commit -m "fix(memory): RAM optimization for 512MB Render limit"
 git push origin main
 ```
-Then trigger deploy in Render dashboard.
-
-### Post-Deployment
-After stable deployment, set in Render dashboard:
-- `FORCE_REINIT_DOORS=0`
-- `FORCE_REINIT_CONFIG=0`
-- `FORCE_REINIT_ROMS=0`
 
 ### What to Watch For
-- `[HEARTBEAT]` logs should appear every 60s
-- `[SHUTDOWN] SIGTERM received` indicates Render killed process
-- `[MEMORY WARNING]` indicates approaching 512MB limit
-- If crashes continue: may need even smaller batch size or Render plan upgrade
+
+- `[HEARTBEAT]` logs show memory usage - target <350MB
+- If doors crash: increase EMULATOR_MEMORY_MB
+- `[AmigaDoorSession] Emulator memory: XMB` shows configured memory per door
