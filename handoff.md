@@ -1,44 +1,41 @@
 # Handoff - 2026-02-05
 
-## Latest Session: TypeScript Door "no default export" Fix
+## Latest Session: TypeScript Door Deployment Fixes
 
-### Problem
-TypeScript doors failed with: `Invalid TypeScript door: Must export ServerDoor instance as default export (no default export)`
+### Problems Fixed
+1. **SDK package.json missing** - Node.js couldn't resolve SDK module
+2. **Old door versions on persistent disk** - Doors still used legacy `runDoor` pattern
+3. **rip-browser door** - Still used old `runDoor` export pattern
 
-### Root Cause Analysis
-The Dockerfile copied `/app/sdk/dist` but **not** `/app/sdk/package.json`. When Node.js resolved the SDK symlink:
-1. Symlink: `node_modules/@amiexpress/bbs-door-sdk` → `/app/sdk`
-2. Node tried to read `/app/sdk/package.json` → **MISSING**
-3. Fell back to looking for `/app/sdk/index.js` → **MISSING** (only `dist/` exists)
-4. Module resolution failed → `doorModule.default` was `undefined`
+### Root Causes
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| "no default export" | SDK package.json not copied to Docker image | Dockerfile: Copy sdk/package.json |
+| "doorModule keys: runDoor" | Persistent disk had old door versions | Added FORCE_REINIT_DOORS env var |
+| rip-browser outdated | Source file used old export pattern | Updated to ServerDoor pattern |
 
 ### Fixes Applied
 | Commit | Description |
 |--------|-------------|
-| ba0e98cb2 | **Dockerfile**: Copy `sdk/package.json` alongside `sdk/dist` |
-| d506f7780 | **docker-entrypoint.sh**: Create SDK symlinks for TS doors at startup |
-| e59b6e25b | Path symlinks `/app/Doors` → `$BBS_DATA_DIR/Doors` |
-| 21cf3f0d5 | Added .info config file copying |
-| 87d19f920 | Added `FORCE_REINIT_ROMS=1` for AROS ROM files |
+| 1b1b8cf6d | Add legacy runDoor fallback + FORCE_REINIT_DOORS + fix rip-browser |
+| ba0e98cb2 | Copy SDK package.json for module resolution |
+| d506f7780 | Create SDK symlinks for TS doors at startup |
+| e59b6e25b | Path symlinks /app/Doors -> $BBS_DATA_DIR/Doors |
 
-### Module Resolution Chain (Now Fixed)
-```
-door imports SDK →
-  node_modules/@amiexpress/bbs-door-sdk (symlink) →
-  /app/sdk →
-  reads package.json → main: "./dist/index.js" →
-  /app/sdk/dist/index.js ✓ →
-  exports ServerDoor ✓
-```
+### Door Audit Results
+All TypeScript doors now use modern `export default door` pattern:
+- ansi-editor, bbs-dashboard, bbslinkwall, fire-emblem-v2, glc-viewer
+- Gwall, phreakwars, telnet-front, telnet, whip, rip-browser
 
 ### Deployment Instructions
-1. Trigger manual deploy on Render (autoDeploy is off)
+1. Trigger manual deploy on Render
 2. Check logs for:
-   - `[Entrypoint] SDK symlinks created for N TypeScript doors`
-   - `[Entrypoint] Configuration file status:` - should show [OK]
+   - `FORCE_REINIT_DOORS=1 - Re-copying all Doors...`
+   - `SDK symlinks created for N TypeScript doors`
 3. After success, set in Render dashboard:
+   - `FORCE_REINIT_DOORS=0`
    - `FORCE_REINIT_CONFIG=0`
    - `FORCE_REINIT_ROMS=0`
 
 ### Status
-All fixes committed and pushed to main. Ready for deploy.
+All fixes committed and pushed. Ready for deploy.
