@@ -1,54 +1,43 @@
 # Handoff - 2026-02-05
 
-## Current Session: Removed Door-Specific Hacks
+## Latest Session: TypeScript Door SDK Symlink Fix
 
-### Problem Identified
+### Problem
+TypeScript doors failed with "Invalid TypeScript door: Must export ServerDoor instance as default export" error on Render deployment.
 
-Analysis found door-specific hacks violating CLAUDE.md rule: "No door-specific hacks or heuristics"
+### Root Cause
+- `.dockerignore` excludes `Doors/**/node_modules` from Docker build
+- TypeScript doors need `@amiexpress/bbs-door-sdk` in their node_modules
+- Without it, import succeeds but SDK classes aren't available
+- Validation for `execute()` and `getConfig()` methods fails
 
-### Fixes Applied
+### Fix Applied (commit d506f7780)
+1. **docker-entrypoint.sh**: Added SDK symlink creation for TypeScript doors
+   - Scans `$BBS_DATA_DIR/Doors/` for directories with `package.json`
+   - Creates `node_modules/@amiexpress/bbs-door-sdk` symlink pointing to `/app/sdk`
+   - Logs count of symlinks created
 
-**1. IconLibrary.ts - Dynamic DOORUSE lookup**
-- Removed: Hardcoded `'DOORUSE.FR', 'DOORUSE.CS', 'DOORUSE.NSU', 'DOORUSE.N'`
-- Added: `findAllDoortypeEntries()` method that dynamically finds ALL DOORUSE.* entries
-- Now works for any door command, not just FR/CS/NSU/N
+2. **door.handler.ts**: Added diagnostic logging
+   - Logs doorModule keys and method types
+   - Shows specific reason for validation failures
 
-**2. command.handler.ts - Removed test door commands**
-- Removed: `GA` (GetAnswer), `MULTITOP`, `WH` (What) hardcoded commands
-- These bypassed the proper door system with hardcoded paths
-- Doors should use .info file registration and door menu
+### Previous Fixes (already deployed)
+| Commit | Fix |
+|--------|-----|
+| e59b6e25b | Path symlinks `/app/Doors` -> `$BBS_DATA_DIR/Doors` |
+| 21cf3f0d5 | Added .info config file copying to Dockerfile and entrypoint |
+| 87d19f920 | Added `FORCE_REINIT_ROMS=1` for AROS ROM files |
+| c1e4dae9e | Fixed `_displayScreen is not a function` TypeError |
 
-**3. internal-commands.ts - Removed duplicate test commands**
-- Removed: `MULTITOP`, `WH` duplicate handlers
-- Same issue as command.handler.ts
+### Deployment Instructions
+1. Trigger manual deploy on Render (autoDeploy is off)
+2. Check logs for:
+   - `[Entrypoint] SDK symlinks created for N TypeScript doors`
+   - `[Entrypoint] Configuration file status:` - should show [OK]
+   - `[Entrypoint] Final ROM status:` - should show [OK]
+3. After success, set in Render dashboard:
+   - `FORCE_REINIT_CONFIG=0`
+   - `FORCE_REINIT_ROMS=0`
 
-**4. command.handler.ts - Fixed WHO helper path**
-- Changed: `path.join(process.cwd(), '../../doors/who')`
-- To: `path.join(config.get('dataDir'), 'Doors', 'who')`
-- Uses proper BBS directory resolution
-
-### Acceptable Patterns (NOT violations)
-
-These were analyzed and found to be acceptable:
-
-1. **batch-scheduler.ts** - QuickNew/MultiTop/SlickTop handlers
-   - TypeScript ports of batch utilities (NOT doors)
-   - Run from batch files like originals
-   - 1:1 compatible with 68K behavior
-
-2. **screen.handler.ts** - MultiTop bulletin codes (%XX.YYCC)
-   - Parsing documented bulletin format
-   - Any bulletin generator can use this format
-
-3. **Character conversion for 0xA0**
-   - Generic CP437 handling, affects all doors
-
-### Previous Session Fix
-
-- batch-scheduler.ts: Added app root to batch file search paths
-- SAmiLog now properly found and executed via batch files
-
-### Deployment Status
-
-- All changes need commit and push
-- TypeScript compiles clean
+### Status
+All fixes committed and pushed to main. Ready for deploy.
