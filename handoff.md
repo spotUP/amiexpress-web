@@ -1,50 +1,54 @@
 # Handoff - 2026-02-05
 
-## Current Session: SAmiLog Batch Scheduler Fix
+## Current Session: Removed Door-Specific Hacks
 
 ### Problem Identified
 
-SAmiLog is a **standalone CLI utility** (NOT a door) run from batch files at logoff time.
-
-**How it works in real AmiExpress:**
-```
-batch1:
-bbs:utils/samilog/samilog -UC"1" -O"BBS:Bulletins/bull6.txt"15
-```
-
-The batch scheduler had correct TypeScript SAmiLog implementation but couldn't FIND batch files because:
-- Batch files live at app root (`/app/batch1`)
-- Scheduler only searched `dataDir` (`/app/data/bbs/`) and `bbsRoot/NodeN/`
+Analysis found door-specific hacks violating CLAUDE.md rule: "No door-specific hacks or heuristics"
 
 ### Fixes Applied
 
-1. **batch-scheduler.ts**: Added `appRoot` (process.cwd()) to candidate search paths for `runLoginBatches()` and `runLogoffBatches()`
+**1. IconLibrary.ts - Dynamic DOORUSE lookup**
+- Removed: Hardcoded `'DOORUSE.FR', 'DOORUSE.CS', 'DOORUSE.NSU', 'DOORUSE.N'`
+- Added: `findAllDoortypeEntries()` method that dynamically finds ALL DOORUSE.* entries
+- Now works for any door command, not just FR/CS/NSU/N
 
-2. **socket-handlers.ts**: Removed redundant `runSamiLogUpdate()` call - SAmiLog is properly handled by batch scheduler via `typescript:samilog` commands in batch files
+**2. command.handler.ts - Removed test door commands**
+- Removed: `GA` (GetAnswer), `MULTITOP`, `WH` (What) hardcoded commands
+- These bypassed the proper door system with hardcoded paths
+- Doors should use .info file registration and door menu
 
-3. **Deleted SamiLogRunner.ts**: Removed obsolete hack that tried to run SAmiLog as a 68K door
+**3. internal-commands.ts - Removed duplicate test commands**
+- Removed: `MULTITOP`, `WH` duplicate handlers
+- Same issue as command.handler.ts
 
-### SAmiLog Command Support (Complete)
+**4. command.handler.ts - Fixed WHO helper path**
+- Changed: `path.join(process.cwd(), '../../doors/who')`
+- To: `path.join(config.get('dataDir'), 'Doors', 'who')`
+- Uses proper BBS directory resolution
 
-The batch scheduler supports ALL SAmiLog commands from SAmiLog.Guide:
-- `-C` - Clear store
-- `-S"days"` - Strip mini log
-- `-D"file"` - Create docs
-- `-U[SC]"node"` - Update from CallersLog
-- `-W[N]"file"` - Weekly stats
-- `-R[N]"file"` - Record stats
-- `-O[NLFSTR]"file"count` - Output bulletin
+### Acceptable Patterns (NOT violations)
+
+These were analyzed and found to be acceptable:
+
+1. **batch-scheduler.ts** - QuickNew/MultiTop/SlickTop handlers
+   - TypeScript ports of batch utilities (NOT doors)
+   - Run from batch files like originals
+   - 1:1 compatible with 68K behavior
+
+2. **screen.handler.ts** - MultiTop bulletin codes (%XX.YYCC)
+   - Parsing documented bulletin format
+   - Any bulletin generator can use this format
+
+3. **Character conversion for 0xA0**
+   - Generic CP437 handling, affects all doors
+
+### Previous Session Fix
+
+- batch-scheduler.ts: Added app root to batch file search paths
+- SAmiLog now properly found and executed via batch files
 
 ### Deployment Status
 
-- All changes committed and pushed
-- Deploy hook may need manual trigger on Render dashboard
-- `FORCE_REINIT_SCREENS=0` set (screens not reinitialized on deploy)
-
-### Post-Deploy Verification
-
-Test on bbs.uprough.net:
-1. Login and logoff
-2. Check that `bull6.txt` updates with last callers
-3. Check backend logs for `[BatchScheduler] Found batch file:` messages
-4. Verify 68K doors still work (WHO, etc.)
+- All changes need commit and push
+- TypeScript compiles clean
