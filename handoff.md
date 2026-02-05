@@ -1,66 +1,44 @@
-# Handoff - 2026-01-30
+# Handoff - 2026-02-05
 
-## Current Session: dRE!WAll Debug - strPtr Fix Applied
+## Current Session: DI Container Fallback Fix
 
-### Changes Made This Session
+### Problem Fixed
 
-**File Modified:** `web/backend/src/amiga-emulation/xim/io.ts`
-
-Added strPtr update to JH_HK handling in both `handleHotkey()` and `completeHotkey()`:
-```typescript
-// FIX 2026-01-30: Also update strPtr to point to embedded buffer
-// Some doors (like dRE!WAll) may read characters via strPtr for storage
-const strPtrUpdated = this.messageParser.writeStringPointer(msg.msgAddr, stringAddr);
+AUTO_REJOIN flow was failing with:
+```
+Error: Attempted to resolve unregistered dependency token: "Symbol(MessageBases)"
+    at getMessageBases (dependency-injection.ts:41)
+    at advanceDisplayFlow (command.handler.ts:669)
 ```
 
-**Rationale:**
-- Door correctly echoes characters (reads msg.string[0] from embedded buffer)
-- Door doesn't accumulate to internal buffer
-- strPtr was NULL, never updated for JH_HK
-- Door might read via strPtr for storage while using embedded buffer for echo
+This caused the display to loop back to CONF_BULL repeatedly, showing "last callers" (bull6.txt) multiple times.
 
-### Testing Required
+### Solution Applied
 
-1. Start servers: `./dev/scripts/start-servers.sh`
-2. Connect to BBS at http://localhost:3001
-3. Run WALL door
-4. Type a message (e.g., "test")
-5. Press Enter
-6. Verify message is saved to `Doors/dRE/dRE!WAll/dRE!WAll.dAtA`
+Added try/catch fallbacks to DI getters that return empty arrays when tokens aren't registered:
 
-### Debug Log to Check
+**File:** `web/backend/src/handlers/command-handler/dependency-injection.ts`
+- `getMessageBases()` - now returns `[]` on error
+- `getConferences()` - now returns `[]` on error
+- `getFileAreas()` - now returns `[]` on error
+- `getDoors()` - now returns `[]` on error
 
-Look for in backend log:
-```
-[DEBUG JH_HK completeHotkey] Updated strPtr to 0x122d4c: OK
-[DEBUG JH_HK completeHotkey] Original msg.stringPtr=NULL
-```
+**Commit:** `78b7e5358`
 
-If "OK" appears, strPtr was updated. If "FAILED", message structure too small.
+### Deployment Status
 
-### If Fix Doesn't Work
+- Code pushed to GitHub
+- Deploy hook expired - manual deploy needed from Render dashboard
+- `FORCE_REINIT_SCREENS=0` in render.yaml (set in previous session)
 
-Next steps:
-1. **Add MOIRA watchpoint** on door's buffer address (0x122ee0) to detect writes
-2. **Disassemble dRE!WAll** to understand character accumulation logic:
-   ```bash
-   r2 -q -c "e asm.arch=m68k; e asm.bits=32; aaa; pdf" Doors/dRE/dRE!WAll/dRE!WAll
-   ```
-3. **Test on WinUAE** with real Amiga emulation to verify if door works there
+### Previous Session Fixes (Still Applied)
 
-### Previous Findings (Context)
+1. **Screen fallback duplicate display** - NODE_BULL no longer falls back to global Screens/BULL.TXT
+2. **68K ROM path** - Added ROM_DIR env var to KickstartRom.ts search paths
 
-- dRE!WAll uses raw XIM protocol (FindPort/PutMsg/GetMsg), NOT AEDoor.library
-- Character flow works: BBS writes char to msg.string[0], door echoes via JH_WRITE
-- Previous fixes already applied:
-  - ximPort returns 2 (SERIAL_PORT)
-  - Double replyMsg bug fixed
+### Post-Deploy Verification
 
-### Memory Layout Reference
-- msg.msgAddr = 0x122d38
-- msg.string = 0x122d4c (offset 0x14)
-- msg.strPtr offset = 0x100 (LONG layout)
-- Door's file buffer = 0x122ee0
-
-### Critical Rule
-**NEVER start servers without asking user first** - per CLAUDE.md
+Check on bbs.uprough.net:
+1. No duplicate "last callers" displays
+2. 68K doors execute properly
+3. No AUTO_REJOIN errors in logs
