@@ -14,10 +14,16 @@ Fixed "Cannot find module 'tone'" error:
 - Dockerfile was only copying sdk/dist, not sdk/node_modules
 - Added: `COPY --from=sdk-builder /app/sdk/node_modules ./sdk/node_modules`
 
-**Note:** `tone` is browser-only (Web Audio API). Import works but actual audio playback requires client-side handling.
+### 3. Wall Door Auto-Execute Fix (commit 389d28315)
+Removed ~CC_wall and ~CC_gwall from logon screens to prevent OOM:
+- Screens/LOGON.TXT: removed ~CC_wall
+- Screens/logon20.txt: removed ~CC_wall, ~CC_gwall
+- logon20.txt_.txt: removed ~CC_wall, ~CC_gwall
+
+Wall doors were auto-executing during logon, consuming memory before users could even interact.
 
 ## Current Deploy Status
-- Both commits pushed to main
+- All commits pushed to main
 - Render should auto-deploy or trigger manually
 
 ## If Doors Still Crash
@@ -29,4 +35,5 @@ EMULATOR_MEMORY_MB=8
 ## What to Watch For
 - `[AmigaDoorSession] Emulator memory: 4MB` confirms RAM optimization active
 - `[HEARTBEAT]` logs show memory usage
-- dRE!Wall and other 68K doors should work with 4MB (increase to 8 if not)
+- Wall doors no longer auto-execute on logon
+- Users can manually run WALL command from menu if desired
