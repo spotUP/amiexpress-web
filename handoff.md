@@ -2,37 +2,27 @@
 
 ## Session Summary
 
-### 1. RAM Optimization (deployed to Render)
-- Emulator memory: 16MB -> 4MB default (EMULATOR_MEMORY_MB)
-- FileCache: 16MB -> 4MB default (FILE_CACHE_MB)
-- AmigaFileCache: Unbounded -> 2MB with LRU eviction
+### Hetzner Deployment
+Migrated from Render.com to Hetzner VPS (CX22, 4GB RAM, €3.79/mo):
+- Server IP: 89.167.21.154
+- Auto-deploy via GitHub Actions on push to main
+- Docker Compose setup with persistent volume
 
-### 2. Wall Door Auto-Execute Fix
-Removed ~CC_wall and ~CC_gwall from logon screens to prevent OOM crashes.
+### Fixes Applied
+1. Removed `~CC_wall`, `~CC_gwall` from logon screens (OOM fix)
+2. Removed `~CC_ANNLOGON` from LOGON.TXT (command doesn't exist)
+3. Fixed database schema issue (old sysop script creating wrong schema)
+4. Added window-click focus for terminal
 
-### 3. Hetzner Deployment Setup (commit 3ddcca581)
-Created deployment scripts for Hetzner VPS (CX22, €3.79/mo, 4GB RAM):
-- `docker-compose.yml` - Updated for VPS deployment with named volumes
-- `deploy/hetzner-setup.sh` - One-command initial setup
-- `deploy/update.sh` - Pull and rebuild
-- `deploy/status.sh` - Health check
-- `deploy/README.md` - Full documentation
+### Access
+- Web: http://89.167.21.154:3001
+- Telnet: telnet 89.167.21.154 2323
 
-## Current Status
-- User created Hetzner project "AmiExpress-Web"
-- Deployment scripts ready, need to push to repo and deploy
-
-## Next Steps
-1. Push commits to GitHub
-2. Create Hetzner CX22 server (Ubuntu 24.04)
-3. SSH in and run setup script
-4. Start BBS with docker compose
-
-## Quick Deploy Commands
+### Server Commands
 ```bash
-# On Hetzner VPS
-ssh root@SERVER_IP
-curl -fsSL https://raw.githubusercontent.com/USER/amiexpress-web/main/deploy/hetzner-setup.sh -o setup.sh
-bash setup.sh
-cd /app/amiexpress && docker compose up -d
+ssh root@89.167.21.154
+cd /app/amiexpress
+docker compose logs -f        # View logs
+docker compose restart        # Restart
+./deploy/status.sh            # Health check
 ```
