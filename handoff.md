@@ -3,20 +3,22 @@
 ## Session Summary
 
 ### Hetzner Deployment
-Migrated from Render.com to Hetzner VPS (CX22, 4GB RAM, 2GB RAM plan):
+Running on Hetzner VPS (CX22, 2 vCPU, 4GB RAM):
 - Server IP: 89.167.21.154
 - Auto-deploy via GitHub Actions on push to main
 - Docker Compose setup with persistent volume
+- **Node 20.20.0** (upgraded from Node 18)
 
 ### Fixes Applied (All Permanent)
 1. **68K doors Enter key** - Stopped CR->LF conversion in `xim/io.ts` (express.e expects CR)
 2. **New user questionnaire crash** - Fixed race condition in `new-user.handler.ts`
-3. **Native module install** - Entrypoint now runs `npm install` for doors with better-sqlite3
+3. **Native module install** - Entrypoint checks for actual .node binary, does clean install
 4. **Removed ~CC_wall/gwall/ANNLOGON** - Cleaned problematic MCI codes from screens
 5. **Database schema** - Removed old sysop script from entrypoint
 6. **Health check timeouts** - Fixed in previous session
-7. **Grandmaster better-sqlite3** - Pinned to ^10.1.0 (Node 18 compatible, was ^12.5.0 requiring Node 20+)
-8. **Entrypoint native check** - Now checks for actual .node binary, not just directory; does clean install
+7. **Node 20 upgrade** - All Docker stages now use node:20-alpine
+8. **Memory warning** - Configurable via MEMORY_LIMIT_MB (default 3072MB for 4GB servers)
+9. **Removed Render.com references** - Updated .env.example, index.ts, deleted old backup files
 
 ### Access
 - Web: https://bbs.uprough.net (SSL via Caddy)
@@ -33,5 +35,4 @@ FORCE_REINIT_DOORS=1 docker compose up -d --build  # Re-copy all doors
 
 ### Pending
 - Verify gmaster works (user should test: run GMASTER command in BBS)
-- SSH up-arrow history (terminal issue, not server)
 
