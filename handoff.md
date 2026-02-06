@@ -13,7 +13,7 @@ Migrated from Render.com to Hetzner VPS (CX22, 4GB RAM, €3.79/mo):
 2. Removed `~CC_ANNLOGON` from LOGON.TXT (command doesn't exist)
 3. Fixed database schema issue (old sysop script creating wrong schema)
 4. Added window-click focus for terminal
-5. Fixed new user registration crash - added null check for `session.newUserData?.questionnaire`
+5. Fixed new user registration crash - `createAccount()` was deleting `session.newUserData` before questionnaire persistence could use it
 
 ### Access
 - Web: https://bbs.uprough.net (SSL via Caddy)
