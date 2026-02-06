@@ -19,6 +19,7 @@ Running on Hetzner VPS (CX22, 2 vCPU, 4GB RAM):
 7. **Node 20 upgrade** - All Docker stages now use node:20-alpine
 8. **Memory warning** - Configurable via MEMORY_LIMIT_MB (default 3072MB for 4GB servers)
 9. **Removed Render.com references** - Updated .env.example, index.ts, deleted old backup files
+10. **Attract mode game_over fix** - Added GameScreen.stop() to properly stop demo game
 
 ### Access
 - Web: https://bbs.uprough.net (SSL via Caddy)
@@ -34,5 +35,6 @@ FORCE_REINIT_DOORS=1 docker compose up -d --build  # Re-copy all doors
 ```
 
 ### Pending
-- Verify gmaster works (user should test: run GMASTER command in BBS)
+- Verify lobby layout fix works (user should test: run GMASTER, enter TetriNet lobby)
+- Note: multiplayer-lobby.ts exceeds 2000 line limit (2126 lines), needs future refactoring
 
