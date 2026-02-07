@@ -1,40 +1,92 @@
-# Handoff - 2026-02-06
+# Handoff - 2026-02-07
 
-## Session Summary
+## CRITICAL FIX: TypeScript Door Module Caching (PERMANENT SOLUTION)
 
-### Hetzner Deployment
-Running on Hetzner VPS (CX22, 2 vCPU, 4GB RAM):
-- Server IP: 89.167.21.154
-- Auto-deploy via GitHub Actions on push to main
-- Docker Compose setup with persistent volume
-- **Node 20.20.0** (upgraded from Node 18)
+**Problem:** Node.js ESM imports were permanently cached in memory, causing "stale code" issues that persisted for days despite rebuilds and restarts. User had to disconnect/reconnect to see changes.
 
-### Fixes Applied (All Permanent)
-1. **68K doors Enter key** - Stopped CR->LF conversion in `xim/io.ts` (express.e expects CR)
-2. **New user questionnaire crash** - Fixed race condition in `new-user.handler.ts`
-3. **Native module install** - Entrypoint checks for actual .node binary, does clean install
-4. **Removed ~CC_wall/gwall/ANNLOGON** - Cleaned problematic MCI codes from screens
-5. **Database schema** - Removed old sysop script from entrypoint
-6. **Health check timeouts** - Fixed in previous session
-7. **Node 20 upgrade** - All Docker stages now use node:20-alpine
-8. **Memory warning** - Configurable via MEMORY_LIMIT_MB (default 3072MB for 4GB servers)
-9. **Removed Render.com references** - Updated .env.example, index.ts, deleted old backup files
-10. **Attract mode game_over fix** - Added GameScreen.stop() to properly stop demo game
+**Root Cause:** ESM modules use path-based caching - same path = cached module, even if file changed.
 
-### Access
-- Web: https://bbs.uprough.net (SSL via Caddy)
-- Telnet: telnet 89.167.21.154 2323
+**Solution Implemented:** Two-layer cache prevention
 
-### Server Commands
-```bash
-ssh root@89.167.21.154
-cd /app/amiexpress
-docker compose logs -f        # View logs
-docker compose restart        # Restart
-FORCE_REINIT_DOORS=1 docker compose up -d --build  # Re-copy all doors
+### Layer 1: Runtime Cache-Busting (door.handler.ts)
+
+**File:** `web/backend/src/handlers/door.handler.ts` (lines 1585-1593)
+
+```typescript
+// CRITICAL: ESM module cache busting for development mode
+const isDev = process.env.NODE_ENV !== 'production';
+const cacheBuster = isDev ? `?t=${Date.now()}` : '';
+const importPath = `file://${resolvedDoorPath}${cacheBuster}`;
 ```
 
-### Pending
-- Verify lobby layout fix works (user should test: run GMASTER, enter TetriNet lobby)
-- Note: multiplayer-lobby.ts exceeds 2000 line limit (2126 lines), needs future refactoring
+**How It Works:**
+- Development: `file:///path/to/door.js?t=1738901234567` (unique timestamp)
+- Production: `file:///path/to/door.js` (stable path, better caching)
+- Each door execution gets fresh import with unique query parameter
+- Node.js treats each as separate module - no cache hits
 
+### Layer 2: Startup Cache Clearing (start-servers.sh)
+
+**File:** `dev/scripts/start-servers.sh` (comprehensive cache clearing)
+
+**What Gets Cleared:**
+1. npm cache (`npm cache clean --force`)
+2. Build tool caches (webpack/babel/vite in node_modules/.cache)
+3. TypeScript build info (*.tsbuildinfo files)
+4. ALL dist/ directories (backend, frontend, config, SDK, doors)
+5. Stale .js files in source directories
+6. Vite cache directories (.vite folders)
+7. Node.js ESM loader cache + force NODE_ENV=development
+
+**Status:** FIXED PERMANENTLY
+- Backend rebuilt: 2026-02-07 04:15am
+- Start script clears ALL caches before every startup
+- Runtime cache-busting prevents stale imports
+- No more disconnects required
+- No more stale code issues
+- Works automatically in development mode
+
+---
+
+## Full AI Opponents System (COMPLETE)
+
+**Implemented:**
+1. **TetriNET Mode** (`ai/tetrinet-ai.ts`) - 3 AI opponents, 10 difficulty levels
+2. **CPU Battle Mode** (`ai/versus-ai.ts`) - 3 AI opponents with independent game engines
+3. Fixed "stupid" auto-play behavior - AI now controls opponents, not player
+
+**Files Modified:**
+- `Doors/grandmaster/app.ts` - Spawn AI opponents
+- `Doors/grandmaster/ui/tetrinet-screen.ts` - Update AI every frame
+- `Doors/grandmaster/ui/versus-screen.ts` - Update opponent minimaps
+
+**Testing:**
+- TetriNET Local: See 3 AI opponents playing
+- CPU Battle: See 3 AI minimaps on right side
+- AI difficulty affects think time (100-2000ms)
+
+---
+
+## Other Fixes
+
+**Music Cleanup:** Frontend missing `audio:music:stop` handler - Fixed in `BBSTerminal.tsx`
+
+**Arrow Keys:** Fixed `enableGrabKeys: false` → `true` in `Doors/grandmaster/app.ts`
+
+---
+
+## Backend Status
+
+- Last rebuild: 04:00am (module cache-busting enabled)
+- Ports: HTTP:3001, Telnet:2323, SSH:2222
+- Log: `logs/backend.log`
+- GRANDMASTER: Rebuilt with AI opponents
+
+---
+
+## Hetzner Deployment
+
+- Server: 89.167.21.154
+- Web: https://bbs.uprough.net
+- Telnet: 2323
+- Auto-deploy via GitHub Actions
