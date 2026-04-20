@@ -1,92 +1,101 @@
-# Handoff - 2026-02-07
+# Handoff — 2026-04-20 (late)
 
-## CRITICAL FIX: TypeScript Door Module Caching (PERMANENT SOLUTION)
+## Six fixes landed on `main`
 
-**Problem:** Node.js ESM imports were permanently cached in memory, causing "stale code" issues that persisted for days despite rebuilds and restarts. User had to disconnect/reconnect to see changes.
-
-**Root Cause:** ESM modules use path-based caching - same path = cached module, even if file changed.
-
-**Solution Implemented:** Two-layer cache prevention
-
-### Layer 1: Runtime Cache-Busting (door.handler.ts)
-
-**File:** `web/backend/src/handlers/door.handler.ts` (lines 1585-1593)
-
-```typescript
-// CRITICAL: ESM module cache busting for development mode
-const isDev = process.env.NODE_ENV !== 'production';
-const cacheBuster = isDev ? `?t=${Date.now()}` : '';
-const importPath = `file://${resolvedDoorPath}${cacheBuster}`;
+```
+9e3966c08 fix(68k): always reply DT_SLOTNUMBER for cross-node queries
+12f1e9f1b fix(68k): gate hybrid input injection on AEDoor waitForReply
+73c2dcfc9 fix(68k): AEDoor WriteStr restores native msg.data semantics
+52770b4d8 fix(68k): pre-create RAM:T so doors can write to it
+87749febe fix(68k): XIM CLI args = node only, not runtime parameters
+d7d1cc1e9 fix(68k): honor AmigaDOS MODE_OLDFILE fail-if-missing semantics
 ```
 
-**How It Works:**
-- Development: `file:///path/to/door.js?t=1738901234567` (unique timestamp)
-- Production: `file:///path/to/door.js` (stable path, better caching)
-- Each door execution gets fresh import with unique query parameter
-- Node.js treats each as separate module - no cache hits
+User-visible: dRE!WAll draws correctly (WriteStr newline), AquaScan
+no longer exits RC=5 on login (CLI args), zOOsTAT no longer errors
+on RAM:T/ZOOSTAT.TMP, WarOLM survives arrow-key nav (injection gate).
+All typecheck-clean. See commit bodies for rationale.
 
-### Layer 2: Startup Cache Clearing (start-servers.sh)
+## WarOLM cross-node OLM delivery — what's actually going on
 
-**File:** `dev/scripts/start-servers.sh` (comprehensive cache clearing)
+"nODE iS rEADY, oLM hAVE bEEN sENT..." prints, **but the message
+never reaches the target node**. Prior handoff's `LISTS/<slot>`
+theory was wrong.
 
-**What Gets Cleared:**
-1. npm cache (`npm cache clean --force`)
-2. Build tool caches (webpack/babel/vite in node_modules/.cache)
-3. TypeScript build info (*.tsbuildinfo files)
-4. ALL dist/ directories (backend, frontend, config, SDK, doors)
-5. Stale .js files in source directories
-6. Vite cache directories (.vite folders)
-7. Node.js ESM loader cache + force NODE_ENV=development
+Disasm of the delivery loop at file `0x11DE`:
 
-**Status:** FIXED PERMANENTLY
-- Backend rebuilt: 2026-02-07 04:15am
-- Start script clears ALL caches before every startup
-- Runtime cache-busting prevents stale imports
-- No more disconnects required
-- No more stale code issues
-- Works automatically in development mode
+```
+0x11fa: moveq  0x4, d0          ; JH_SM
+0x1200: move.l d0, 0xe0(a0)     ; msg.command
+0x1208: adda.w 0x14, a0         ; msg.string
+0x120e: move.b (a1)+, (a0)+     ; copy line
+0x1220: bsr.w  0x131a           ; SendAEServer(target)
+```
 
----
+Delivery = `PutMsg(JH_SM)` to `AEServer.<target>`, one per line.
+`Open("LISTS/<slot>")` is just a queue-presence probe.
 
-## Full AI Opponents System (COMPLETE)
+**Our cross-node handler at
+`web/backend/src/amiga-emulation/session/lifecycle/door-message-callbacks.ts:236-274`
+already routes `JH_SM` → target's socket.** It just never gets called,
+because WarOLM takes a `beq.w 0xf8e` early-exit at one of:
 
-**Implemented:**
-1. **TetriNET Mode** (`ai/tetrinet-ai.ts`) - 3 AI opponents, 10 difficulty levels
-2. **CPU Battle Mode** (`ai/versus-ai.ts`) - 3 AI opponents with independent game engines
-3. Fixed "stupid" auto-play behavior - AI now controls opponents, not player
+| File PC | Test                         | Failure means              |
+|---------|------------------------------|----------------------------|
+| 0xDD0   | `tst.l d7`                   | line count == 0            |
+| 0xDD8   | `tst.w 0x11a(a7)`            | Y/n answer == 0            |
+| 0xDE8   | `tst.w d0` after `bsr 0x122c`| wait-for-idle said bail    |
 
-**Files Modified:**
-- `Doors/grandmaster/app.ts` - Spawn AI opponents
-- `Doors/grandmaster/ui/tetrinet-screen.ts` - Update AI every frame
-- `Doors/grandmaster/ui/versus-screen.ts` - Update opponent minimaps
+Trap log between success banner and `JH_SHUTDOWN` shows **no
+`STATS@N` poll or `Delay()`** — bailout fires BEFORE `0x122c`, so
+the failing test is check 1 or 2. Most likely D7 (line count) is 0
+because the line-editor state isn't where the door expects.
 
-**Testing:**
-- TetriNET Local: See 3 AI opponents playing
-- CPU Battle: See 3 AI minimaps on right side
-- AI difficulty affects think time (100-2000ms)
+## Next-session tasks
 
----
+1. **Instrument PCs 0xDD0/0xDD8/0xDE8** to log D7 and `0x11a(a7)`.
+   `DOOR_PC_PROBE_RANGES` didn't fire at runtime `0x2DA6` this
+   session — address mapping needs empirical verification. Binary
+   loads code at runtime `0x2008`, hunk header is `0x30` bytes, so
+   file `0xDCE` should map to `0x2008 + (0xDCE - 0x30) = 0x2DA6`.
+   Verify by dumping actual door-code PCs during execution and
+   triangulating.
+2. If D7==0: line-editor isn't committing our typed line into the
+   `0x188(a7)` 10×200-byte buffer. JH_LI reply mismatch — look at
+   `0x1ACA`.
+3. If `0x11a(a7)`==0: our "Y" isn't landing where WarOLM reads it.
+   JH_HK reply bug specific to this door.
+4. Once the delivery loop runs, cross-node routing is done.
 
-## Other Fixes
+## Verified live (via MCP harness)
 
-**Music Cleanup:** Frontend missing `audio:music:stop` handler - Fixed in `BBSTerminal.tsx`
+- `MODE_OLDFILE` returns `IoErr=205` when file missing ✓
+- `DT_SLOTNUMBER` returns nodeId unconditionally ✓ (WarOLM now
+  forms `LISTS/2`, was `LISTS/` with empty slot before)
+- Cross-node `JH_SM` handler wiring ✓ (not exercised this session)
 
-**Arrow Keys:** Fixed `enableGrabKeys: false` → `true` in `Doors/grandmaster/app.ts`
+## Open items carried forward
 
----
+- **SysInfo sync waitForReply** blocks JS event loop for full 10000
+  iters; my gate is correct but can't deliver input during the sync
+  poll. Real fix: async-with-yields on `AEDoorLibrary.waitForReply`
+  — non-trivial, traps are fully sync.
+- WarOLM editor cursor `[11A` offset (cosmetic).
+- Row 00 phantom in Olm table (LOWNODE=0).
+- Input lag — `AEDOOR_BATCH_SIZE` exposed; needs live
+  `DOOR_PROFILE=1`.
 
-## Backend Status
+## Working-tree (uncommitted, from prior session)
 
-- Last rebuild: 04:00am (module cache-busting enabled)
-- Ports: HTTP:3001, Telnet:2323, SSH:2222
-- Log: `logs/backend.log`
-- GRANDMASTER: Rebuilt with AI opponents
+`AmigaDoorSession.ts`, `ExecLibrary.ts`, `DoorLifecycleManager.ts`,
+`index.ts` — debugRegistry wiring, `[CopyMem-100]` console.log,
+`dosLib.isDelayed()` 10ms yield, `(global as any).io = io`. Not
+mine — check with whoever was working on those.
 
----
+## Server state
 
-## Hetzner Deployment
+Backend started/stopped via MCP harness for live OLM test. All
+processes killed, lockfile clean. Kill path if needed:
+`./dev/scripts/kill-servers.sh`.
 
-- Server: 89.167.21.154
-- Web: https://bbs.uprough.net
-- Telnet: 2323
-- Auto-deploy via GitHub Actions
+Ports: Frontend 5174, Backend 3001, Telnet 2323, SSH 2222.
