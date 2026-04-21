@@ -1,0 +1,3 @@
+- generic [ref=e8]:
+  - generic:
+    - textbox "Terminal input" [active]

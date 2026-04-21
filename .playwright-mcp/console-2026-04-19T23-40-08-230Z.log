@@ -1,0 +1,6 @@
+[      27ms] [WARNING] Origin trial controlled feature not enabled: 'language-model'. @ https://codepen.io/OpherV/pen/PoPQwaz:2474
+[      27ms] [WARNING] Origin trial controlled feature not enabled: 'rewriter'. @ https://codepen.io/OpherV/pen/PoPQwaz:2474
+[      27ms] [WARNING] Origin trial controlled feature not enabled: 'writer'. @ https://codepen.io/OpherV/pen/PoPQwaz:2474
+[     751ms] ReferenceError: Sonorous is not defined
+    at pen.js:210:1
+[     970ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ https://codepen.io/OpherV/pen/PoPQwaz:0

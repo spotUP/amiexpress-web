@@ -1,0 +1,33 @@
+[     278ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     298ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-R9yIOogS.js:62
+[     298ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-R9yIOogS.js:62
+[     298ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-R9yIOogS.js:62
+[     534ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-R9yIOogS.js:62
+[     645ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     645ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-R9yIOogS.js:62
+[     655ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[     656ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[     656ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[     657ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[    3950ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-R9yIOogS.js:77
+[    3950ms] [LOG] [BBSTerminal] doorActive.current set to: true @ http://localhost:3001/assets/index-R9yIOogS.js:77
+[    4628ms] [LOG] [BBSTerminal] door-active received: false @ http://localhost:3001/assets/index-R9yIOogS.js:77
+[    4628ms] [LOG] [BBSTerminal] doorActive.current set to: false @ http://localhost:3001/assets/index-R9yIOogS.js:77
+[  255523ms] [LOG] [DISCONNECT] Client disconnected, reason: transport close @ http://localhost:3001/assets/index-R9yIOogS.js:73
+[  255524ms] [LOG] [DISCONNECT] Disconnect details: {reason: transport close, socketId: undefined, loginState: waiting, forcedDisconnect: false, timestamp: 2026-04-19T21:10:50.749Z} @ http://localhost:3001/assets/index-R9yIOogS.js:73
+[  255524ms] [LOG] [DISCONNECT] Network disconnect - preserving session state for reconnection @ http://localhost:3001/assets/index-R9yIOogS.js:73
+[  256486ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[  256486ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[  258613ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[  258613ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[  261620ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[  261620ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[  264634ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[  264634ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-R9yIOogS.js:71
+[  267640ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-R9yIOogS.js:54
+[  267640ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-R9yIOogS.js:71
