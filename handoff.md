@@ -1,19 +1,17 @@
 # Handoff
 
 ## Recent Work
-- Rewrote mail-composer door to use ANSIEditor widget
-- Fixed ANSIEditor: canvas line-skipping (wrap:false), cursor visibility (red), stale content
-- Fixed production caching (index.html no-cache, assets 1y)
-- Mapped ANSI editor to AE command (pure door, no BBS modifications)
-- SDK: removed transparent bg from dialog widgets, added lightblue focus default for inputs
-- SDK: key event bubbling in screen.ts (parent elements receive unhandled keys from children)
-- All committed and pushed (c42e252cd)
+- 68K doors: Clear screen + reset scroll region before door launch (6601ad85d)
+  - Fixes RTW node 01 shifting down every refresh, dRE!WAll layout issues
+  - Sequence: ESC[r + ESC[2J + ESC[H in door.handler.ts before 68K door start
+- SDK: Fixed stale border artifacts in slow connection mode
+- Grandmaster: effects, music, J piece, ghost piece, column overlap fixes
 
 ## Key Decisions
-- E = built-in text editor (untouched), AE = ANSI art editor (mail-composer door)
-- No BBS internal modifications for new features -- implement as doors
-- ae.info is plain text (not binary Amiga .info) -- fallback parser handles it
+- ALWAYS fix at SDK level when possible, not in individual doors
+- Effects rendered inline in board content loop (no overlay boxes)
 
 ## Active State
-- Servers running on shellId srv10 (--no-watch)
-- 140 commands loaded including AE
+- Clear screen fix committed (6601ad85d), needs testing with RTW and dRE!WAll
+- RTW redraw may still have a 2-row offset (skip count mismatch with initial draw)
+- dRE!WAll uses absolute positioning so clear screen should fully fix it
