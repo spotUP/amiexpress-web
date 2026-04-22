@@ -1,0 +1,214 @@
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=33997 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=33997 to=33997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=33997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34509 to=34509 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34509 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34997 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34997 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34997 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34151 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34151 to=34151 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34151 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34663 to=34663 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34663 to=34663 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34663 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35151 to=35151 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35151 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35151 to=35151 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35151 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35151 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34261 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34261 to=34261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34773 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34261 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34261 to=34261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34773 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34261 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34261 to=34261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34773 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34261 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34261 to=34261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34773 to=34773 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34773 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=35261 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35261 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35261 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34328 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34328 to=34328 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34328 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34840 to=34840 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34840 to=34840 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34840 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35328 to=35328 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35328 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35328 to=35328 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35328 to=34955 whence=0 offset=34955 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34955 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35328 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34853 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34853 to=34853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35365 to=35365 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35365 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35811 whence=0 offset=35811 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35811 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34853 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34853 to=34853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35365 to=35365 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35365 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35811 whence=0 offset=35811 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35811 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34853 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34853 to=34853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35365 to=35365 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35365 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35811 whence=0 offset=35811 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35811 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=0 to=34853 whence=2 offset=-1000 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=34853 to=34853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=34853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35365 to=35365 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35365 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=false
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35853 whence=1 offset=0 justEof=true
+[FileHandle] FILE SEEK: bbs:node3/callerslog from=35853 to=35811 whence=0 offset=35811 justEof=true
+[FileHandle] FILE EOF-SEEK-BACK: bbs:node3/callerslog count=1 (seeking backwards after EOF)
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35811 req=512
+[FileHandle] FILE NO-SNAPSHOT: bbs:node3/callerslog pos=35853 req=512

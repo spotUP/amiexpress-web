@@ -1,18 +1,29 @@
 # Handoff
 
 ## Recent Work
-Fixed multiple blessed UI issues across all TypeScript doors.
 
-### Fixed Issues
-1. **Ctrl+Shift+M mouse toggle** - Added to BBSTerminal (was only in ChatTerminal)
-2. **Cmd+A/Cmd+C** - Terminal select/copy via xterm.js APIs when mouse disabled
-3. **Panel border defaults** - Fixed Panel constructor to respect explicit `border: undefined`
-4. **Double borders in doors-menu** - Added `border: undefined` to borderless elements
-5. **Double borders in mail-composer** - StatusBar/Toolbar got `border: undefined`
-6. **Focus stealing** - Added `focusable: false` to 100+ display-only boxes across all doors
-7. **Double line breaks in editor** - Line number box width was `lineNumberWidth+1` but content was `lineNumberWidth+2` chars wide, causing word wrap. Fixed width and left offsets.
+- Rewrote `Doors/mail-composer/index.ts` to use `ANSIEditor` widget directly (~330 lines, down from ~844)
+- Fixed ANSIEditor canvas line-skipping bug: added `wrap: false` to drawCanvas and viewport
+- Fixed ANSIEditor cursor: changed to red, added `setFront()` so it stays above canvas
+- Fixed stale content: always sync canvas to display on startup (not just when initialContent exists)
+- Restored SDK preview Tailwind configs (postcss.config.js, tailwind.config.js) that were deleted
+- Added SDK preview terminal centering override (`!min-h-0 !h-full !items-start`)
+- Fixed `createScreen(bbs, ...)` call (was passing ctx instead of bbs)
 
-### Current State
-- All blessed doors audited for focus/border issues
-- SDK docs updated with best practices (CLAUDE.md rule 6b, blessed guides)
-- Mail-composer editor double-line bug fixed
+## User's Last Prompts
+
+- Fix red cursor missing from ansi message editor, commit and push
+- Previously: mail editor uses ansi editor, fix line-skipping, fix SDK CSS
+
+## Key Files Changed
+
+- `Doors/mail-composer/index.ts` - Complete rewrite using ANSIEditor widget
+- `sdk/engines/ui/blessed/widgets/ansi-editor.ts` - wrap:false, red cursor, setFront, always sync
+- `sdk/tools/preview/frontend/postcss.config.js` - Restored
+- `sdk/tools/preview/frontend/tailwind.config.js` - Restored
+- `sdk/tools/preview/frontend/src/App.tsx` - Terminal centering override
+
+## Status
+
+- Committed and pushed (1db05f5ee), deploy in progress
+- Servers running on shellId srv3

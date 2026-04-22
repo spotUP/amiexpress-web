@@ -21889,3 +21889,83 @@
 [BB_CONFLOCAL WRITE] 2026-04-21T18:16:54.492Z wrote="BBS:" verify="BBS:" msgAddr=0x128276 stringOffset=0x14
 [BB_CONFLOCAL] 2026-04-21T18:16:55.205Z confId=1 value="BBS:Conf1/" incomingString="Main" msgAddr=0x128276
 [BB_CONFLOCAL WRITE] 2026-04-21T18:16:55.213Z wrote="BBS:Conf1/" verify="BBS:Conf1/" msgAddr=0x128276 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:00:08.105Z confId=11 value="BBS:Conf11/" incomingString="sysop" msgAddr=0x122d72
+[BB_CONFLOCAL WRITE] 2026-04-21T22:00:08.108Z wrote="BBS:Conf11/" verify="BBS:Conf11/" msgAddr=0x122d72 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:04:24.252Z confId=11 value="BBS:Conf11/" incomingString="CONFTOP" msgAddr=0x123f48
+[BB_CONFLOCAL WRITE] 2026-04-21T22:04:24.252Z wrote="BBS:Conf11/" verify="BBS:Conf11/" msgAddr=0x123f48 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:04:51.397Z confId=2 value="BBS:Conf2/" incomingString="CONFTOP" msgAddr=0x123f48
+[BB_CONFLOCAL WRITE] 2026-04-21T22:04:51.401Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123f48 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:14.967Z confId=1 value="BBS:Conf1/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:14.968Z wrote="BBS:Conf1/" verify="BBS:Conf1/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:28.487Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:28.491Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:30.301Z confId=3 value="BBS:Conf3/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:30.303Z wrote="BBS:Conf3/" verify="BBS:Conf3/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:32.193Z confId=4 value="BBS:Conf4/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:32.194Z wrote="BBS:Conf4/" verify="BBS:Conf4/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:32.925Z confId=5 value="BBS:Conf5/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:32.928Z wrote="BBS:Conf5/" verify="BBS:Conf5/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:33.651Z confId=6 value="BBS:Conf6/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:33.654Z wrote="BBS:Conf6/" verify="BBS:Conf6/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:34.307Z confId=7 value="BBS:Conf7/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:34.310Z wrote="BBS:Conf7/" verify="BBS:Conf7/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:34.900Z confId=8 value="BBS:Conf8/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:34.900Z wrote="BBS:Conf8/" verify="BBS:Conf8/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:35.814Z confId=9 value="BBS:Conf9/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:35.817Z wrote="BBS:Conf9/" verify="BBS:Conf9/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:36.647Z confId=10 value="BBS:Conf10/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:36.647Z wrote="BBS:Conf10/" verify="BBS:Conf10/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:37.473Z confId=11 value="BBS:Conf11/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:37.473Z wrote="BBS:Conf11/" verify="BBS:Conf11/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:38.032Z confId=12 value="BBS:Conf12/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:38.033Z wrote="BBS:Conf12/" verify="BBS:Conf12/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:38.670Z confId=13 value="BBS:Conf13/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:38.673Z wrote="BBS:Conf13/" verify="BBS:Conf13/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-21T22:55:39.419Z confId=14 value="BBS:Conf14/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-21T22:55:39.424Z wrote="BBS:Conf14/" verify="BBS:Conf14/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T08:06:06.149Z confId=4 value="BBS:Conf4/" incomingString="sysop" msgAddr=0x122d72
+[BB_CONFLOCAL WRITE] 2026-04-22T08:06:06.155Z wrote="BBS:Conf4/" verify="BBS:Conf4/" msgAddr=0x122d72 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:42:40.041Z confId=1 value="BBS:Conf1/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:42:40.042Z wrote="BBS:Conf1/" verify="BBS:Conf1/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:42:40.079Z confId=1 value="BBS:Conf1/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:42:40.082Z wrote="BBS:Conf1/" verify="BBS:Conf1/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:06.249Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:06.252Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:07.914Z confId=3 value="BBS:Conf3/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:07.918Z wrote="BBS:Conf3/" verify="BBS:Conf3/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:10.566Z confId=4 value="BBS:Conf4/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:10.569Z wrote="BBS:Conf4/" verify="BBS:Conf4/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:11.331Z confId=5 value="BBS:Conf5/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:11.332Z wrote="BBS:Conf5/" verify="BBS:Conf5/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:12.177Z confId=6 value="BBS:Conf6/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:12.180Z wrote="BBS:Conf6/" verify="BBS:Conf6/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:12.926Z confId=7 value="BBS:Conf7/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:12.927Z wrote="BBS:Conf7/" verify="BBS:Conf7/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:13.679Z confId=8 value="BBS:Conf8/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:13.680Z wrote="BBS:Conf8/" verify="BBS:Conf8/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:14.470Z confId=9 value="BBS:Conf9/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:14.473Z wrote="BBS:Conf9/" verify="BBS:Conf9/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:15.046Z confId=10 value="BBS:Conf10/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:15.049Z wrote="BBS:Conf10/" verify="BBS:Conf10/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:15.703Z confId=11 value="BBS:Conf11/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:15.706Z wrote="BBS:Conf11/" verify="BBS:Conf11/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:16.492Z confId=12 value="BBS:Conf12/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:16.495Z wrote="BBS:Conf12/" verify="BBS:Conf12/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:17.185Z confId=13 value="BBS:Conf13/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:17.188Z wrote="BBS:Conf13/" verify="BBS:Conf13/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:17.848Z confId=14 value="BBS:Conf14/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:17.851Z wrote="BBS:Conf14/" verify="BBS:Conf14/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:43:24.506Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x123094
+[BB_CONFLOCAL WRITE] 2026-04-22T14:43:24.510Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123094 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:47:40.372Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:47:40.373Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:52:40.909Z confId=3 value="BBS:Conf3/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:52:40.910Z wrote="BBS:Conf3/" verify="BBS:Conf3/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:53:02.187Z confId=4 value="BBS:Conf4/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:53:02.187Z wrote="BBS:Conf4/" verify="BBS:Conf4/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:53:03.022Z confId=5 value="BBS:Conf5/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:53:03.025Z wrote="BBS:Conf5/" verify="BBS:Conf5/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:53:03.708Z confId=6 value="BBS:Conf6/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:53:03.711Z wrote="BBS:Conf6/" verify="BBS:Conf6/" msgAddr=0x1230a0 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-22T14:53:04.437Z confId=7 value="BBS:Conf7/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-04-22T14:53:04.440Z wrote="BBS:Conf7/" verify="BBS:Conf7/" msgAddr=0x1230a0 stringOffset=0x14
