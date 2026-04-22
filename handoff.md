@@ -1,17 +1,20 @@
 # Handoff
 
 ## Recent Work
-- 68K doors: Clear screen + reset scroll region before door launch (6601ad85d)
-  - Fixes RTW node 01 shifting down every refresh, dRE!WAll layout issues
-  - Sequence: ESC[r + ESC[2J + ESC[H in door.handler.ts before 68K door start
-- SDK: Fixed stale border artifacts in slow connection mode
-- Grandmaster: effects, music, J piece, ghost piece, column overlap fixes
+- Grandmaster bug fixes (3400f242e):
+  - Hold key fixed (sonicDrop optional chaining crash in keyToAction)
+  - Game over dialog no longer destroys playfield border
+  - Pause menu: ESC/Q=quit, P=resume, fixed listener leak
+  - High score column alignment and personal best overflow fixed
+  - Settings now persist per BBS user (data/settings-{user}.json)
+  - Settings list scrollable, TetriNET connect dialog border fix
+- 68K doors: Clear screen before launch (6601ad85d)
 
 ## Key Decisions
 - ALWAYS fix at SDK level when possible, not in individual doors
 - Effects rendered inline in board content loop (no overlay boxes)
 
-## Active State
-- Clear screen fix committed (6601ad85d), needs testing with RTW and dRE!WAll
-- RTW redraw may still have a 2-row offset (skip count mismatch with initial draw)
-- dRE!WAll uses absolute positioning so clear screen should fully fix it
+## Remaining Grandmaster Issues
+- TetriNET menu focus may still be lost (needs testing)
+- Unify animations/sounds to TetriNET mode (low priority)
+- app.ts at 2345 lines - needs refactoring to stay under 2000
