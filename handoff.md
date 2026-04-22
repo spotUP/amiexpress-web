@@ -1,37 +1,18 @@
-# Handoff — 2026-04-21 (night)
+# Handoff
 
-## Just shipped
+## Recent Work
+Fixed multiple blessed UI issues across all TypeScript doors.
 
-- **Docker image rebuilt and redeployed** on bbs.uprough.net
-  - Rewrote .dockerignore (was blocking batch files, scripts, C/, S/,
-    System/, express binary, and many more BBS files)
-  - Added ALL missing dirs to Dockerfile: C, Devs, L, S, Scripts, System,
-    AmiXnet, RIPgraphics, Partdownload, Access, Languages, Protocols,
-    FCheck, Storage, SysopStats, Zoom, HELP, Utils
-  - Added batch files, acp.dat, express binary, root .info files
-  - Fixed Node screen auto-repair in docker-entrypoint.sh
-  - Committed 6 untracked source files needed for build (DebugRegistry,
-    SymbolResolver, OutputTap, debug-mcp routes, etc.)
-  - Committed all uncommitted backend/SDK/door source changes
-  - Created deploy/sync-to-server.sh for gitignored files
-  - Fixed bbsConfig.info permissions (was root-owned, now bbsuser)
+### Fixed Issues
+1. **Ctrl+Shift+M mouse toggle** - Added to BBSTerminal (was only in ChatTerminal)
+2. **Cmd+A/Cmd+C** - Terminal select/copy via xterm.js APIs when mouse disabled
+3. **Panel border defaults** - Fixed Panel constructor to respect explicit `border: undefined`
+4. **Double borders in doors-menu** - Added `border: undefined` to borderless elements
+5. **Double borders in mail-composer** - StatusBar/Toolbar got `border: undefined`
+6. **Focus stealing** - Added `focusable: false` to 100+ display-only boxes across all doors
+7. **Double line breaks in editor** - Line number box width was `lineNumberWidth+1` but content was `lineNumberWidth+2` chars wide, causing word wrap. Fixed width and left offsets.
 
-## Live server state
-
-- Container healthy, bbsConfig.info loading correctly
-- Image rebuilt 2026-04-21 ~21:15 UTC (was 2+ months old)
-- All config dirs populated, batch files present
-
-## Carried forward
-
-- OLM row 00 phantom (blocked by info-editor.ts corruption)
-- WarOLM cursor offset (\r\n normalization blast radius)
-- SysInfo waitForReply blocking
-- Input lag profiling
-- J door (emp_tools/joincnf) not verified working yet
-
-## Live server
-
-- Hetzner VPS: root@89.167.21.154, container `amiexpress-bbs`
-- Sync script: `./deploy/sync-to-server.sh [--force]`
-- Rebuild: `ssh root@89.167.21.154 "cd /app/amiexpress && git pull && docker compose up -d --build"`
+### Current State
+- All blessed doors audited for focus/border issues
+- SDK docs updated with best practices (CLAUDE.md rule 6b, blessed guides)
+- Mail-composer editor double-line bug fixed
