@@ -1,29 +1,22 @@
 # Handoff
 
 ## Recent Work
+- Rewrote mail-composer door to use ANSIEditor widget directly (~330 lines)
+- Fixed ANSIEditor bugs: line-skipping (wrap:false), cursor visibility (red+setFront), stale content (always sync)
+- Fixed SDK preview CSS (restored postcss/tailwind configs) and terminal centering
+- Fixed production 404 caching bug (index.html maxAge:0, assets 1y)
+- Added Text/ANSI editor choice to E command: "Text or Ansi (T/a):" prompt
+  - T/Enter -> normal text editor, A -> launches mail-composer door
 
-- Rewrote `Doors/mail-composer/index.ts` to use `ANSIEditor` widget directly (~330 lines, down from ~844)
-- Fixed ANSIEditor canvas line-skipping bug: added `wrap: false` to drawCanvas and viewport
-- Fixed ANSIEditor cursor: changed to red, added `setFront()` so it stays above canvas
-- Fixed stale content: always sync canvas to display on startup (not just when initialContent exists)
-- Restored SDK preview Tailwind configs (postcss.config.js, tailwind.config.js) that were deleted
-- Added SDK preview terminal centering override (`!min-h-0 !h-full !items-start`)
-- Fixed `createScreen(bbs, ...)` call (was passing ctx instead of bbs)
+## Key Commits
+- `1db05f5ee` - mail-composer rewrite + canvas rendering fixes
+- `bc7f470e3` - static asset caching fix for production
+- `8e4f83b83` - Text/ANSI editor choice on E command
 
-## User's Last Prompts
+## Servers
+- Running via `start-servers.sh --no-watch` on shellId srv6
+- Port 3001 (BBS), 8080 (SDK preview)
 
-- Fix red cursor missing from ansi message editor, commit and push
-- Previously: mail editor uses ansi editor, fix line-skipping, fix SDK CSS
-
-## Key Files Changed
-
-- `Doors/mail-composer/index.ts` - Complete rewrite using ANSIEditor widget
-- `sdk/engines/ui/blessed/widgets/ansi-editor.ts` - wrap:false, red cursor, setFront, always sync
-- `sdk/tools/preview/frontend/postcss.config.js` - Restored
-- `sdk/tools/preview/frontend/tailwind.config.js` - Restored
-- `sdk/tools/preview/frontend/src/App.tsx` - Terminal centering override
-
-## Status
-
-- Committed and pushed (1db05f5ee), deploy in progress
-- Servers running on shellId srv3
+## What User Was Doing
+- Testing the E command Text/ANSI prompt flow
+- All features committed and pushed, deploy should auto-run
