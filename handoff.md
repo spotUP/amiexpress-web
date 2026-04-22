@@ -1,22 +1,19 @@
 # Handoff
 
 ## Recent Work
-- Rewrote mail-composer door to use ANSIEditor widget directly (~330 lines)
-- Fixed ANSIEditor bugs: line-skipping (wrap:false), cursor visibility (red+setFront), stale content (always sync)
-- Fixed SDK preview CSS (restored postcss/tailwind configs) and terminal centering
-- Fixed production 404 caching bug (index.html maxAge:0, assets 1y)
-- Added Text/ANSI editor choice to E command: "Text or Ansi (T/a):" prompt
-  - T/Enter -> normal text editor, A -> launches mail-composer door
+- Rewrote mail-composer door to use ANSIEditor widget
+- Fixed ANSIEditor: canvas line-skipping (wrap:false), cursor visibility (red), stale content
+- Fixed production caching (index.html no-cache, assets 1y)
+- Mapped ANSI editor to AE command (pure door, no BBS modifications)
+- SDK: removed transparent bg from dialog widgets, added lightblue focus default for inputs
+- SDK: key event bubbling in screen.ts (parent elements receive unhandled keys from children)
+- All committed and pushed (c42e252cd)
 
-## Key Commits
-- `1db05f5ee` - mail-composer rewrite + canvas rendering fixes
-- `bc7f470e3` - static asset caching fix for production
-- `8e4f83b83` - Text/ANSI editor choice on E command
+## Key Decisions
+- E = built-in text editor (untouched), AE = ANSI art editor (mail-composer door)
+- No BBS internal modifications for new features -- implement as doors
+- ae.info is plain text (not binary Amiga .info) -- fallback parser handles it
 
-## Servers
-- Running via `start-servers.sh --no-watch` on shellId srv6
-- Port 3001 (BBS), 8080 (SDK preview)
-
-## What User Was Doing
-- Testing the E command Text/ANSI prompt flow
-- All features committed and pushed, deploy should auto-run
+## Active State
+- Servers running on shellId srv10 (--no-watch)
+- 140 commands loaded including AE
