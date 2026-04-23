@@ -21973,3 +21973,5 @@
 [BB_CONFLOCAL WRITE] 2026-04-22T18:13:37.066Z wrote="BBS:" verify="BBS:" msgAddr=0x123094 stringOffset=0x14
 [BB_CONFLOCAL WRITE] 2026-04-22T18:13:44.886Z wrote="BBS:" verify="BBS:" msgAddr=0x123094 stringOffset=0x14
 [BB_CONFLOCAL WRITE] 2026-04-22T18:13:44.900Z wrote="BBS:" verify="BBS:" msgAddr=0x123094 stringOffset=0x14
+[BB_CONFLOCAL] 2026-04-23T07:44:16.716Z confId=7 value="BBS:Conf7/" incomingString="255" msgAddr=0x123094
+[BB_CONFLOCAL WRITE] 2026-04-23T07:44:16.719Z wrote="BBS:Conf7/" verify="BBS:Conf7/" msgAddr=0x123094 stringOffset=0x14
