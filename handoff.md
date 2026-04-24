@@ -3,23 +3,21 @@
 ## Current State
 Clean `main`. Last deploy: `6f0bc8a9f` (NODE_BULL + CONF_BULL). GDPR baseline live on Hetzner; messaging-handler DI + MailStats self-heal + cross-tab session leak all fixed; livechat visuals cleaned up with self-preview + block-letter avatar; ASCII video frames now actually paint in self-preview tile.
 
-## Shipped 2026-04-24
-- **GDPR Phase 1–6** (`a7ba3058d` merge + follow-ups): privacy notice + consent gate at registration, backfill prompt on first login for pre-GDPR users, W options 19 (view my data) and 20 (delete my account, 3-step confirm + PII scrub), LogRetentionService (10 MB cap), webhook PII stripping (`webhook_include_pii` default false → `User #<id>`), `Documentation/PRIVACY.md`.
-- **Registration UX**: `Group Affiliation` relabel, phone optional, required-field reprompt (no retreat), `(Enter to skip)` hints, `NO CARRIER` on abort, v5.6 version banner, silent optional screens.
-- **Cross-tab leak** (`9a02dfdb9`): `getSession` prefers `socketId→nodeId→session`; `restore-session` refuses when old socket alive.
-- **MailStats self-heal** (`2eec40a52`): undersized `Conf*/Messages/MailStats` files rebuild to 12 bytes instead of throwing.
-- **Messaging DI mystery** (`f252613f4`): dynamic `await import()` of messaging.handler replaced with static `require()` / top-level import → fixes `_db undefined` R-command crash caused by tsx ESM/CJS cache split.
-- **R reader exit** (`ec12e56f7`): transitions to `DISPLAY_MENU` (matches express.e), no bulletin-chain replay on Enter-at-last-message.
-- **Livechat** (`bd6c46e41`, `85a3572c1`, `9013de196`, `02e78c468`): dropped nested video-tile border, removed loud magenta avatar bg, block-letter avatar for no-video, self-preview via unfilter in `voice-channel-ux.ts`, disabled SGR mouse reporting (stopped `[<btn;col;row;M` leaks into chat area), `setVideoFrame` switched to `setContent` (blessed.box has no `setFrame`).
-- **Livechat tile keying**: `VideoGrid.tiles.set(userId, ...)` was using the raw value while `updateParticipantVideo` looked up by `String(userId)` — `Map.get(0) !== Map.get('0')`, every frame silently dropped. Both `tiles.set` sites now use `String(userId)`. Self-preview ASCII video confirmed working on localhost.
-- **Node/conference screens** (`6f0bc8a9f`): NODE_BULL silent on missing file; CONF_BULL displays on every `joinConference` per express.e:5058.
-- **Questionnaire disabled** via `disabled_scripts/` per node; CLAUDE.md rule tightened to require explicit OK before diverging from express.e.
+## NeoShowcase audit + fixes (2026-04-24)
+- **List wheel throttle** (`sdk/engines/ui/blessed/widgets/list.ts`): added 80ms throttle to `wheelup`/`wheeldown` — fixes scroll-too-fast in any List widget including NEOSHOWCASE menu.
+- **#8 Image Demo**: replaced placeholder stub with procedural ANSI-block "sunset" pixel art showing exactly what the tng.js PNG→cellmap pipeline produces.
+- **#9 ANSIImage Demo**: renamed to "Color Art Demo" — accurately labels it as a blessed tag coloring demo, not the ANSIImage widget.
+- **#12 Special Widgets**: removed Terminal stub; FileManager reads real BBS root via `fs.readdirSync(process.cwd())`; FileBox shows same real entries; both get full height.
+- **#12b Viewport Demo**: new separate menu item — 60 lines of scrollable content with clear keyboard/mouse instructions.
+- **#16 Donut Chart**: `bottom: 3→2`, footer `height 2→1`, explicit `halfblock` mode — more vertical space for the ring.
+- **#20 LCD Demo**: centered in 50-char container (`left: 'center'`) — no more full-width wrap. Added second static "HELLO" LCD.
+- **#25 Picture Demo**: replaced empty `file: ''` with hand-crafted ASCII art representing the widget's typical output.
+- **#31 ASCII Video**: replaced stub with live matrix rain animation (~12fps, white heads/green trail) demonstrating the Video widget's frame-rendering model.
+- Already done (no changes needed): #10 Ascii Animation, #17 Sparkline animated, #30 Dockable Layout, #21 Contrib Data.
 
-## Regression test fixes (2026-04-24)
-- Fixed 12 of 14 pre-existing failing test suites via `fdf10c086`.
-- Key production fix: `formatUploadDate` was returning `MM-DD-YY` instead of the correct `DD-Mon-YY` (express.e) format.
-- Still failing: `file-hold.util.test.ts` and `info-file.util.test.ts` — both have a deep ts-jest hoisting issue where `jest.mock('path')` / `jest.mock('fs')` don't intercept calls in production modules when those modules are loaded through `setup.ts`→`database.ts` import chain. Requires restructuring mocks to use `jest.spyOn` in `beforeEach` instead of module-level `jest.mock`.
-- `file-io.util.test.ts` is intermittently flaky in full-suite parallel runs (passes alone).
+## Shipped recently (see git log for details)
+- GDPR Phase 1–6, Registration UX, Cross-tab leak fix, MailStats self-heal, Messaging DI fix, R reader exit, Livechat visual + tile-keying fixes, Node/conference screens.
+- Regression test session: 113 backend + 3 frontend suites, 3700+ tests across 44+ new files (Phases 2–10).
 
 ## Open / deferred
 - **CONFTOP reset-date (#18)** — data wiped locally + prod via `dev/scripts/reset-conftop-data.sh`. Root cause is inside the 68K `Conftop020.x` binary; disassembly out of scope.
