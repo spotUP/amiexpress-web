@@ -1,53 +1,37 @@
 # Handoff
 
 ## Current State
-LiveChat /chat/ SSO + voice/video pipeline working end-to-end. Cross-tab BBS leak and livechat disconnect→BBS-prompt bugs fixed.
+Clean `main`. Last deploy: `6f0bc8a9f` (NODE_BULL + CONF_BULL). GDPR baseline live on Hetzner; messaging-handler DI + MailStats self-heal + cross-tab session leak all fixed; livechat visuals cleaned up with self-preview + block-letter avatar.
 
-## Done This Session
-- **Cross-tab BBS→chat leak fix** — `web/backend/src/server/session-manager.ts:250-266`. `setSession()` now skips `userSessions.set()` when `session.chatOnly === true`. Previously: opening /chat/ on tab B called `setSession(socketB, sessionB)` which overwrote `userSessions[userId]` from sessionA (BBS) to sessionB. After that, `getSessionBySocketId(socketA)` routed through `socketToUser[socketA] → userId → userSessions[userId] = sessionB`, causing BBS door output (AquaScan file listings, `Enter your Line:`, etc.) to be emitted to the chat tab's socket. Fix keeps BBS session as the primary user session; chat sessions are only reachable via socketId→nodeId→sessions map.
-- **Livechat BBS-prompt-after-disconnect fix** — `web/backend/src/handlers/door.handler.ts:1864-1870, 1925-1929`. When the livechat door exited (including on socket disconnect), `executeTypeScriptDoor`'s post-cleanup called `displayMainMenu()` which emitted the BBS main menu. For chatOnly SSO sessions there is no BBS context to return to, so /chat/ ended up showing a BBS login prompt. Fix: skip `displayMainMenu()` in both normal-exit and error-exit branches when `session.chatOnly === true || session.tempData?.chatOnly === true`. Reconnect flow still works — new socket hits SSO path (`index.ts:1187-1223`) and relaunches livechat on a fresh nodeId.
-- **Nested video-tile frames fix** — User reported tile wrapped in ~4 nested borders. Root cause:
-  1. `Doors/livechat/features/video-grid.ts` — `blessed.box()` (Panel default) adds a blue line border around the whole grid → **removed** (`border: undefined`).
-  2. `Doors/livechat/ui/video-tile.ts` — inner `new Video(...)` widget defaults to `{ type: 'line' }` border → **replaced** with `blessed.box({ border: undefined })`.
-  3. Same file — placeholder content drew ASCII `┌─┐│└─┘` box characters inside the videoBox → **replaced** with plain centered "WAITING FOR VIDEO..." text.
-  Result: only the tile's own outer `container` border remains (the one users expect).
-- `tsc --noEmit` clean after both fixes.
+## Shipped 2026-04-24
+- **GDPR Phase 1–6** (`a7ba3058d` merge + follow-ups): privacy notice + consent gate at registration, backfill prompt on first login for pre-GDPR users, W options 19 (view my data) and 20 (delete my account, 3-step confirm + PII scrub), LogRetentionService (10 MB cap), webhook PII stripping (`webhook_include_pii` default false → `User #<id>`), `Documentation/PRIVACY.md`.
+- **Registration UX**: `Group Affiliation` relabel, phone optional, required-field reprompt (no retreat), `(Enter to skip)` hints, `NO CARRIER` on abort, v5.6 version banner, silent optional screens.
+- **Cross-tab leak** (`9a02dfdb9`): `getSession` prefers `socketId→nodeId→session`; `restore-session` refuses when old socket alive.
+- **MailStats self-heal** (`2eec40a52`): undersized `Conf*/Messages/MailStats` files rebuild to 12 bytes instead of throwing.
+- **Messaging DI mystery** (`f252613f4`): dynamic `await import()` of messaging.handler replaced with static `require()` / top-level import → fixes `_db undefined` R-command crash caused by tsx ESM/CJS cache split.
+- **R reader exit** (`ec12e56f7`): transitions to `DISPLAY_MENU` (matches express.e), no bulletin-chain replay on Enter-at-last-message.
+- **Livechat** (`bd6c46e41`, `85a3572c1`, `9013de196`): dropped nested video-tile border, removed loud magenta avatar bg, block-letter avatar for no-video, self-preview via unfilter in `voice-channel-ux.ts`, disabled SGR mouse reporting (stopped `[<btn;col;row;M` leaks into chat area).
+- **Node/conference screens** (`6f0bc8a9f`): NODE_BULL silent on missing file; CONF_BULL displays on every `joinConference` per express.e:5058.
+- **Questionnaire disabled** via `disabled_scripts/` per node; CLAUDE.md rule tightened to require explicit OK before diverging from express.e.
 
-## Earlier Session
-- **SSO /chat/ login** — JWT auth middleware → executeDoor(livechat). `web/backend/src/index.ts:1187-1224`.
-- **Duplicate SDK Door.ts bug** — TWO Door.ts files: `sdk/core/Door.ts` AND `sdk/src/core/Door.ts`. ServerDoor imports from `../src/core/Door`. src/ was missing `ctx.audio`/`ctx.video`. Added Audio/Video instantiation + type fields (`sdk/src/core/types.ts`). ALWAYS edit both if changing createContext.
-- **SDK Audio/Video ack-hang** — `startStreaming`/`startStream` awaited ack that ClientDoor never calls. Changed to fire-and-forget. `sdk/media/Audio.ts`, `sdk/media/Video.ts`.
-- **Video pipeline** — `Doors/livechat/client.ts` getUserMedia (320x240) → canvas → ASCII → `socket.emit('video:frame')` → server forwards via `sdk/client/index.ts` SERVER_FORWARD_EVENTS → `Video` SDK → `ui/video-tile.ts` blessed render.
-- **Video ANSI parsing** — SDK blessed doesn't parse raw `\x1b[38;2;r;g;bm` in `setContent`. Only blessed tags work. Hardcoded `colored: false` in `features/voice-channel-ux.ts:534`.
-- **Tile bg** — Forced `bg: 'black'` in `ui/video-tile.ts:103` (was hash-of-username magenta).
-- **Hybrid door input routing** — `socket-handlers.ts:686-695` — when `clientDoorActive && inDoorManager && doorInputHandler`, route input to server handler.
-- **Frontend auth** — `web/frontend/src/chat/ChatTerminal.tsx` reads authToken from localStorage, passes in socket auth.
+## Open / deferred
+- **CONFTOP reset-date (#18)** — data wiped locally + prod via `dev/scripts/reset-conftop-data.sh`. Root cause is inside the 68K `Conftop020.x` binary; disassembly out of scope.
+- **`Doors/livechat/server.ts`** is 2360 lines, above the 2000-line pre-commit hook. Bypassed with `SKIP_SIZE_CHECK=1` for single-line fixes. Due a feature-based split.
 
-## Not Fixed / Known Issues
+## Gotchas
+- **tsx ESM/CJS split cache**: never use dynamic `await import()` for a module that already has a static import in the same file — they resolve to different instances with different module-scoped state. Always use `require()` or re-use the static binding.
+- **Pre-commit size hook**: blocks files over 2000 lines. Bypass only with `SKIP_SIZE_CHECK=1` for minor fixes where the oversize is pre-existing.
+- **`.info` files contain high-bit bytes**: edit via `sed`/python/git only. `Edit`/`Write` tools corrupt them.
 
-### 1. Mouse codes at bottom of terminal — NON-ISSUE (don't chase)
-User confirmed NOT reproducible. Browser correctly forwards SGR mouse codes via `socket.emit('command', data)`. DO NOT re-investigate unless user reports again.
-
-## Key Files Touched
-- `sdk/src/core/Door.ts` + `sdk/src/core/types.ts`
-- `sdk/media/Audio.ts`, `sdk/media/Video.ts`, `sdk/client/index.ts`
-- `Doors/livechat/client.ts`, `features/voice-channel-ux.ts`, `features/video-grid.ts`, `ui/video-tile.ts`
-- `web/backend/src/index.ts` (SSO branch)
-- `web/backend/src/server/session-manager.ts` (chatOnly userSessions guard)
-- `web/backend/src/server/socket-handlers.ts` (hybrid input routing)
-- `web/backend/src/handlers/door.handler.ts` (chatOnly menu suppression)
-- `web/frontend/src/chat/ChatTerminal.tsx`
-
-## Debugging Notes
-- **Backend log:** `/Users/spot/Code/amiexpress-web/logs/backend.log`. Markers: `[sdk/Audio] Emitting`, `[sdk/Video] Emitting`, `[Voice DEBUG]`, `[DoorSocket] Intercepting`, `[ClientDoorBridge] Parsed key`, `[LIVECHAT CLEANUP]`.
-- **User manages servers manually.** Do not run start-servers.sh / kill-servers.sh unless asked. Door watcher auto-rebuilds on dist/ change. Manual: `cd Doors/livechat && npm run build`.
-- **SDK dist has parallel paths:** `sdk/dist/core/Door.js` AND `sdk/dist/src/core/Door.js`. ServerDoor uses `src/` version.
-
-## Cleanup Needed
-- 140+ uncommitted files (many build artifacts). Review .gitignore.
-
-## Cleaned Up This Session
-- Removed diagnostic console.logs: `[Voice DEBUG]` (3 sites in `Doors/livechat/features/voice-channel-ux.ts`), `[sdk/Audio] Emitting` (`sdk/media/Audio.ts`), `[sdk/Video] Emitting` (`sdk/media/Video.ts`).
+## Debugging
+- Backend log: `logs/backend.log`. Markers: `[setMessagingDependencies]`, `[LogRetention]`, `[SessionManager]`, `[JOIN]`, `[gdpr]`.
+- Container log: `ssh root@89.167.21.154 "docker logs amiexpress-bbs --tail=200"`.
+- **User manages servers manually** — never run `start/kill-servers.sh` unprompted.
 
 ## Deployment
-Push to main → SSH 89.167.21.154 → `docker rm -f amiexpress-bbs; docker compose up -d --build`
+Push to `main` → GitHub Actions → `docker compose up -d --build` on Hetzner. Web: https://bbs.uprough.net. Telnet: `telnet 89.167.21.154 2323`.
+
+## Suggested next session
+- Smoke Phase 3: `W` → 19 (view data), `W` → 20 (abort at each of the 3 confirm steps; end-to-end erase on a throwaway account).
+- Verify webhook PII stripping if a Discord/Slack webhook is configured.
+- If splitting `livechat/server.ts` becomes urgent, start by extracting menu/voice/chat setup into `features/`.
