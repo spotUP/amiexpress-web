@@ -1,40 +1,32 @@
 # Handoff
 
 ## Current State
-Door sweep complete — all hybrid SDK doors (livechat, card-lobby, arkanoid, galaga, frogger, bubble-bobble, etc.) now start and quit cleanly. Bug-tracker freezes fixed. GLC crash hardened. Plus: dos.library D0 propagation audit (5 LVOs fixed) and BBSApi game-mode delegation refactor. Server running locally. Detailed write-up in `thoughts/shared/handoffs/2026-04-25_door-sweep.md` and `thoughts/shared/research/2026-04-25_datestamp-d0-and-ctop.md`.
+Three commits shipped today: dos.library D0 propagation audit (5 LVOs), BBSApi game-mode delegation refactor, live-site livechat fix (`door-preloader` SDK package import). All pushed to `main` → Hetzner. Server running locally. Detailed write-up: `thoughts/shared/handoffs/2026-04-25_d0-audit-and-prod-fix.md`.
 
-## D0 dispatcher audit + game-mode refactor (2026-04-25 evening)
-- **dos.library `handleCall` discarded helper return values** — 5 LVOs whose helpers DO return a value were leaving `D0` with whatever the caller stashed there: DateStamp (-192), IoErr (-132), Input (-54), Output (-60), Seek (-66). IoErr is the most impactful — every door checks `D0` after Open/Lock/Read/Write. Fixed at the dispatch site; helpers unchanged. Audited the other four libraries (Exec/Icon/Intuition/AmiExpress) — pattern was unique to DosLibrary.
-- **`BBSApi.enableGameMode()` only emitted the socket event** — didn't set `session.gameModeEnabled` / `currentDoorType`, didn't tear down `keyRepeatManager` on disable. Now delegates to canonical helpers extracted to `web/backend/src/services/game-mode.service.ts`. Hybrid-RPC manual emit at `door.handler.ts:1800` swapped for the helper too. SDK `BBSApi` interface declares the methods.
-- Regression tests: `tests/amiga-emulation/datestamp-d0-return.test.ts`, `tests/amiga-emulation/dos-d0-propagation.test.ts`, `tests/doors/bbsapi-game-mode.test.ts`.
+## This session (2026-04-25 evening)
+- **dos.library `handleCall` discarded helper return D0** for 5 LVOs: DateStamp(-192), IoErr(-132), Input(-54), Output(-60), Seek(-66). IoErr was the most damaging — every door checks `D0` after Open/Lock/Read/Write. Fixed at the dispatch site. Commit `ace9e2451`.
+- **BBSApi.enableGameMode/disableGameMode were stubs** — only emitted the socket event, didn't update `session.gameModeEnabled` / `currentDoorType`, didn't tear down `keyRepeatManager`. Extracted canonical helpers to `web/backend/src/services/game-mode.service.ts`; BBSApi + `door.handler.ts:1800` hybrid-RPC path now both delegate. Commit `42082b096`.
+- **Prod livechat crash** — `door.handler.ts:1634` used source-relative `'../../../../sdk/utils/door-preloader'` that doesn't exist in Docker (only `sdk/dist` is shipped). Switched to `@amiexpress/bbs-door-sdk/utils/door-preloader` + added the subpath to `sdk/package.json` exports. Commit `a26f1951f`.
+- Tests added: `tests/amiga-emulation/datestamp-d0-return.test.ts`, `tests/amiga-emulation/dos-d0-propagation.test.ts`, `tests/doors/bbsapi-game-mode.test.ts`.
 
-## Door sweep + hybrid rescue (2026-04-25)
-- **`isHybridRPCOnly` misfired for every hybrid SDK door** — fallback branch matched any object default export, so `execute()` was skipped and every door exited immediately. Gated on `!isSDKDoor && !hasRunDoor`. Fixed livechat, card-lobby, all arcade games.
-- **Arkanoid restart-on-quit** — RPC-only hybrid doors weren't enabling game mode, so terminal `onData` leaked every keypress (incl. Q-to-quit) as a BBS command. Emit `game-mode: true` before `waitForSessionEnd`.
-- **GamepadInputManager null crash** — guarded `bbsSession.on(...)`; added `session: bbsSession` alias to DoorContext for old arcade door code (`ctx.session`).
-- **0-byte binary crashed the server** — `DoorLoader.loadDoor()` passed empty Buffer to hunk parser → uncaught exception. Now throws cleanly.
-- **DOORMAN delete didn't refresh registry** — `getDoors()` still returned deleted door. Now reload via `initializeDoors()` after success. Also fixed `commandName` detection (`pkg.doorMetadata.command` not `pkg.bbsCommand`).
-- **CHECKUP SQL crash** — `upload_date` → `uploaddate` typo.
-- **XIM doors with missing binary** (ARCL→bbslink, etc.) — redirect to TypeScript door at parent directory.
-- **Dev bundle endpoint** ignored pre-built `dist/client.bundle.js` and ran esbuild → failed on absolute paths. Now serves pre-built when present.
-- **Ghost borders on 19 TS doors** — `clearRegion + alloc` sweep.
-- **Bug-tracker dialog freeze** — `showSelector`/`showTextInput`/`showMessage` didn't restore focus. Save `screen.focused`, restore in cleanup.
-- **GLC crash hardening** — `res.on('error')` handler + settled flag.
-- **NeoShowcase audit** — image demo, color art, viewport demo, LCD width, donut height, picture content, ASCII video matrix rain, list wheel throttle.
+## Priority for next session
+1. **Fix `DoorManager.ts:777`** — references `dev/scripts/install-sdk-doors.ts` which isn't shipped to Docker. Only triggered by sysop "rebuild door" admin flow — not user-facing, but will fail on the live site. Recommend inlining the install logic (precedent: `BBSApi.ts:1346` reload pattern). Won't crash livechat or any normal door run.
+2. **CS (AquaScan)** — DT_CONFACCESS protocol mismatch. Our handler matches express.e:3778 (returns 10-char access flags), but AquaScan uses that string as a NAME for `BBS:ACCESS/AREA.<name>.info` icon lookup (real ACCESS dir has Sysop/Elite/Lamer/Disabled). Either door misuses cmd 146 or there's a different XIM cmd we should answer. Live trace at `logs/backend.log:7605`.
+3. **CTOP** — silently exits post-IoErr-fix instead of erroring loudly. The `0x04006920` header IS NOT garbage — it matches SanctuaryBBS reference files (`0x040068ec`, `0x0400629d`); high 16 bits is fixed `0x0400` format marker, low 16 bits is days-since-1978 in the 2047–2051 range ("never reset"). Recommend reimplementing as TS door rather than disassembling Conftop v2.3 (closed source by Bobo/Mystic).
+4. **`Doors/livechat/server.ts`** still 2590 lines — single `createApp()` with 37 inner functions sharing closure state. Existing `MODULARIZATION_PHASE2_PROGRESS.md` in livechat dir shows this is a paused incremental effort. Needs UI validation per extraction.
 
-## Open / deferred (per backlog memory)
-- **CTOP** — confirmed: 68K binary writes garbage date (`0x04006920`) to fresh `Conftop.Data`, then rejects on next read. Inside Conftop020.x; disassembly out of scope.
-- **CS (AquaScan)** — "Couldn't load area icon!!" — needs real BBS-context icon.library trace (test harness shows different earlier failure).
-- **ED (5D-Edit)** — needs interactive audit with user.
-- **DEL (MgzListMan)** — original AmigaOS binary missing.
-- **GA (GetAnswer)** — NOT broken, prompts for input by design. Closed.
-- **`Doors/livechat/server.ts`** still 2360 lines, over the 2000-line hook.
+## Other open items
+- **ED (5D-Edit)** — needs interactive audit with user
+- **DEL (MgzListMan)** — original AmigaOS binary missing
+- **GA (GetAnswer)** — NOT broken, prompts for input by design
 
 ## Gotchas
-- **tsx ESM/CJS split cache**: never use dynamic `await import()` for a module that already has a static import.
+- **DosLibrary has TWO LVO dispatchers** — `handleCall` (used by `AmigaDosEnvironment.handleSyscall`) and the vector-table in `dos-vectors.ts` (used by `LibraryTraps`). Any D0-touching fix must update both — handleCall has the bug pattern.
+- **Production ships only `sdk/dist/`**, never `sdk/utils/` or other source dirs. SDK requires from backend MUST go through the package import (`@amiexpress/bbs-door-sdk/...`) and the package's exports map. Audit pattern: `require\('\.\.\/.+sdk\/'`.
+- **`0x04006XXX` is a real format marker**, not garbage — cross-reference SanctuaryBBS captures FIRST when something looks like garbage data.
+- **Pre-commit hook EXEMPTS oversize files** (DosLibrary, door.handler etc.) — no `SKIP_SIZE_CHECK=1` needed for those.
 - **`.info` files contain high-bit bytes**: edit via `sed`/python/git only.
-- **`SKIP_SIZE_CHECK=1`** required for several commits — `Doors/neo-blessed-showcase/app.ts` and `door.handler.ts` are over the limit (pre-existing).
-- **Hybrid RPC-only doors** (server.ts exports rpcHandlers only, not the door) need explicit `socket.emit('game-mode', true)` to prevent terminal input from being forwarded to BBS command processor.
+- **Hybrid RPC-only doors** must enable game mode before `waitForSessionEnd` — now handled centrally via the helper.
 
 ## Debugging
 - Backend log: `logs/backend.log`. 68K door logs: `logs/door-68k-{name}-*.-N{n}.log`.
@@ -43,9 +35,3 @@ Door sweep complete — all hybrid SDK doors (livechat, card-lobby, arkanoid, ga
 
 ## Deployment
 Push to `main` → GitHub Actions → `docker compose up -d --build` on Hetzner. Web: https://bbs.uprough.net. Telnet: `telnet 89.167.21.154 2323`.
-
-## Suggested next session
-- Capture full BBS-context icon.library trace for AquaScan (CS) to diagnose "Couldn't load area icon".
-- ED audit with user — user said "almost works."
-- Investigate CTOP DateStamp() return path — `D0 = pointer to DateStamp` may be misread as the date itself.
-- Split `livechat/server.ts` into `features/`.
