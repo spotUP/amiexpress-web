@@ -94,8 +94,7 @@ Seven passes of express.e 1:1 audit. All critical bugs fixed:
 - **Config audit**: logon20.txt functional (QuickNew+flt via MCI, sec≥20 users). BULL.TXT and CONF_BULL.TXT are empty — no content issues found, those are sysop content choices.
 
 ## Open priorities
-1. **zOOsTAT "NOT deleted"** — see `thoughts/shared/handoffs/2026-04-27_zoostat-not-deleted.md`
-2. **xim/io.ts** — approaching 2000 line limit, needs modular split
+1. **xim/io.ts** — approaching 2000 line limit, needs modular split
 
 ## Gotchas
 - **Amiga = BE**: see CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE (PC standards). Everything else Amiga = BE.
