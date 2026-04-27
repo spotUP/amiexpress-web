@@ -1,3 +1,1 @@
 ~
-~CC_ANNLOGON|
-~CC_wall|

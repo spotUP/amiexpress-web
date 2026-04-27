@@ -1,6 +1,1 @@
-~CC_wall| ~f [0m
-Welcome to AmiExpress.
-
-This BBS is being run on an Amiga emulator and will attempt to
-revive - in some small part - the BBS scene of yesteryear.
-
+~

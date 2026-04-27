@@ -96,7 +96,6 @@ Seven passes of express.e 1:1 audit. All critical bugs fixed:
 ## Open priorities
 1. **zOOsTAT "NOT deleted"** — see `thoughts/shared/handoffs/2026-04-27_zoostat-not-deleted.md`
 2. **xim/io.ts** — approaching 2000 line limit, needs modular split
-3. **Message editor WEB_ extensions** — attach/quote/insert/replace unreachable; add to options menu if desired
 
 ## Gotchas
 - **Amiga = BE**: see CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE (PC standards). Everything else Amiga = BE.
