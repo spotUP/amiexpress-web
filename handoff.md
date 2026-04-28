@@ -1,142 +1,43 @@
 # Handoff
 
+## TUI Console (2026-04-28)
+New: dev/console/ — Ink v4 TUI sysop console with tmux session bootstrap.
+
+### What was built
+- start-servers.sh: creates tmux session `amiexpress` (3 windows: logs, shell, console)
+  when run in interactive terminal with tmux. Falls back to plain output otherwise.
+- dev/console/: standalone Ink TUI package
+  - Login prompt → 5-tab dashboard (Nodes, Users, Confs, Callers, Logs)
+  - Header: rainbow gradient "AmiExpress-Web", "Ultra Vibed by Spot/Up Rough"
+  - Nodes: live poll every 3s, kick (k), chat (c)
+  - Users: list+search, edit SL (e), ban (b), delete (d)
+  - Confs: list with arrow nav
+  - Callers: last 50, auto-refresh 30s
+  - Logs: backend/preview/68K door, switchable, auto-refresh 5s
+  - Status strip: dev/console/dist/strip/strip.js — plain ANSI, runs in tmux pane 1
+
+### How to run
+- `./dev/scripts/start-servers.sh` → creates tmux session automatically if tmux available
+- `node dev/console/dist/src/index.js` → run console manually
+- `node dev/console/dist/strip/strip.js` → run status strip manually
+
+### Build
+- `cd dev/console && npm run build`
+
+### Known limitations
+- Header shows static "Preview ✓ / Watch ✓" (live detection is a future iteration)
+- No remote support yet (assumes localhost:3001)
+
 ## Current State
-Server stopped. All changes committed (a1619a2b2). Server needs restart.
+Server stopped. All changes committed. Console integrated.
 
-## This sub-session (2026-04-28 continued) — /loop audit round 4
+## Summary of Session Work
 
-### Fixes
-- EALL: permission check (express.e:10810) + EALL command alias
-- doPause regression: `kind:'doPause'` prevents spurious `[1A[K` cursor-up on Space To Resume
-- AquaScan `00:00:00`: seed UserData slot at login with `newSinceDate`; advance after each scan
-- K command: security check `privateFlag=0 OR toName=user`; "Not your message."; exits reader (not advance-to-next)
-- Reply (R): "Delete original message (y/N)?" after save when eligible (express.e:9898-9903)
-- Forward (F): delete-original flow already correct (was missed in earlier audit)
-- ZModem upload completion: "File Uploading Complete...", stats line, "Time increased by N mins." (express.e:19053-19127)
-
-### Additional fixes after b5198887c (this sub-session: full audit round 3)
-See commits from b5d55eaea to 3ab138825. Key fixes:
-- VER, W, S, GR, X, Q, CF, E, JM, Z, FM, N, F, ^ — removed AnsiUtil decoration, matched express.e
-- permissionDenied → 'Command requires higher access.' (express.e:3037)
-- doPause/More prompts — ANSI colors, trailing space, [1A[K after response
-- Logoff → '\r\nClick...' (removed NO CARRIER)
-- E command msgToHeader() — separator box + '     To: (Enter)=\'ALL\'? ' (was '(Blank)=ALL?')
-- JM dot-params: silently delegates to J (no warning)
-- listMSGs: zero-pad msg#, double-\r\n before header, no 'No messages found.'
-- Delete message: 'Message not deleted, not your mail.' (express.e:11920)
-- Login: 'That account has been deleted.', 'Too Many Errors' plain text (6 locations)
-- C command: commentToSYSOP() separator box (express.e:8779-8783)
-- new-user: 'City, State: ', 'Phone Number: ' (correct prompts)
-- Upload: 'Please enter a description...', 'Begin  with (/) ... to Sysop'
-- alter-flags: 'Sorry filename not found!' plain text; silent on success
-- FM: 'No files available...' plain text; menuPause=true after
-- ^ (UpHat): silent on empty/not-found; no 'Help topic:' header; no press-key
-- messaging.handler.ts split: 1561→~860 lines (refactored to messaging-commands.ts)
-
-## This session (2026-04-28) — comprehensive .e source audit + gap fill
-
-### Scope
-Full audit of ALL TypeScript handler files against express.e, MiscFuncs.e, axobjects.e,
-axconsts.e, zmodem.e, tooltypes.e, qwk.e. 138 deviations found across 8 parallel audit tracks.
-Research reports in `thoughts/shared/research/audit-track-*.md` and `audit-master.md`.
-
-### Major fixes this session
-
-**Data corruption (binary structs)**:
-- MailStats: field order swapped + size 12→18 bytes (axobjects.e)
-- ConferenceFileManager: CONFBASE_SIZE 64→74 (axobjects.e)
-- UserStructures.ts: missing pad byte after phoneNumber, SIZE 230→232
-- QWK: msgNum as 7-char ASCII (not binary LE); confNum at bytes 123-124; added CONTROL.DAT
-
-**Security / auth**:
-- Locked account (`accountLocked`) now checked at login — was bypassed entirely
-- `secStatus <= 1` LOCKOUT0/LOCKOUT1 screens now shown
-- `forcePwdReset` / PASSWORD_EXPIRY_DAYS flow added (full 3-attempt dialog)
-- STEALTH_MODE / SYSTEM_PASSWORD gate added to pre-login flow
-- New-user name validation: retries all failure cases (blank/short/duplicate/banned)
-- `checkIfNameAllowed` + `checkForAst` (banned names, wildcards) added
-- `slotNumber=0` (deleted account) now rejected at login
-- ANSI prompt: removed PETSCII option (not in express.e)
-
-**Core loop**:
-- SYSCMD only attempted when `allowSyscmd=true` (not on every user keystroke)
-- Time-limit enforcement: `checkTimeUsed()` called at every menu redisplay
-- Carrier-drop gate: `socket.connected` check before menu display
-- `RESULT_NOT_ALLOWED` → DISPLAY_MENU with menuPause=true (was DISPLAY_CONF_BULL false)
-- "No such command!!  Use '?' for command list." — correct express.e string
-
-**Conference system**:
-- joinConference ACS forward-walk loop added (was instant failure)
-- Mail scan stub connected (TODO replaced with real checkMailConfScan call)
-- `saveMsgPointers` called after every scan and before J conference switch
-- Auto-rejoin now uses `auto=false` (was true — showed spurious "Auto-ReJoined" text)
-- MAILSCAN_PROMPT "N" now gates both mail AND file scan phases
-- confScan iterates all msgBases per conference (was only first)
-- Partial upload check phase added to confScan (express.e:28117-28147)
-- `getInverse()` relative conference numbering (+N/-N) added to J command
-- `createNodeUserFiles` guarded: only on interactive joins, not auto-rejoin or scan
-- `lowestNotDel` clamp applied after pointer validation (express.e:5037-5038)
-
-**Display / MCI / screen files**:
-- `formatLongDateTime`: now `"Mon 07-Jan-26 14:32:00"` (was missing day-of-week, 4-digit year)
-- `~CT`/`~OD`/`~OT`: now use session logon time (was current time/date)
-- `~LG`/`~ON`: now use `session.nodeId` (was hardcoded `'1'`)
-- `~NS`: now sets nonStopText flag (was no-op)
-- `~SU`/`~SD`: auto-scaling b/kb/mb/gb (was always `/1024 + 'K'`)
-- `~LC`: now formatted with `formatLongDateTime` (was raw DB string)
-- `~CL`: now filters by `checkConfAccess` (was unfiltered)
-- `~CD`: now 2-column numbered list (was single conf name)
-- `displayFile` MCI guard: MCI only if first line starts with `~`
-- Missing SCREEN_DIR_MAP entries added (NONEWATBAUD, NOT_TIME, MAILSCAN, etc.)
-- SCREENS_REQUIRE_CLEAR: added BBSTITLE, LOGOFF, JOIN, JOINED
-- Early ESC[2J clear now fires BEFORE MCI processing (was inside `else if (!inlineEmitted)`)
-- `~SR_` handler: now emits ESC[2J before displayScreen (fixes Fairlight animation)
-- Leading form feed (0x0C) in screen files: now converted to ESC[2J (xterm.js was treating as newline)
-
-**File system**:
-- Download ratio display: branches on ratioType (was always "Infinite bytes")
-- Post-download efficiency: calculated from actual CPS vs baud (was hardcoded 100%)
-- G=Goodbye after download: now runs `pGoodbye()` 10-second countdown (express.e:13751)
-- File listing: `, Area: <name>` suffix removed
-- Zippy search: uses real maxDirs (was hardcoded 20)
-- Zippy search: `getDirSpan` directory range prompt added
-- `fileStatus`: "KBytes" vs "Bytes" now toggles on CREDITBYKB tooltype
-- Upload filename >12 chars: inline rejection with correct error string
-- Post-upload: "File Uploading Complete...", stats line, "Time increased by N mins."
-
-**Command-level fixes**:
-- B command: bulletin path now per-conference `confScreenDir/Bulletins/` (was global)
-- H command: removed spurious CLS (express.e has none)
-- M command: "Ansi Color On/Off" plain text (was green ANSI + spurious pressKey)
-- RL command: removed extra "Are you sure?" confirm (express.e relogons immediately)
-- CF command: FORCE_NEWSCAN/NO_NEWSCAN shown as F/D flags
-- W command: computer/screen type selection as numbered list (was free-text)
-- Z command: getDirSpan prompt before search string
-- Page sysop: `pagesAllowed=0` redirects to commentToSYSOP flow with exact strings
-- MENU_PROMPT tooltype: now used for per-conference menu prompt (through parseMciCodes)
-- Shortcut handler: now runs parseMciCodes on translated value (enables ~CC_/~XC_ shortcuts)
-
-**Message system**:
-- Reply (R): header box + pre-filled To/Subject flow (express.e:9874)
-- Forward (F): subject pre-fills from original; delete-original shows `(y/N)?`
-- K (Keep): recv=0 written to disk + lowestNotDel fallback
-- U command: added to message reader (account edit from mail)
-- H key: word-highlight toggle in chooseTranslator
-- confScan `recv=0` filter: already-read private mail excluded from scan listing
-- confScan multi-msgBase iteration: all msgBases scanned (was only first)
-
-**AquaScan / door output**:
-- `conf_base.scan_flags DEFAULT` fixed 12→0 (was triggering AquaScan on every login)
-- `getUserScanFlags()` fallback 12→0 (was re-introducing bug via CF command)
-- `checkFileConfScan()`: DB FILE_SCAN_MASK path removed; only SHOW_NEW_FILES tooltype triggers scan
-- Migration: resets ALL non-zero scan_flags to 0 on startup
-- QuickNew stdout contamination: `console-to-stderr.ts` loaded as first import in run-amiga-door.ts
-- Removed all initialization `console.log` from config.ts, UserFileManager.ts, CallersLogManager.ts
-
-**WEB_: tags added** to all untagged intentional deviations (sysop shell stubs, VER web info, W modem/font options, 500ms debounce, bcrypt, ~CR wait, ~w delay).
-
-### xim/io.ts modular split
-Done (commit 0fa31073a). io.ts: 1980→1657 lines. New: io-hotkey-tokens.ts, io-ansi-util.ts, io-file-display.ts.
+## Prior Sessions (archived)
+Audit rounds 3-4 with 138 deviations fixed (binary struct corruption, security checks, core loop,
+conference system, MCI/display, file system, messages). See `thoughts/shared/handoffs/` for detailed
+audit reports and commits b5d55eaea→be7e2fbcf. Key: MailStats/UserStructures BE byte order (CLAUDE.md Rule 0),
+scan_flags DEFAULT 12→0, confScan multi-msgBase, ACL forward-walk, time-limit checks.
 
 ## Open priorities
 1. **messaging.handler.ts** approaching 1600 lines — monitor, split if needed
