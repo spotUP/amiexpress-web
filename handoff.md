@@ -14,21 +14,23 @@ All changes committed (c2cdb4ada). Server stopped.
 - WEB_ tag on MAILSCAN_ALL (ALL messages in confScan always included; conf Conf.DB gating deferred)
 - 'Joining Conference' now appears after CONF_BULL doPause, not before (express.e:5056-5088)
 
-## TUI Console (2026-04-28)
-New: dev/console/ — Ink v4 TUI sysop console with tmux session bootstrap.
+## Console v2 (2026-04-28)
+TUI sysop control center: full Ink-based dashboard with 8 tabs.
 
 ### What was built
-- start-servers.sh: creates tmux session `amiexpress` (3 windows: logs, shell, console)
+- start-servers.sh: creates tmux session `amiexpress` (3 windows + 5 panes in window 0)
   when run in interactive terminal with tmux. Falls back to plain output otherwise.
-- dev/console/: standalone Ink TUI package
-  - Login prompt → 5-tab dashboard (Nodes, Users, Confs, Callers, Logs)
-  - Header: rainbow gradient "AmiExpress-Web", "Ultra Vibed by Spot/Up Rough"
-  - Nodes: live poll every 3s, kick (k), chat (c)
-  - Users: list+search, edit SL (e), ban (b), delete (d)
-  - Confs: list with arrow nav
-  - Callers: last 50, auto-refresh 30s
-  - Logs: backend/preview/68K door, switchable, auto-refresh 5s
-  - Status strip: dev/console/dist/strip/strip.js — plain ANSI, runs in tmux pane 1
+- dev/console/: standalone Ink TUI package, 8-tab control center
+  - Tab 1 Dashboard: ink-big-text "SYSOP" banner, animated stat cards (Live/Today/All Time),
+                     24h call sparkline (Unicode block chars), recent callers ticker
+  - Tab 2 Nodes: live poll every 3s, kick (k), chat (c)
+  - Tab 3 Users: list+search, edit SL (e), ban (b), delete (d)
+  - Tab 4 Confs: toggle enabled (t), health check (h), auto-fix (f), refresh (r)
+  - Tab 5 Callers: last 50, auto-refresh 30s
+  - Tab 6 Logs: backend/preview/68K door, switchable, auto-refresh 5s
+  - Tab 7 Doors: list all, [R]eload all, refresh
+  - Tab 8 System: per-node start/exit/reserve/sysop-login, [Q]uiet mode, system config view
+  - Status strip: dev/console/dist/strip/strip.js — plain ANSI 3-line summary
 
 ### How to run
 - `./dev/scripts/start-servers.sh` → creates tmux session automatically if tmux available
@@ -38,9 +40,8 @@ New: dev/console/ — Ink v4 TUI sysop console with tmux session bootstrap.
 ### Build
 - `cd dev/console && npm run build`
 
-### Known limitations
-- Header shows static "Preview ✓ / Watch ✓" (live detection is a future iteration)
-- No remote support yet (assumes localhost:3001)
+### Tab keys
+1=Dashboard 2=Nodes 3=Users 4=Confs 5=Callers 6=Logs 7=Doors 8=System
 
 ## Current State
 Server stopped. All changes committed. Console integrated.
