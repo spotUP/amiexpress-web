@@ -26,6 +26,21 @@ messageIndexManager.updateMessageHeader. Earlier audit was wrong about this.
 EM/E (edit body) is still a WEB_ stub that re-displays — full Emacs editor integration
 deferred. Sysop can edit via web admin instead.
 
+## Open bug: wrong conf joined first on login (2026-04-28)
+User reports: "it joins conf 14 before i joins the one i was in during the last bbs session"
+Output observed:
+```
+Conference Top Uploaders is not installed in this conference.
+AmiExpress Web BBS [14:bAUD bOY bATTLE] Menu (9999 mins. left): 
+Joining Conference: Amiga Warez!
+```
+Conf 14 is the highest-numbered conf. CONFTOP ran in conf 14, menu shown for conf 14,
+THEN AUTO_REJOIN fires "Joining Conference: Amiga Warez!" (conf 2).
+DB shows sysop autorejoin=1 — neither 14 nor 2. Need to check:
+- whether session restore is reusing stale `currentConf=14`
+- whether the display flow is running CONF_BULL/menu BEFORE AUTO_REJOIN
+- whether `db.updateUser({confRJoin})` silently fails (no such column — only `autorejoin`)
+
 ## Round 8 (2026-04-28) — Audit byte-level pass
 Comprehensive audit of remaining areas: translation (T/TS/T!/T*), R-command entry,
 searchNewMail flow, quote range parsing, file attach flow, subject input, body editor
