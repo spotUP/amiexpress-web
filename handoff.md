@@ -1,123 +1,23 @@
 # Handoff
 
+## Console v3 — full /admin/ parity (2026-04-29)
+
+The TUI at dev/console/ now matches the web admin's feature surface.
+
+Sidebar nav (~22 cols) groups all pages into Live / Users / Content / Files / System / Comms.
+
+Phase summary
+- Phase A: Sidebar restructure; pages registry as single source of truth
+- Phase B: SystemConfig, HealthCheck, AuditLog, SessionLogs, OperatorChat (real-time socket.io)
+- Phase C: Generic CrudList + 7 CRUD pages (Languages, Protocols, Computers, ScreenTypes, Drives, FileCheckers, Security)
+- Phase D: DoorInstall (path-based), Import/Export, BatchEditor, GlobalWall
+- Phase E: Deployment, InfoFiles, AmiXnet, OpChatSettings
+
+How to run: `./dev/scripts/start-servers.sh` — tmux session amiexpress, window 2 = console
+Build: `cd dev/console && npm run build`
+
 ## Current State
-All changes committed (494bd6fd7). Server running with new code.
-
-## Loop audit round 6 (2026-04-28) — Message handler audit COMPLETE
-Deep audit confirms 1:1 parity with express.e for:
-- enterMSG body editor (A/C/D/E/F/L/S commands, yesNo confirmations)
-- Message body line input (75-char limit, line number prompts, empty line→options)
-- Quote-from-reply flow (range prompt, line numbering, separator, blank lines)
-- yesNo(0)/yesNo(2) prompt behavior (loop on unknown, CR defaults)
-- Message READ display (header box, EALL, Recv'd, subject, body)
-- 2/3-digit line padding boundary (lines<=98 logic equivalent)
-
-Only minor: `checkForPause` (More prompt) not in quote display loop — WEB_ acceptable.
-No critical deviations remain in messaging code.
-
-## Round 7 (2026-04-28) — Reader nav modifiers
-Added N+/N- and bare +/- direction modifiers in message reader (express.e:12238-12261).
-Direction is sticky: CR/Enter steps in last-typed direction (default forward).
-Previously '5+', '5-', and '+' returned 'No such command!!'
-
-EH (edit header) audit confirmed: it DOES persist to disk via repository.updateMessage →
-messageIndexManager.updateMessageHeader. Earlier audit was wrong about this.
-
-EM/E (edit body) is still a WEB_ stub that re-displays — full Emacs editor integration
-deferred. Sysop can edit via web admin instead.
-
-## Open bug: wrong conf joined first on login (2026-04-28)
-User reports: "it joins conf 14 before i joins the one i was in during the last bbs session"
-Output observed:
-```
-Conference Top Uploaders is not installed in this conference.
-AmiExpress Web BBS [14:bAUD bOY bATTLE] Menu (9999 mins. left): 
-Joining Conference: Amiga Warez!
-```
-Conf 14 is the highest-numbered conf. CONFTOP ran in conf 14, menu shown for conf 14,
-THEN AUTO_REJOIN fires "Joining Conference: Amiga Warez!" (conf 2).
-DB shows sysop autorejoin=1 — neither 14 nor 2. Need to check:
-- whether session restore is reusing stale `currentConf=14`
-- whether the display flow is running CONF_BULL/menu BEFORE AUTO_REJOIN
-- whether `db.updateUser({confRJoin})` silently fails (no such column — only `autorejoin`)
-
-## Round 10 (2026-04-28) — EH recv reset
-EH (edit header) save now resets receivedAt:null in DB and recv:0 in HeaderFile,
-matching express.e:11643 (`mh.recv:=0`). Edited messages now appear unread to
-the recipient as intended.
-
-Audit also confirmed: C (comment to sysop) IS implemented (audit was wrong).
-Open items not yet implemented (deferred):
-- X command in body editor options menu (express.e:10562 — sets transferFiles flag)
-- "Download attached file? (y/N/G)" prompt after reading messages with attachments
-  (express.e:8964 → checkAttachedFile)
-
-## Round 9 (2026-04-28) — Status byte ASCII chars + bug fixes
-Real fixes:
-- MsgStatus enum changed to ASCII char values matching express.e:
-  NORMAL='P' (0x50), CENSORED='p' (0x70), PRIVATE='R' (0x52), DELETED='D' (0x44).
-  All bitwise checks (header.status & MsgStatus.X) converted to equality
-  (header.status === MsgStatus.X). Doors expecting express.e binary
-  HeaderFile format now see correct status bytes.
-- ACS_CENSORED users posting public messages: status now 'p' instead of 'P'
-  (express.e:10790-10794). Was never set before.
-- Mailscan banner: removed custom 'SCANNING FOR NEW MAIL' banner from
-  Screens/MAILSCAN.TXT (express.e ships no default; sysop adds custom art).
-  Scan text 'Scanning conferences for mail and files...' → 'Scanning
-  conferences for mail...' to match express.e:28083 verbatim.
-- TO and Subject 30-char input cap now enforced at keystroke level (was
-  only post-trim, allowing 70 chars to be echoed).
-- Race fix: empty input at message-options menu no longer re-emits
-  'Msg. Options:' before BBS menu (was caused by async S=save not
-  transitioning subState before delayed CR arrived).
-
-## Round 8 (2026-04-28) — Audit byte-level pass
-Comprehensive audit of remaining areas: translation (T/TS/T!/T*), R-command entry,
-searchNewMail flow, quote range parsing, file attach flow, subject input, body editor
-sub-commands D/C/E/L, message file binary format, HeaderFile structure.
-
-Only real gap found: subject input did not enforce 30-char limit. Fixed in both
-handleMessageSubjectInput and handleForwardMessageSubjectInput (express.e:10847, 9826).
-
-False alarms: K logic (correct — confused express.e:11128 with 11759), MessageIndexManager
-called from createMessage (line 52 calls appendMessageHeader). Dual text+binary file
-format is intentional (text .msg for body, binary HeaderFile for index).
-
-Body editor sub-commands D/C/E/L are byte-perfect with express.e:10402-10506.
-I/R/Q are intentional WEB_ extensions, well-implemented.
-
-## AquaScan 00:00:00 ROOT CAUSE FOUND (2026-04-28)
-After 5+ debugging rounds, the actual bug was in `DT_STAMP_LASTON` (express.e:8943-8949 reader).
-
-When AquaScan reads the formatted "last logon" date string via XIM, our handler did:
-```ts
-formatCDateTime(new Date(user.lastLogin || user.timeLastOn!))
-```
-
-But `user.lastLogin` from the DB is **Unix SECONDS** (e.g., 1762463426).
-`new Date(1762463426)` treats the value as **milliseconds**, giving 1970-01-21.
-AquaScan formats this and (likely) only displays the time portion → near `00:00:00`.
-
-Fix: `new Date(raw * 1000)` when raw is a number (file: data-query.ts).
-
-Plus: AquaScan.UserData login seed + post-scan advance (already in place from round 4)
-covered a separate, less-impactful path; both are correct now.
-
-Also added /tmp/aquascan-debug.log instrumentation:
-- DT_TIMELASTON reads
-- DT_STAMP_LASTON reads
-- handleLoadAccountCommand entries
-- AquaScan UserData write/skip decisions
-
-To verify: `tail -f /tmp/aquascan-debug.log` then run N S U in a logged-in session.
-
-## Loop audit round 5 (2026-04-28 latest)
-
-### Fixes
-- EALL display: `username (ALL)` not conference name — confMailName = userName (express.e:12461)
-- Short help `?`: removed spurious `A>gain` (only in `??`); both use direct ANSI literals
-- Private msg listing: sysops with SYSOP_READ now see all private messages (express.e:12344)
-- `A>gain` in `??` now has no leading `\r\n` — continuation of nav line (express.e:12035)
+Console v3 Phase E complete. All four pages wired, API client updated, registry reflects full implementation.
 - TO: field truncated to 30 chars (express.e lineInput limit, express.e:10779)
 - WEB_ tag on MAILSCAN_ALL (ALL messages in confScan always included; conf Conf.DB gating deferred)
 - 'Joining Conference' now appears after CONF_BULL doPause, not before (express.e:5056-5088)
