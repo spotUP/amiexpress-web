@@ -1,15 +1,23 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (dadc11076). Server needs restart.
+Server stopped. All changes committed (1008c1b9f). Server needs restart.
 
-### Additional fixes after b5198887c (this sub-session)
-- Login: "not used on this BBS" msg format, "Too Many Errors" no color
-- C command: commentToSYSOP() separator box + To: + Subject prompt (express.e:8779-8783)
-- InValid Password! — plain text (was AnsiUtil.errorLine)
-- 'Not enough daily byte allowance' — remove trailing period (express.e:19854)
-- N files listing: remove extra pressKeyPrompt; menuPause=true
-- new-user: 'City, State: ' (was 'Group Affiliation'), 'Phone Number: ' (was +skip text)
+### Additional fixes after b5198887c (this sub-session: full audit round 3)
+See commits from b5d55eaea to 1008c1b9f. Key fixes:
+- VER, W, S, GR, X, Q, CF, E, JM, Z, FM, N, F — removed AnsiUtil decoration, matched express.e
+- permissionDenied → 'Command requires higher access.' (express.e:3037)
+- doPause/More prompts — ANSI colors, trailing space, [1A[K after response
+- Logoff → '\r\nClick...' (removed NO CARRIER)
+- E command msgToHeader() — separator box + '     To: (Enter)=\'ALL\'? ' (was '(Blank)=ALL?')
+- JM dot-params: silently delegates to J (no warning)
+- listMSGs: zero-pad msg#, double-\r\n before header, no 'No messages found.'
+- Delete message: 'Message not deleted, not your mail.' (express.e:11920)
+- Login: 'That account has been deleted.', 'Too Many Errors' plain text (6 locations)
+- C command: commentToSYSOP() separator box (express.e:8779-8783)
+- new-user: 'City, State: ', 'Phone Number: ' (correct prompts)
+- Upload: 'Please enter a description...', 'Begin  with (/) ... to Sysop'
+- messaging.handler.ts split: 1561→~860 lines (refactored to messaging-commands.ts)
 
 ## This session (2026-04-28) — comprehensive .e source audit + gap fill
 
