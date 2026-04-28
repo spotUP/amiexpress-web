@@ -41,6 +41,17 @@ DB shows sysop autorejoin=1 — neither 14 nor 2. Need to check:
 - whether the display flow is running CONF_BULL/menu BEFORE AUTO_REJOIN
 - whether `db.updateUser({confRJoin})` silently fails (no such column — only `autorejoin`)
 
+## Round 10 (2026-04-28) — EH recv reset
+EH (edit header) save now resets receivedAt:null in DB and recv:0 in HeaderFile,
+matching express.e:11643 (`mh.recv:=0`). Edited messages now appear unread to
+the recipient as intended.
+
+Audit also confirmed: C (comment to sysop) IS implemented (audit was wrong).
+Open items not yet implemented (deferred):
+- X command in body editor options menu (express.e:10562 — sets transferFiles flag)
+- "Download attached file? (y/N/G)" prompt after reading messages with attachments
+  (express.e:8964 → checkAttachedFile)
+
 ## Round 9 (2026-04-28) — Status byte ASCII chars + bug fixes
 Real fixes:
 - MsgStatus enum changed to ASCII char values matching express.e:
