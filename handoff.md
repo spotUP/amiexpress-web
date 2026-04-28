@@ -1,7 +1,15 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (b5198887c). Server needs restart to pick up screen-clear fixes.
+Server stopped. All changes committed (dadc11076). Server needs restart.
+
+### Additional fixes after b5198887c (this sub-session)
+- Login: "not used on this BBS" msg format, "Too Many Errors" no color
+- C command: commentToSYSOP() separator box + To: + Subject prompt (express.e:8779-8783)
+- InValid Password! — plain text (was AnsiUtil.errorLine)
+- 'Not enough daily byte allowance' — remove trailing period (express.e:19854)
+- N files listing: remove extra pressKeyPrompt; menuPause=true
+- new-user: 'City, State: ' (was 'Group Affiliation'), 'Phone Number: ' (was +skip text)
 
 ## This session (2026-04-28) — comprehensive .e source audit + gap fill
 
