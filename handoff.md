@@ -1,117 +1,130 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (88b20c7a2). Server needs restart.
+Server stopped. All changes committed (b5198887c). Server needs restart to pick up screen-clear fixes.
 
-## This session (2026-04-28) — second comprehensive .e source audit pass
+## This session (2026-04-28) — comprehensive .e source audit + gap fill
 
 ### Scope
-Full line-by-line audit of ALL express.e commands A-Z and mainloop against TypeScript port.
-Fixed deviations in: VER, W, S, X, T, M, Q, G, GR, WHO, WHD, UP, S, CF, E, JM, Z, FM, N, F
-Plus: permissionDenied (higherAccess), doPause prompts, More prompt, Logoff, scan messages.
+Full audit of ALL TypeScript handler files against express.e, MiscFuncs.e, axobjects.e,
+axconsts.e, zmodem.e, tooltypes.e, qwk.e. 138 deviations found across 8 parallel audit tracks.
+Research reports in `thoughts/shared/research/audit-track-*.md` and `audit-master.md`.
 
-### Fixes (commit range d3f5c7325..88b20c7a2)
+### Major fixes this session
 
-**VER command (express.e:25688-25698)**:
-- Removed headerBox, screen-clear, web-platform info, press-key — plain text only
-- Format: `\r\nAmiExpress-Web 5.6.0 (date) Copyright ©...\r\n\r\nOriginal Version:...`
+**Data corruption (binary structs)**:
+- MailStats: field order swapped + size 12→18 bytes (axobjects.e)
+- ConferenceFileManager: CONFBASE_SIZE 64→74 (axobjects.e)
+- UserStructures.ts: missing pad byte after phoneNumber, SIZE 230→232
+- QWK: msgNum as 7-char ASCII (not binary LE); confNum at bytes 123-124; added CONTROL.DAT
 
-**W command (express.e:25712-26092)**:
-- DISABLED format: `[34m[[0mN[34m][31m [DISABLED][0m` (was full-red via AnsiUtil)
-- Option 10 display: check `userFlags&8` not `user.ansi`
-- Password empty confirm = silent cancel (was "do not match")
-- After password save: no "Password updated" message (express.e silent save)
-- Strength messages: no trailing `\r\n`
+**Security / auth**:
+- Locked account (`accountLocked`) now checked at login — was bypassed entirely
+- `secStatus <= 1` LOCKOUT0/LOCKOUT1 screens now shown
+- `forcePwdReset` / PASSWORD_EXPIRY_DAYS flow added (full 3-attempt dialog)
+- STEALTH_MODE / SYSTEM_PASSWORD gate added to pre-login flow
+- New-user name validation: retries all failure cases (blank/short/duplicate/banned)
+- `checkIfNameAllowed` + `checkForAst` (banned names, wildcards) added
+- `slotNumber=0` (deleted account) now rejected at login
+- ANSI prompt: removed PETSCII option (not in express.e)
 
-**S command (express.e:25540-25606)**:
-- `timesCalled`, `messagesPosted` AND $FFFF
-- `screenClr`: check `userFlags&8` not `user.screenClr`
-- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
+**Core loop**:
+- SYSCMD only attempted when `allowSyscmd=true` (not on every user keystroke)
+- Time-limit enforcement: `checkTimeUsed()` called at every menu redisplay
+- Carrier-drop gate: `socket.connected` check before menu display
+- `RESULT_NOT_ALLOWED` → DISPLAY_MENU with menuPause=true (was DISPLAY_CONF_BULL false)
+- "No such command!!  Use '?' for command list." — correct express.e string
 
-**permissionDenied (express.e:3037-3039 higherAccess())**:
-- ErrorHandler.permissionDenied: now emits `'\r\nCommand requires higher access.\r\n'`
-- command.handler NOT_ALLOWED path: emit higherAccess for sys/bbs command denials
+**Conference system**:
+- joinConference ACS forward-walk loop added (was instant failure)
+- Mail scan stub connected (TODO replaced with real checkMailConfScan call)
+- `saveMsgPointers` called after every scan and before J conference switch
+- Auto-rejoin now uses `auto=false` (was true — showed spurious "Auto-ReJoined" text)
+- MAILSCAN_PROMPT "N" now gates both mail AND file scan phases
+- confScan iterates all msgBases per conference (was only first)
+- Partial upload check phase added to confScan (express.e:28117-28147)
+- `getInverse()` relative conference numbering (+N/-N) added to J command
+- `createNodeUserFiles` guarded: only on interactive joins, not auto-rejoin or scan
+- `lowestNotDel` clamp applied after pointer validation (express.e:5037-5038)
 
-**Pause prompts (express.e:5141-5152, 5193-5200)**:
-- doPause prompt: `[32m([33mPause[32m)[34m...[32mSpace To Resume[33m: [0m` in all paths
-- More prompt: added trailing space `(Pause)...More(y/n/ns)? `
-- More response: emit `\x1b[1A\x1b[K` to clear pause line (express.e:5199)
+**Display / MCI / screen files**:
+- `formatLongDateTime`: now `"Mon 07-Jan-26 14:32:00"` (was missing day-of-week, 4-digit year)
+- `~CT`/`~OD`/`~OT`: now use session logon time (was current time/date)
+- `~LG`/`~ON`: now use `session.nodeId` (was hardcoded `'1'`)
+- `~NS`: now sets nonStopText flag (was no-op)
+- `~SU`/`~SD`: auto-scaling b/kb/mb/gb (was always `/1024 + 'K'`)
+- `~LC`: now formatted with `formatLongDateTime` (was raw DB string)
+- `~CL`: now filters by `checkConfAccess` (was unfiltered)
+- `~CD`: now 2-column numbered list (was single conf name)
+- `displayFile` MCI guard: MCI only if first line starts with `~`
+- Missing SCREEN_DIR_MAP entries added (NONEWATBAUD, NOT_TIME, MAILSCAN, etc.)
+- SCREENS_REQUIRE_CLEAR: added BBSTITLE, LOGOFF, JOIN, JOINED
+- Early ESC[2J clear now fires BEFORE MCI processing (was inside `else if (!inlineEmitted)`)
+- `~SR_` handler: now emits ESC[2J before displayScreen (fixes Fairlight animation)
+- Leading form feed (0x0C) in screen files: now converted to ESC[2J (xterm.js was treating as newline)
 
-**Logoff (express.e:8191)**:
-- `'\r\nClick...'` — removed spurious 'NO CARRIER' suffix
+**File system**:
+- Download ratio display: branches on ratioType (was always "Infinite bytes")
+- Post-download efficiency: calculated from actual CPS vs baud (was hardcoded 100%)
+- G=Goodbye after download: now runs `pGoodbye()` 10-second countdown (express.e:13751)
+- File listing: `, Area: <name>` suffix removed
+- Zippy search: uses real maxDirs (was hardcoded 20)
+- Zippy search: `getDirSpan` directory range prompt added
+- `fileStatus`: "KBytes" vs "Bytes" now toggles on CREDITBYKB tooltype
+- Upload filename >12 chars: inline rejection with correct error string
+- Post-upload: "File Uploading Complete...", stats line, "Time increased by N mins."
 
-**Logon / E command (express.e:9998-10000)**:
-- E command msgToHeader: separator box + `'     To: (Enter)=\'ALL\'? '` (was `(Blank)=ALL?`)
+**Command-level fixes**:
+- B command: bulletin path now per-conference `confScreenDir/Bulletins/` (was global)
+- H command: removed spurious CLS (express.e has none)
+- M command: "Ansi Color On/Off" plain text (was green ANSI + spurious pressKey)
+- RL command: removed extra "Are you sure?" confirm (express.e relogons immediately)
+- CF command: FORCE_NEWSCAN/NO_NEWSCAN shown as F/D flags
+- W command: computer/screen type selection as numbered list (was free-text)
+- Z command: getDirSpan prompt before search string
+- Page sysop: `pagesAllowed=0` redirects to commentToSYSOP flow with exact strings
+- MENU_PROMPT tooltype: now used for per-conference menu prompt (through parseMciCodes)
+- Shortcut handler: now runs parseMciCodes on translated value (enables ~CC_/~XC_ shortcuts)
 
-**displayULStats (express.e:12701-12714)**:
-- Show actual bytesAvailableForDownload when not 0x7FFFFFFF (was always 'Infinite')
+**Message system**:
+- Reply (R): header box + pre-filled To/Subject flow (express.e:9874)
+- Forward (F): subject pre-fills from original; delete-original shows `(y/N)?`
+- K (Keep): recv=0 written to disk + lowestNotDel fallback
+- U command: added to message reader (account edit from mail)
+- H key: word-highlight toggle in chooseTranslator
+- confScan `recv=0` filter: already-read private mail excluded from scan listing
+- confScan multi-msgBase iteration: all msgBases scanned (was only first)
 
-**CF command (express.e:24672-24841)**:
-- Header: inline `[32m`/`[33m` ANSI (not AnsiUtil.colorize)
-- Flag prompt: plain `'Edit which flags [M]ailScan...'`
-- Numbers prompt: `"...'*' toggle all,'-' All off,'+' All on >: "`
-- Clear: `\x0c` (sendCLS) not `\x1b[2J`
+**AquaScan / door output**:
+- `conf_base.scan_flags DEFAULT` fixed 12→0 (was triggering AquaScan on every login)
+- `getUserScanFlags()` fallback 12→0 (was re-introducing bug via CF command)
+- `checkFileConfScan()`: DB FILE_SCAN_MASK path removed; only SHOW_NEW_FILES tooltype triggers scan
+- Migration: resets ALL non-zero scan_flags to 0 on startup
+- QuickNew stdout contamination: `console-to-stderr.ts` loaded as first import in run-amiga-door.ts
+- Removed all initialization `console.log` from config.ts, UserFileManager.ts, CallersLogManager.ts
 
-**WHO/WHD (express.e:24204-24382)**:
-- Remove screen clear (express.e: just `\r\n\r\n`)
-- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
+**WEB_: tags added** to all untagged intentional deviations (sysop shell stubs, VER web info, W modem/font options, 500ms debounce, bcrypt, ~CR wait, ~w delay).
 
-**Q command (express.e:25504-25516)**:
-- `'\r\nQuiet Mode On/Off\r\n'` — removed AnsiUtil.successLine + press-key
-
-**GR command (express.e:24411-24421)**:
-- `'In memory of...'` plain text (was cyan via AnsiUtil.colorize)
-
-**X command (express.e:26113-26121)**:
-- `'\r\nExpert mode disabled/enabled\r\n'` — removed extra blank lines
-
-**UP command (express.e:25667-25673)**:
-- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
-
-**Z command (express.e:26123-26213)**:
-- `'Enter string to search for: '` — plain text (was cyan)
-- `'No files available in this conference.'` — plain text (was red AnsiUtil.errorLine)
-- `'Scanning directory N'` — plain text (was green in all file handlers)
-
-**FM command (express.e:24889-25044)**:
-- `'View option is not available for hold directory'` — plain text (was wrong text + AnsiUtil.errorLine)
-
-**F/N commands**:
-- `'No files available in this conference.'` — plain text (myError ERR_NOFILES)
-- F: `'Scanning directory N'` — plain text, remove colored 'Area: {name}' sub-header
-
-**JM command (express.e:25185-25237)**:
-- `'.' params: silently delegate to J (no AnsiUtil warning)
-- Remove 'Available message bases:' list + '<-- Current' indicator
-- After join: joinConf() already shows message — remove AnsiUtil.successLine
-- Invalid input: silently clamp (no AnsiUtil error)
-
-**Message scan / message-entry**:
-- Remove AnsiUtil.pressKeyPrompt after confScan/save; set menuPause=true
-
-### HYDRA protocol (hydra-e)
-Not implemented — known gap.
-
-### ACP-E admin panel gaps
-- `SV_ACCOUNTS`, `SV_LOCALLOG` — no endpoints
-- Per-node stats filtering — global only
+### xim/io.ts modular split
+Done (commit 0fa31073a). io.ts: 1980→1657 lines. New: io-hotkey-tokens.ts, io-ansi-util.ts, io-file-display.ts.
 
 ## Open priorities
-1. **xim/io.ts** — at 2000 line limit, needs modular split
-2. messaging.handler.ts approaching 1600 lines — monitor
+1. **messaging.handler.ts** approaching 1600 lines — monitor, split if needed
+2. **screen.handler.ts** at 3220 lines (exempted) — future refactor candidate
 
 ## Known WEB_ deviations (intentional)
 - Line-mode vs char-mode; no HYDRA bidirectional transfer
 - No `chooseAName` recipient validation, no `checkToForward`, no extSend
 - confScan nav prompt: `(N+MAX)` format vs `replyPrompt`'s `(currentMsg)` — minor
-- 2 command (callers log): shows DB entries not per-node files
+- 2 command (callers log): shows DB entries not per-node files (WEB_: tagged)
 - ZOOM: auto-selects ZIP; no LHA binary available
 - GDPR gate on new user (WEB_ extension)
-- VO (voting): WEB_ implementation; voting source not in indexed modules
+- File scan at login disabled (uses QuickNew instead of AquaScan); set SHOW_NEW_FILES in .info to re-enable per conference
 
 ## Gotchas
 - **Amiga = BE**: see CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE.
-- **conf_base**: scan_flags DEFAULT was 12 (bug, now 0). If AquaScan reappears, check conf_base rows.
-- **User.data rebuilt**: 2-slot BE file.
-- **b4d8c381a WARNING**: startup XIM changes reverted. AquaScan.020 warning-on-exit.
-- **ctop.data** must exist per conference for Conftop-II (Conf1/, Conf2/, Conf12/ only).
+- **conf_base scan_flags**: DEFAULT now 0. Migration resets any non-zero rows on startup.
+- **screens/quicknew.txt**: truncate to empty after any server crash/restart that produced garbage; regenerates clean on next batch run.
+- **Screen clearing**: ESC[2J fires (a) from SCREENS_REQUIRE_CLEAR before all processing, (b) from leading 0x0C in screen files, (c) before ~SR_ art files. If a screen still bleeds, check if it has a leading form feed.
+- **ctop.data** must exist per conference for Conftop-II (currently Conf1/, Conf2/, Conf12/ only).
+- **b4d8c381a WARNING**: startup XIM changes reverted. AquaScan.020 warning-on-exit may resurface.
