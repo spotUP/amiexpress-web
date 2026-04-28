@@ -26,6 +26,21 @@ messageIndexManager.updateMessageHeader. Earlier audit was wrong about this.
 EM/E (edit body) is still a WEB_ stub that re-displays — full Emacs editor integration
 deferred. Sysop can edit via web admin instead.
 
+## Round 8 (2026-04-28) — Audit byte-level pass
+Comprehensive audit of remaining areas: translation (T/TS/T!/T*), R-command entry,
+searchNewMail flow, quote range parsing, file attach flow, subject input, body editor
+sub-commands D/C/E/L, message file binary format, HeaderFile structure.
+
+Only real gap found: subject input did not enforce 30-char limit. Fixed in both
+handleMessageSubjectInput and handleForwardMessageSubjectInput (express.e:10847, 9826).
+
+False alarms: K logic (correct — confused express.e:11128 with 11759), MessageIndexManager
+called from createMessage (line 52 calls appendMessageHeader). Dual text+binary file
+format is intentional (text .msg for body, binary HeaderFile for index).
+
+Body editor sub-commands D/C/E/L are byte-perfect with express.e:10402-10506.
+I/R/Q are intentional WEB_ extensions, well-implemented.
+
 ## AquaScan 00:00:00 ROOT CAUSE FOUND (2026-04-28)
 After 5+ debugging rounds, the actual bug was in `DT_STAMP_LASTON` (express.e:8943-8949 reader).
 
