@@ -1,85 +1,117 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (3dbcb53e8). Server needs restart to pick up fixes.
+Server stopped. All changes committed (88b20c7a2). Server needs restart.
 
-## This session (2026-04-28) — deep message audit
+## This session (2026-04-28) — second comprehensive .e source audit pass
 
-### Message reader/editor — comprehensive audit pass (25+ fixes)
-All critical deviations from express.e fixed in messaging.handler.ts and message-entry.handler.ts.
+### Scope
+Full line-by-line audit of ALL express.e commands A-Z and mainloop against TypeScript port.
+Fixed deviations in: VER, W, S, X, T, M, Q, G, GR, WHO, WHD, UP, S, CF, E, JM, Z, FM, N, F
+Plus: permissionDenied (higherAccess), doPause prompts, More prompt, Logoff, scan messages.
 
-**Header display (displaySingleMessage)**:
-- Date: `formatLongDateTime()` format, padEnd(30) column alignment
-- ANSI colors: `[32mField[33m: [0mvalue` pattern
-- Recv'd: ALL→N/A, EALL→No (express.e:8922 only 'ALL' gets N/A)
-- Screen clear: respects USER_SCRNCLR flag; if unset → just `\r\n`
+### Fixes (commit range d3f5c7325..88b20c7a2)
 
-**Navigation**:
-- Nav prompt: `( N+MAX )` / `( QUIT )` — express.e:12010
-- Number jump: type message number → jump directly
-- `-` backward navigation with noMoreMinus message
-- `noMorePlus`: "The last message in this conference is N" at end of messages
-- `K`: backs up scan pointer, advances to next message (not exits reader)
-- Invalid/not-yours: nav prompt only, no message re-render
+**VER command (express.e:25688-25698)**:
+- Removed headerBox, screen-clear, web-platform info, press-key — plain text only
+- Format: `\r\nAmiExpress-Web 5.6.0 (date) Copyright ©...\r\n\r\nOriginal Version:...`
 
-**Read start**: from `lastMsgReadConf+1` (express.e:11984), shows "No new messages." if empty
+**W command (express.e:25712-26092)**:
+- DISABLED format: `[34m[[0mN[34m][31m [DISABLED][0m` (was full-red via AnsiUtil)
+- Option 10 display: check `userFlags&8` not `user.ansi`
+- Password empty confirm = silent cancel (was "do not match")
+- After password save: no "Password updated" message (express.e silent save)
+- Strength messages: no trailing `\r\n`
 
-**listMSGs** (L command):
-- "Starting message [N]: " prompt (express.e:8831)
-- Columnar format: Msg/Type/From/Subject with correct widths
+**S command (express.e:25540-25606)**:
+- `timesCalled`, `messagesPosted` AND $FFFF
+- `screenClr`: check `userFlags&8` not `user.screenClr`
+- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
 
-**replyToMSG** (R command):
-- Header box + informational "To: fromName" + Subject prompt pre-filled (no "Re:" prefix)
-- Blank subject → back to reader (express.e:9890 RESULT_SUCCESS)
+**permissionDenied (express.e:3037-3039 higherAccess())**:
+- ErrorHandler.permissionDenied: now emits `'\r\nCommand requires higher access.\r\n'`
+- command.handler NOT_ALLOWED path: emit higherAccess for sys/bbs command denials
 
-**forwardMSG** (F command):
-- Subject pre-fills from original message
-- "Delete original message (y/N)?" format (was missing yesNo prompt)
-- F prompt: raw `[32m` → proper `\x1b[32m` escapes
+**Pause prompts (express.e:5141-5152, 5193-5200)**:
+- doPause prompt: `[32m([33mPause[32m)[34m...[32mSpace To Resume[33m: [0m` in all paths
+- More prompt: added trailing space `(Pause)...More(y/n/ns)? `
+- More response: emit `\x1b[1A\x1b[K` to clear pause line (express.e:5199)
 
-**enterMSG** (E command):
-- E with param pre-fills To: and skips To: prompt (express.e:10762-10774)
-- Delete output: "Message N deleted..." (express.e:11936)
-- Delete check: allows if author (fromName) OR recipient
+**Logoff (express.e:8191)**:
+- `'\r\nClick...'` — removed spurious 'NO CARRIER' suffix
 
-**editHeader** (EH command):
-- Private prompt: shows `(y/N)?`, yesNo(2) single-char, skipped for ALL/EALL
+**Logon / E command (express.e:9998-10000)**:
+- E command msgToHeader: separator box + `'     To: (Enter)=\'ALL\'? '` (was `(Blank)=ALL?`)
 
-**Non-stop mode**: same header format as regular displaySingleMessage
+**displayULStats (express.e:12701-12714)**:
+- Show actual bytesAvailableForDownload when not 0x7FFFFFFF (was always 'Infinite')
 
-**confScan (searchNewMail)**:
-- `mscan=false`: conf skipped silently (no "No mail today!"), no header shown
-- `mscan=true`: header + scan as before; `[0m` reset after dashes
-- `handleMessageSubjectInput` made async (was fire-and-forget IIFE)
+**CF command (express.e:24672-24841)**:
+- Header: inline `[32m`/`[33m` ANSI (not AnsiUtil.colorize)
+- Flag prompt: plain `'Edit which flags [M]ailScan...'`
+- Numbers prompt: `"...'*' toggle all,'-' All off,'+' All on >: "`
+- Clear: `\x0c` (sendCLS) not `\x1b[2J`
 
-**Quote separator**: uses `formatLongDateTime()` not `toLocaleString()`
+**WHO/WHD (express.e:24204-24382)**:
+- Remove screen clear (express.e: just `\r\n\r\n`)
+- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
 
-### Other fixes made by other agents this session
-- auth: accountLocked/secStatus lockout, forcePwdReset, STEALTH_MODE/SYSTEM_PASSWORD gate
-- QWK: msgNum 7-char ASCII, CONTROL.DAT
-- conference: ACS fallback loop, auto=false on rejoin
-- loop: enforce time limit and carrier-drop check
-- commands: SYSCMD allowSyscmd check, WHO WEB_ tag, MENU_PROMPT, etc.
-- MCI: formatLongDateTime, ~CT/~OD, node numbers, ~NS flag
-- bulletin: per-conf path, H no CLS
-- upload+scan: reject filenames >12 chars, skip already-recv'd private mail
+**Q command (express.e:25504-25516)**:
+- `'\r\nQuiet Mode On/Off\r\n'` — removed AnsiUtil.successLine + press-key
 
-### CONFTOP stuck-door fix (8c273d70a)
-Post-shutdown forced-exit timer in main execution loop. 2s after JH_SHUTDOWN. Working.
+**GR command (express.e:24411-24421)**:
+- `'In memory of...'` plain text (was cyan via AnsiUtil.colorize)
+
+**X command (express.e:26113-26121)**:
+- `'\r\nExpert mode disabled/enabled\r\n'` — removed extra blank lines
+
+**UP command (express.e:25667-25673)**:
+- Remove AnsiUtil.pressKeyPrompt; set menuPause=true
+
+**Z command (express.e:26123-26213)**:
+- `'Enter string to search for: '` — plain text (was cyan)
+- `'No files available in this conference.'` — plain text (was red AnsiUtil.errorLine)
+- `'Scanning directory N'` — plain text (was green in all file handlers)
+
+**FM command (express.e:24889-25044)**:
+- `'View option is not available for hold directory'` — plain text (was wrong text + AnsiUtil.errorLine)
+
+**F/N commands**:
+- `'No files available in this conference.'` — plain text (myError ERR_NOFILES)
+- F: `'Scanning directory N'` — plain text, remove colored 'Area: {name}' sub-header
+
+**JM command (express.e:25185-25237)**:
+- `'.' params: silently delegate to J (no AnsiUtil warning)
+- Remove 'Available message bases:' list + '<-- Current' indicator
+- After join: joinConf() already shows message — remove AnsiUtil.successLine
+- Invalid input: silently clamp (no AnsiUtil error)
+
+**Message scan / message-entry**:
+- Remove AnsiUtil.pressKeyPrompt after confScan/save; set menuPause=true
+
+### HYDRA protocol (hydra-e)
+Not implemented — known gap.
+
+### ACP-E admin panel gaps
+- `SV_ACCOUNTS`, `SV_LOCALLOG` — no endpoints
+- Per-node stats filtering — global only
 
 ## Open priorities
-1. **xim/io.ts** — at 2000 line limit, needs modular split (pre-commit hook warnings)
-2. **messaging.handler.ts** — at ~1500 lines, approaching limit
+1. **xim/io.ts** — at 2000 line limit, needs modular split
+2. messaging.handler.ts approaching 1600 lines — monitor
 
 ## Known WEB_ deviations (intentional)
-- Line-mode vs char-mode (no word-wrap, cursor positioning)
+- Line-mode vs char-mode; no HYDRA bidirectional transfer
 - No `chooseAName` recipient validation, no `checkToForward`, no extSend
-- WEB_ press-key prompt after save
 - confScan nav prompt: `(N+MAX)` format vs `replyPrompt`'s `(currentMsg)` — minor
+- 2 command (callers log): shows DB entries not per-node files
+- ZOOM: auto-selects ZIP; no LHA binary available
+- GDPR gate on new user (WEB_ extension)
+- VO (voting): WEB_ implementation; voting source not in indexed modules
 
 ## Gotchas
 - **Amiga = BE**: see CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE.
-- **conf_base**: 45 rows were zeroed. On first login, confScan sets high-watermarks.
+- **conf_base**: scan_flags DEFAULT was 12 (bug, now 0). If AquaScan reappears, check conf_base rows.
 - **User.data rebuilt**: 2-slot BE file.
 - **b4d8c381a WARNING**: startup XIM changes reverted. AquaScan.020 warning-on-exit.
 - **ctop.data** must exist per conference for Conftop-II (Conf1/, Conf2/, Conf12/ only).
