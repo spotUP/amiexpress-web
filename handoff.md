@@ -1,7 +1,19 @@
 # Handoff
 
 ## Current State
-All changes committed (604c5f9db). Server running with new code.
+All changes committed (494bd6fd7). Server running with new code.
+
+## Loop audit round 6 (2026-04-28) — Message handler audit COMPLETE
+Deep audit confirms 1:1 parity with express.e for:
+- enterMSG body editor (A/C/D/E/F/L/S commands, yesNo confirmations)
+- Message body line input (75-char limit, line number prompts, empty line→options)
+- Quote-from-reply flow (range prompt, line numbering, separator, blank lines)
+- yesNo(0)/yesNo(2) prompt behavior (loop on unknown, CR defaults)
+- Message READ display (header box, EALL, Recv'd, subject, body)
+- 2/3-digit line padding boundary (lines<=98 logic equivalent)
+
+Only minor: `checkForPause` (More prompt) not in quote display loop — WEB_ acceptable.
+No critical deviations remain in messaging code.
 
 ## AquaScan 00:00:00 ROOT CAUSE FOUND (2026-04-28)
 After 5+ debugging rounds, the actual bug was in `DT_STAMP_LASTON` (express.e:8943-8949 reader).
