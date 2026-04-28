@@ -1,5 +1,19 @@
 # Handoff
 
+## Current State
+All changes committed (c2cdb4ada). Server stopped.
+
+## Loop audit round 5 (2026-04-28 latest)
+
+### Fixes
+- EALL display: `username (ALL)` not conference name — confMailName = userName (express.e:12461)
+- Short help `?`: removed spurious `A>gain` (only in `??`); both use direct ANSI literals
+- Private msg listing: sysops with SYSOP_READ now see all private messages (express.e:12344)
+- `A>gain` in `??` now has no leading `\r\n` — continuation of nav line (express.e:12035)
+- TO: field truncated to 30 chars (express.e lineInput limit, express.e:10779)
+- WEB_ tag on MAILSCAN_ALL (ALL messages in confScan always included; conf Conf.DB gating deferred)
+- 'Joining Conference' now appears after CONF_BULL doPause, not before (express.e:5056-5088)
+
 ## TUI Console (2026-04-28)
 New: dev/console/ — Ink v4 TUI sysop console with tmux session bootstrap.
 
