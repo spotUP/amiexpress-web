@@ -15,6 +15,17 @@ Deep audit confirms 1:1 parity with express.e for:
 Only minor: `checkForPause` (More prompt) not in quote display loop — WEB_ acceptable.
 No critical deviations remain in messaging code.
 
+## Round 7 (2026-04-28) — Reader nav modifiers
+Added N+/N- and bare +/- direction modifiers in message reader (express.e:12238-12261).
+Direction is sticky: CR/Enter steps in last-typed direction (default forward).
+Previously '5+', '5-', and '+' returned 'No such command!!'
+
+EH (edit header) audit confirmed: it DOES persist to disk via repository.updateMessage →
+messageIndexManager.updateMessageHeader. Earlier audit was wrong about this.
+
+EM/E (edit body) is still a WEB_ stub that re-displays — full Emacs editor integration
+deferred. Sysop can edit via web admin instead.
+
 ## AquaScan 00:00:00 ROOT CAUSE FOUND (2026-04-28)
 After 5+ debugging rounds, the actual bug was in `DT_STAMP_LASTON` (express.e:8943-8949 reader).
 
