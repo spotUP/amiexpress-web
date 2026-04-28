@@ -1,7 +1,18 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (3ab138825). Server needs restart.
+Server stopped. All changes committed (a1619a2b2). Server needs restart.
+
+## This sub-session (2026-04-28 continued) — /loop audit round 4
+
+### Fixes
+- EALL: permission check (express.e:10810) + EALL command alias
+- doPause regression: `kind:'doPause'` prevents spurious `[1A[K` cursor-up on Space To Resume
+- AquaScan `00:00:00`: seed UserData slot at login with `newSinceDate`; advance after each scan
+- K command: security check `privateFlag=0 OR toName=user`; "Not your message."; exits reader (not advance-to-next)
+- Reply (R): "Delete original message (y/N)?" after save when eligible (express.e:9898-9903)
+- Forward (F): delete-original flow already correct (was missed in earlier audit)
+- ZModem upload completion: "File Uploading Complete...", stats line, "Time increased by N mins." (express.e:19053-19127)
 
 ### Additional fixes after b5198887c (this sub-session: full audit round 3)
 See commits from b5d55eaea to 3ab138825. Key fixes:
