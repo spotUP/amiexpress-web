@@ -1,11 +1,11 @@
 # Handoff
 
 ## Current State
-Server stopped. All changes committed (1008c1b9f). Server needs restart.
+Server stopped. All changes committed (3ab138825). Server needs restart.
 
 ### Additional fixes after b5198887c (this sub-session: full audit round 3)
-See commits from b5d55eaea to 1008c1b9f. Key fixes:
-- VER, W, S, GR, X, Q, CF, E, JM, Z, FM, N, F — removed AnsiUtil decoration, matched express.e
+See commits from b5d55eaea to 3ab138825. Key fixes:
+- VER, W, S, GR, X, Q, CF, E, JM, Z, FM, N, F, ^ — removed AnsiUtil decoration, matched express.e
 - permissionDenied → 'Command requires higher access.' (express.e:3037)
 - doPause/More prompts — ANSI colors, trailing space, [1A[K after response
 - Logoff → '\r\nClick...' (removed NO CARRIER)
@@ -17,6 +17,9 @@ See commits from b5d55eaea to 1008c1b9f. Key fixes:
 - C command: commentToSYSOP() separator box (express.e:8779-8783)
 - new-user: 'City, State: ', 'Phone Number: ' (correct prompts)
 - Upload: 'Please enter a description...', 'Begin  with (/) ... to Sysop'
+- alter-flags: 'Sorry filename not found!' plain text; silent on success
+- FM: 'No files available...' plain text; menuPause=true after
+- ^ (UpHat): silent on empty/not-found; no 'Help topic:' header; no press-key
 - messaging.handler.ts split: 1561→~860 lines (refactored to messaging-commands.ts)
 
 ## This session (2026-04-28) — comprehensive .e source audit + gap fill
