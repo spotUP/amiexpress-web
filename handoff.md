@@ -1,7 +1,32 @@
 # Handoff
 
 ## Current State
-All changes committed (c2cdb4ada). Server stopped.
+All changes committed (604c5f9db). Server running with new code.
+
+## AquaScan 00:00:00 ROOT CAUSE FOUND (2026-04-28)
+After 5+ debugging rounds, the actual bug was in `DT_STAMP_LASTON` (express.e:8943-8949 reader).
+
+When AquaScan reads the formatted "last logon" date string via XIM, our handler did:
+```ts
+formatCDateTime(new Date(user.lastLogin || user.timeLastOn!))
+```
+
+But `user.lastLogin` from the DB is **Unix SECONDS** (e.g., 1762463426).
+`new Date(1762463426)` treats the value as **milliseconds**, giving 1970-01-21.
+AquaScan formats this and (likely) only displays the time portion → near `00:00:00`.
+
+Fix: `new Date(raw * 1000)` when raw is a number (file: data-query.ts).
+
+Plus: AquaScan.UserData login seed + post-scan advance (already in place from round 4)
+covered a separate, less-impactful path; both are correct now.
+
+Also added /tmp/aquascan-debug.log instrumentation:
+- DT_TIMELASTON reads
+- DT_STAMP_LASTON reads
+- handleLoadAccountCommand entries
+- AquaScan UserData write/skip decisions
+
+To verify: `tail -f /tmp/aquascan-debug.log` then run N S U in a logged-in session.
 
 ## Loop audit round 5 (2026-04-28 latest)
 
