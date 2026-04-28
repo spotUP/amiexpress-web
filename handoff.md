@@ -41,6 +41,25 @@ DB shows sysop autorejoin=1 — neither 14 nor 2. Need to check:
 - whether the display flow is running CONF_BULL/menu BEFORE AUTO_REJOIN
 - whether `db.updateUser({confRJoin})` silently fails (no such column — only `autorejoin`)
 
+## Round 9 (2026-04-28) — Status byte ASCII chars + bug fixes
+Real fixes:
+- MsgStatus enum changed to ASCII char values matching express.e:
+  NORMAL='P' (0x50), CENSORED='p' (0x70), PRIVATE='R' (0x52), DELETED='D' (0x44).
+  All bitwise checks (header.status & MsgStatus.X) converted to equality
+  (header.status === MsgStatus.X). Doors expecting express.e binary
+  HeaderFile format now see correct status bytes.
+- ACS_CENSORED users posting public messages: status now 'p' instead of 'P'
+  (express.e:10790-10794). Was never set before.
+- Mailscan banner: removed custom 'SCANNING FOR NEW MAIL' banner from
+  Screens/MAILSCAN.TXT (express.e ships no default; sysop adds custom art).
+  Scan text 'Scanning conferences for mail and files...' → 'Scanning
+  conferences for mail...' to match express.e:28083 verbatim.
+- TO and Subject 30-char input cap now enforced at keystroke level (was
+  only post-trim, allowing 70 chars to be echoed).
+- Race fix: empty input at message-options menu no longer re-emits
+  'Msg. Options:' before BBS menu (was caused by async S=save not
+  transitioning subState before delayed CR arrived).
+
 ## Round 8 (2026-04-28) — Audit byte-level pass
 Comprehensive audit of remaining areas: translation (T/TS/T!/T*), R-command entry,
 searchNewMail flow, quote range parsing, file attach flow, subject input, body editor
