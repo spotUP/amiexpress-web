@@ -65,6 +65,7 @@ scan_flags DEFAULT 12→0, confScan multi-msgBase, ACL forward-walk, time-limit 
 ## Open priorities
 1. **messaging.handler.ts** approaching 1600 lines — monitor, split if needed
 2. **screen.handler.ts** at 3220 lines (exempted) — future refactor candidate
+3. **Message subsystem architectural deviations** — see `thoughts/shared/research/2026-04-29_message-subsystem-deviations.md`. Key issues: dual write paths (Conf/Messages/<id>.msg vs express.e Conf/MsgBase/<id>), highMsgNum off-by-one (TS=last id, express.e=next id), two MailStats files. Needs user decision before fixing.
 
 ## Known WEB_ deviations (intentional)
 - Line-mode vs char-mode; no HYDRA bidirectional transfer
