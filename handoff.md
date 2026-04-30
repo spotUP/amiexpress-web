@@ -1,45 +1,29 @@
 # Handoff
 
-## 2026-04-29 — message storage refactor + AUTO_REJOIN flow + test cleanup
-
-Detailed handoff: `thoughts/shared/handoffs/2026-04-29_msg-refactor-and-login-fixes.md`
+## 2026-07-21 — MCP knowledge base + startup/tmux fixes
 
 ### What changed
 
-- **Message storage** moved to express.e canonical `<conf>/MsgBase/<id>` (raw body, no extension). HeaderFile is single source of truth for metadata. `mailStat.highMsgNum` is now "next id to assign" matching express.e:10688/12418. `recv` lives in HeaderFile, no more `.recv` companion files. Disk wiped per user direction; new posts start at #1.
-- **Mail scan** now fires the "Would you like to read it now (Y/n)?" prompt (express.e:11739). joinConference's inline mail scan is bypassed when called from confScan to avoid pointer-advance race.
-- **AUTO_REJOIN** pre-sets full conf-identity tuple (`currentConf`/`relConfNum`/`currentConfName`/`currentMsgBase`) before CONF_BULL renders, so `~CC_CONFTOP` MCI finds the right `Conf<N>/ctop.data` and the menu prompt shows `[N:Name]` correctly. CONF_BULL screens with their own `~SP`/segments no longer get double-paused.
-- **Message body** display converts raw `\n`→`\r\n` so xterm cursor returns to col 1.
-- **Raw-display screens** (allowMCI=FALSE) now strip trailing `~SP` so files like `Conf*/Screens/uprough.txt` don't print "~SP" literally.
-- **39 pre-existing test failures** fixed → 3974 pass / 0 fail / 151 suites green. Two real bugs caught (pendingGoodbye logoff, qwk parse buffer-size).
-- **start/kill scripts**: start-servers.sh always cleans first; kill-servers.sh widened to TUI/tmux/build-wasm and skips its own PID/PPID so it doesn't kill its parent start-servers.sh.
+- **MCP knowledge base tools**: 3 new tools (`search_ndk_structs`, `search_hw_registers`, `search_m68k_isa`) backed by indexes from rmtew/amiga-reversing. 334 structs, 8483 constants, 43 libraries, 245 HW registers, 126 M68K instructions. `build-indexes.js` auto-downloads source KB.
+- **Startup tmux fixes**: kill-servers.sh no longer destroys its own tmux session (3 self-destruction vectors fixed). Single-window layout (server log + console TUI + shell). Status bar with F-key hotkeys (F1=Help, F2=Restart, F3=BBS, F4=Admin, F10=Quit).
+- **Console TUI**: LoginPrompt polls `/health` before showing login form.
+- **Doorman fixes**: Hex color tags replaced with named colors; file explorer input handling fixed (ESC/arrow keys).
 
 ### Recent commits
 
 ```
-1b80edc20 fix(kill-servers): don't kill self / parent start-servers.sh
-844acb3df fix(scripts): start-servers.sh always kills old instances + tmux/TUI
-9d1d46862 fix(autorejoin): don't double-pause when CONF_BULL has its own ~SP/segments
-a8998d778 fix(login/msg): pause+conf state, body line breaks, ~SP in raw screens
-a54f2ace0 fix(autorejoin): pre-set currentConf so CONF_BULL MCI codes resolve to target
-91169651e fix(confscan): skip joinConference mail scan when called from confScan
-2cc990ed0 test: clear all 39 pre-existing test failures
-e67bbb386 docs(msg): round-5 audit findings for message subsystem
-c1fba301a fix(msg): align message storage with express.e canonical layout
+9fb1445 feat(mcp): add Amiga knowledge base tools from amiga-reversing
+(earlier in session): 7 commits for tmux/startup/doorman fixes
 ```
 
 ### Verified
 
-- `npx tsc --noEmit` clean
-- Full backend jest: 3974 pass / 0 fail / 151 suites green (zero regressions vs. baseline)
-- Mail scan list 1:1 with express.e:11713-11720 (zero-padded `000001` etc.)
-- Multi-line message body renders flush left
-- CONF_BULL/conftop reports correct conference data
-- `~SP` no longer literal in raw screens
+- MCP smoke tests pass for all 3 new tools
+- Indexes validated against known Amiga specs (ProcessStruct, MEMF_CHIP, OpenLibrary LVO, DMACON)
 
 ## Prior Sessions (archived)
 
-Console v3 Phase E complete (2026-04-29) — TUI matches /admin/ feature surface across 5 phases. Audit rounds 3-4 (2026-04-26→27) fixed 138 deviations including BE byte-order corruption, security checks, core loop, conference system, MCI/display, file system, messages. See `thoughts/shared/handoffs/` for detailed reports.
+Message storage refactor + AUTO_REJOIN flow (2026-04-29). Console v3 Phase E (2026-04-29). See `thoughts/shared/handoffs/` for details.
 
 ## How to run
 
