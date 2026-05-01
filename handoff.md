@@ -1,25 +1,31 @@
 # Handoff
 
-## 2026-07-21 — MCP knowledge base + startup/tmux fixes
+## 2026-04-30 — NDK-generated LVO maps + MCP knowledge base
 
 ### What changed
 
-- **MCP knowledge base tools**: 3 new tools (`search_ndk_structs`, `search_hw_registers`, `search_m68k_isa`) backed by indexes from rmtew/amiga-reversing. 334 structs, 8483 constants, 43 libraries, 245 HW registers, 126 M68K instructions. `build-indexes.js` auto-downloads source KB.
-- **Startup tmux fixes**: kill-servers.sh no longer destroys its own tmux session (3 self-destruction vectors fixed). Single-window layout (server log + console TUI + shell). Status bar with F-key hotkeys (F1=Help, F2=Restart, F3=BBS, F4=Admin, F10=Quit).
-- **Console TUI**: LoginPrompt polls `/health` before showing login form.
-- **Doorman fixes**: Hex color tags replaced with named colors; file explorer input handling fixed (ESC/arrow keys).
+- **Auto-generated LVO/struct maps from NDK 3.1**: `dev/scripts/generate-lvo-maps.js` reads the MCP NDK index and generates 3 TypeScript files:
+  - `lvo-names.generated.ts`: 1114 function names across 43 libraries
+  - `lvo-params.generated.ts`: 952 functions with register/type annotations
+  - `struct-fields.generated.ts`: 180 fields across 14 key structs (Process, Task, CLI, MsgPort, FileHandle, FileLock, etc.)
+- **LibraryTraps enhanced**: Stub vectors now show real function names (was generic `lib-stub`). Unimplemented function errors show function name + offset.
+- **DoorExecutionLogger**: Complete AEDoor function name map (20 functions, was 6).
+- **MCP knowledge base tools**: 3 new tools (`search_ndk_structs`, `search_hw_registers`, `search_m68k_isa`) backed by indexes from rmtew/amiga-reversing.
+- **Startup tmux fixes**: kill-servers.sh self-destruction fixed. Single-window layout. F-key hotkeys.
 
 ### Recent commits
 
 ```
+d1fd5d8 feat(emulation): auto-generate LVO maps, params, and struct fields from NDK
 9fb1445 feat(mcp): add Amiga knowledge base tools from amiga-reversing
-(earlier in session): 7 commits for tmux/startup/doorman fixes
+a6ba536 docs: update handoff for MCP knowledge base session
 ```
 
 ### Verified
 
+- `npx tsc --noEmit` clean
+- Generated maps validated: Process pr_CLI=172, OpenLibrary LVO=-552, all 43 libraries present
 - MCP smoke tests pass for all 3 new tools
-- Indexes validated against known Amiga specs (ProcessStruct, MEMF_CHIP, OpenLibrary LVO, DMACON)
 
 ## Prior Sessions (archived)
 
