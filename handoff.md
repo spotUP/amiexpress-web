@@ -1,35 +1,34 @@
 # Handoff
 
-## 2026-04-30 — NDK-generated LVO maps + MCP knowledge base
+## 2026-05-01 — CRITICAL: ACS security vulnerability fixed
 
 ### What changed
 
-- **Auto-generated LVO/struct maps from NDK 3.1**: `dev/scripts/generate-lvo-maps.js` reads the MCP NDK index and generates 3 TypeScript files:
-  - `lvo-names.generated.ts`: 1114 function names across 43 libraries
-  - `lvo-params.generated.ts`: 952 functions with register/type annotations
-  - `struct-fields.generated.ts`: 180 fields across 14 key structs (Process, Task, CLI, MsgPort, FileHandle, FileLock, etc.)
-- **LibraryTraps enhanced**: Stub vectors now show real function names (was generic `lib-stub`). Unimplemented function errors show function name + offset.
-- **DoorExecutionLogger**: Complete AEDoor function name map (20 functions, was 6).
-- **MCP knowledge base tools**: 3 new tools (`search_ndk_structs`, `search_hw_registers`, `search_m68k_isa`) backed by indexes from rmtew/amiga-reversing.
-- **Startup tmux fixes**: kill-servers.sh self-destruction fixed. Single-window layout. F-key hotkeys.
+- **Security fix**: checkSecurity() fallback was granting ALL permissions to secLevel >= 10 users and sysop-level access to secLevel >= 100 users. Reported by Phantasm (original AmiExpress author).
+- **New `acs-access-loader.ts`**: Parses `Access/ACS.*.info` tooltype files at startup, building per-level permission maps. Replaces broken numeric thresholds with actual file-based lookups matching express.e:8455-8497.
+- **`findAcsLevel()` fixed**: Now scans downward through available ACS files (10, 20, 50, 255) per express.e:3025-3035 instead of simple rounding.
+- **`initializeSecurity()` fixed**: No longer clears database-stored securityFlags/secOverride on login.
 
 ### Recent commits
 
 ```
+c316ada fix(security): implement proper ACS file-based permission checks
 d1fd5d8 feat(emulation): auto-generate LVO maps, params, and struct fields from NDK
 9fb1445 feat(mcp): add Amiga knowledge base tools from amiga-reversing
-a6ba536 docs: update handoff for MCP knowledge base session
 ```
 
 ### Verified
 
 - `npx tsc --noEmit` clean
-- Generated maps validated: Process pr_CLI=172, OpenLibrary LVO=-552, all 43 libraries present
-- MCP smoke tests pass for all 3 new tools
+- Sysop commands (ACCOUNT_EDITING, SYSOP_COMMANDS) denied at levels 10/20/50/100, granted at 255
+- REMOTE_SHELL denied even for sysop (commented in ACS.255.info)
+- Normal user perms (DOWNLOAD, UPLOAD, READ_BULLETINS) work at levels 10/20/50
+- Level 100 correctly maps to ACS.50 (no sysop access)
+- Level 254 maps to ACS.50, NOT 255
 
 ## Prior Sessions (archived)
 
-Message storage refactor + AUTO_REJOIN flow (2026-04-29). Console v3 Phase E (2026-04-29). See `thoughts/shared/handoffs/` for details.
+NDK-generated LVO maps + MCP knowledge base (2026-04-30). Message storage refactor + AUTO_REJOIN flow (2026-04-29). See `thoughts/shared/handoffs/` for details.
 
 ## How to run
 
