@@ -1,60 +1,79 @@
 # Handoff
 
-## 2026-05-03 — Maintenance pass: SIG_LI, info-editor, file-cache, DOORSMENU root cause
+## 2026-05-04 — Live test pass: DOORSMENU works, Conftop, operator chat, FLT mojibake
 
 ### Today
 
-- **SIG_LI (XIM 912) implemented properly** (`35779aa8b`). Was a stub returning
-  empty string + 0; now mirrors `getPass2` (express.e:1504-1548): prompt
-  display, `*` echo per char, 30-char hard cap, backspace/Enter as JH_LI.
-  Routed through `XIMIOHandler` so it shares JH_LI's pause/resume + queue-drain.
-- **info-editor delete bug fixed** (`5c6b122c9`). Was reporting `[OK]` while
-  silently writing `rawBuffer` unchanged on `_fallback` files (e.g. malformed
-  `Doors/5D-User/5D-User.info`). `writeInfoFile` now throws `InfoFileWriteError`;
-  CLI/admin/door-manager UI surface the real error. Regression test added.
-- **DOORSMENU root cause fixed** (`ce742d5ce` + `0049d687f`):
-  1. `exec.library Allocate(-186)` was returning NULL; now properly walks the
-     MemHeader free-chunk list per `exec/memory.h`. SAS/C `__MERGE` ctor was
-     `__exit(20)`-ing on NULL.
-  2. Door stack was placed past DATA, but BSS sits ABOVE DATA in SAS/C layout
-     (CODE@0x2008, DATA@0x7608, BSS@0x7808). DOORSMENU's 25KB `Config cfg`
-     local frame was clobbering the SAS/C startup's saved ExecBase / argc.
-     `DoorLoader.computeStackBounds` now anchors the stack past the highest
-     segment (8-byte aligned, 32-byte gap).
-  3. Removed temporary debug checkpoints from `DoorLifecycleManager.ts`
-     (`8d31a1723`).
-- **amiga-text-decode util landed** (`26b131485`, `28cabd824`, `1a1278dda`).
-  SAUCE-aware encoding/iCE-colors decoder shared by screens + bulletins.
-  Reads via `fileCache.readBuffer` (not `readString`) so 0xB7 (·), 0xA9 (©),
-  0xAE (®) survive the trip; `file-cache.readBuffer` re-reads from disk
-  when a string was previously cached, avoiding the UTF-8 round-trip
-  corruption (EF BF BD mojibake).
-- **`fileEntries` dead in-memory cache removed** (`fa1f1d2e7`). Was always
-  empty; live F-command path is `FileListingHandler` + `readDirFile`.
-- **4 stale tests realigned** (`cc63bd526`): `acs.util` (8 failures from the
-  c316ada1e file-based-ACS fix), `download-accounting`, `log-retention`
-  (in-place truncate), `message-entry`. Suite back to green.
-- **GL/GLC live fix** (earlier today): see `4034494a`, container restart at
-  2026-05-03T15:16:55Z.
-- **Conftop double-banner** (earlier today, `8abcb6082`): XIM-protocol doors
-  now silently drop DOS stdout writes, matching real-Amiga AmiExpress.
+- **DOORSMENU verified live** — runs and reaches its menu. The
+  stack-above-BSS fix from yesterday holds.
+- **Conftop double-banner — second fix** (`b014ec0cd`). Yesterday's
+  form-feed translation (`44411707b`) wasn't enough on its own; user
+  still saw 2 rows pre-render before \f cleared. Re-applied the DOS
+  stdout suppression from `8abcb6082` (which `44411707b` reverted on
+  a wrong hypothesis). Both fixes now coexist: form-feed → ESC[2J
+  for in-protocol clears; DOS stdout silently discarded for
+  XIM-protocol doors so printf banners stay invisible like on real
+  Amiga (Output() → NIL:).
+- **Operator chat audited 1:1 with express.e** (`63539d80c`). Two
+  deviations fixed: (1) bot only replied on "double enter" — express.e
+  has no such gate, every Enter flushes the line; now bot responds to
+  every non-empty user line. (2) typing simulation added 3-5s of fake
+  delay on top of the LLM round-trip; express.e sysop chars echo at
+  line speed, no artificial delay — both intro and replies now emit
+  instantly via sendChatMessage. Split-screen layout (line 23 sysop,
+  line 24 user) kept as a usability improvement.
+- **FLT logo mojibake** — server-side pipeline pinned clean by e2e
+  test (`2e31a9415`). Wire-trace instrumentation added (`82dcf35e8`,
+  `WIRE_TRACE=1` env var) for if it recurs. User reports the FLT
+  logo is randomised per login and they haven't seen the mojibake
+  variant since — closed pending re-report.
+- **Test cleanup** — re-aligned `acs.util.test.ts` (8 failures from
+  the file-based-ACS security fix), `download-accounting`,
+  `log-retention`, `message-entry` (all yesterday in `cc63bd526`).
+  Suite back to green: 158/159 file suites, 4037/4046 tests passing.
+
+### Open priorities (today's leftover backlog)
+
+1. **doorman "Cannot read directory"** — needs you to paste a path
+   that triggers it.
+2. **AquaScan false new-mail count** — `N` / `NSU` reports unread
+   messages that aren't really there. Needs a sysop running the door
+   + MCP traces to compare `AquaScan.Date.N` vs `msgBase` lastRead
+   pointer.
+3. **13 divergent door icons vs Sanctuary reference** — 11 with
+   `OVERCLOCK=100` (functional, keep). 2 substantive: `ByteKiller`
+   (NUKER/SPY_LIST) and `Request` (path differences). Both
+   installation-specific, your decision.
 
 ### Commits today (chronological)
 
 ```
-9d881f1c5 chore(diagnostics): add opt-in XIM_TIMING per-call timing
-8d31a1723 chore(lifecycle): drop temporary DOORSMENU trace checkpoints
-0049d687f fix(emulation): place door stack above the highest segment (BSS-aware)
-ce742d5ce fix(emulation): implement exec.library Allocate() properly
-1a1278dda refactor(screens): route screen + bulletin reads through amiga-text-decode
-28cabd824 fix(file-cache): readBuffer must not round-trip through cached strings
-26b131485 feat(util): add amiga-text-decode for shared screen/bulletin pipeline
-5c6b122c9 fix(info-editor): surface fallback writes as a real error, not silent [OK]
-cc63bd526 test: realign 4 stale suites with current behaviour
-fa1f1d2e7 chore(file): remove dead fileEntries in-memory cache
-049753f5b chore: sweep stale / inaccurate TODOs in active source
-35779aa8b fix(xim): implement SIG_LI (912) per express.e:4205-4207
+82dcf35e8 diag(modem): WIRE_TRACE=1 logs hex of high-bit codepoints on emit
+b014ec0cd fix(emulation): re-apply DOS stdout suppression for XIM doors (Conftop)
+2e31a9415 test(decode): pin server-side high-bit byte preservation end-to-end
+63539d80c fix(operator-chat): respond per message, drop typing simulation
+10d85b452 docs(emulation): handleCall comment after AmigaDosEnvironment removal
+fa1a27b94 chore(file): remove dead displayFileAreaContents chain + handlers
+627d1e15e docs: refresh handoff for 2026-05-03 maintenance pass
 ```
+
+## 2026-05-03 — Maintenance pass
+
+- **SIG_LI (XIM 912)** properly implemented per express.e:1504-1548
+  (`35779aa8b`).
+- **info-editor delete** was silently no-op on `_fallback` .info
+  files; now throws `InfoFileWriteError` (`5c6b122c9`).
+- **DOORSMENU root cause** = stack-above-BSS overlap + missing
+  Allocate (`0049d687f` + `ce742d5ce`).
+- **amiga-text-decode util** landed: shared SAUCE/iCE/encoding
+  pipeline for screens + bulletins; preserves high-bit bytes
+  (`26b131485`, `28cabd824`, `1a1278dda`).
+- **Dead code removed**: `fileEntries` cache (`fa1f1d2e7`),
+  `displayFileAreaContents` chain (`fa1a27b94`),
+  `AmigaDosEnvironment.ts` (`db6a8618b`).
+- **4 stale test suites realigned** (`cc63bd526`).
+- **GL/GLC live fix** (`4034494a`).
+- Conftop fix #1 was reverted, see today.
 
 ## How to run
 
