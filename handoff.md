@@ -1,5 +1,24 @@
 # Handoff
 
+## 2026-05-03 — Conftop double-banner fix (XIM stdout)
+
+**Conftop renders banner twice on our emulator; once on real Sanctuary.** Confirmed by
+user-recorded video on the real Amiga. Root cause: the binary printf's its startup
+banner via DOS `Write(Output(), ...)` BEFORE the report-banner via JH_PUTSTR. On real
+Amiga AmiExpress launches XIM doors with `Output()` pointed at NIL: so the stdout
+banner goes nowhere. Our `DosLibrary.setOutputCallback` was forwarding ALL stdout
+writes to the user's terminal, regardless of door type.
+
+Fix in `LibraryManager.ts:563-579` (commit `8abcb6082`):
+- XIM-protocol doors (XIM/AIM/TIM/IIM/MCI/AEM — anything with `useXimProtocol=true`)
+  → DOS stdout writes silently discarded; user-facing output must come through AEDoor JH messages.
+- SIM/SUP doors → unchanged (stdout IS their user channel, no AEDoor messages).
+- Transfer-raw passthrough preserved in both cases.
+
+Test: restart, run `top` (CONFTOP). Should show banner ONCE, matching real Sanctuary.
+
+Other XIM doors that printf debug/status to stdout will also be cleaner now.
+
 ## 2026-05-03 — GL command fix on prod, backlog audit
 
 ### Today
@@ -36,6 +55,7 @@
 ### Recent commits
 
 ```
+8abcb608 fix(emulation): suppress DOS stdout writes for XIM-protocol doors
 4034494a fix(screens): revert logon20.txt ~CC_glc back to ~CC_gl
 fc584174 fix(emulation): AllocVec/FreeVec must use proper size-header protocol
 a94bfdcd fix(emulation): add complete set of AmiExpress door env vars
@@ -102,9 +122,18 @@ start-servers.sh self-cleans before each run.
 ## Open priorities
 
 1. **DOORSMENU argc mystery** — `[DIAG]` probe ready, needs server restart + test
-2. **doorman** "Cannot read directory" on archive listing — needs repro
-3. **DoorLifecycleManager.ts** at 2020 lines — refactor candidate (over 2000 limit)
-4. **LOGON24 screen** — optional; create a stylized one if desired
+2. **info-editor delete is silently broken** — `delete <KEY>` reports `[OK]` but the
+   tooltype persists; re-parse still shows it `[ENABLED]`. Suspect `writeInfoFile`
+   binary `_fallback` path round-trips raw bytes. Repro on `Doors/5D-User/5D-User.info`
+   with `OVERCLOCK`. Blocks any tooltype editing through the script.
+3. **13 divergent door icons vs Sanctuary reference** — 11 with `OVERCLOCK=100`
+   (functional, matches our 100x emulation default — keep). 2 substantive: `ByteKiller`
+   (NUKER names, SPY_LIST) and `Request` (path differences). Both installation-specific,
+   user decision.
+4. **doorman** "Cannot read directory" on archive listing — needs repro
+5. **DoorLifecycleManager.ts** at 2020 lines — refactor candidate (over 2000 limit)
+6. **LOGON24 screen** — optional; create a stylized one if desired
+
 
 ## Known WEB_ deviations (intentional)
 
