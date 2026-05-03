@@ -1,113 +1,60 @@
 # Handoff
 
-## 2026-05-03 — Conftop double-banner fix (XIM stdout)
-
-**Conftop renders banner twice on our emulator; once on real Sanctuary.** Confirmed by
-user-recorded video on the real Amiga. Root cause: the binary printf's its startup
-banner via DOS `Write(Output(), ...)` BEFORE the report-banner via JH_PUTSTR. On real
-Amiga AmiExpress launches XIM doors with `Output()` pointed at NIL: so the stdout
-banner goes nowhere. Our `DosLibrary.setOutputCallback` was forwarding ALL stdout
-writes to the user's terminal, regardless of door type.
-
-Fix in `LibraryManager.ts:563-579` (commit `8abcb6082`):
-- XIM-protocol doors (XIM/AIM/TIM/IIM/MCI/AEM — anything with `useXimProtocol=true`)
-  → DOS stdout writes silently discarded; user-facing output must come through AEDoor JH messages.
-- SIM/SUP doors → unchanged (stdout IS their user channel, no AEDoor messages).
-- Transfer-raw passthrough preserved in both cases.
-
-Test: restart, run `top` (CONFTOP). Should show banner ONCE, matching real Sanctuary.
-
-Other XIM doors that printf debug/status to stdout will also be cleaner now.
-
-## 2026-05-03 — GL command fix on prod, backlog audit
+## 2026-05-03 — Maintenance pass: SIG_LI, info-editor, file-cache, DOORSMENU root cause
 
 ### Today
 
-- **`~CC_gl` / GL.info mismatch on live — FIXED**. Two May 1 commits raced
-  in opposite directions: `591f874` renamed door GLC → GL, then `0ec1c1f`
-  changed screens from `~CC_gl` → `~CC_glc` to match the wrong command name,
-  causing "No such command!!" on every login.
-  - Reverted screens to `~CC_gl` in `Screens/logon20.txt` + 41 per-node
-    copies (commit `4034494a`).
-  - Restored `Commands/BBSCmd/GL.info` from git (had been deleted on disk).
-  - Removed stale on-disk `Commands/BBSCmd/GLC.info`.
-  - Live host had a divergent stale commit (`fb63f44d`, same fix as
-    upstream `bb394a9`) that broke `git pull` in the auto-deploy. Reset
-    `/app/amiexpress` to origin/main and rebuilt the container manually.
-    Live container started 2026-05-03T15:16:55Z.
-  - Cleaned stale `GLC.info` from the live `/app/data/bbs/Commands/BBSCmd/`
-    volume (kept as `.backup`).
+- **SIG_LI (XIM 912) implemented properly** (`35779aa8b`). Was a stub returning
+  empty string + 0; now mirrors `getPass2` (express.e:1504-1548): prompt
+  display, `*` echo per char, 30-char hard cap, backspace/Enter as JH_LI.
+  Routed through `XIMIOHandler` so it shares JH_LI's pause/resume + queue-drain.
+- **info-editor delete bug fixed** (`5c6b122c9`). Was reporting `[OK]` while
+  silently writing `rawBuffer` unchanged on `_fallback` files (e.g. malformed
+  `Doors/5D-User/5D-User.info`). `writeInfoFile` now throws `InfoFileWriteError`;
+  CLI/admin/door-manager UI surface the real error. Regression test added.
+- **DOORSMENU root cause fixed** (`ce742d5ce` + `0049d687f`):
+  1. `exec.library Allocate(-186)` was returning NULL; now properly walks the
+     MemHeader free-chunk list per `exec/memory.h`. SAS/C `__MERGE` ctor was
+     `__exit(20)`-ing on NULL.
+  2. Door stack was placed past DATA, but BSS sits ABOVE DATA in SAS/C layout
+     (CODE@0x2008, DATA@0x7608, BSS@0x7808). DOORSMENU's 25KB `Config cfg`
+     local frame was clobbering the SAS/C startup's saved ExecBase / argc.
+     `DoorLoader.computeStackBounds` now anchors the stack past the highest
+     segment (8-byte aligned, 32-byte gap).
+  3. Removed temporary debug checkpoints from `DoorLifecycleManager.ts`
+     (`8d31a1723`).
+- **amiga-text-decode util landed** (`26b131485`, `28cabd824`, `1a1278dda`).
+  SAUCE-aware encoding/iCE-colors decoder shared by screens + bulletins.
+  Reads via `fileCache.readBuffer` (not `readString`) so 0xB7 (·), 0xA9 (©),
+  0xAE (®) survive the trip; `file-cache.readBuffer` re-reads from disk
+  when a string was previously cached, avoiding the UTF-8 round-trip
+  corruption (EF BF BD mojibake).
+- **`fileEntries` dead in-memory cache removed** (`fa1f1d2e7`). Was always
+  empty; live F-command path is `FileListingHandler` + `readDirFile`.
+- **4 stale tests realigned** (`cc63bd526`): `acs.util` (8 failures from the
+  c316ada1e file-based-ACS fix), `download-accounting`, `log-retention`
+  (in-place truncate), `message-entry`. Suite back to green.
+- **GL/GLC live fix** (earlier today): see `4034494a`, container restart at
+  2026-05-03T15:16:55Z.
+- **Conftop double-banner** (earlier today, `8abcb6082`): XIM-protocol doors
+  now silently drop DOS stdout writes, matching real-Amiga AmiExpress.
 
-### Backlog audit (handoff items 1-9 from prior session)
-
-| # | Item | Status |
-|---|---|---|
-| 1 | SAmiLog "Unknown" locations | ✅ resolved (other agent) |
-| 2 | sysop/sysop login on live | ✅ HTTP 200 confirmed |
-| 3 | CONFTOP date range error | ✅ likely resolved |
-| 4 | LOGON24 screen file missing | 🔧 optional — code falls back to text on missing |
-| 5 | GLC.info disk vs git mismatch | ✅ fixed today (above) |
-| 6 | Live per-node `logon20.txt` with `~CC_gl` | ✅ none exist on live volume |
-| 7 | `messaging.handler.ts` ≈1600 lines | ✅ now 999 lines (handoff was stale) |
-| 8 | doorman "Cannot read directory" | 🔧 needs repro to find which dir |
-| 9 | `DoorLifecycleManager.ts` over 2000 lines | 🔧 2020 lines, refactor candidate |
-
-### Recent commits
+### Commits today (chronological)
 
 ```
-8abcb608 fix(emulation): suppress DOS stdout writes for XIM-protocol doors
-4034494a fix(screens): revert logon20.txt ~CC_glc back to ~CC_gl
-fc584174 fix(emulation): AllocVec/FreeVec must use proper size-header protocol
-a94bfdcd fix(emulation): add complete set of AmiExpress door env vars
-8acc7928 fix(emulation): wire up more dos.library vectors
-27697114 fix(emulation): wire up SetVar/GetVar/DeleteVar
-f21e26c4 fix(emulation): add AmiExpress node number env vars for 68K doors
-7640480f fix(emulation): wire up GetProgramName at LVO -576
-ac68df54 fix(emulation): implement stubbed exec.library LVOs properly
-f7d87a7e fix(emulation): list ops + semaphores for SAS/C runtime
-e940f157 fix(emulation): implement SuperState/UserState handlers
-1bffa580 fix(emulation): disable false-positive stuck loop jump detector
-832cba55 fix(emulation): dynamic library trap ranges in stuck loop detector
+9d881f1c5 chore(diagnostics): add opt-in XIM_TIMING per-call timing
+8d31a1723 chore(lifecycle): drop temporary DOORSMENU trace checkpoints
+0049d687f fix(emulation): place door stack above the highest segment (BSS-aware)
+ce742d5ce fix(emulation): implement exec.library Allocate() properly
+1a1278dda refactor(screens): route screen + bulletin reads through amiga-text-decode
+28cabd824 fix(file-cache): readBuffer must not round-trip through cached strings
+26b131485 feat(util): add amiga-text-decode for shared screen/bulletin pipeline
+5c6b122c9 fix(info-editor): surface fallback writes as a real error, not silent [OK]
+cc63bd526 test: realign 4 stale suites with current behaviour
+fa1f1d2e7 chore(file): remove dead fileEntries in-memory cache
+049753f5b chore: sweep stale / inaccurate TODOs in active source
+35779aa8b fix(xim): implement SIG_LI (912) per express.e:4205-4207
 ```
-
-## 2026-05-03 — DOORSMENU (DM) door debugging (still open)
-
-DOORSMENU (68K, SAS/C compiled, by zALO/uP!) exits immediately with FAIL.
-~25 emulation issues fixed; door still exits.
-
-The SAS/C startup pushes `argc` from BSS 0x9874 onto the stack, then
-`_main()` at memory **0x32e8** checks `if (argc < 2) exit`. The command
-line parser (`___nocommandline` at 0x1fd4) DOES parse "1\n" and sets
-argc=2 (proven by `AllocVec(12)` = `(argc+1)*4`). But main() still exits
-as if argc < 2.
-
-A `[DIAG]` probe was placed at PC=0x32e8 in `DoorLifecycleManager.ts`
-(line ~990) but **not yet tested** (server needs restart).
-
-Next session:
-
-1. `./dev/scripts/kill-servers.sh && ./dev/scripts/start-servers.sh --no-watch`
-2. Run `dm` in the BBS
-3. Check `logs/backend.log` for `[DIAG]` lines — they show actual argc on stack
-4. After fixing, remove all temp logging:
-   - `LibraryTraps.ts` ~line 1208 `[TRAP] vectorName` console.log
-   - `exec-vectors.ts` console.logs in FindPort/CreateMsgPort/PutMsg
-   - `DoorLifecycleManager.ts` ~line 990 `[DIAG]` probe at PC=0x32e8
-
-Binary details: `Doors/DOORSMENU/DOORSMENU` 25564 bytes, SAS/C.
-CODE@0x2008 (21844B), DATA@0x7608 (384B), BSS@0x7808 (8344B).
-`_main` = code+0x12e0 → mem 0x32e8. `___nocommandline` = code+0x1fd4 →
-mem 0x3FDC. `___argc` = BSS+0x206c → mem 0x9874.
-
-Two trap dispatch systems:
-1. `LibraryTraps` (PRIMARY) — ILLEGAL traps at vector addresses, used by all doors
-2. `ExecLibrary.handleCall()` (LEGACY) — only from `AmigaDosEnvironment`
-Generic stub in #1 returns D0 unchanged — **wrong** for any function that returns a value.
-
-## Prior sessions (archived)
-
-ACS security fix, NDK-generated LVO maps, MCP knowledge base (2026-04-30 — 05-01).
-See `thoughts/shared/handoffs/`.
 
 ## How to run
 
@@ -117,23 +64,23 @@ See `thoughts/shared/handoffs/`.
 ./dev/scripts/kill-servers.sh               # stop everything cleanly
 ```
 
-start-servers.sh self-cleans before each run.
+`start-servers.sh` self-cleans before each run.
 
 ## Open priorities
 
-1. **DOORSMENU argc mystery** — `[DIAG]` probe ready, needs server restart + test
-2. **info-editor delete is silently broken** — `delete <KEY>` reports `[OK]` but the
-   tooltype persists; re-parse still shows it `[ENABLED]`. Suspect `writeInfoFile`
-   binary `_fallback` path round-trips raw bytes. Repro on `Doors/5D-User/5D-User.info`
-   with `OVERCLOCK`. Blocks any tooltype editing through the script.
+1. **doorman "Cannot read directory"** — needs you to paste a path that
+   triggers it.
+2. **AquaScan false new-mail count** — `N` / `NSU` reports unread messages
+   that aren't really there. Needs a sysop running the door + MCP traces to
+   compare `AquaScan.Date.N` vs `msgBase` lastRead pointer.
 3. **13 divergent door icons vs Sanctuary reference** — 11 with `OVERCLOCK=100`
-   (functional, matches our 100x emulation default — keep). 2 substantive: `ByteKiller`
-   (NUKER names, SPY_LIST) and `Request` (path differences). Both installation-specific,
-   user decision.
-4. **doorman** "Cannot read directory" on archive listing — needs repro
-5. **DoorLifecycleManager.ts** at 2020 lines — refactor candidate (over 2000 limit)
-6. **LOGON24 screen** — optional; create a stylized one if desired
-
+   (functional, keep). 2 substantive: `ByteKiller` (NUKER/SPY_LIST) and
+   `Request` (path differences). Both installation-specific, user decision.
+4. **AmigaDosEnvironment.ts** (547 lines) — orphaned dead file, no imports.
+   Safe to delete; queued for next pass.
+5. **Dead `displayFileAreaContents` chain** in `file.handler.ts` — DEPRECATED-
+   marked function shells + unreachable `FILES_SELECT_AREA` / `FILES_DOWNLOAD_SELECT`
+   subState handlers in `command.handler.ts`. ~500 lines; queued.
 
 ## Known WEB_ deviations (intentional)
 
@@ -161,13 +108,17 @@ start-servers.sh self-cleans before each run.
   the whole conf tuple before any conf-scoped MCI renders.
 - **Body files store `\n`**: convert to `\r\n` at display time, not at write
   (express.e:10700-10703 stores raw `\n`).
-- **conf_base scan_flags**: DEFAULT now 0. Migration resets any non-zero rows on startup.
 - **screens/quicknew.txt**: truncate to empty after any server crash/restart that
   produced garbage; regenerates clean on next batch run.
 - **Screen clearing**: ESC[2J fires from (a) SCREENS_REQUIRE_CLEAR, (b) leading 0x0C,
   (c) `~f` MCI, (d) ~SR_ art files.
-- **ctop.data** must exist per conference for Conftop-II (currently Conf1/, Conf2/,
-  Conf12/ only).
+- **`_fallback` .info files**: parser tags them when the tooltype-array structure
+  isn't recognised. `writeInfoFile` now throws `InfoFileWriteError` on these —
+  silent no-op was the bug. Re-create the .info via Workbench/IconEdit.
+- **High-bit bytes in screen/bulletin files**: route ALL reads through
+  `readAmigaTextFileWithTransforms` (`utils/amiga-text-decode.util.ts`).
+  `fs.readFileSync(path, 'utf8')` and `fileCache.readString(path, 'utf8')`
+  silently corrupt 0xB7 (·), 0xA9 (©), 0xAE (®).
 - **Two May 1 GL/GLC commits** moved in opposite directions and broke logon. If you
   ever see "No such command!!" on login, check `Screens/logon20.txt` `~CC_gl` matches
   the actual `Commands/BBSCmd/<NAME>.info` filename.
