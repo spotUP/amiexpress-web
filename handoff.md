@@ -1,34 +1,93 @@
 # Handoff
 
-## 2026-05-01 — CRITICAL: ACS security vulnerability fixed
+## 2026-05-03 — GL command fix on prod, backlog audit
 
-### What changed
+### Today
 
-- **Security fix**: checkSecurity() fallback was granting ALL permissions to secLevel >= 10 users and sysop-level access to secLevel >= 100 users. Reported by Phantasm (original AmiExpress author).
-- **New `acs-access-loader.ts`**: Parses `Access/ACS.*.info` tooltype files at startup, building per-level permission maps. Replaces broken numeric thresholds with actual file-based lookups matching express.e:8455-8497.
-- **`findAcsLevel()` fixed**: Now scans downward through available ACS files (10, 20, 50, 255) per express.e:3025-3035 instead of simple rounding.
-- **`initializeSecurity()` fixed**: No longer clears database-stored securityFlags/secOverride on login.
+- **`~CC_gl` / GL.info mismatch on live — FIXED**. Two May 1 commits raced
+  in opposite directions: `591f874` renamed door GLC → GL, then `0ec1c1f`
+  changed screens from `~CC_gl` → `~CC_glc` to match the wrong command name,
+  causing "No such command!!" on every login.
+  - Reverted screens to `~CC_gl` in `Screens/logon20.txt` + 41 per-node
+    copies (commit `4034494a`).
+  - Restored `Commands/BBSCmd/GL.info` from git (had been deleted on disk).
+  - Removed stale on-disk `Commands/BBSCmd/GLC.info`.
+  - Live host had a divergent stale commit (`fb63f44d`, same fix as
+    upstream `bb394a9`) that broke `git pull` in the auto-deploy. Reset
+    `/app/amiexpress` to origin/main and rebuilt the container manually.
+    Live container started 2026-05-03T15:16:55Z.
+  - Cleaned stale `GLC.info` from the live `/app/data/bbs/Commands/BBSCmd/`
+    volume (kept as `.backup`).
+
+### Backlog audit (handoff items 1-9 from prior session)
+
+| # | Item | Status |
+|---|---|---|
+| 1 | SAmiLog "Unknown" locations | ✅ resolved (other agent) |
+| 2 | sysop/sysop login on live | ✅ HTTP 200 confirmed |
+| 3 | CONFTOP date range error | ✅ likely resolved |
+| 4 | LOGON24 screen file missing | 🔧 optional — code falls back to text on missing |
+| 5 | GLC.info disk vs git mismatch | ✅ fixed today (above) |
+| 6 | Live per-node `logon20.txt` with `~CC_gl` | ✅ none exist on live volume |
+| 7 | `messaging.handler.ts` ≈1600 lines | ✅ now 999 lines (handoff was stale) |
+| 8 | doorman "Cannot read directory" | 🔧 needs repro to find which dir |
+| 9 | `DoorLifecycleManager.ts` over 2000 lines | 🔧 2020 lines, refactor candidate |
 
 ### Recent commits
 
 ```
-c316ada fix(security): implement proper ACS file-based permission checks
-d1fd5d8 feat(emulation): auto-generate LVO maps, params, and struct fields from NDK
-9fb1445 feat(mcp): add Amiga knowledge base tools from amiga-reversing
+4034494a fix(screens): revert logon20.txt ~CC_glc back to ~CC_gl
+fc584174 fix(emulation): AllocVec/FreeVec must use proper size-header protocol
+a94bfdcd fix(emulation): add complete set of AmiExpress door env vars
+8acc7928 fix(emulation): wire up more dos.library vectors
+27697114 fix(emulation): wire up SetVar/GetVar/DeleteVar
+f21e26c4 fix(emulation): add AmiExpress node number env vars for 68K doors
+7640480f fix(emulation): wire up GetProgramName at LVO -576
+ac68df54 fix(emulation): implement stubbed exec.library LVOs properly
+f7d87a7e fix(emulation): list ops + semaphores for SAS/C runtime
+e940f157 fix(emulation): implement SuperState/UserState handlers
+1bffa580 fix(emulation): disable false-positive stuck loop jump detector
+832cba55 fix(emulation): dynamic library trap ranges in stuck loop detector
 ```
 
-### Verified
+## 2026-05-03 — DOORSMENU (DM) door debugging (still open)
 
-- `npx tsc --noEmit` clean
-- Sysop commands (ACCOUNT_EDITING, SYSOP_COMMANDS) denied at levels 10/20/50/100, granted at 255
-- REMOTE_SHELL denied even for sysop (commented in ACS.255.info)
-- Normal user perms (DOWNLOAD, UPLOAD, READ_BULLETINS) work at levels 10/20/50
-- Level 100 correctly maps to ACS.50 (no sysop access)
-- Level 254 maps to ACS.50, NOT 255
+DOORSMENU (68K, SAS/C compiled, by zALO/uP!) exits immediately with FAIL.
+~25 emulation issues fixed; door still exits.
 
-## Prior Sessions (archived)
+The SAS/C startup pushes `argc` from BSS 0x9874 onto the stack, then
+`_main()` at memory **0x32e8** checks `if (argc < 2) exit`. The command
+line parser (`___nocommandline` at 0x1fd4) DOES parse "1\n" and sets
+argc=2 (proven by `AllocVec(12)` = `(argc+1)*4`). But main() still exits
+as if argc < 2.
 
-NDK-generated LVO maps + MCP knowledge base (2026-04-30). Message storage refactor + AUTO_REJOIN flow (2026-04-29). See `thoughts/shared/handoffs/` for details.
+A `[DIAG]` probe was placed at PC=0x32e8 in `DoorLifecycleManager.ts`
+(line ~990) but **not yet tested** (server needs restart).
+
+Next session:
+
+1. `./dev/scripts/kill-servers.sh && ./dev/scripts/start-servers.sh --no-watch`
+2. Run `dm` in the BBS
+3. Check `logs/backend.log` for `[DIAG]` lines — they show actual argc on stack
+4. After fixing, remove all temp logging:
+   - `LibraryTraps.ts` ~line 1208 `[TRAP] vectorName` console.log
+   - `exec-vectors.ts` console.logs in FindPort/CreateMsgPort/PutMsg
+   - `DoorLifecycleManager.ts` ~line 990 `[DIAG]` probe at PC=0x32e8
+
+Binary details: `Doors/DOORSMENU/DOORSMENU` 25564 bytes, SAS/C.
+CODE@0x2008 (21844B), DATA@0x7608 (384B), BSS@0x7808 (8344B).
+`_main` = code+0x12e0 → mem 0x32e8. `___nocommandline` = code+0x1fd4 →
+mem 0x3FDC. `___argc` = BSS+0x206c → mem 0x9874.
+
+Two trap dispatch systems:
+1. `LibraryTraps` (PRIMARY) — ILLEGAL traps at vector addresses, used by all doors
+2. `ExecLibrary.handleCall()` (LEGACY) — only from `AmigaDosEnvironment`
+Generic stub in #1 returns D0 unchanged — **wrong** for any function that returns a value.
+
+## Prior sessions (archived)
+
+ACS security fix, NDK-generated LVO maps, MCP knowledge base (2026-04-30 — 05-01).
+See `thoughts/shared/handoffs/`.
 
 ## How to run
 
@@ -38,14 +97,14 @@ NDK-generated LVO maps + MCP knowledge base (2026-04-30). Message storage refact
 ./dev/scripts/kill-servers.sh               # stop everything cleanly
 ```
 
-start-servers.sh now self-cleans before each run (no more "servers already running" wall).
+start-servers.sh self-cleans before each run.
 
 ## Open priorities
 
-1. **messaging.handler.ts** at ~1600 lines — monitor, split if needed
-2. **screen.handler.ts** at ~3220 lines (exempted) — future refactor candidate
-3. **doorman** still can't list archive contents — "Cannot read directory" error (untouched this session)
-4. **Modem speed throttling**: user has 56k modem emulation set; output is rate-limited by ModemEmulator. Just context for any timing-related tests.
+1. **DOORSMENU argc mystery** — `[DIAG]` probe ready, needs server restart + test
+2. **doorman** "Cannot read directory" on archive listing — needs repro
+3. **DoorLifecycleManager.ts** at 2020 lines — refactor candidate (over 2000 limit)
+4. **LOGON24 screen** — optional; create a stylized one if desired
 
 ## Known WEB_ deviations (intentional)
 
@@ -55,18 +114,31 @@ start-servers.sh now self-cleans before each run (no more "servers already runni
 - 2 command (callers log): shows DB entries not per-node files (WEB_: tagged)
 - ZOOM: auto-selects ZIP; no LHA binary available
 - GDPR gate on new user (WEB_ extension)
-- File scan at login: gated on `SHOW_NEW_FILES` tooltype (DB FILE_SCAN_MASK path disabled to stop AquaScan auto-launching)
-- MAILSCAN_ALL in confScan: ALL messages always included, conf `Conf.DB` MAILSCAN_ALL flag gating deferred
+- File scan at login gated on `SHOW_NEW_FILES` tooltype
+- MAILSCAN_ALL in confScan: ALL messages always included; conf `Conf.DB` flag gating deferred
 
 ## Gotchas
 
 - **Amiga = BE**: see CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE.
-- **Message storage**: post-refactor body files at `<conf>/MsgBase/<id>` (no extension, raw body). HeaderFile + MailStats are the source of truth. Don't write to `Conf*/Messages/` — that path is dead.
-- **`mailStat.highMsgNum`**: stores the *next* id to assign (express.e:10688). Total messages = `highMsgNum - 1`. Off-by-one bugs usually mean the writer treats it as "last assigned".
-- **`~SP` in screens**: when CONF_BULL or any flow screen has `~SP`, displayScreen handles the pause + segment-resume internally. Callers must NOT also call `doPause()` — it overwrites `paginatedScreen` and re-runs the post-`~SP` MCI codes (e.g. `~CC_CONFTOP` running twice).
-- **`relConfNum` drives the menu prompt and conftop**, not `currentConf`. Pre-set the whole conf tuple before any conf-scoped MCI renders.
-- **Body files store `\n`**: convert to `\r\n` at display time, not at write (express.e:10700-10703 stores raw `\n`).
+- **Message storage**: body files at `<conf>/MsgBase/<id>` (no extension, raw body).
+  HeaderFile + MailStats are the source of truth. Don't write to `Conf*/Messages/` —
+  that path is dead.
+- **`mailStat.highMsgNum`**: stores the *next* id (express.e:10688). Total messages
+  = `highMsgNum - 1`.
+- **`~SP` in screens**: displayScreen handles the pause + segment-resume internally.
+  Callers must NOT also call `doPause()` — it overwrites `paginatedScreen` and
+  re-runs post-`~SP` MCI codes.
+- **`relConfNum`** drives the menu prompt and conftop, not `currentConf`. Pre-set
+  the whole conf tuple before any conf-scoped MCI renders.
+- **Body files store `\n`**: convert to `\r\n` at display time, not at write
+  (express.e:10700-10703 stores raw `\n`).
 - **conf_base scan_flags**: DEFAULT now 0. Migration resets any non-zero rows on startup.
-- **screens/quicknew.txt**: truncate to empty after any server crash/restart that produced garbage; regenerates clean on next batch run.
-- **Screen clearing**: ESC[2J fires from (a) SCREENS_REQUIRE_CLEAR, (b) leading 0x0C in screen files, (c) `~f` MCI, (d) ~SR_ art files.
-- **ctop.data** must exist per conference for Conftop-II (currently Conf1/, Conf2/, Conf12/ only).
+- **screens/quicknew.txt**: truncate to empty after any server crash/restart that
+  produced garbage; regenerates clean on next batch run.
+- **Screen clearing**: ESC[2J fires from (a) SCREENS_REQUIRE_CLEAR, (b) leading 0x0C,
+  (c) `~f` MCI, (d) ~SR_ art files.
+- **ctop.data** must exist per conference for Conftop-II (currently Conf1/, Conf2/,
+  Conf12/ only).
+- **Two May 1 GL/GLC commits** moved in opposite directions and broke logon. If you
+  ever see "No such command!!" on login, check `Screens/logon20.txt` `~CC_gl` matches
+  the actual `Commands/BBSCmd/<NAME>.info` filename.
