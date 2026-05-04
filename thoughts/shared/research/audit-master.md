@@ -607,7 +607,8 @@ Sweep totals:
 
 ### ID: C-V — View (V) searches TEXT/ subdirectory instead of BBS file areas
 **Priority**: P2
-**File**: `web/backend/src/handlers/commands/utility-commands.handler.ts`
+**Status**: ✓ FIXED 2026-05-04 — Active V/VS dispatch already routes through ViewFileHandler (content/view-file.handler.ts) which searches Dir1..DirN (BBS file areas), emits RIP brackets `[1!`/`[2!`, validates filename/binary/restricted-path, paginates via flagPause. Legacy utility-commands.handler.ts handleViewFileCommand was a dead duplicate searching a flat BBS:TEXT/ dir with no RIP brackets — replaced with a forwarder to ViewFileHandler so any accidental re-wire produces parity behavior. Regression test in tests/view-file-canonical-handler.test.ts.
+**File**: `web/backend/src/handlers/content/view-file.handler.ts` (active), `web/backend/src/handlers/commands/utility-commands.handler.ts:103-128` (forwarder).
 **express.e**: `25675–25687`
 **Impact**: V command cannot find files in the BBS file areas; only files in a TEXT/ subdirectory are accessible.
 **Fix**: Change V to use `viewAFile` file-area search path; add RIP mode bracket emissions around the view.
@@ -616,8 +617,9 @@ Sweep totals:
 
 ### ID: C-W — W command option 16 (BGFILECHECK) always shows [DISABLED]; options 8/9/11/15 stub
 **Priority**: P2
-**File**: `web/backend/src/handlers/commands/info-commands.handler.ts`
-**express.e**: `25712–26092`
+**Status**: ✓ FIXED 2026-05-04 — Options 8 (computer), 9 (screen type), 11 (protocol) already implemented as interactive list selections via `_displayComputerList` / `_displayScreenTypeList` / inline protocol menu (info-commands.handler.ts:616-650, 1029-1106) with database fallback. Option 15 (translator) WEB_-tagged: chooseTranslator() loops translator libraries that don't exist on web; userLanguage is fixed at 'English'. Option 16 (BGFILECHECK) now reads userFlags & UserFlag.BGFILECHECK and emits YES/NO; case 16 toggles via XOR and persists. Web drops Node BGFILECHECK / FORCE_BGFILECHECK tooltype gates (WEB_-tagged: no bg-checker process server-side). Regression test in tests/w-command-bgfilecheck-toggle.test.ts.
+**File**: `web/backend/src/handlers/commands/info-commands.handler.ts:435-453, 693-705`
+**express.e**: `25872–25879` (display), `26081–26087` (toggle), `25712–26092` (whole W menu)
 **Impact**: Users can't configure computer type (8), screen type (9), or transfer protocol from a list (11); BGFILECHECK appears disabled even when configured; translator (15) is a no-op.
 **Fix**: Gate BGFILECHECK on actual tooltype; implement `chooseComputer`, `chooseScreenType`, `chooseProtocol` as interactive list selections matching express.e.
 
@@ -625,8 +627,9 @@ Sweep totals:
 
 ### ID: C-Z — Zippy (Z) missing directory range prompt; output lacks context buffering
 **Priority**: P2
-**File**: `web/backend/src/handlers/commands/utility-commands.handler.ts`
-**express.e**: `26123–26213`
+**Status**: ✓ FIXED 2026-05-04 — Active Z dispatch routes through ZippySearchHandler (content/zippy-search.handler.ts) which prompts via getDirSpan (line 142, ZIPPY_DIR_SPAN_INPUT state), iterates DIR1..DIRN emitting "Scanning directory N"/HOLD per-DIR headers (lines 232/236), and uses currentEntry[] buffer to context-emit each multi-line file-description block on match (lines 279-293). Discovered + fixed runtime bug: dispatcher require paths in command.handler.ts (3x), command-execution.ts, internal-commands.ts pointed at the wrong path './zippy-search.handler' instead of './content/zippy-search.handler' — the require would have thrown at runtime. Legacy utility-commands.handler.ts handleZippySearchCommand was a dead duplicate doing a flat DB search with no per-DIR headers and no context buffering — replaced with a forwarder to ZippySearchHandler. Regression test in tests/zippy-search-canonical-handler.test.ts.
+**File**: `web/backend/src/handlers/content/zippy-search.handler.ts` (active), `web/backend/src/handlers/commands/utility-commands.handler.ts:140-170` (forwarder).
+**express.e**: `26123–26213`, `27529–27625` (zippy)
 **Impact**: Z command never prompts for directory range (1-N, A, U, H, Enter); always searches all areas by default.
 **Fix**: Show `getDirSpan` prompt before searching; implement context-buffered output with per-page pause.
 
