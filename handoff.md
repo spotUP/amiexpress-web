@@ -27,39 +27,44 @@
   `db.getOperatorChatRepository()` like every other caller, plus a
   fallback that emits "Aborted!" if the DB isn't available so the user
   is never permanently stuck. Source-level regression test included.
-- **Upload "transport error" disconnect** (`1bdef6d27`). socket.io's
-  `maxHttpBufferSize` was 1MB, but BBSTerminal sends file uploads as
-  `Array.from(new Uint8Array(buf))` which JSON-inflates each byte ~3x.
-  Anything over ~330KB blew the buffer mid-upload and dropped the user
-  to the login screen. Bumped to 64MB so a max-size 10MB upload fits
-  with headroom. Long-term: switch to multipart POST against the
-  already-wired `/api/upload` (multer) endpoint and shrink the buffer.
+- **Upload "transport error" disconnect** (`1bdef6d27`, `4c2699110`).
+  socket.io's `maxHttpBufferSize` was 1MB, but BBSTerminal sent file
+  uploads as `Array.from(new Uint8Array(buf))` which JSON-inflates each
+  byte ~3x. Anything over ~330KB blew the buffer mid-upload and dropped
+  the user to the login screen. First commit bumped the buffer to 64MB;
+  follow-up migrated the uploader to multipart POST against the
+  already-wired `/api/upload` (multer) endpoint and shrank the buffer
+  to 4MB. Binary now never touches the websocket — the frontend POSTs
+  the file, then emits a small `file-upload-ready` event with metadata
+  only.
+- **DOORMAN freeze under heavy mouse activity** (`b2fa20371` bundled
+  this in with an aquascan fix). Browsers fire mousemove at 60Hz+;
+  BBSTerminal forwarded every one over the socket and the SDK's
+  `screen.handleMouseEvent` walked the whole element tree per event,
+  saturating the event loop until socket.io's ping timeout fired and
+  the user got bounced to login. Throttled `mouse-drag` and `mouse-hover`
+  to 60Hz per session at the socket boundary (16ms minimum between
+  forwards); `mouse-up` and `mouse-click` are NOT throttled. Also
+  gated the 3-per-event console.log spam in `Program._handleData`
+  behind `SDK_LOG_MOUSE=1`.
 
 ### Commits today
 
 ```
+4c2699110 feat(upload): migrate BBSTerminal uploader to multipart HTTP, shrink buffer
 1bdef6d27 fix(upload): bump socket.io maxHttpBufferSize to fit JSON-encoded uploads
 732163e2f test(operator-chat): regression guard for cancel-page repository resolution
 1c5b18227 fix(messages): expert mode no longer redraws full menu after E command
 b493b6802 fix(download): D command picks up flagged files; restore Conf14 screens
 ```
 
-## 2026-05-03 — Maintenance pass (yesterday)
+## 2026-05-03 (yesterday) — see git log for detail
 
-- **DOORSMENU root cause** = stack-above-BSS overlap + missing Allocate
-  (`0049d687f` + `ce742d5ce`).
-- **amiga-text-decode util**: shared SAUCE/iCE/encoding pipeline,
-  preserves high-bit bytes (`26b131485`, `28cabd824`, `1a1278dda`).
-- **Conftop double-banner**: form-feed → ESC[2J for in-protocol clears
-  + DOS stdout silently discarded for XIM doors (`8abcb6082`,
-  `b014ec0cd`).
-- **Operator chat 1:1 audit**: per-Enter response, no fake typing delay
-  (`63539d80c`).
-- **Dead code purge**: `fileEntries` cache, `displayFileAreaContents`
-  chain, `AmigaDosEnvironment.ts` (`fa1f1d2e7`, `fa1a27b94`,
-  `db6a8618b`).
-- **SIG_LI (XIM 912)** + info-editor `_fallback` write error
-  (`35779aa8b`, `5c6b122c9`).
+DOORSMENU root cause (`0049d687f`+`ce742d5ce`), amiga-text-decode util
+(`26b131485` series), Conftop double-banner (`8abcb6082`+`b014ec0cd`),
+operator chat 1:1 audit (`63539d80c`), dead-code purge of fileEntries /
+displayFileAreaContents / AmigaDosEnvironment, SIG_LI + info-editor
+fallback writes.
 
 ## How to run
 
@@ -75,14 +80,12 @@ b493b6802 fix(download): D command picks up flagged files; restore Conf14 screen
 2. **AquaScan false new-mail count** — `N` / `NSU` reports unread
    messages that aren't really there. Needs a sysop running the door
    + MCP traces (compare `AquaScan.Date.N` vs `msgBase` lastRead).
+   Note the seed bug was fixed in `b2fa20371` — re-test the new-mail
+   count first; the symptom may already be gone.
 3. **13 divergent door icons vs Sanctuary reference** — 11 are
    `OVERCLOCK=100` only (keep). 2 substantive: `ByteKiller`
    (NUKER/SPY_LIST) and `Request` (path differences). Installation-
    specific, your call.
-4. **Upload via multipart, not socket.io** — frontend already gets
-   `uploadUrl: '/api/upload'`; switching to a multipart POST lets us
-   shrink `maxHttpBufferSize` back down and avoids the 3x JSON
-   inflation. Backend endpoint already exists.
 
 ## Known WEB_ deviations (intentional)
 
@@ -115,6 +118,14 @@ b493b6802 fix(download): D command picks up flagged files; restore Conf14 screen
 - **Expert mode after E**: `displayMainMenu` now has a separate
   `bypassDebounce` flag; use it (not `forceMenuDisplay=true`) when you
   just want to guarantee the prompt renders.
-- **Upload buffer**: `maxHttpBufferSize` must stay >= 3 × `maxFileSize`
-  while frontend uploads via socket.io as JSON arrays
-  (`tests/server/upload-buffer-size.test.ts` enforces this).
+- **Uploads go via HTTP, not the websocket**. BBSTerminal POSTs to
+  `/api/upload` (multer) then emits `file-upload-ready` with metadata.
+  Don't re-introduce JSON-encoded binary on the socket —
+  `tests/server/upload-buffer-size.test.ts` guards both the buffer cap
+  (1MB ≤ x ≤ 16MB) and the absence of `Array.from(new Uint8Array(...))`
+  in the frontend.
+- **Mouse-move events are throttled at the socket boundary** (60Hz per
+  session, drag/hover have independent clocks). Don't bypass it for
+  hover/drag — the saturation that throttle prevents was the cause of
+  the DOORMAN freeze. mouse-up and mouse-click are intentionally NOT
+  throttled (discrete events doors must always see).
