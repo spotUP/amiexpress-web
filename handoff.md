@@ -1,43 +1,59 @@
 # Handoff
 
-## 2026-05-04 — Native AREXX bring-up (#78 Phases 1-5-final)
+## 2026-05-04 — Native AREXX Phase 6 — pick up here
 
-10 commits shipping the full plumbing for running real AREXX scripts
-via RexxMast under MOIRA, with TS-interpreter fallback. End-to-end
-verified live: RexxMast loads, rexxsyslib LVO traps install, MOIRA
-executes RexxMast for 1M instructions without faulting. The remaining
-gap is a full Amiga environment (dos.library traps, Process struct,
-CLI argv) that AmigaDoorSession sets up for doors — see
-`thoughts/shared/handoffs/2026-05-04_native-arexx-bringup.md` for the
-detailed phase-by-phase write-up + commit list.
+12 commits this session: #78 Phases 1 → 5-final + AREXX_TRACE.
+84 tests across 6 suites, TS clean. End-to-end works up to but not
+through actual RexxMast bring-up under MOIRA. Detail in
+`thoughts/shared/handoffs/2026-05-04_native-arexx-bringup.md`.
 
-Sysop ops:
-- Drop `RexxMast` (Commodore copyrighted) into `System/RexxMast`
-- Drop the Rexxc command-line tools into `System/Rexxc/`
-- `bbsConfig.info` `AREXX_ENGINE=auto` (default), `native`, or `ts`
-- Watch `[AREXX]` lines in `backend.log` to see which engine is live
+### Live boot status
 
-84 tests across 6 suites, TS clean. The TS interpreter still handles
-every script — the native path lights up only when bring-up
-completes (which needs Phase 6 work).
+```
+✅ rexxsyslib.library loaded at 0x200000
+✅ 10 LVO traps installed (CreateArgstring → UnlockRexxBase)
+✅ RexxMast hunks parse + load (3 segments)
+✅ MOIRA executes 1M instructions, no fault
+❌ AddPort('REXX') never reached — needs Amiga env around RexxMast
+```
 
-## Current state — 2026-05-04
+### Phase 6 plan
 
-Two work packages closed today; both archived to
-`thoughts/shared/handoffs/2026-05-04_message-audit-and-bug-sweep.md`.
+**Step 1 — diagnose** (env var added this session):
+```bash
+AREXX_TRACE=1 ./dev/scripts/start-servers.sh --bbs-only
+tail -f logs/backend.log | grep AREXX-TRACE
+# Logs first 100 library calls with A0/A1/D0/pc + resolved string
+# for OpenLibrary("…") so you see exactly where RexxMast gets stuck.
+```
 
-- **Message function 1:1 audit** — 16 rounds (commits `2247cf0ed` →
-  `de5a516a8`). 26+ express.e deviations closed across enterMSG /
-  replyToMSG / replyPrompt / displayMessage / listMSGs / mail-scan /
-  move / delete / EXTSEND / captureRealAndInternetNames. The recurring
-  bug was using raw `session.user.username` instead of `confMailName`
-  for "is this my mail?" checks — broke REALNAME / INTERNETNAME confs
-  silently. 17 new regression tests; 74/74 passing.
-- **Bug-queue sweep** — D-command flagged files, expert-mode post-E
-  redraw, operator-page cancel disconnect, upload transport-error
-  disconnect, DOORMAN mouse-flood freeze.
+**Step 2 — wire the missing Amiga env in `rexxmast-service.ts`:**
+1. Install dos.library LVO traps (mirror `installRexxSysLibVectors`
+   pattern, both already in `LibraryTraps.ts`).
+2. Synthesise a Process struct with `pr_MsgPort=hostPortAddr,
+   pr_CLI=0, pr_TaskNum=1` (`<dos/dosextens.h>` layout).
+3. Synthesise an Exec Task so `FindTask(0)` returns it
+   (`ExecLibrary.ts` ~L711-740 has the door-session pattern to copy).
+4. Empty CLI argv (just program name).
+5. Re-run `runUntilReady(10_000_000)`.
 
-## How to run
+★ All Phase 6 changes go in `src/services/arexx/rexxmast-service.ts`.
+
+### Sysop ops
+
+- `System/RexxMast` + `System/Rexxc/` (gitignored, sysop-supplied)
+- `Libs/rexxsyslib.library` (in repo)
+- `bbsConfig.info` `AREXX_ENGINE=auto|native|ts` (default auto)
+- `AREXX_TRACE=1` env var → debug startup
+
+### Tests
+
+```
+SKIP_DB_INIT=1 npm test -- --testPathPattern="(rexx|arexx)"
+# 84 / 84 passing. ✅
+```
+
+### How to run
 
 ```
 ./dev/scripts/start-servers.sh --bbs-only   # BBS terminal only
@@ -47,61 +63,39 @@ Two work packages closed today; both archived to
 
 ## Open priorities
 
-- **#78** AREXX native rexxsyslib via 68K emulator (alternative to the
-  TS interpreter). Multi-day architectural project; only worth
-  picking up if you need full real-AREXX semantics for classic
-  scripts the TS interpreter handles partially (e.g.
-  `Doors/SCEPTIC/F!-REQUEST/request.rexx` hangs on user input).
-- **Stray uncommitted diff** — `src/handlers/door.handler.ts` and
-  `src/server/auth-socket-handlers.ts` show modifications, plus
-  untracked `src/utils/aquascan-slot.util.ts`. Not from the audit; diff
-  before bundling into something unrelated.
+- **#78 Phase 6** — see Phase 6 plan above
+- **#77** AREXX TS interpreter (DONE; native is the alt path)
 
 ## Known WEB_ deviations (intentional)
 
 - Line-mode vs char-mode; no HYDRA bidirectional transfer
-- `2` (callers log): shows DB entries not per-node files
-- ZOOM auto-selects ZIP; no LHA binary available
+- `2` (callers log): DB entries not per-node files
+- ZOOM auto-selects ZIP; no LHA binary
 - GDPR gate on new user
-- File scan at login gated on `SHOW_NEW_FILES` tooltype
-- `lowestNotDel` recomputed from headers (express.e just bumps `+1`)
+- File scan at login gated on `SHOW_NEW_FILES`
+- `lowestNotDel` recomputed from headers (express.e just bumps +1)
 - EH preserves 'p' (censored) status (express.e forces 'P')
-- ZModem batch upload from `Msg. Options X` replaced by F file-attach
+- ZModem `Msg. Options X` replaced by F file-attach
 
 ## Gotchas
 
-- **Amiga = BE**: CLAUDE.md Rule 0. QWK/LZH/SAUCE are LE.
-- **Message storage**: body at `<conf>/MsgBase/<id>` (no extension, raw
-  body, `\n` not `\r\n`). HeaderFile + MailStats are the source of
-  truth. Don't write to `Conf*/Messages/` — dead path.
-- **`mailStat.highMsgNum`** stores the *next* id; total = `highMsgNum-1`.
-- **`confMailName`, NOT `session.user.username`** for every "is this my
-  mail?" check across the message subsystem. Use
-  `getConfMailName(session)` or session-less
-  `getConfMailNameFor(user, confId, msgBaseId)` for multi-conf
-  iteration.
-- **`~SP` in screens**: `displayScreen` handles pause + segment-resume.
-  Callers must NOT also call `doPause()`.
-- **`relConfNum`** drives the menu prompt and conftop, not `currentConf`.
-- **Screen clearing fires from**: SCREENS_REQUIRE_CLEAR, leading 0x0C,
-  `~f` MCI, `~SR_` art files.
-- **`_fallback` .info files**: `writeInfoFile` throws on these now —
-  re-create the .info via Workbench/IconEdit.
-- **High-bit bytes**: route ALL screen/bulletin reads through
-  `readAmigaTextFileWithTransforms`. `fs.readFileSync(path, 'utf8')` and
-  `fileCache.readString(path, 'utf8')` silently corrupt 0xB7/0xA9/0xAE.
-- **Expert mode after E**: `displayMainMenu` has a separate
-  `bypassDebounce` flag; use it (not `forceMenuDisplay=true`) when you
-  just want to guarantee the prompt renders.
-- **Uploads go via HTTP**, not the websocket. BBSTerminal POSTs to
-  `/api/upload` (multer) then emits `file-upload-ready` with metadata.
-  `tests/server/upload-buffer-size.test.ts` guards both the buffer cap
-  and the absence of `Array.from(new Uint8Array(...))` in the frontend.
-- **Mouse-move events are throttled** at the socket boundary (60Hz per
-  session, drag/hover have independent clocks). `mouse-up` and
-  `mouse-click` are intentionally NOT throttled.
-- **`SKIP_DB_INIT=1`** disables the test-DB setup
-  (`tests/setup.ts:14-16`). Suites that need the test DB
-  (`message-pointers`, `message-scan-parity`, `message-repository`)
-  will fail with "Test database not initialized" — run them WITHOUT
+- **Amiga = BE**: QWK/LZH/SAUCE are LE.
+- **Message storage**: body at `<conf>/MsgBase/<id>` (no extension,
+  raw body, `\n`). HeaderFile + MailStats authoritative.
+- **`mailStat.highMsgNum`** stores the *next* id; total = high-1.
+- **`confMailName`, NOT `session.user.username`** for "is this my
+  mail?" checks. Use `getConfMailName(session)` or
+  `getConfMailNameFor(user, confId, msgBaseId)`.
+- **`~SP` in screens**: `displayScreen` handles pause + resume.
+- **`relConfNum`** drives menu prompt + conftop, not `currentConf`.
+- **`_fallback` .info files**: `writeInfoFile` throws on these.
+- **High-bit bytes**: route screen/bulletin reads through
+  `readAmigaTextFileWithTransforms`. `fs.readFileSync(p, 'utf8')`
+  silently corrupts 0xB7/0xA9/0xAE.
+- **Uploads via HTTP**, not websocket.
+- **Mouse-move throttled** at socket boundary (60Hz per session).
+- **`SKIP_DB_INIT=1`** breaks `message-pointers` /
+  `message-scan-parity` / `message-repository` — run them without
   the env var.
+- **AREXX native**: `RexxMast` + `Rexxc/` gitignored (Commodore
+  copyright). Sysops drop their own.
