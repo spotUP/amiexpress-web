@@ -99,17 +99,16 @@ repo. Toggle `AREXX_ENGINE=auto|native|ts` in `bbsConfig.info`.
 
 ## Open priorities
 
-- **MCI parser 1:1 with express.e tokenizer.** Our `screen.handler.ts`
-  substitutes MCI codes via a regex pipeline. Express.e's `processMciCmd`
-  (lines 5258-5410) is a single-pass tokenizer: see `~`, eat optional
-  3-digit width prefix, scan for next space OR `|` terminator. Real
-  impact: `Screens/Logon24hrs.txt` writes `~N.` with no `|` — our regex
-  sees the `.` as a non-match and falls through, leaving `~N` literal.
-  Port `processMci` / `processMciCmd` to TS, replace the regex pipeline
-  + ad-hoc substituters in `door.handler.ts:2735` and
-  `batch-scheduler.ts:170`.
-- **Native AREXX end-to-end smoke test** once the rexxsyslib interpreter
-  invocation arm is identified (Phase 7+).
+- **MCI tokenizer follow-on cleanup.** `src/utils/mci-tokenizer.util.ts`
+  is in (`ff73674ed`) and `screen.handler.ts` routes the userInfo
+  dispatch through it. Color/bg codes (c0-c7, b0-b6) and FC/FF/FL/AK/SP/
+  CR/NS still go through `mciRegex(...)`. Migrate them to the tokenizer
+  too so all MCI substitution is single-pass. Also audit
+  `door.handler.ts:2735` and `batch-scheduler.ts:170` for the ad-hoc
+  substituters.
+- **Native AREXX end-to-end smoke test** — promote `dev/scripts/arexx-trace.ts`
+  into a `tests/services/native-arexx-smoke.test.ts` so CI catches
+  regressions in the bridged-interpretation path.
 - **doorman "Cannot read directory"** — needs user repro path.
 
 ## Known WEB_ deviations (intentional)
