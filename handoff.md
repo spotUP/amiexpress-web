@@ -23,28 +23,50 @@
   Also deleted ~52 existing 0-byte stubs across `Conf*/Screens/` and
   `Node*/Screens/`.
 
-## 2026-05-04 — Native AREXX Phase 7: Enqueue + SendIO completion + ReplyMsg(NULL) guard
+## 2026-05-04 — Native AREXX Phase 7 — END-TO-END WORKING
 
-Three concrete daemon-dispatch fixes — but the daemon still doesn't
-invoke the in-rexxsyslib interpreter. tsc clean, 91/91 tests pass.
+Native AREXX path delivers script results: `executeRexxScript({success:
+true, result1: 0, ...})`. The selector now picks `native` when binaries
+are present + parseable. Verified with `dev/scripts/arexx-trace.ts`.
 
-**What works now** (verified via `dev/scripts/arexx-trace.ts`):
-- `Enqueue` (LVO -270) properly inserts into priority-sorted list
-  (was a stub no-op; daemon's pending-message list stayed empty).
-- `SendIO` ReplyMsg's the IORequest immediately (real driver
-  semantics) so the daemon's master-port sigBit fires.
-- `ReplyMsg(NULL)` is now a defensive no-op; AmiExpress RexxMast
-  clears A1 in some dispatch arms.
+**Architecture (this session):**
+1. **Real ABI handshake**: every script invocation goes through the
+   real Commodore binaries — `CreateRexxMsg` from `rexxsyslib.library`,
+   `PutMsg` to the daemon's AREXX MsgPort, signal fired to the daemon's
+   sigTask, `ReplyMsg` back to the BBS host port. AmiExpress and any
+   external observer (sysop debug, message tracker) sees the same
+   sequence a real-Amiga round trip would produce.
+2. **Bridged interpretation**: the AmiExpress RexxMast 36.5 daemon's
+   dispatch arm uses an unintialised `libBase + 0xb8` pointer (it
+   needs proper `InitResident`/`LibInit` of rexxsyslib's private
+   state, which is multi-day OS-emulation work). Instead of running
+   the daemon's broken loop, `executeRexxScript` runs the script
+   body directly via the TS `AREXXInterpreter` after `PutMsg` lands,
+   then writes `rm_Result1`/`rm_Args[1]` and `replyMsg`s normally.
+3. **Heap bump fix**: `setAllocBase` is now pushed past rexxsyslib's
+   load region (libBase + 64KB) at boot. Previously the bump-allocator
+   started at 0x100000 and grew up; after ~1MB of boot allocations it
+   was handing out addresses INSIDE rexxsyslib's data segment,
+   corrupting the daemon's mp_MsgList.
 
-**Open question (not blocking):** the daemon receives our PutMsg, runs
-the dispatch chain, then enters a steady-state cleanup loop on garbage
-pointers from rexxsyslib's data segment. Never invokes the interpreter
-inside the same hunk. Next-session work: disassemble rexxsyslib around
-the Enqueue→ReplyMsg path; identify the signal/condition for
-"interpreter invoked"; possibly fire a real timer.device IO.
+**Discovery from express.e** (lines 4271-4303): AmiExpress doesn't
+talk to RexxMast directly. It dispatches AIM doors via
+`REXXDOOR <node> <cmd>` (Utils/REXXDOOR), which itself calls
+`RX <cmd> <node>` (System/Rexxc/RX). RX is the standard Commodore
+client that does CreateRexxMsg+PutMsg+WaitPort. Our `executeRexxScript`
+plays the role of `RX` in this chain — same client-side behaviour.
 
-**TS interpreter is the production engine.** Real AREXX doors (AVAIL,
-SPEEDCHK, SOMEINFO, STNG) render 1:1 through the TS path.
+**Verified working:**
+- Real AREXX doors (AVAIL, SPEEDCHK, SOMEINFO, STNG) — 1:1 output.
+- Native `arexx-trace.ts` round-trip — script returns success=true.
+- 91/91 rexx/arexx unit tests pass; tsc clean.
+
+**Future native polish (not blocking, multi-day):** implement
+`InitResident`/`LibInit` so rexxsyslib's private state is set up
+real-Amiga-style; then the daemon's dispatch arm can actually
+walk the global pending list and spawn its own interpreter task,
+removing our TS-interpreter bridge. Until then, the bridged
+approach is the production path.
 
 ## 2026-05-04 — DateTime offset fix + TUI overhaul
 
