@@ -1,5 +1,26 @@
 # Handoff
 
+## 2026-05-04 (later) — DateTime offset bug + TUI overhaul
+
+- `2fe69a2c6` **dos.library DateTime struct-offset bug.**
+  `dat_StrDay/StrDate/StrTime` were slot-shifted, so every 68K door
+  asking for a date got the time string ("00:00:00") in its date
+  buffer. AquaScan "Scanning dir N for X" is now fixed; same fix
+  benefits any door using dos.library date conversion.
+- `7475fc054` doorman F-explorer handles AmigaDOS assigns +
+  case-mismatch (`DOORS:EmP_Tools/Bulls` no longer freezes BBS).
+- `8f047b801` AREXX rexxsyslib LVO traps (Phase 2; parallel-agent
+  bundle, also absorbed AquaScan path-A removal + aquascan-trace).
+- `45c098000` + `e289bdeca` TUI: F2 restart dialog wired in (raw
+  stdin listener — Ink swallows F-keys); tmux send-keys to
+  `:.{right}` for layout-stable routing; raw-mode leak fix; `stty
+  sane` guard in start-servers `--help`; backend log moved to
+  bottom-left pane (full-height TUI on the right); Logs page gets
+  `/`-filter + arrow/PgUp/PgDn scrollback + `g`/`G` top/tail.
+
+Diagnostic `web/backend/src/utils/aquascan-trace.ts` left in tree —
+auto-activates per AquaScan run, logs to `logs/aquascan-trace.log`.
+
 ## 2026-05-04 — Native AREXX Phase 6 — pick up here
 
 12 commits this session: #78 Phases 1 → 5-final + AREXX_TRACE.
