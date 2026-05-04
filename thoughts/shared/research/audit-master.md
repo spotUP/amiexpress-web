@@ -81,6 +81,7 @@ Sweep totals:
 
 ### ID: H-4 — QWK msgNum read as LE binary integer, should be 7-char ASCII decimal
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — msgNum parsed as 7-char ASCII decimal at qwk.service.ts:192-193
 **File**: `web/backend/src/services/qwk.service.ts:189–196, 381`
 **express.e**: `qwk.e:561–580`
 **Impact**: Any QWK round-trip with a real Amiga QWK reader/writer will produce corrupt or unreadable message packets; message numbers and conference numbers are at wrong offsets.
@@ -90,6 +91,7 @@ Sweep totals:
 
 ### ID: H-5 — QWK confNum written at buffer[110] instead of buffer[123/124]
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — confNum written as LE uint16 at qwk.service.ts:496-498
 **File**: `web/backend/src/services/qwk.service.ts:417`
 **express.e**: `qwk.e:568–569`
 **Impact**: QWK packets have conference number at the wrong byte position; offline mail readers will assign all messages to the wrong conference.
@@ -167,6 +169,7 @@ Sweep totals:
 
 ### ID: B-4 — NOT_ALLOWED result routes to DISPLAY_CONF_BULL instead of DISPLAY_MENU
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — NOT_ALLOWED at command.handler.ts:3934 routes to DISPLAY_MENU with menuPause=true
 **File**: `web/backend/src/handlers/command-handler/input-handlers.ts:617–635`
 **express.e**: `28639–28648`
 **Impact**: When a user tries a command they don't have access to, they are dumped back to the conference bulletin instead of the menu; the "Command requires higher access" message is also never shown.
@@ -199,6 +202,7 @@ Sweep totals:
 
 ### ID: A-5 — Username retry limit conflates name retries with password fails
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — session.usernameRetryCount split from loginRetryCount in auth-socket-handlers.ts
 **File**: `web/backend/src/server/auth-socket-handlers.ts:906`
 **express.e**: `29631–29637`
 **Impact**: Name retry limit and password fail limit share the same counter; a user entering many wrong usernames consumes password retry budget and vice versa.
@@ -208,6 +212,7 @@ Sweep totals:
 
 ### ID: A-13 — SCREEN_JOINED not displayed after new user account creation
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — displayScreen('JOINED') with doPause fallback in new-user.handler.ts
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:1329–1380`
 **express.e**: `30124–30125`
 **Impact**: New users see a hardcoded welcome string instead of the sysop-configured JOINED screen file, breaking BBS customisation.
@@ -227,6 +232,7 @@ Sweep totals:
 
 ### ID: D-5 — Forward (F) Subject prompt never pre-fills original subject
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — forwardMSG promptForwardSubject pre-fills inputBuffer with originalSubject
 **File**: `web/backend/src/handlers/message/message-entry.handler.ts:1022–1025`
 **express.e**: `9825–9830`
 **Impact**: Forwarding a message always aborts silently when the user presses Enter for Subject because the original subject is not pre-filled; it is impossible to keep the original subject by pressing Enter.
@@ -305,6 +311,7 @@ Sweep totals:
 
 ### ID: F-8 — DISPLAY_CONF_BULL state does not reset currentMenuName before CONF_BULL
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — currentMenuName='' before displayScreen('CONF_BULL') in command.handler.ts
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:218–226`
 **express.e**: `5056–5061`
 **Impact**: `currentMenuName` retains the previous conference's value when CONF_BULL is displayed, causing stale menu names to appear in MCI-processed screens.
@@ -444,6 +451,7 @@ Sweep totals:
 
 ### ID: A-22 — Questionnaire `~` detection checks anywhere in line instead of last char only
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — endsWith('~') used in new-user.handler.ts:1203
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:1083–1088`
 **express.e**: `30368–30373`
 **Impact**: Script lines containing `~` in the middle are incorrectly treated as input prompts; only lines ending with `~` should be prompts.
@@ -457,6 +465,7 @@ Sweep totals:
 
 ### ID: B-5 — Duplicate `case "Q"` in command dispatch (one is dead code)
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — duplicate case "Q" removed from command-execution.ts
 **File**: `web/backend/src/handlers/command-handler/command-execution.ts:254, 424`
 **express.e**: `25504–25516`
 **Impact**: The second `case "Q"` is unreachable dead code; the wrong Q handler may be active.
@@ -656,6 +665,7 @@ Sweep totals:
 
 ### ID: D-9 — confScan table missing `[0m` reset and "Found Mail!" line
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — added \r\n after header reset + "Found Mail!" banner in message-scan.handler.ts
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:538–539`
 **express.e**: `11712–11714, 11737`
 **Impact**: Missing color reset after dash line; "Found Mail!" not emitted before the "Would you like to read it now" prompt.
@@ -845,6 +855,7 @@ Sweep totals:
 
 ### ID: G-LC — `~LC` uses raw DB date string instead of formatLongDateTime format
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — formatLongDateTime called for ~LC at screen.handler.ts:618
 **File**: `web/backend/src/handlers/screen.handler.ts:877`
 **express.e**: `5315–5318`
 **Impact**: Last-call date in MCI-processed screens shows a raw ISO date string instead of the `"Mon 07-Jan-26 14:32:00"` AmiExpress format.
@@ -854,6 +865,7 @@ Sweep totals:
 
 ### ID: G-SU-SD — `~SU`/`~SD` always output KB; should auto-scale with lowercase suffix
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — calcSizeText with lowercase kb/mb/gb at screen.handler.ts:633-644
 **File**: `web/backend/src/handlers/screen.handler.ts:888–889`
 **express.e**: `5359–5366`
 **Impact**: Upload/download size always shows in KB with uppercase K; correct format auto-scales to kb/mb/gb lowercase.
@@ -863,6 +875,7 @@ Sweep totals:
 
 ### ID: G-LG-ON — `~LG`/`~ON` hardcoded to '1' instead of actual node number
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — session.nodeId used at screen.handler.ts:649-650
 **File**: `web/backend/src/handlers/screen.handler.ts:893–894`
 **express.e**: `5379–5382`
 **Impact**: Screen files showing the node number always display 1 regardless of which node the user is on.
@@ -872,6 +885,7 @@ Sweep totals:
 
 ### ID: G-OD — `~OD` shows today's date instead of logon date
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — formatLongDate(logonDate) at screen.handler.ts:681
 **File**: `web/backend/src/handlers/screen.handler.ts:939`
 **express.e**: `5391–5394`
 **Impact**: MCI `~OD` (logon date) shows today's system date, not the date the user logged on.
@@ -881,6 +895,7 @@ Sweep totals:
 
 ### ID: G-CT — `~CT` shows current time instead of logon time
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — formatLongTime(logonDate) at screen.handler.ts:674
 **File**: `web/backend/src/handlers/screen.handler.ts:929`
 **express.e**: `5431–5434`
 **Impact**: `~CT` (Connected Time / time of logon) shows the current system time instead of when the user logged on.
@@ -899,6 +914,7 @@ Sweep totals:
 
 ### ID: G-CR_ — `~CR_` sets hasPause flag but doesn't enforce actual keypress wait
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — hasPause flag set at screen.handler.ts:1187
 **File**: `web/backend/src/handlers/screen.handler.ts:1433–1436`
 **express.e**: `5564–5574`
 **Impact**: Prompted keypress (`~CR_prompt`) shows the prompt but may not block execution waiting for the keypress.
@@ -908,6 +924,7 @@ Sweep totals:
 
 ### ID: G-NS — `~NS` has no effect; should set nonStopDisplayFlag
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — nonStopText flag set at screen.handler.ts:725-730
 **File**: `web/backend/src/handlers/screen.handler.ts:985`
 **express.e**: `5740–5742`
 **Impact**: Screen files using `~NS` to suppress pause prompts still pause; the non-stop flag is never set.
@@ -935,6 +952,7 @@ Sweep totals:
 
 ### ID: G-screens — 7 screen types missing from SCREEN_DIR_MAP
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — All 7 screen types in SCREEN_DIR_MAP at screen.handler.ts:131-137
 **File**: `web/backend/src/handlers/screen.handler.ts` (SCREEN_DIR_MAP)
 **express.e**: `6615–6653`
 **Impact**: `SCREEN_NONEWATBAUD`, `SCREEN_NOT_TIME`, `SCREEN_NOCALLERSATBAUD`, `SCREEN_LANGUAGES`, `SCREEN_INTERNETNAMES`, `SCREEN_REALNAMES`, `SCREEN_MAILSCAN` can never be displayed; baud-parameterized screens use the wrong lookup.
@@ -944,6 +962,7 @@ Sweep totals:
 
 ### ID: G-MCI-enable — MCI always processed even when first line doesn't start with `~`
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — First-line ~ check at screen.handler.ts:1948-1959
 **File**: `web/backend/src/handlers/screen.handler.ts` (loadScreenFile / parseMciCodes)
 **express.e**: `6800–6806`
 **Impact**: Screen files without a leading `~` have their content incorrectly MCI-processed, potentially mangling literal `~` characters in plain-text screens.
@@ -953,6 +972,7 @@ Sweep totals:
 
 ### ID: G-datetime — formatLongDateTime missing day-of-week prefix
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Day-of-week prefix in formatLongDateTime at date-time.util.ts:93-107
 **File**: `web/backend/src/utils/date-time.util.ts:78–80`
 **express.e**: `MiscFuncs.e:320–341`
 **Impact**: `formatLongDateTime` outputs `"07-Jan-2026 14:32:15"` instead of `"Mon 07-Jan-26 14:32:00"` (missing `Mon` prefix, wrong year format).
@@ -962,6 +982,7 @@ Sweep totals:
 
 ### ID: G-longdate — formatLongDate uses DD-Mon-YYYY; express.e uses MM-DD-YY
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — formatLongDate uses MM-DD-YY at date-time.util.ts:41-46
 **File**: `web/backend/src/utils/date-time.util.ts:39–48`
 **express.e**: `MiscFuncs.e:278–297`
 **Impact**: Date fields (including `~OD`, `~DT`, `~LC`) display in a different format than Amiga users expect.
@@ -971,6 +992,7 @@ Sweep totals:
 
 ### ID: G-bull-help — BullHelp existence check uses security variants instead of literal file
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — findBullHelpAcross check at bulletin.handler.ts:214
 **File**: `web/backend/src/utils/screen-security.util.ts:179–197`
 **express.e**: `24616–24618`
 **Impact**: The B command always permits bulletin listing because the literal `BullHelp.txt` existence gate is skipped.
@@ -980,6 +1002,7 @@ Sweep totals:
 
 ### ID: G-bull-loop — Bulletin display returns to menu instead of re-prompting
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Re-prompts after bulletin display at bulletin.handler.ts:303-309
 **File**: `web/backend/src/handlers/bulletin.handler.ts:228–233`
 **express.e**: `24643–24655`
 **Impact**: After viewing a bulletin, the user is returned to the main menu instead of being prompted for another bulletin number.
