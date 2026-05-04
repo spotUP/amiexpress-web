@@ -1,5 +1,52 @@
 # Handoff
 
+## 2026-05-04 — Native AREXX Phase 7: Enqueue + SendIO completion + ReplyMsg(NULL) guard
+
+Three concrete daemon-dispatch fixes — but the daemon still doesn't
+invoke the in-rexxsyslib interpreter. tsc clean, 91/91 tests pass.
+
+**What works now** (verified via `dev/scripts/arexx-trace.ts`):
+- `Enqueue` (LVO -270) properly inserts into priority-sorted list —
+  exec-vectors.ts. Was a stub no-op; the daemon's pending-message
+  list stayed empty and RemHead spun on garbage afterwards.
+- `SendIO` ReplyMsg's the IORequest immediately (real driver
+  semantics) so the daemon's master-port sigBit fires when its
+  timer.device IO "completes" — ExecLibrary.sendIO. Without this
+  the daemon's Wait(0x6000) after dispatch never woke.
+- `ReplyMsg(NULL)` is now a defensive no-op — ExecLibrary.replyMsg.
+  AmiExpress RexxMast clears A1 in some dispatch arms; reading
+  memory at addr 0+14 was auto-registering a phantom port with
+  the wrong sigBit (16/17), corrupting the daemon's signal map.
+
+**What still doesn't work — open question:**
+The daemon receives our PutMsg, runs IsRexxMsg/FillRexxMsg/Remove/
+Enqueue/ReplyMsg/Permit/SendIO/Wait, then enters a steady-state
+RemHead/ReplyMsg/DeleteRexxMsg cleanup loop on garbage pointers
+from rexxsyslib's internal data segment (offsets +0x0d8 / +0x25d3
+relative to rexxsyslib base 0x200000). The daemon never invokes
+rexxsyslib's interpreter, which lives INSIDE the same hunk —
+strings dump shows `INTERPRET`, `TRACE`, `ARexx V1.15`, no
+separate `rexxc` binary referenced. The `RexxMast` launcher is
+2364 bytes; the daemon body is in rexxsyslib's hunk via the
+CreateProc trampoline.
+
+To finish the native path someone needs to:
+1. Disassemble rexxsyslib.library around the Enqueue→ReplyMsg
+   dispatch arm — find the path from "msg enqueued" to
+   "interpreter invoked" and identify what signal/condition the
+   daemon expects between those two states.
+2. Verify our daemon is on the right execution path post-dispatch;
+   the constant `0x25d3` in ReplyMsg's A0 looks like a fixed
+   data-segment offset that may be a function pointer the daemon
+   should be JSR'ing to (interpreter entry?).
+3. Possibly we need to actually-fire the timer.device IO with a
+   pending IORequest so the daemon's main loop progresses past
+   the Wait that the cleanup loop ends in.
+
+**TS interpreter is the production engine.** Real AREXX doors
+(AVAIL, SPEEDCHK, SOMEINFO, STNG) render 1:1 through the TS path.
+Native is committed-and-progressing but not user-facing.
+
 ## 2026-05-04 — DateTime offset fix + TUI overhaul
 
 - `2fe69a2c6` **dos.library DateTime struct-offset bug.**
@@ -18,48 +65,29 @@
   arrow/PgUp/PgDn scrollback + `g`/`G` top/tail.
 - `9f636c9d4` aquascan-trace plumbing ripped post-fix; tree clean.
 
-## 2026-05-04 — Native AREXX Phase 6 — CreateProc next
+## 2026-05-04 — Native AREXX Phase 6 (boot READY)
 
-Phase 6 env wiring committed. tsc clean, 90/90 rexx/arexx tests pass.
-Live boot now traps 100 library calls vs 0 before. New blocker:
-RexxMast `CreateProc` returns 0 (UNSUPPORTED) → parent loops on
-`LockRexxBase` instead of reaching `AddPort('REXX')`.
+Boot path verified: ExecBase / exception vectors / 297 LVO traps /
+RexxMast Process struct / CreateProc trampoline / LoadSeg override
+for dynamically-loaded daemons / OpenDevice timer.device override.
+`runUntilReady → true`, `AddPort("AREXX")` observed. The launcher
+spawns the daemon in our singleton via the trampoline (no scheduler
+needed — we just switch PC into seg 1).
 
-Live boot status:
+Discovery: `RexxMast` is a 2364-byte launcher; the actual
+interpreter (`INTERPRET`, `TRACE`, `ARexx V1.15` strings) lives
+INSIDE `rexxsyslib.library`. There's no separate `rexxc` binary on
+this version. The daemon's CreateProc target IS rexxsyslib's
+hunk. Phase 7 work needs to find the dispatch arm from
+"msg enqueued" → "interpreter invoked" inside that hunk.
 
-```
-✅ ExecBase + low-mem + exception vectors
-✅ MOIRA library trap handler routed
-✅ exec.library 62 LVOs + dos.library 79 LVOs + rexxsyslib 10 LVOs
-✅ Process struct (NT_PROCESS, pr_TaskNum=1, pr_CLI=0, ln_Name=RexxMast)
-✅ FindTask(0) resolves to RexxMast Process
-✅ syncTrapAddressesToMoira: 295 traps in batch set
-✅ runUntilReady isTrapAddress-guarded (door-style dispatch)
-✅ Traps fire: WaitPort, GetMsg, OpenLibrary x3, CreateProc, CloseLibrary x2
-❌ CreateProc returns 0 → RexxMast loops in LockRexxBase
-```
+TS interpreter is the production engine; real AREXX doors (AVAIL,
+SPEEDCHK, SOMEINFO, STNG) render 1:1. AnsiSKiP installed at
+`Doors/AnsiSkip/`; `door.handler.ts` routes AIM/XIM/SIM/TIM/IIM
+with .rexx/.rx LOCATIONs through `executeARexxDoor`.
 
-Phase 6 ships in `services/arexx/rexxmast-service.ts`:
-ExecLibrary.initialize → setLibraryLoader → setLibraryTrapHandler →
-installExecVectors → openLibraryHybrid('dos.library', 37) → new
-DosLibrary + setDOSLibrary + installDOSVectors → allocateDoorTask
-(NT_PROCESS, pr_TaskNum=1, ln_Name="RexxMast", pr_StackBase/Size) →
-syncTrapAddressesToMoira → refillPrefetch in runUntilReady (else
-ILLEGAL hits exception 4 not trap dispatch). Budget 1M → 10M.
-
-Diagnostic: `dev/scripts/arexx-trace.ts` — boots singleton in
-isolation, prints first 100 lib calls with regs + resolved strings.
-
-Next: `DosLibrary.ts:2853 CreateProc` returns D0=0. Forks aren't
-modeled in our singleton, so:
-
-1. **Fake success** — non-zero process pointer; arexx-context-gated
-   so doors don't see fake forks. One-line change. Run AREXX_TRACE
-   after.
-2. **Trampoline** — extract D3 SegList, JMP to its entry in singleton.
-3. **Disassemble RexxMast** to find `AddPort('REXX')` branch.
-
-Recommend option 1 + AREXX_TRACE.
+Diagnostic: `dev/scripts/arexx-trace.ts` boots the singleton in
+isolation and dumps the first 100 library calls.
 
 ## How to run
 
@@ -78,8 +106,23 @@ is in repo. Toggle `AREXX_ENGINE=auto|native|ts` in `bbsConfig.info`.
 
 ## Open priorities
 
-- **#78 CreateProc** — see "Next step" above
+- **#78 native AREXX end-to-end smoke test** — ship a minimal script
+  through `executeRexxScript()` to validate the host-port round trip.
 - **#77** AREXX TS interpreter (DONE; native is alt path)
+- **MCI parser: 1:1 with express.e tokenizer.** Our `screen.handler.ts`
+  substitutes MCI codes via a regex pipeline
+  (`parsed.replace(mciRegex('N'), ...)`). Express.e's `processMciCmd`
+  (lines 5258-5410) is a single-pass tokenizer: see `~`, eat optional
+  3-digit width prefix, scan for next space OR `|` terminator,
+  exact-match the extracted command against an if/else chain. Real
+  impact: `Screens/Logon24hrs.txt` writes `~N.` with no `|` — our
+  regex sees the `.` as a non-match and falls through, leaving `~N`
+  literal in the output. Refactor target: port `processMci` /
+  `processMciCmd` to TypeScript and replace the regex pipeline +
+  every other ad-hoc MCI substituter (door.handler.ts:2735's
+  `~CL.`/`~N|` notes, batch-scheduler.ts:170 basic MCI). Validate
+  against express.e:5258-5410 (LVO list), :5769-5802 (main loop),
+  :6810 (line-mode invocation site).
 
 ## Known WEB_ deviations (intentional)
 
