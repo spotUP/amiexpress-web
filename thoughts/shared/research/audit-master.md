@@ -193,7 +193,7 @@ Sweep totals:
 
 ### ID: A-3 — Reserved node check missing after BBSTITLE
 **Priority**: P1
-**Status**: ✓ FIXED 2026-05-04 — reservedFor session field + reservedName check in pre-login transitionToBBSTitle
+**Status**: ✓ FIXED 2026-05-04 — Display side wired (reservedFor session field + reservedName banner in pre-login transitionToBBSTitle). Setter side closed full-parity 2026-05-04 (later in day): per-node reservation lives in `services/node-reservation.service.ts` (Map<nodeId, string>); admin endpoints `POST /api/nodes/:nodeId/reserve {username}` (set/F4-toggle-clear) and `GET /api/nodes/:nodeId/reserve` in `api/node-control-routes.ts`; `createSession()` populates `session.reservedFor` from the store; logoff via `handleGoodbyeCommand` clears the reservation (express.e:8213); auth handler bumps non-matching authenticated users with `420 Node is currently reserved for another user.` + disconnect (express.e:28734-28738 / 29129-29135, case-insensitive match per StriCmp). 33 regression tests across 5 suites: tests/services/node-reservation.service.test.ts, tests/api/node-control-routes.test.ts, tests/session-manager-reserved-for.test.ts, tests/handlers/goodbye-clears-reservation.test.ts, tests/server/connect-bump-on-reservation.test.ts.
 **File**: `web/backend/src/handlers/command-handler/pre-login.ts`
 **express.e**: `29554–29557`
 **Impact**: The "Node N is reserved right now, for <name>" warning is never shown; reserved nodes appear fully open to callers.
