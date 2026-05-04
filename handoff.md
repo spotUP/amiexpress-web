@@ -18,47 +18,85 @@
   bottom-left pane (full-height TUI on the right); Logs page gets
   `/`-filter + arrow/PgUp/PgDn scrollback + `g`/`G` top/tail.
 
-Diagnostic `web/backend/src/utils/aquascan-trace.ts` left in tree —
-auto-activates per AquaScan run, logs to `logs/aquascan-trace.log`.
+aquascan-trace plumbing was kept while debugging, then ripped after
+the fix verified — tree clean.
 
-## 2026-05-04 — Native AREXX Phase 6 — pick up here
+## 2026-05-04 (latest) — Native AREXX Phase 6 wiring landed; CreateProc next
 
-12 commits this session: #78 Phases 1 → 5-final + AREXX_TRACE.
-84 tests across 6 suites, TS clean. End-to-end works up to but not
-through actual RexxMast bring-up under MOIRA. Detail in
-`thoughts/shared/handoffs/2026-05-04_native-arexx-bringup.md`.
+Phase 6 env wiring committed this session. tsc clean, 90/90 rexx/arexx
+tests pass (84 prior + 6 new Phase 6 invariants). Live boot now
+**traps 100 library calls** vs 0 before — the wiring is fully
+connected. New blocker: RexxMast's `CreateProc` returns 0 (UNSUPPORTED),
+which sends RexxMast into a `LockRexxBase` retry loop instead of
+reaching `AddPort('REXX')`.
 
-### Live boot status
+### Live boot status (post-Phase-6)
 
 ```
-✅ rexxsyslib.library loaded at 0x200000
-✅ 10 LVO traps installed (CreateArgstring → UnlockRexxBase)
-✅ RexxMast hunks parse + load (3 segments)
-✅ MOIRA executes 1M instructions, no fault
-❌ AddPort('REXX') never reached — needs Amiga env around RexxMast
+✅ ExecLibrary.initialize() — ExecBase + low-mem ptrs + exception vecs
+✅ MOIRA library trap handler routed
+✅ exec.library 62 LVOs + dos.library 79 LVOs + rexxsyslib 10 LVOs
+✅ Process struct: NT_PROCESS, pr_TaskNum=1, pr_CLI=0, ln_Name=RexxMast
+✅ FindTask(0) resolves to RexxMast Process
+✅ syncTrapAddressesToMoira: 295 traps in MOIRA's batch set
+✅ runUntilReady loop now isTrapAddress-guarded (door-style dispatch)
+✅ refillPrefetch after PC change — first instruction decodes correctly
+✅ Trap fires: WaitPort, GetMsg, OpenLibrary("dos.library"),
+   OpenLibrary("mathieeedoubbas.library"), OpenLibrary("rexxsyslib"),
+   CreateProc, CloseLibrary x2
+❌ CreateProc returns 0 → RexxMast loops in LockRexxBase forever
 ```
 
-### Phase 6 plan
+### What ships in Phase 6
 
-**Step 1 — diagnose** (env var added this session):
+`web/backend/src/services/arexx/rexxmast-service.ts`:
+1. `execLibrary.initialize()` (ExecBase + low-mem + exception vectors).
+2. `setLibraryLoader(loader, true)` enables ROM-resident library path.
+3. `emulator.setLibraryTrapHandler(...)` routes ILLEGAL → handleTrap.
+4. `installExecVectors()` armed from cycle 0.
+5. dos.library: `openLibraryHybrid('dos.library', 37)` + new
+   `DosLibrary` instance + `setDOSLibrary` + `installDOSVectors`.
+6. `allocateDoorTask(segEnd)` then patch ln_Type=NT_PROCESS,
+   pr_TaskNum=1, ln_Name="RexxMast", pr_StackBase / pr_StackSize.
+7. `syncTrapAddressesToMoira()` after all vectors installed.
+8. `refillPrefetch()` after PC/SP set in `runUntilReady`.
+9. `runUntilReady` rewritten with `isTrapAddress(pc)` pre-check —
+   without it MOIRA's ILLEGAL went through exception vector 4 to
+   our generic ADDQ/RTE handler instead of our trap dispatch.
+10. Default `runUntilReady` budget 1M → 10M.
+11. `_getRexxMastTaskAddr()` test accessor.
+
+### Diagnostic tool (`dev/scripts/arexx-trace.ts`)
+
 ```bash
-AREXX_TRACE=1 ./dev/scripts/start-servers.sh --bbs-only
-tail -f logs/backend.log | grep AREXX-TRACE
-# Logs first 100 library calls with A0/A1/D0/pc + resolved string
-# for OpenLibrary("…") so you see exactly where RexxMast gets stuck.
+cd web/backend
+AREXX_TRACE=1 SKIP_DB_INIT=1 BBS_DATA_DIR=/Users/spot/Code/amiexpress-web \
+  npx tsx ../../dev/scripts/arexx-trace.ts
+# Boots the singleton in isolation — much faster than start-servers
+# for trap-level diagnosis. Prints first 100 library calls with
+# A0/A1/D0/pc + resolved string for OpenLibrary calls.
 ```
 
-**Step 2 — wire the missing Amiga env in `rexxmast-service.ts`:**
-1. Install dos.library LVO traps (mirror `installRexxSysLibVectors`
-   pattern, both already in `LibraryTraps.ts`).
-2. Synthesise a Process struct with `pr_MsgPort=hostPortAddr,
-   pr_CLI=0, pr_TaskNum=1` (`<dos/dosextens.h>` layout).
-3. Synthesise an Exec Task so `FindTask(0)` returns it
-   (`ExecLibrary.ts` ~L711-740 has the door-session pattern to copy).
-4. Empty CLI argv (just program name).
-5. Re-run `runUntilReady(10_000_000)`.
+### Next step — CreateProc
 
-★ All Phase 6 changes go in `src/services/arexx/rexxmast-service.ts`.
+`web/backend/src/amiga-emulation/api/DosLibrary.ts:2853` —
+`CreateProc()` is stubbed UNSUPPORTED (returns D0=0). RexxMast forks
+itself via CreateProc; with D0=0 the parent treats fork as failed and
+bails into the `LockRexxBase` cleanup loop. Forks aren't modeled in
+the singleton emulator, so options:
+
+1. **Fake success** — return a non-zero "process pointer" so RexxMast's
+   parent thinks fork worked. Cheap to try; one-line change in
+   `DosLibrary.CreateProc` gated by an arexx-context flag so doors
+   don't see fake forks. Run AREXX_TRACE after to see if AddPort fires.
+2. **Trampoline** — extract D3 SegList passed to CreateProc and JMP to
+   its entry point in our singleton, treating "the child" as the only
+   thread. Closer to real semantics, more invasive.
+3. **Disassemble RexxMast** — `r2 -q` System/RexxMast and find where
+   `AddPort('REXX')` lives (parent vs child) so we know which branch
+   to keep alive.
+
+Recommended start: option 1 + a fresh AREXX_TRACE run.
 
 ### Sysop ops
 
@@ -71,7 +109,7 @@ tail -f logs/backend.log | grep AREXX-TRACE
 
 ```
 SKIP_DB_INIT=1 npm test -- --testPathPattern="(rexx|arexx)"
-# 84 / 84 passing. ✅
+# 90 / 90 passing. ✅
 ```
 
 ### How to run
@@ -84,7 +122,8 @@ SKIP_DB_INIT=1 npm test -- --testPathPattern="(rexx|arexx)"
 
 ## Open priorities
 
-- **#78 Phase 6** — see Phase 6 plan above
+- **#78 CreateProc** — DosLibrary.CreateProc returns 0; RexxMast forks
+  itself, fork fails, parent loops on LockRexxBase. See "Next step" above.
 - **#77** AREXX TS interpreter (DONE; native is the alt path)
 
 ## Known WEB_ deviations (intentional)
