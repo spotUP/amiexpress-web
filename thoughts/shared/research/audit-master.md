@@ -282,6 +282,7 @@ Sweep totals:
 
 ### ID: F-2 — joinConf CUSTOM tooltype path entirely missing
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — getConferenceToolFlags(confId).custom guards getMailStatFile + mail-stats display + MAIL_SCAN at 3 sites in conference.handler
 **File**: `web/backend/src/handlers/operations/conference.handler.ts` (entire file)
 **express.e**: `5028, 5093, 5111–5124`
 **Impact**: Conferences configured with the CUSTOM tooltype use a different message base; our code always calls the standard path, silently skipping mail stats and mail scan for custom-base conferences.
