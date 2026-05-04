@@ -76,15 +76,24 @@ fallback writes.
 
 ## Open priorities
 
-1. **doorman "Cannot read directory"** — needs a path that triggers it.
+(none currently — all the handoff backlog items have closed.)
 
 ### Recently closed
 
+- doorman "Cannot read directory" — F-explorer now strips AmigaDOS
+  assign prefixes (`BBS:`, `DOORS:`, `WORK:`) and walks the path
+  components case-insensitively when the literal cased path doesn't
+  exist (`7475fc054`). Bridges mixed-case tooltype LOCATIONs to the
+  all-lowercase on-disk door dirs.
+- SDK test infrastructure unblocked — `cd sdk && npm test` was
+  silently dying because jest defaulted to babel which can't parse TS
+  `as` syntax. Added `sdk/jest.config.js` (ts-jest preset). Six
+  legacy tests with stale APIs are explicitly skip-listed for now,
+  the new `list-keypress-debounce` test runs (also in `7475fc054`).
 - AquaScan "00:00:00" — DT_TIMELASTON cTime conversion + UserData
   slot seed on websocket login (`c8e7c2ff7`, `b2fa20371`, `883b1545f`).
 - Multipart upload migration — already complete (BBSTerminal does
   fetch + FormData against `/api/upload`, maxHttpBufferSize is 4MB).
-  Handoff item was stale.
 - 13 / 14 divergent door icons aligned with Sanctuary baseline
   (`e9942b38d`): AquaScan, ByteKiller, NTR-LASTCALLERS, Request
   restored from reference; 10 OVERCLOCK-only files kept as-is.
