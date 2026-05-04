@@ -1,4 +1,4 @@
-[BB_CONFLOCAL] 2026-04-30T14:39:28.535Z confId=2 value="BBS:Conf2/" incomingString="CONFTOP" msgAddr=0x123f48
-[BB_CONFLOCAL WRITE] 2026-04-30T14:39:28.535Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123f48 stringOffset=0x14
-[BB_CONFLOCAL] 2026-05-01T17:39:53.177Z confId=2 value="BBS:Conf2/" incomingString="CONFTOP" msgAddr=0x123f48
-[BB_CONFLOCAL WRITE] 2026-05-01T17:39:53.178Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123f48 stringOffset=0x14
+[BB_CONFLOCAL] 2026-05-04T11:48:39.526Z confId=2 value="BBS:Conf2/" incomingString="CONFTOP" msgAddr=0x123f48
+[BB_CONFLOCAL WRITE] 2026-05-04T11:48:39.526Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x123f48 stringOffset=0x14
+[BB_CONFLOCAL] 2026-05-04T11:48:53.123Z confId=2 value="BBS:Conf2/" incomingString="255" msgAddr=0x1230a0
+[BB_CONFLOCAL WRITE] 2026-05-04T11:48:53.125Z wrote="BBS:Conf2/" verify="BBS:Conf2/" msgAddr=0x1230a0 stringOffset=0x14
