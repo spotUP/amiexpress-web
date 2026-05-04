@@ -193,6 +193,7 @@ Sweep totals:
 
 ### ID: A-3 — Reserved node check missing after BBSTITLE
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — reservedFor session field + reservedName check in pre-login transitionToBBSTitle
 **File**: `web/backend/src/handlers/command-handler/pre-login.ts`
 **express.e**: `29554–29557`
 **Impact**: The "Node N is reserved right now, for <name>" warning is never shown; reserved nodes appear fully open to callers.
@@ -721,6 +722,7 @@ Sweep totals:
 
 ### ID: E-11 — Upload Okay prompt bypassed (WebSocket event replaces terminal prompt)
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — WEB_ tag explaining WebSocket startFileUpload bypasses Okay: prompt
 **File**: `web/backend/src/handlers/file/file.handler.ts`
 **express.e**: `17769`
 **Impact**: The `Okay: (Enter) to Start, (G)oodbye after transfer, (A)bort?` prompt is never shown for terminal clients; upload starts immediately.
@@ -1221,6 +1223,7 @@ Sweep totals:
 
 ### ID: C-CM — Conference Maintenance fidelity unverified
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — handleConferenceMaintenanceCommand exists at message-commands:595 with express.e:22686-22948 body; deep fidelity-audit deferred
 **File**: `web/backend/src/handlers/command-handler/internal-commands.ts` (via `handleConferenceMaintenanceCommand`)
 **express.e**: `24843–24852`
 **Impact**: `conferenceMaintenance()` implementation not confirmed 1:1 with express.e.
@@ -1401,6 +1404,7 @@ Sweep totals:
 
 ### ID: G-wrap — displayFile lacks 79-column wrap for non-MCI files
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_ tag explaining no 79-col wrap (modern terminals reflow + ANSI escape risk)
 **File**: `web/backend/src/handlers/screen.handler.ts` (displayFile)
 **express.e**: `6814–6830`
 **Impact**: Lines longer than 79 chars are not wrapped in plain-text (non-MCI) screen files.
