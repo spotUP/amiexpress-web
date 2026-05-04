@@ -520,6 +520,7 @@ Sweep totals:
 
 ### ID: C-2 — Callers log command shows flat DB list instead of per-node log files
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — callers log per-node WEB_-tagged at sysop-commands:121-150
 **File**: `web/backend/src/handlers/commands/sysop-commands.handler.ts`
 **express.e**: `24461–24509`
 **Impact**: Multi-node log selection flow is entirely different; sysops can't view per-node caller logs.
@@ -935,6 +936,7 @@ Sweep totals:
 
 ### ID: G-CL — `~CL` lists all conferences without access filtering
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — conference list filtering at screen.handler:478-492
 **File**: `web/backend/src/handlers/screen.handler.ts:758–767`
 **express.e**: `5588–5607`
 **Impact**: Conference list MCI code shows conferences the user doesn't have access to when `TOGGLES_CONFRELATIVE` is set.
@@ -944,6 +946,7 @@ Sweep totals:
 
 ### ID: G-CD — `~CD` returns single conference name instead of 2-column list
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — 2-column numbered list at screen.handler:495-511
 **File**: `web/backend/src/handlers/screen.handler.ts:769–773`
 **express.e**: `5608–5620`
 **Impact**: `~CD` in screen files shows only the current conference name instead of the full 2-column conference list.
@@ -1059,6 +1062,7 @@ Sweep totals:
 
 ### ID: A-12 — Token reconnect does not persist quickFlag; missing WEB_: tag
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: tag added at session-restore site explaining no-quickFlag-carryforward
 **File**: `web/backend/src/server/auth-socket-handlers.ts:740–755`
 **express.e**: `29853–29855`
 **Impact**: quickFlag state is not preserved across reconnects; minor UX difference, not tagged.
@@ -1068,6 +1072,7 @@ Sweep totals:
 
 ### ID: A-15 — "Blank line to retreat" in new-user flow removed but confirmed tagged
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: retreat-on-blank tags already present in new-user.handler
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:310–373`
 **express.e**: `30134–30229`
 **Impact**: New users can't retreat to previous fields with blank entry; already tagged with WEB_: comments.
@@ -1077,6 +1082,7 @@ Sweep totals:
 
 ### ID: A-16 — Location field label changed from "City, State" to "Group Affiliation"; tagged
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — City, State emit at line 431 matches express.e:30194 — no divergence
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:313`
 **express.e**: `30194`
 **Impact**: Label differs from express.e; confirmed tagged WEB_:.
@@ -1086,6 +1092,7 @@ Sweep totals:
 
 ### ID: A-19 — Password strength check runs before confirmation; minor UX order difference
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: tag explaining eager strength check vs post-confirmation
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:674–689`
 **express.e**: `30227–30254`
 **Impact**: Strength error appears at first password entry instead of after confirmation; functionally equivalent but order differs.
@@ -1095,6 +1102,7 @@ Sweep totals:
 
 ### ID: A-20 — Screen clear preference uses line input instead of single readChar()
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: single keypress not available in line-buffered web flow
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:786–800`
 **express.e**: `30272–30281`
 **Impact**: User must press Enter after Y/N instead of just one keypress; web terminal limitation.
@@ -1104,6 +1112,7 @@ Sweep totals:
 
 ### ID: A-21 — Summary confirmation uses line input instead of single readChar()
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: same as A-20 for summary confirmation
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:844–860`
 **express.e**: `30306–30318, 30391–30404`
 **Impact**: Same as A-20; web limitation.
@@ -1113,6 +1122,7 @@ Sweep totals:
 
 ### ID: A-23 — auth.handler.ts (admin REST API) has no WEB_:/ADMIN_: tags
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — ADMIN_: tag added to auth.handler.ts module header
 **File**: `web/backend/src/handlers/user/auth.handler.ts`
 **express.e**: No equivalent
 **Impact**: File has no WEB_/ADMIN_ convention tags per project rules.
@@ -1122,6 +1132,7 @@ Sweep totals:
 
 ### ID: A-24 — account.handler.ts wrapper menu not tagged WEB_:
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_: tag added on displayAccountEditingMenu
 **File**: `web/backend/src/handlers/user/account.handler.ts:19–33`
 **express.e**: `21211` (editInfo — no menu wrapper)
 **Impact**: The 7-option menu wrapper has no WEB_/ADMIN_ tags.
@@ -1135,6 +1146,7 @@ Sweep totals:
 
 ### ID: B-10 — 500ms debounce in displayMainMenu not tagged WEB_:
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — debounce already WEB_-tagged at menu.ts:45
 **File**: `web/backend/src/handlers/command-handler/menu.ts:38–44`
 **express.e**: No equivalent
 **Impact**: Debounce guard is untagged; root-cause race condition is unresolved.
@@ -1144,6 +1156,7 @@ Sweep totals:
 
 ### ID: B-11 — "Command requires higher access." message never emitted on NOT_ALLOWED
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — "higher access" message emitted via ErrorHandler/command-execution
 **File**: `web/backend/src/handlers/command-handler/core.ts:173–176`
 **express.e**: `28400, 3037–3039`
 **Impact**: Users get no feedback when they type a command above their access level.
@@ -1153,6 +1166,7 @@ Sweep totals:
 
 ### ID: B-12 — Unknown command error text uses "Unknown command: X" instead of express.e text
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — "No such command!!" text matches express.e:28397 at line 566
 **File**: `web/backend/src/handlers/command-handler/command-execution.ts:563`
 **express.e**: `28396–28398`
 **Impact**: Unknown command message is web-style instead of `No such command!!  Use '?' for command list.`
@@ -1166,6 +1180,7 @@ Sweep totals:
 
 ### ID: C-0 — Remote shell stub missing WEB_: tag
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — remoteShell stub WEB_-tagged at sysop-commands:46
 **File**: `web/backend/src/handlers/commands/sysop-commands.handler.ts`
 **express.e**: `24434–24450`
 **Impact**: Stub has no WEB_: tag.
@@ -1175,6 +1190,7 @@ Sweep totals:
 
 ### ID: C-3-4-5 — Edit file/directory, dirAnyWhere stubs missing WEB_: tags
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — editDirFile/editAnyFile/dirAnyWhere WEB_-tagged at sysop-commands:196,250,304
 **File**: `web/backend/src/handlers/commands/sysop-commands.handler.ts`
 **express.e**: `24511–24527`
 **Impact**: Three command stubs (3, 4, 5) have no WEB_: tags.
@@ -1184,6 +1200,7 @@ Sweep totals:
 
 ### ID: C-VER — VER command adds web-only lines without WEB_: tags
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_ tag added on AmiExpress-Web version line
 **File**: `web/backend/src/handlers/commands/info-commands.handler.ts`
 **express.e**: `25688–25699`
 **Impact**: Extra Node.js/TypeScript/community lines appear in version output without tagging.
@@ -1193,6 +1210,7 @@ Sweep totals:
 
 ### ID: C-WHD — WHD shows same table as WHO; should show debug memory info
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — who(1) debug WEB_-tagged at info-commands:151
 **File**: `web/backend/src/handlers/commands/info-commands.handler.ts`
 **express.e**: `26104–26112`
 **Impact**: WHD is identical to WHO; `who(1)` shows debug pointer info in express.e.
@@ -1363,6 +1381,7 @@ Sweep totals:
 
 ### ID: G-w — `~w` delay removed; should have WEB_: tag
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Amiga tick delay WEB_-tagged at screen.handler:790
 **File**: `web/backend/src/handlers/screen.handler.ts:1044–1049`
 **express.e**: `5472–5477`
 **Impact**: Amiga tick delays (`~w3|` = 60ms) are silently removed; no WEB_: tag.
@@ -1394,6 +1413,7 @@ Sweep totals:
 
 ### ID: H-ED — No named TypeScript constants for ED_* editor flags, USER_* userFlags, PG_* commands
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — web/backend/src/constants/express-flags.ts with EditorFlag/UserFlag/PageType
 **File**: Constants not found in `web/backend/src/types/`
 **express.e**: `axconsts.e` (ED_*, USER_*, PG_*)
 **Impact**: These bit flags and enum values are hardcoded inline wherever used; no central reference.
@@ -1403,6 +1423,7 @@ Sweep totals:
 
 ### ID: H-TTV — checkToolTypeValue() missing; callers do case-insensitive value compare manually
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — checkToolTypeValue helper added to info-file.util.ts
 **File**: `web/backend/src/utils/info-file.util.ts`
 **express.e**: `tooltypes.e:152–174` (MatchToolValue)
 **Impact**: No central helper for case-insensitive tooltype value comparison; callers must implement it themselves inconsistently.
@@ -1412,6 +1433,7 @@ Sweep totals:
 
 ### ID: H-CDateTime — formatCDateTime produces ISO 8601 instead of ctime-style
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — formatCDateTime returns ctime "DDD MMM DD HH:MM:SS YYYY"
 **File**: `web/backend/src/utils/date-time.util.ts:92–94`
 **express.e**: `MiscFuncs.e:343–364`
 **Impact**: `formatCDateTime` produces `"2026-01-07T14:32:00.000Z"` instead of `"Mon Jan 07 14:32:00 2026"` (Unix ctime-style); rarely used in screen display.
