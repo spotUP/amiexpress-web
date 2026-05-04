@@ -333,6 +333,7 @@ Sweep totals:
 
 ### ID: C-FM — FM (File Maintenance) fidelity to express.e unverified
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — FileMaintenanceHandler with D/M/V/Q action loop complete
 **File**: `web/backend/src/handlers/file/file-maintenance.handler.ts`
 **express.e**: `24889–25045`
 **Impact**: FM is complex (search/delete/move/view with full action prompt loop); the TS implementation exists but its fidelity to the C/D/M/V/Q prompt flow and move-with-date-sorting has not been confirmed.
@@ -342,6 +343,7 @@ Sweep totals:
 
 ### ID: C-NM — NM (Node Management) fidelity to express.e unverified
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — handleNodeManagementCommand fully implemented
 **File**: `web/backend/src/handlers/message/message-commands.handler.ts`
 **express.e**: `25281–25370`
 **Impact**: NM is sysop node control (take offline, kick users); if the confirm flow or Exec message types differ, sysops may silently fail to kick sessions.
@@ -387,6 +389,7 @@ Sweep totals:
 
 ### ID: A-2 — Dead code re-prompts for ANSI after BBSTITLE
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — pendingScreenCommand dead code not present in pre-login.ts
 **File**: `web/backend/src/handlers/command-handler/pre-login.ts:146–155`
 **express.e**: `29552–29559`
 **Impact**: If the `pendingScreenCommand` branch is ever triggered, the ANSI prompt is incorrectly re-shown after BBSTITLE.
@@ -396,6 +399,7 @@ Sweep totals:
 
 ### ID: A-6 — Password fail default allows 5 tries; express.e disconnects after 3
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — getMaxPasswordFails fallback now 3, matching express.e:29637
 **File**: `web/backend/src/server/auth-socket-handlers.ts:348–383`
 **express.e**: `29152`
 **Impact**: Users get 5 password attempts when express.e disconnects after 3 (`tries > 2`).
@@ -405,6 +409,7 @@ Sweep totals:
 
 ### ID: A-10 — Deleted account (slotNumber=0) not detected at login
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — slotNumber===0 disconnect check at auth-socket-handlers:478
 **File**: `web/backend/src/server/auth-socket-handlers.ts`
 **express.e**: `29702–29712`
 **Impact**: Logically deleted accounts (slotNumber=0) can still authenticate and log in.
@@ -532,6 +537,7 @@ Sweep totals:
 
 ### ID: C-B — B command searches global Bulletins dir instead of conference-specific confScreenDir
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Bulletins use confScreenDir not global path
 **File**: `web/backend/src/handlers/commands/display-file-commands.handler.ts`
 **express.e**: `24616–24618`
 **Impact**: Bulletins in per-conference Screens/Bulletins/ directories are not found; only global bulletins work.
@@ -571,6 +577,7 @@ Sweep totals:
 
 ### ID: C-M — ANSI Color On uses AnsiUtil.successLine() wrapper; express.e uses plain text + no pause
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Plain text without AnsiUtil wrapper or pause
 **File**: `web/backend/src/handlers/chat/preference-chat-commands.handler.ts`
 **express.e**: `25239–25248`
 **Impact**: "Ansi Color On" is wrapped in green ANSI brackets (wrong when ANSI might be off); a spurious keypress pause is added.
@@ -580,6 +587,7 @@ Sweep totals:
 
 ### ID: C-OLM — OLM target's quiet-mode (olmBlocked) check not verified present
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — blockOLM check with MESSAGES SUPPRESSED message
 **File**: `web/backend/src/handlers/transfer/olm.handler.ts`
 **express.e**: `25406–25503`
 **Impact**: Sending an OLM to a node in quiet mode should show "NODE N HAS MESSAGES SUPPRESSED"; if missing, OLMs are silently delivered against the target's wish.
@@ -589,6 +597,7 @@ Sweep totals:
 
 ### ID: C-RL — Relogon (RL) shows confirmation prompt not in express.e
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — No confirmation; relogon flag triggers immediate G command
 **File**: `web/backend/src/handlers/commands/utility-commands.handler.ts`
 **express.e**: `25534–25539`
 **Impact**: Users expecting immediate relogon (per Amiga AmiExpress behavior) see an unexpected confirmation prompt.
@@ -679,6 +688,7 @@ Sweep totals:
 
 ### ID: D-14 — chooseTranslator missing H (word highlight) toggle
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — H toggle for WORD HIGHLIGHT in handleChooseTranslatorInput
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:1393–1449`
 **express.e**: `11407–11414`
 **Impact**: Users can't toggle word highlighting from the translator menu; H input is treated as invalid.
@@ -750,6 +760,7 @@ Sweep totals:
 
 ### ID: E-16 — File listing "Scanning directory" appends `, Area: <name>` not in express.e
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Scanning message lacks ", Area: <name>" suffix per express.e
 **File**: `web/backend/src/handlers/file/file.handler.ts:85`
 **express.e**: `27683–27685`
 **Impact**: Scanning message is `"Scanning directory N, Area: <name>"` instead of `"Scanning directory N"`.
@@ -759,6 +770,7 @@ Sweep totals:
 
 ### ID: E-18 — Zippy search hardcodes endDir=20 instead of using fetched maxDirs
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Zippy uses maxDirs variable not hardcoded 20
 **File**: `web/backend/src/handlers/content/zippy-search.handler.ts:143–158`
 **express.e**: `26177–26209`
 **Impact**: Zippy search stops at directory 20 even on systems with fewer or more configured directories.
@@ -811,6 +823,7 @@ Sweep totals:
 
 ### ID: F-11 — confScan only scans first msgBase per conference
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — confScan inner loop over all confMsgBases
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:493–505`
 **express.e**: `28092–28098`
 **Impact**: Multi-msgbase conferences only have their first message base scanned; mail in bases 2+ is never shown during confScan.
@@ -820,6 +833,7 @@ Sweep totals:
 
 ### ID: F-12 — confScan partUpload check phase entirely missing
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — partUploadOK check phase complete
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts`
 **express.e**: `28117–28147`
 **Impact**: In-progress (partial) uploads are never detected and resumed during confScan; partial uploads from previous sessions are abandoned.
@@ -829,6 +843,7 @@ Sweep totals:
 
 ### ID: F-14 — checkFileConfScan default false not tagged as WEB_ deviation
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — checkFileConfScan WEB_ divergence tag for FALSE default
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:125–129`
 **express.e**: `603–607`
 **Impact**: When confBase is missing, express.e defaults to scanning (TRUE); our code defaults to not scanning (FALSE) with only a plain comment, not a WEB_: tag.
@@ -838,6 +853,7 @@ Sweep totals:
 
 ### ID: F-16 — J command: getInverse() (relative conference numbering) not implemented
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — J command getInverse with TOGGLES_CONFRELATIVE
 **File**: `web/backend/src/handlers/commands/user-commands.handler.ts:412`
 **express.e**: `25140, 25150`
 **Impact**: When `TOGGLES_CONFRELATIVE` is set, "J 2" should join the 2nd accessible conference, not conference ID 2; users with this toggle get wrong conferences.
@@ -847,6 +863,7 @@ Sweep totals:
 
 ### ID: F-17 — J command: saveMsgPointers not called before joining new conference
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — J command saveMsgPointers called before state changes
 **File**: `web/backend/src/handlers/commands/user-commands.handler.ts:502–505`
 **express.e**: `25121`
 **Impact**: The user's read position in the current conference is lost when they switch conferences with J.
@@ -910,6 +927,7 @@ Sweep totals:
 
 ### ID: G-CR — `~CR` (bare) emits CRLF instead of waiting for single keypress
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — WEB_ tag at screen.handler:719-721 explaining sync-replace-mode limitation
 **File**: `web/backend/src/handlers/screen.handler.ts:984`
 **express.e**: `5462–5468`
 **Impact**: Screen files using `~CR` to pause for a keypress display a blank line instead of waiting.
@@ -1023,6 +1041,7 @@ Sweep totals:
 
 ### ID: H-QWK1 — QWK blockCount read as LE binary instead of 8-char ASCII
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — QWK blockCount parsed as ASCII decimal
 **File**: `web/backend/src/services/qwk.service.ts`
 **express.e**: `qwk.e:576`
 **Impact**: Block count in QWK message headers may be mis-parsed for large messages; coincidentally correct for small values only.
@@ -1032,6 +1051,7 @@ Sweep totals:
 
 ### ID: H-QWK2 — CONTROL.DAT not generated in QWK packets
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — CONTROL.DAT generation in qwk.service
 **File**: `web/backend/src/services/qwk.service.ts`
 **express.e**: `qwk.e:248–289`
 **Impact**: QWK packets generated by the TS code are invalid; offline mail readers cannot parse them without CONTROL.DAT.
@@ -1041,6 +1061,7 @@ Sweep totals:
 
 ### ID: H-states — Missing BBS states: HANGUP, LOGGING_OFF, SHUTDOWN
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — LOGGING_OFF/HANGUP/SHUTDOWN added to BBSState enum
 **File**: `web/backend/src/types/bbs-states.ts`
 **express.e**: `axenums.e:5–6`
 **Impact**: The TS state machine cannot represent HANGUP, LOGGING_OFF, or SHUTDOWN states; if a 68K door or internal component sets these states, the transition is silently lost.
@@ -1050,6 +1071,7 @@ Sweep totals:
 
 ### ID: H-userkeys — userKeys pad after userName[31] missing in UserStructures
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — userKeys pad at offset 0x1F after userName[31]
 **File**: `web/backend/src/amiga-emulation/UserStructures.ts` (userKeys section)
 **express.e**: `axobjects.e:70–81`
 **Impact**: `number` (LONG) field in userKeys in-memory struct is at misaligned offset 31 (odd address); 68K requires LONG on even boundary; all subsequent fields in the in-memory userKeys layout are 1 byte off.
@@ -1345,6 +1367,7 @@ Sweep totals:
 
 ### ID: F-15 — checkMailConfScan scanFlags field mapping to cb.handle[0] unverified
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — scanFlags field mapping in checkMailConfScan
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:187–192`
 **express.e**: `582–588`
 **Impact**: If `scanFlags` does not map to the same byte as `handle[0]` in confBase, mail scan decisions will be wrong.
@@ -1354,6 +1377,7 @@ Sweep totals:
 
 ### ID: F-19 — conference-maint-states.ts is a router only; structural observation
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — conference-maint-states.ts router-only by design
 **File**: `web/backend/src/handlers/command-handler/conference-maint-states.ts`
 **express.e**: N/A
 **Impact**: Observation only; no deviation.
@@ -1395,6 +1419,7 @@ Sweep totals:
 
 ### ID: G-x — `~x` emits ESC[NG instead of ESC[;NH (functionally equivalent)
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — ~x ESC[NG functionally equivalent to express.e ESC[;NH
 **File**: `web/backend/src/handlers/screen.handler.ts:1055–1060`
 **express.e**: `5478–5486`
 **Impact**: Column positioning uses a slightly different ANSI escape sequence; visually equivalent on all terminals.
