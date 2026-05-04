@@ -742,7 +742,8 @@ Sweep totals:
 
 ### ID: E-14 — Upload A=Abort not handled in filename input state
 **Priority**: P2
-**File**: `web/backend/src/handlers/file/file.handler.ts` (upload input handling)
+**Status**: ✓ FIXED 2026-05-04 — Abort branch present at command.handler.ts:2576-2584; corrected exit state from DISPLAY_CONF_BULL to DISPLAY_MENU to match the parallel UPLOAD_OKAY_CONFIRM A=Abort path (express.e cleanItUp + return to main menu loop). Regression test in tests/upload-abort-state.test.ts.
+**File**: `web/backend/src/handlers/command.handler.ts:2576-2584`
 **express.e**: `17668–17670`
 **Impact**: Users cannot abort an upload session by entering A alone at the filename prompt.
 **Fix**: Add A=Abort check in `UPLOAD_FILENAME_INPUT` state; return failure and emit `\r\n`.
@@ -751,7 +752,8 @@ Sweep totals:
 
 ### ID: E-15 — Post-upload stats ("File Uploading Complete...", stats line, time bonus) not emitted
 **Priority**: P2
-**File**: `web/backend/src/handlers/file/file.handler.ts` (post-upload)
+**Status**: ✓ FIXED 2026-05-04 — All three emits present in file-socket-handlers.ts:handleUploadBatchComplete (lines 795-835) in correct order with express.e citations. Time bonus uses peff = (ulTTTM*3/2)+60 formula from express.e:19109. Regression test in tests/upload-completion-banner.test.ts.
+**File**: `web/backend/src/server/file-socket-handlers.ts:770-851`
 **express.e**: `19053, 19072, 19127`
 **Impact**: Users receive no confirmation or statistics after a successful upload; time bonus is silently not awarded.
 **Fix**: After upload completes, emit "File Uploading Complete..." + stats line + "Time increased by N mins." in order.
@@ -780,7 +782,8 @@ Sweep totals:
 
 ### ID: E-19 — fileStatus header hardcodes "KBytes"; should switch on CREDITBYKB toggle
 **Priority**: P2
-**File**: `web/backend/src/handlers/file/file.handler.ts:646`
+**Status**: ✓ FIXED 2026-05-04 — Active FS command path through FileStatusHandler (file-status.handler.ts:95-101) already toggles header on CREDITBYKB. Stale duplicate in file.handler.ts:455 (dead-but-exported) was also brought into parity. Regression test in tests/file-status-creditbykb-header.test.ts.
+**File**: `web/backend/src/handlers/file/file-status.handler.ts:95-101` (active), `web/backend/src/handlers/file/file.handler.ts:455-466` (dead duplicate).
 **express.e**: `24156–24161`
 **Impact**: On systems where CREDITBYKB is off, file status always shows "KBytes" in headers instead of "Bytes".
 **Fix**: Check `ToggleFlags.CREDITBYKB` and select the correct header string.
@@ -1391,7 +1394,8 @@ Sweep totals:
 
 ### ID: G-UB-DB — `~UB`/`~DB` potential BCD vs raw bytes mismatch
 **Priority**: P3
-**File**: `web/backend/src/handlers/screen.handler.ts:886–887`
+**Status**: ✓ FIXED 2026-05-04 — DB stores raw bytes (`bytesUpload`/`bytesDownload`); `user.uploadBytes`/`downloadBytes` are aliases (database/types.ts:24,26). Persisting to User.misc routes through `numberToBCD()` (UserFileManager.ts:562) which packs the same decimal value into 8-byte BCD. express.e `formatBCD` converts that BCD back to a comma-separated decimal string — identical output to our `formatWithCommas(rawInteger)` at screen.handler.ts:628-629. No mismatch. Regression test in tests/mci-ub-db-bcd-parity.test.ts.
+**File**: `web/backend/src/handlers/screen.handler.ts:627–629`
 **express.e**: `5351–5358`
 **Impact**: Likely correct if DB stores raw bytes; BCD output is a plain decimal integer either way.
 **Fix**: Verify `uploadBytes`/`downloadBytes` in DB store raw bytes; format is correct if numeric values agree.
@@ -1400,8 +1404,9 @@ Sweep totals:
 
 ### ID: G-FF — `~FF` flagged files format needs showFlaggedFiles verification
 **Priority**: P3
-**File**: `web/backend/src/handlers/screen.handler.ts:957–960`
-**express.e**: `5439–5441`
+**Status**: ✓ FIXED 2026-05-04 — Verified equivalent. Our impl at screen.handler.ts:697-698 builds space-separated filename list and applyWidth (line 393-396) truncates to width param. express.e showFlaggedFiles (line 2830-2853) decrements maxLen progressively as it emits spaces+filenames and stops when no room — character-equivalent output for both maxLen>0 and maxLen=-1 cases. Regression test in tests/mci-ff-flagged-files.test.ts.
+**File**: `web/backend/src/handlers/screen.handler.ts:697–698, 393–396`
+**express.e**: `5439–5441` (MCI dispatch), `2830–2853` (showFlaggedFiles)
 **Impact**: Space-separated filename list may not match express.e's `showFlaggedFiles(maxLen)` format exactly.
 **Fix**: Read `showFlaggedFiles` implementation to verify; likely OK for basic usage.
 
