@@ -77,15 +77,17 @@ fallback writes.
 ## Open priorities
 
 1. **doorman "Cannot read directory"** — needs a path that triggers it.
-2. **AquaScan false new-mail count** — `N` / `NSU` reports unread
-   messages that aren't really there. Needs a sysop running the door
-   + MCP traces (compare `AquaScan.Date.N` vs `msgBase` lastRead).
-   Note the seed bug was fixed in `b2fa20371` — re-test the new-mail
-   count first; the symptom may already be gone.
-3. **13 divergent door icons vs Sanctuary reference** — 11 are
-   `OVERCLOCK=100` only (keep). 2 substantive: `ByteKiller`
-   (NUKER/SPY_LIST) and `Request` (path differences). Installation-
-   specific, your call.
+
+### Recently closed
+
+- AquaScan "00:00:00" — DT_TIMELASTON cTime conversion + UserData
+  slot seed on websocket login (`c8e7c2ff7`, `b2fa20371`, `883b1545f`).
+- Multipart upload migration — already complete (BBSTerminal does
+  fetch + FormData against `/api/upload`, maxHttpBufferSize is 4MB).
+  Handoff item was stale.
+- 13 / 14 divergent door icons aligned with Sanctuary baseline
+  (`e9942b38d`): AquaScan, ByteKiller, NTR-LASTCALLERS, Request
+  restored from reference; 10 OVERCLOCK-only files kept as-is.
 
 ## Known WEB_ deviations (intentional)
 
