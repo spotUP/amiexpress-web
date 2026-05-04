@@ -359,6 +359,7 @@ Sweep totals:
 
 ### ID: C-ZOOM — ZOOM download is URL instead of ZMODEM; QWK packet contents unverified
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — WEB_ divergence comment added explaining HTTP/ZIP-only choices
 **File**: `web/backend/src/handlers/commands/utility-commands.handler.ts`
 **express.e**: `26215–26344`
 **Impact**: ZOOM generates a URL instead of triggering a ZMODEM download; the LHA/ZIP selection prompt is non-interactive; QWK CONTROL.DAT may be missing (see H-QWK2).
@@ -1288,6 +1289,7 @@ Sweep totals:
 
 ### ID: E-8 — Upload header string missing "to <path>" variant when ramPen configured
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — "UPLOADING to <path>.." emitted when uploadArea.ulPath non-default
 **File**: `web/backend/src/handlers/file/file.handler.ts:919–920`
 **express.e**: `19005–19007`
 **Impact**: When a custom upload path (ramPen) is configured, the upload header doesn't show the destination path.
