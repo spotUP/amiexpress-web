@@ -1,5 +1,26 @@
 # Handoff
 
+## 2026-05-04 — Native AREXX bring-up (#78 Phases 1-5-final)
+
+10 commits shipping the full plumbing for running real AREXX scripts
+via RexxMast under MOIRA, with TS-interpreter fallback. End-to-end
+verified live: RexxMast loads, rexxsyslib LVO traps install, MOIRA
+executes RexxMast for 1M instructions without faulting. The remaining
+gap is a full Amiga environment (dos.library traps, Process struct,
+CLI argv) that AmigaDoorSession sets up for doors — see
+`thoughts/shared/handoffs/2026-05-04_native-arexx-bringup.md` for the
+detailed phase-by-phase write-up + commit list.
+
+Sysop ops:
+- Drop `RexxMast` (Commodore copyrighted) into `System/RexxMast`
+- Drop the Rexxc command-line tools into `System/Rexxc/`
+- `bbsConfig.info` `AREXX_ENGINE=auto` (default), `native`, or `ts`
+- Watch `[AREXX]` lines in `backend.log` to see which engine is live
+
+84 tests across 6 suites, TS clean. The TS interpreter still handles
+every script — the native path lights up only when bring-up
+completes (which needs Phase 6 work).
+
 ## Current state — 2026-05-04
 
 Two work packages closed today; both archived to
