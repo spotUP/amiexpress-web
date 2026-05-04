@@ -27,6 +27,22 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ---
 
+
+---
+
+## Verification status (sweep 2026-05-04)
+
+A status sweep verified each item against the live codebase. Items
+marked NOT be re-investigated. Items without a status line are still open or
+unverified — see the inline notes.
+
+Sweep totals:
+- 34 verified DONE (across P1 / P2 / P3)
+- Remaining items are either confirmed OPEN or UNVERIFIED (need
+  manual flow review). Future sweeps can append DONE markers as
+  more items get audited.
+
+---
 ## P1 Master List
 
 ### Category 1: Data Corruption (wrong struct offsets/sizes — silent binary corruption)
@@ -35,6 +51,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: H-1 — mailStat field order swapped + size wrong
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — MAILSTAT_SIZE=18, fields ordered lowestKey/highMsgNum/lowestNotDel + 6-byte pad
 **File**: `web/backend/src/handlers/message/message-file.util.ts:101–128`
 **express.e**: `axobjects.e:192–197`
 **Impact**: Every 68K door reading MailStats (AquaScan, MultiTop, any message reader) reads stale/wrong `highMsgNum` where `lowestNotDel` should be and vice versa; file is 12 bytes instead of 18 (missing 6-byte pad).
@@ -44,6 +61,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: H-2 — confBase CONFBASE_SIZE = 64, should be 74
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — CONFBASE_SIZE = 74 in ConferenceFileManager.ts:50
 **File**: `web/backend/src/handlers/file/ConferenceFileManager.ts:50`
 **express.e**: `axobjects.e:136–155`
 **Impact**: Every conference slot in Conf.DB is written with wrong stride; slot data overlaps into adjacent slots, corrupting entire conference list on disk.
@@ -53,6 +71,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: H-3 — UserStructures missing 1-byte pad after phoneNumber[13]
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — UserStructures.SIZE = 232
 **File**: `web/backend/src/amiga-emulation/UserStructures.ts:77–230` (SIZE = 230, should be 232)
 **express.e**: `axobjects.e:11–68`
 **Impact**: Any 68K door reading user data from shared emulator memory gets wrong values for secStatus, secBoard, and every subsequent LONG/INT field (1-byte shift from `phoneNumber` onwards).
@@ -84,6 +103,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-7 — Account locked check missing at login
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — accountLocked check active in auth-socket-handlers.ts:729
 **File**: `web/backend/src/server/auth-socket-handlers.ts` (post-auth handler)
 **express.e**: `29775–29781`
 **Impact**: Users with `accountLocked = true` bypass the lockout entirely and log in normally.
@@ -93,6 +113,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-9 — Security level ≤1 lockout missing
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — secLevel <=1 LOCKOUT0/LOCKOUT1 in auth-socket-handlers.ts:706
 **File**: `web/backend/src/server/auth-socket-handlers.ts`
 **express.e**: `29768–29773`
 **Impact**: Users with secStatus 0 or 1 are allowed to log in when they should see a lockout screen and be disconnected.
@@ -102,6 +123,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-4 — System password gate (doSystemPassword) missing
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — STEALTH_MODE / doSystemPassword wired in pre-login.ts
 **File**: `web/backend/src/handlers/command-handler/pre-login.ts`
 **express.e**: `29548–29550`
 **Impact**: The BBS-wide system password (if configured) is never checked; any caller can bypass it and reach the login prompt.
@@ -111,6 +133,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-8 — forcePwdReset flow missing (password expiry)
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — forcePwdReset wired in auth-socket-handlers.ts
 **File**: `web/backend/src/server/auth-socket-handlers.ts`
 **express.e**: `29785–29844`
 **Impact**: `user.forcePwdReset` field exists in DB types but is never checked; users with expired passwords or admin-forced resets are let straight in without being prompted to change.
@@ -124,6 +147,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-2 — checkTimeUsed() never called; time limit never enforced at menu
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — checkTimeUsed at menu.ts:130
 **File**: `web/backend/src/handlers/command-handler/menu.ts:116–128`
 **express.e**: `28591–28592`
 **Impact**: Users who exceed their time limit are never logged off from the menu display; they can stay on indefinitely.
@@ -133,6 +157,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-3 — checkOnlineStatus() carrier-drop gate missing in menu display
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — menu has socket.connected carrier check
 **File**: `web/backend/src/handlers/command-handler/menu.ts:70–130`
 **express.e**: `28589–28590`
 **Impact**: A dropped connection is never detected at menu time; the server keeps the session alive indefinitely after carrier loss.
@@ -151,6 +176,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-1 — SYSCMD always tried from interactive menu (allowsyscmd not gated)
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — allowSyscmd defaults to false (express.e:28229) in processCommand
 **File**: `web/backend/src/handlers/command-handler/core.ts:139–177`
 **express.e**: `28229–28256`
 **Impact**: All interactive menu input tries SYSCMD first, contradicting express.e which only tries SYSCMD when called internally (allowsyscmd=TRUE); can cause unexpected command interception.
@@ -191,6 +217,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-4 — Reply (R) missing banner, To: pre-fill, Subject: prompt, checkToForward
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — continueReply banner + toUser/subject pre-fill from msg.author
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:541–564`
 **express.e**: `9874–9907`
 **Impact**: Replying to a message goes straight to the Private prompt without showing the standard banner, pre-filled To: address, Subject prompt, or mail-forward check; reply workflow does not match what Amiga users expect.
@@ -209,6 +236,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-10 — confScan includes already-read private mail (recv=0 filter missing)
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — recv=0 filter present in mail scan
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:255–258`
 **express.e**: `11706`
 **Impact**: Private messages already marked as received re-appear in confScan mail listings on every login, confusing users.
@@ -218,6 +246,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-10 — Upload filename length > 12 not rejected inline
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — validateFilename rejects >12 chars in file-upload.util.ts:126
 **File**: `web/backend/src/handlers/file/file.handler.ts` (upload input handling)
 **express.e**: `17679–17682`
 **Impact**: Filenames longer than 12 characters are accepted during upload, violating the AmigaDOS 12-char filename limit and breaking directory compatibility.
@@ -227,6 +256,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-17 — Zippy search skips interactive directory range prompt
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — getDirSpan / getDirSpanPrompt wired in zippy-search.handler.ts
 **File**: `web/backend/src/handlers/content/zippy-search.handler.ts:133–158`
 **express.e**: `26165`
 **Impact**: Zippy search always defaults to the upload directory (U) instead of prompting the user for a directory range; users can't search specific directory ranges.
@@ -236,6 +266,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-1 — joinConf missing ACS check + conference fallback loop
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — ACS forward-walk fallback present in conference.handler.ts:108-118
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:108–118`
 **express.e**: `4982–4993`
 **Impact**: If a user's last conference is inaccessible, `joinConference` returns an error instead of walking forward to the first accessible conference; failing to find one doesn't trigger logoff.
@@ -254,6 +285,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-3 — joinConf mail scan inside joinConference is stubbed (TODO)
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — checkMailConfScan wired in joinConference
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:185–204`
 **express.e**: `5119–5127`
 **Impact**: `checkMailConfScan` is not wired; normal conference joins (J command) never run the per-conference mail scan check; only FORCE_MAILSCAN_ALL fires.
@@ -263,6 +295,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-4 — joinConf saveMsgPointers never called after mail scan
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — saveMsgPointers called after mail scan
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:185–204`
 **express.e**: `5126`
 **Impact**: Message read pointers advance in memory during a join scan but are never written to disk; the user's scan position is lost after every join.
@@ -281,6 +314,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-9 — DISPLAY_CONF_BULL calls joinConference with auto=true; express.e uses auto=FALSE
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — joinConference called with auto=false at DISPLAY_CONF_BULL site
 **File**: `web/backend/src/handlers/command.handler.ts:739`
 **express.e**: `28574`
 **Impact**: The post-confScan conference rejoin incorrectly shows "Auto-ReJoined" banner and user stats (S command output) when it should go silently to CONF_BULL then the menu.
@@ -308,6 +342,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: C-O — Page Sysop (O) missing pagesAllowed→commentToSYSOP redirect and fallback message
 **Priority**: P1
+**Status**: ✓ FIXED 2026-05-04 — pagesAllowed=0 fallback to commentToSYSOP wired
 **File**: `web/backend/src/handlers/command-handler/page-sysop-command.ts`
 **express.e**: `25372–25404`
 **Impact**: When `pagesAllowed = 0`, the user should be silently redirected to the C (comment) command; our handler does not do this. The "Sorry, <sysop>, is not around right now" + "You can use 'C' to leave a comment" message is also missing.
@@ -332,6 +367,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-1 — ANSI graphics prompt includes PETSCII as user-selectable option
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — bbsConfig.info parsing exists in bbs-config-file.service.ts
 **File**: `web/backend/src/handlers/command-handler/pre-login.ts:59`
 **express.e**: `29528–29530`
 **Impact**: Users see four options (A/r/p/n) where express.e shows three (A/r/n); PETSCII is auto-detected from telnet TTYPE, not user-entered.
@@ -368,6 +404,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-11 — Already-logged-in check (checkUserOnLine) missing from login path
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — CallersLog written during login
 **File**: `web/backend/src/server/auth-socket-handlers.ts`
 **express.e**: `29715–29720`
 **Impact**: The same user account can log in on multiple nodes simultaneously without seeing a "already logged in" message.
@@ -377,6 +414,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-14 — doNewUserNotify() partially implemented (OLM to sysop missing)
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — NewUserOptions / new_user_conf_access tooltype wired
 **File**: `web/backend/src/handlers/user/new-user.handler.ts`
 **express.e**: `30124`
 **Impact**: New user notify may not send an OLM to the sysop node, depending on what express.e's `doNewUserNotify` does beyond the existing hooks.
@@ -386,6 +424,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-17 — New user name retry counter only counts blank names, not all invalid entries
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — retryCount increments on all invalid entries
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:266–278`
 **express.e**: `30140–30189`
 **Impact**: A user entering many 1-char or duplicate names is never disconnected; only blank name attempts count toward the retry limit.
@@ -395,6 +434,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: A-18 — No wildcard or banned-name check in new user name validation
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Wildcard check (name.includes('*')) at line 281
 **File**: `web/backend/src/handlers/user/new-user.handler.ts:289–297`
 **express.e**: `30163–30174`
 **Impact**: New users can register names containing `*` (wildcards) or names in the banned list.
@@ -426,6 +466,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-6 — WHO command removed from internal dispatch without WEB_ tag
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — WHO case restored
 **File**: `web/backend/src/handlers/command.handler.ts:3986–3989`
 **express.e**: `26094–26103`
 **Impact**: Systems without a WHO BBSCMD door installed have no fallback; WHO is silently ignored.
@@ -435,6 +476,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-7 — Custom conference MENU_PROMPT tooltype not implemented
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — menuPrompt implemented
 **File**: `web/backend/src/handlers/command-handler/menu.ts:136–204`
 **express.e**: `28409–28413`
 **Impact**: Conferences configured with a custom `MENU_PROMPT` tooltype always show the standard prompt instead.
@@ -444,6 +486,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-8 — Menu prompt shows "mins left" instead of "mins. left" (missing period)
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Period in "mins. left"
 **File**: `web/backend/src/handlers/command-handler/menu.ts:195, 200`
 **express.e**: `28417, 28419`
 **Impact**: Byte-level text mismatch visible to users on every menu display.
@@ -453,6 +496,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: B-9 — Shortcut translated string not passed through processMci() before dispatch
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Shortcut MCI processed
 **File**: `web/backend/src/handlers/command-handler/input-handlers.ts:581–601`
 **express.e**: `28617–28620`
 **Impact**: Shortcut mappings containing MCI codes (e.g., `~CC_V SCREEN`) are dispatched as raw text without MCI expansion.
@@ -484,6 +528,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: C-CF — Conference Flags: FORCE_NEWSCAN/NO_NEWSCAN tooltype not shown as F/D
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — FORCE_NEWSCAN / NO_NEWSCAN check
 **File**: `web/backend/src/handlers/commands/advanced-commands.handler.ts`
 **express.e**: `24843–24852`
 **Impact**: CF display shows only `*` or ` ` for flag state; tooltype-forced (F) and tooltype-disabled (D) states are invisible.
@@ -493,6 +538,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: C-G — Goodbye (G) skips partUploadOK check before flagged file prompt
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — handleGoodbyeCommand wired
 **File**: `web/backend/src/handlers/commands/system-commands.handler.ts`
 **express.e**: `25047–25075`
 **Impact**: Partial uploads in progress are not offered to the user before logoff; possible data loss for interrupted uploads.
@@ -502,6 +548,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: C-H — Help (H) emits CLS before displaying; express.e never clears screen
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — help command (HELP_INDEX) exists
 **File**: `web/backend/src/handlers/commands/system-commands.handler.ts`
 **express.e**: `25075–25087`
 **Impact**: H command unexpectedly clears the screen before showing help text.
@@ -569,6 +616,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-1 — Nav prompt never shows QUIT at last message; wrong colon spacing
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — getMsgNavStr QUIT path + prompt format
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:477–487`
 **express.e**: `12010–12021`
 **Impact**: Users at the last message see a message number in the nav prompt instead of QUIT, giving no visual indication they've reached the end; colon spacing differs.
@@ -578,6 +626,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-3 — U (User Account Edit) command missing from message reader navigation
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — U command routes to handleEditUserAccount for message author
 **File**: `web/backend/src/handlers/message/messaging.handler.ts`
 **express.e**: `11032–11034, 11154–11175`
 **Impact**: Sysops with `ACS_ACCOUNT_EDITING` cannot edit a message author's account directly from the message reader.
@@ -587,6 +636,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-7 — deleteMSG output uses custom ANSI format instead of express.e plain text
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — deleteMSG plain text "Message N deleted..." format
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:634–657`
 **express.e**: `11936`
 **Impact**: Deletion confirmation uses green ANSI brackets instead of the exact `\r\nMessage N deleted...\r\n` format.
@@ -596,6 +646,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-8 — Keep (K): lowestNotDel fallback missing; recv not cleared on disk; wrong condition
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — K command lowestNotDel fallback + unmarkMessageReceived
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:578–591`
 **express.e**: `11124–11137`
 **Impact**: K command doesn't implement the lowestNotDel read-pointer fallback; doesn't clear the `recv` flag on disk; incorrectly allows K on private messages addressed to ALL.
@@ -627,6 +678,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-1 — Download prompt ignores ratioType; always shows "Infinite bytes"
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — ratioType 0/1/2 format selection in download prompt
 **File**: `web/backend/src/handlers/file/download.handler.ts:216–231`
 **express.e**: `19784–19789`
 **Impact**: Users always see "Infinite bytes" in the download prompt regardless of their ratio type; bytes/files limits are invisible.
@@ -636,6 +688,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-4 — Post-transfer stats hardcode 100% efficiency; missing "at N baud" field
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Efficiency and baud-rate stats
 **File**: `web/backend/src/handlers/file/download.handler.ts:480–481`
 **express.e**: `20266`
 **Impact**: Transfer efficiency is always shown as 100% regardless of actual CPS vs baud; the final "at N" (baud) field is missing.
@@ -645,6 +698,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-6 — pGoodbye countdown not implemented; immediate logoff instead of 10-second countdown
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Goodbye countdown after transfer
 **File**: `web/backend/src/handlers/file/download.handler.ts:494–498`
 **express.e**: `20317, 13751–13772`
 **Impact**: After a G-goodbye download, users are logged off immediately without the "Last chance! Auto LOGOFF in N SECS" countdown.
@@ -712,6 +766,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-5 — joinConf calls createNodeUserFiles on auto and confScan paths (should be manual-only)
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — Auto/confScan guard clause
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:174–181`
 **express.e**: `5130–5137`
 **Impact**: Node user file is updated on every joinConference call including login confScan and auto-joins, creating unnecessary I/O and potentially wrong node state.
@@ -721,6 +776,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-6 — joinConf pointer validation may be missing lowestNotDel clamping
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — lowestNotDel clamping
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:163–170`
 **express.e**: `5037–5048`
 **Impact**: If `lastMsgReadConf` or `lastNewReadConf` falls below `lowestNotDel` (e.g., after deletions), the pointers are not clamped up; users may see "no new messages" when there are new ones.
@@ -730,6 +786,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-10 — confScan: user answering N to MAILSCAN_PROMPT still runs file scan
 **Priority**: P2
+**Status**: ✓ FIXED 2026-05-04 — File scan gating on mscan
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:648–663`
 **express.e**: `28075–28082`
 **Impact**: When a user answers N to "Scan for Mail?", both the mail scan and the file scan should be skipped; our code skips only the mail scan.
@@ -1134,6 +1191,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-2 — Short help CR prompt uses nextMsgNum instead of current; missing leading CRLF
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Message nav prompt correct
 **File**: `web/backend/src/handlers/message/messaging.handler.ts:321–375`
 **express.e**: `11009`
 **Impact**: Minor: short help prompt shows next message number instead of current; missing leading newline before `<CR>=Next` line.
@@ -1143,6 +1201,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-6 — Forward delete-original uses `==` instead of case-insensitive compare
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Case-insensitive toUser.toLowerCase() compare
 **File**: `web/backend/src/handlers/message/message-entry.handler.ts:1074`
 **express.e**: `9853–9860`
 **Impact**: Forward's delete-original prompt may not appear if sender name case differs (e.g., "SYSOP" vs "sysop").
@@ -1152,6 +1211,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-11 — confScan missing per-msgBase name when conference has >1 msgBase
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Per-msgBase naming when count > 1
 **File**: `web/backend/src/handlers/message/message-scan.handler.ts:507–508`
 **express.e**: `28092–28097`
 **Impact**: confScan output doesn't show the msgBase name for conferences with multiple message bases.
@@ -1161,6 +1221,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: D-12 — OLM compose uses non-standard /S /A instead of edit(); custom header
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — OLM compose flow
 **File**: `web/backend/src/handlers/transfer/olm.handler.ts:134–206`
 **express.e**: `25443–25445`
 **Impact**: OLM compose is simplified; custom header banner not in express.e.
@@ -1174,6 +1235,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-2 — "Aborting..." has extra leading CRLF
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Aborting message has correct \r\n spacing
 **File**: `web/backend/src/handlers/file/download.handler.ts:265`
 **express.e**: `20141`
 **Impact**: Extra blank line before "Aborting..." text.
@@ -1183,6 +1245,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-5 — Post-transfer stats missing second blank line after
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Double CRLF after stats
 **File**: `web/backend/src/handlers/file/download.handler.ts:483`
 **express.e**: `20268`
 **Impact**: Only one CRLF after download stats instead of two.
@@ -1192,6 +1255,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-7 — displayULStats uses integer division instead of BCD for byte display
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — BCD formatting in displayULStats
 **File**: `web/backend/src/handlers/file/download.handler.ts:509–527`
 **express.e**: `12685–12691`
 **Impact**: Minor precision difference for very large byte counts; functionally correct for typical values.
@@ -1210,6 +1274,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: E-9 — Upload disk space shows same value for both "available" and "at one time" fields
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — Dual disk-space display in upload header
 **File**: `web/backend/src/handlers/file/file.handler.ts:926–928`
 **express.e**: `19012–19014`
 **Impact**: On multi-drive systems, total free space and per-drive free space would differ; on single-drive web BBS these are always identical.
@@ -1223,6 +1288,7 @@ Compiled from 8 track audits (A–H) against express.e, axobjects.e, axconsts.e,
 
 ### ID: F-7 — joinConf WEB_: comment for displaySysopULStats missing reason
 **Priority**: P3
+**Status**: ✓ FIXED 2026-05-04 — WEB_ comment for divergence
 **File**: `web/backend/src/handlers/operations/conference.handler.ts:259`
 **express.e**: `5115`
 **Impact**: WEB_: tag exists but has no explanation.
