@@ -110,6 +110,14 @@ repo. Toggle `AREXX_ENGINE=auto|native|ts` in `bbsConfig.info`.
   into a `tests/services/native-arexx-smoke.test.ts` so CI catches
   regressions in the bridged-interpretation path.
 - **doorman "Cannot read directory"** — needs user repro path.
+- **Ctrl+C should break out of running AREXX doors.** Currently a
+  long-running script (e.g. KickBox match loop, STNG question loop)
+  has no user-side abort path; the only way out is for the script to
+  reach its own quit option or run to completion. Wire Ctrl+C
+  (or some BBS-side ESC sequence) to set the interpreter's
+  `breakRequested` / `returnRequested` flag so the script unwinds
+  cleanly through its frames and exits — same hook the door:input
+  handler already provides for normal keystrokes.
 
 ## Known WEB_ deviations (intentional)
 
