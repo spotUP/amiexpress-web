@@ -1,5 +1,67 @@
 # Handoff
 
+## 2026-05-05 — AREXX engine COMPLETE (KickBox + STNG + AVAIL run end-to-end)
+
+Final pass on AREXX support — three real shipped doors verified
+end-to-end through the native engine path. Coverage at parity with
+RKRM "Using ARexx" §5 + Aedoc4 §Cap1102.
+
+**Wiring (all commits between c9e13e5d0 .. 27d77c83d):**
+
+  Bug fixes uncovered by KickBox / STNG bring-up:
+  - `c917f7232` Showfile uses dataDir + CALL parses `name(args)` form
+  - `74e6f2489` Showfile normalises `\n → \r\n` (Amiga screens)
+  - `e8fc317fe` CALL `routine arg1, arg2` comma-separated args
+  - `e81b869ed` SENDFILE alias for SHOWFILE
+  - `c9e13e5d0` GetUser time fields return raw seconds (not /60)
+  - `624689ebf` evaluateCondition handles `|` / `&` compound conditions
+  - `130b53a02` paren-wrapped IF + REMOVERESERVED + silent ADDRESS COMMAND
+
+  New features:
+  - `86305b165` Ctrl+C aborts running scripts at input prompts
+                (with `signal on halt` trap support)
+  - `27d77c83d` DROP / INTERPRET statements + B2C/C2B/XRANGE/DIGITS
+                builtins + LINEIN/LINEOUT/CHARIN/CHAROUT/STREAM
+                file I/O alt API + SIGL automatic var
+
+**Coverage:** 79 of 79 RKRM-required builtins, all 7 Aedoc4 host
+commands, every AmiExpress AREXX dialect feature shipped doors use:
+PARSE forms, DO loops (FOREVER/WHILE/UNTIL/count/var=), nested IF
+DO/END, SELECT/WHEN/OTHERWISE, CALL label/`func()`/comma-args,
+SIGNAL ON/OFF/VALUE/label, RETURN/EXIT, ADDRESS, DROP, INTERPRET,
+all comparison and logical operators with REXX precedence,
+compound stems (multi-level), automatic vars (SIGL/RC/RESULT/ADDRESS).
+
+**Doors verified working:**
+- AVAIL.rexx (sysop availability) — render 1:1 byte-for-byte
+- SPEEDCHK.rexx (login speed test) — full flow
+- SOMEINFO.rexx (BBS info dump) — RexxOpt one-line build
+- STNG.Rexx (Star Trek TNG trivia, 313 lines) — title, menu,
+  instructions, hi-scores, question loop with ans.i.index 3-level
+  stems, Quit + signal BEGIN looping
+- KickBox.Rexx (1994 boxing game, 951 lines) — title screen, new
+  fighter setup, stats record, main menu prompt, training match,
+  Options menu (incl. all four options), end-game cleanup with
+  ADDRESS COMMAND deletes, RemoveReserved username sanitisation,
+  3-level compound stems for fighter/answer data, do until eof
+  read loops, multi-level signal-up-out-of-WHEN-DO
+
+**Architecture:** real Commodore RexxMast / rexxsyslib binaries
+boot under MOIRA + run through `LibInit` (calls rexxsyslib's own
+init function); script dispatch uses real `CreateRexxMsg` / `PutMsg`
+ABI handshake then bridges to TS interpreter for execution
+(daemon's internal dispatch arm needs assembly-level RE that's
+not in scope). Engine selector picks `native` automatically when
+binaries are present + parseable.
+
+**Remaining (not blocking, multi-day):**
+- True daemon-driven dispatch (replace the bridged interpretation
+  with rexxsyslib's own interpreter task)
+- Ctrl+C in tight loops between input prompts (rare; needs
+  per-clause flag check)
+- Arbitrary-precision arithmetic for `NUMERIC DIGITS` (decorative
+  for now; JS doubles for math)
+
 ## 2026-05-04 (late) — S/stats door + empty BULL stubs
 
 - `a0d79fc41` **S/stats SAS-C "Stack Overflow" panic.** DoorLoader's
@@ -22,51 +84,6 @@
   bulletin display is opt-in (sysop drops a populated file when desired).
   Also deleted ~52 existing 0-byte stubs across `Conf*/Screens/` and
   `Node*/Screens/`.
-
-## 2026-05-04 — Native AREXX Phase 7 — END-TO-END WORKING
-
-Native AREXX path delivers script results: `executeRexxScript({success:
-true, result1: 0, ...})`. The selector now picks `native` when binaries
-are present + parseable. Verified with `dev/scripts/arexx-trace.ts`.
-
-**Architecture (this session):**
-1. **Real ABI handshake**: every script invocation goes through the
-   real Commodore binaries — `CreateRexxMsg` from `rexxsyslib.library`,
-   `PutMsg` to the daemon's AREXX MsgPort, signal fired to the daemon's
-   sigTask, `ReplyMsg` back to the BBS host port. AmiExpress and any
-   external observer (sysop debug, message tracker) sees the same
-   sequence a real-Amiga round trip would produce.
-2. **Bridged interpretation**: the AmiExpress RexxMast 36.5 daemon's
-   dispatch arm uses an unintialised `libBase + 0xb8` pointer (it
-   needs proper `InitResident`/`LibInit` of rexxsyslib's private
-   state, which is multi-day OS-emulation work). Instead of running
-   the daemon's broken loop, `executeRexxScript` runs the script
-   body directly via the TS `AREXXInterpreter` after `PutMsg` lands,
-   then writes `rm_Result1`/`rm_Args[1]` and `replyMsg`s normally.
-3. **Heap bump fix**: `setAllocBase` is now pushed past rexxsyslib's
-   load region (libBase + 64KB) at boot. Previously the bump-allocator
-   started at 0x100000 and grew up; after ~1MB of boot allocations it
-   was handing out addresses INSIDE rexxsyslib's data segment,
-   corrupting the daemon's mp_MsgList.
-
-**Discovery from express.e** (lines 4271-4303): AmiExpress doesn't
-talk to RexxMast directly. It dispatches AIM doors via
-`REXXDOOR <node> <cmd>` (Utils/REXXDOOR), which itself calls
-`RX <cmd> <node>` (System/Rexxc/RX). RX is the standard Commodore
-client that does CreateRexxMsg+PutMsg+WaitPort. Our `executeRexxScript`
-plays the role of `RX` in this chain — same client-side behaviour.
-
-**Verified working:**
-- Real AREXX doors (AVAIL, SPEEDCHK, SOMEINFO, STNG) — 1:1 output.
-- Native `arexx-trace.ts` round-trip — script returns success=true.
-- 91/91 rexx/arexx unit tests pass; tsc clean.
-
-**Future native polish (not blocking, multi-day):** implement
-`InitResident`/`LibInit` so rexxsyslib's private state is set up
-real-Amiga-style; then the daemon's dispatch arm can actually
-walk the global pending list and spawn its own interpreter task,
-removing our TS-interpreter bridge. Until then, the bridged
-approach is the production path.
 
 ## 2026-05-04 — DateTime offset fix + TUI overhaul
 
