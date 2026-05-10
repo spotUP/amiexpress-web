@@ -54,9 +54,32 @@ ABI handshake then bridges to TS interpreter for execution
 not in scope). Engine selector picks `native` automatically when
 binaries are present + parseable.
 
-**Remaining (not blocking, multi-day):**
-- True daemon-driven dispatch (replace the bridged interpretation
-  with rexxsyslib's own interpreter task)
+**Daemon-driven dispatch (HLE bridge landed 2026-05-11):**
+Fix 1 (counter zeroing) + Fix 2 (task-spawn fields) from 2026-05-10
+got the daemon through PutMsg→GetMsg→dispatch→CreateProc. RXC
+turned out to be a 372-byte CLI helper, not the interpreter (which
+lives inside rexxsyslib). 2026-05-11 wired the HLE bridge:
+phantom rexxc MsgPort allocated at start() (port at task_base+0x5C
+so daemon's `lea -0x5c(a0),a0` resolves correctly), CreateProc
+override detects rexxcSegListBptr and returns the phantom port —
+daemon's post-CreateProc PutMsg lands the RexxMsg in our queue.
+`executeRexxScript()` now drives the daemon dispatch loop, GetMsgs
+from the phantom port, runs the TS interpreter asynchronously,
+writes rm_Result1/rm_Result2/rm_Args[1], ReplyMsg's to rm_ReplyPort,
+post-burst drives the daemon back to WaitPort, then cleans up.
+Bridged fallback preserved for any path the daemon doesn't reach
+within the cycle budget. Verified end-to-end on a real
+RexxMast/rexxsyslib/RXC + AROS ROM stack: probe in
+`dev/scripts/arexx-hle-probe.ts` reports `CreateProc(seg=0x1000) A2=msg
+→ phantomPort`, executeRexxScript round-trips in 974ms with
+`rm_Result1=0`. CI regression in
+`tests/services/native-arexx-daemon.test.ts` (6 tests, gated on
+binaries+ROM). All 114 rexx/arexx tests green in 2.77s; tsc --noEmit
+clean. LVO -462 from the spawn-rexxc disasm (jsr -0x1ce(a6) post
+exg a5,a6) is not reached in the daemon's actual post-CreateProc
+path — round-trip completes without stubbing it.
+Full design + disasm: `thoughts/shared/research/2026-05-10_arexx-daemon-dispatch-wedge.md`,
+handoff: `thoughts/shared/handoffs/2026-05-11_arexx-daemon-hle-bridge.md`.
 - Ctrl+C in tight loops between input prompts (rare; needs
   per-clause flag check)
 - Arbitrary-precision arithmetic for `NUMERIC DIGITS` (decorative
@@ -116,25 +139,30 @@ repo. Toggle `AREXX_ENGINE=auto|native|ts` in `bbsConfig.info`.
 
 ## Open priorities
 
-- **MCI tokenizer follow-on cleanup.** `src/utils/mci-tokenizer.util.ts`
-  is in (`ff73674ed`) and `screen.handler.ts` routes the userInfo
-  dispatch through it. Color/bg codes (c0-c7, b0-b6) and FC/FF/FL/AK/SP/
-  CR/NS still go through `mciRegex(...)`. Migrate them to the tokenizer
-  too so all MCI substitution is single-pass. Also audit
-  `door.handler.ts:2735` and `batch-scheduler.ts:170` for the ad-hoc
-  substituters.
-- **Native AREXX end-to-end smoke test** — promote `dev/scripts/arexx-trace.ts`
-  into a `tests/services/native-arexx-smoke.test.ts` so CI catches
-  regressions in the bridged-interpretation path.
-- **doorman "Cannot read directory"** — needs user repro path.
-- **Ctrl+C should break out of running AREXX doors.** Currently a
-  long-running script (e.g. KickBox match loop, STNG question loop)
-  has no user-side abort path; the only way out is for the script to
-  reach its own quit option or run to completion. Wire Ctrl+C
-  (or some BBS-side ESC sequence) to set the interpreter's
-  `breakRequested` / `returnRequested` flag so the script unwinds
-  cleanly through its frames and exits — same hook the door:input
-  handler already provides for normal keystrokes.
+- **MCI tokenizer follow-on cleanup (DONE — was stale).** Audit
+  confirmed color/bg (`c0..c7`, `b0..b7`, `z0..z7`), FC/FF/FL/AK/CR/
+  NS, `~SP`, `~f`, `~w`, `~q`, `~h`, `~n1..n9`, `~x<n>`, `~y<n>` are
+  all routed through `userInfoDispatch` / `prefixDispatch` at
+  `screen.handler.ts:693-839`. `door.handler.ts:2749` uses
+  `parseMciCodes`; `batch-scheduler.ts:181` uses the shared
+  tokenizer. No ad-hoc `mciRegex` substituters remain. See
+  `thoughts/shared/handoffs/2026-05-04_mci-tokenizer-followup.md`.
+- **Native AREXX end-to-end smoke test (DONE 2026-05-10).** Promoted
+  `dev/scripts/arexx-trace.ts` to `tests/services/native-arexx-smoke.test.ts`.
+  Suite is gated on the presence of `System/RexxMast`, `Libs/rexxsyslib.library`,
+  and a Kickstart or AROS ROM under `data/amiga-roms/` — skips
+  cleanly in CI (binaries gitignored), runs in full on a sysop's
+  local checkout. Covers `start()` boot, `runUntilReady()`, a
+  trivial `RETURN 0`, and SAY output capture through the
+  outputCallback path. 5 tests, all green locally.
+- **Ctrl+C in tight AREXX loops (DONE 2026-05-10).** `scriptAbortHandler`
+  now lives on `BBSSession`; AREXX `executeScript` installs it for
+  the script's duration, and both socket-handlers `command` channel
+  and the telnet input path route 0x03 through it regardless of
+  whether a `doorInputHandler` is currently registered. The interpreter
+  picks up `returnRequested`/`exitRequested` at the next clause
+  boundary, so KickBox/STNG-style CPU loops between input prompts
+  abort cleanly. Regression: `tests/services/arexx-ctrlc-abort.test.ts`.
 
 ## Known WEB_ deviations (intentional)
 
