@@ -1,11 +1,23 @@
 # Handoff
 
-## 2026-05-12 — 68K door coverage: regression corpus + universe-wide stub elimination
+## 2026-05-12 — 68K door coverage: corpus + probe + universe stub elimination
 
-Built a CI-runnable door regression corpus and shipped real implementations
-for every LVO stub the AmiExpress door universe (~3000 binaries) actually
-calls. New tooling: `dev/scripts/door-corpus/` (regression) and
-`dev/scripts/door-probe/` (per-door + bulk diagnosis).
+Built a CI-runnable regression corpus, a per-door diagnostic probe, a
+bulk-probe with race-free sharding, a coverage report generator, and a
+timeout-cluster miner. Shipped real implementations for every LVO stub
+the AmiExpress door universe (~3000 binaries) actually calls. 10
+commits this session ahead of `e6e8f8e11`:
+
+  d72cc0fdd  Full LVO coverage v1 + corpus + probe + bulk-probe
+  733068905  Time-mask diff (recovers live-clock doors)
+  bc2d16a8c  Docs + npm scripts (test:corpus, corpus, probe)
+  929e7eefb  Parallel corpus runner (~3 min → ~80 sec, -j 4)
+  62be1ebb7  AREXX TS-interpreter regression tests (5/5)
+  ff7aa95ce  --shard I/N for race-free parallel bulk-probe
+  962fb6224  Session research doc (proven/probable/deferred)
+  795018918  Batch 4 LVO impls + coverage-report tool
+  57dd258d1  Timeout-cluster miner + .library filter
+  7ed0b0453  +2 corpus doors validated from cluster mining
 
 **Coverage from the 1489-archive scan (47% of universe, 3631 binaries
 probed):**
@@ -16,32 +28,44 @@ probed):**
   not an emulator bug) or live-time renderers (intentionally
   non-deterministic — corpus drops them)
 
-**Corpus: 34 doors green** covering 65 distinct XIM ops + 10 real LVOs.
-Categories: 3 XIM-SysCmd, 27 XIM-BBSCmd, 4 SIM. Refreezable goldens at
+**Corpus: 38 doors green** covering 65+ distinct XIM ops + 10 real
+LVOs. Categories: 3 XIM-SysCmd, 31 XIM-BBSCmd (incl. 2 from cluster
+mining), 4 SIM. Refreezable goldens at
 `dev/scripts/door-corpus/goldens/<id>/{output.txt,trace.txt}`.
-CI wrapper: `web/backend/tests/corpus/door-corpus.test.ts`. Skips with
-`SKIP_DOOR_CORPUS=1`. Add a door: drop binary, register in
-`corpus.json`, `npx tsx dev/scripts/door-corpus/run.ts --capture <id>`.
+CI wrapper: `web/backend/tests/corpus/door-corpus.test.ts` (skip with
+`SKIP_DOOR_CORPUS=1`). Runner supports `--concurrency N` / `-j N`
+(default 4, drop to 1 under bulk-probe contention) and time-masking
+diff (HH:MM:SS, HH:MM, Dow DD-Mon-YYYY → masked tokens; live-clock
+doors stay stable). Add a door: drop binary into `Doors/<Name>/`,
+register in `corpus.json`, `npm run corpus:capture` (or
+`npx tsx dev/scripts/door-corpus/run.ts --capture <id>`).
 
-**Probe: `npx tsx dev/scripts/door-probe/probe.ts <binary>`** turns
-"every new door takes days" into a one-shot diagnosis. Bulk-probe at
-`bulk-probe.ts` walks an archive directory and aggregates LVO/XIM-op
-frequency. Cached results at `/tmp/bp-full/` (1489 archives, durable).
+**Probe (`npm run probe -- <binary>` or
+`npx tsx dev/scripts/door-probe/probe.ts`)** turns "every new door
+takes days" into a one-shot diagnosis. Bulk-probe (`bulk-probe.ts`,
+`--shard I/N` for parallel runs, `--skip-existing` for resumption)
+walks an archive directory and aggregates LVO/XIM-op frequency.
+Cached at `/tmp/bp-full/` (~2 500 archives durable). Two report
+tools sit on top: `npm run coverage:report` (clean-exit %, stubs,
+hard blockers, corpus candidates) and `npm run clusters:report`
+(timeout-door clusters by trailing prompt + suggested input
+bytes).
 
-**LVO impls landed this session (24, all routed via the `*-vectors.ts`
-files — DosLibrary.handleCall switch is dead code, only DOS_VECTORS is
-live, same for ExecLibrary):**
+**LVO impls landed (29, routed via `library-vectors/*-vectors.ts` —
+the DosLibrary.handleCall switch and ExecLibrary equivalents are dead
+code, only the vector files dispatch live):**
 
-- exec.library: FreeSignal, RemPort (port-list membership guarded via
+- exec.library: FreeSignal, RemPort (membership-guarded via
   `portsInExecList: Set<number>`), OpenDevice, CloseDevice, DoIO,
   CheckIO, WaitIO, AbortIO, CreateIORequest, DeleteIORequest,
   AllocEntry, FreeEntry, OpenResource, SetFunction, AddTask,
-  AddSemaphore, AddIntServer, CacheControl, RemMemHandler, SetIntVector
+  AddSemaphore, AddIntServer, CacheControl, RemMemHandler,
+  SetIntVector, AllocTrap, FreeTrap, SendIO, SumLibrary
 - dos.library: LockDosList, UnLockDosList, AttemptLockDosList,
   FindDosEntry, NextDosEntry (broke a 367 241-call spin), SetIoErr,
-  StrToLong, MatchFirst, MatchNext, MatchEnd, IsFileSystem,
-  SetProgramName, GetArgStr, ReadItem, GetDeviceProc, DoPkt, VFWritef,
-  SetMode, ExAll
+  StrToLong, MatchFirst, MatchNext (broke 98 167-call spin), MatchEnd,
+  IsFileSystem, SetProgramName, GetArgStr, ReadItem, GetDeviceProc,
+  DoPkt, VFWritef, SetMode, ExAll, StartNotify
 
 **AREXX-side regression fixes (still from this multi-day arc):**
 PRV_COMMAND now queues for post-door-exit dispatch with `allowSyscmd=TRUE`
@@ -56,30 +80,18 @@ line-mode with echo + backspace.
 clear message on telnet/SSH transports (was leaving the session stuck
 at FILES_UPLOAD waiting for a browser file picker).
 
-**Doors installed:** 25-ish under `Doors/<Name>/` (Sent_FE, Jdn-Csent
-in 5D/, U-Stat, ConfScan, uPdOWNiNFO, newinfo, 5D-Status, FuckNature,
-JoinCnf, RATIOREP, AutoOnline, ConferenceSecurity, 5D-AutoFree,
-5D^DupeCheck, 5D-EnterMsg, 5D-DoorMenu, 5D-TimeBank, LOGOFF,
-5D-ZippySearch, Bull, AFL status / pager, HoldCheck, diary,
-mgs!-bulls, S!X Status, sKAN^4^sTATUs, Super-Stats, 5D-FileId,
-MAKECMD, 5D-News, 5D_Comment + .info registrations as needed).
-
-## 2026-05-11 — Sent_FE 68K + Jdn-Csent AREXX chain works end-to-end
-
-EMP-SF10 (Sent_FE, XIM 68K) and 5D-CS3 (Jdn-CSent, AIM AREXX) installed
-and verified. Door chain: `sent_fe` → banner → PRV_COMMAND `Sent` →
-Jdn-Csent menu → pick color → QUERY line input → write to
-`Doors/FileID/Sent.DAT` → clean exit. See the AREXX-side regression
-fixes summarised above.
+**Doors installed:** 38 under `Doors/<Name>/`. Full list in
+`dev/scripts/door-corpus/corpus.json`.
 
 ## How to run
 
 ```
 ./dev/scripts/start-servers.sh --bbs-only   # BBS terminal only
-./dev/scripts/start-servers.sh              # full: BBS + Admin + SDK
 ./dev/scripts/kill-servers.sh               # stop everything cleanly
-npx tsx dev/scripts/door-corpus/run.ts      # corpus regression
-npx tsx dev/scripts/door-probe/probe.ts <bin>  # diagnose one door
+npm run corpus            # 38-door regression diff (-j 4 default)
+npm run probe -- <bin>    # diagnose a single binary
+npm run coverage:report   # universe coverage from /tmp/bp-full
+npm run clusters:report   # timeout-door clusters by prompt
 ```
 
 Force TS AREXX: `AREXX_ENGINE=ts ./dev/scripts/start-servers.sh ...`.
@@ -108,5 +120,5 @@ Sysop drops `System/RexxMast` + `System/Rexxc/` (gitignored).
   `auto` (native if present); use `AREXX_ENGINE=ts` to force the TS
   interpreter when native daemon-dispatch is unstable on a script.
 - Door stack floor = 256 KB (DoorLoader.computeStackBounds).
-- Bulk-probe full-sweep results cached at `/tmp/bp-full/` (~/3000
-  binaries probed). `--skip-existing` resumes.
+- Bulk-probe results cached at `/tmp/bp-full/`; `--skip-existing`
+  resumes, `--shard I/N` parallelises across N runners (race-free).
