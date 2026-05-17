@@ -17,39 +17,42 @@ Full session writeup: `thoughts/shared/handoffs/2026-05-16_door-bug-batch.md`.
 | 5 | MASTERMIND/LUCKY | exits 65535, zero XIM ops          | **parked** | n/a — corpus golden already records exit 65535 |
 | 6 | EALL     | rejects sysop as "disabled user"            | fixed      | `DoorMessageHandler.ts` (DT_SECBOARD/SECLIBRARY/SECBULLETIN) |
 
-### MASTERMIND diagnosis (for next time)
+### MASTERMIND deep-dive — 2026-05-16 evening
 
-- Door is a self-decrypting stub: 548-byte CODE decryptor + 26136-byte
-  encrypted DATA segment.
-- After ~13s of CPU activity with ZERO library calls, `DoorLifecycleManager`
-  traps an out-of-bounds PC: `Previous PC 0x21d2 (lsr.l D4,D5) → New PC
-  0x1804b4 (OUT OF BOUNDS)`.
-- The "scattered letters" / "ORIGINAL SIN IS GOOD" art seen in screenshots
-  was the FRONTEND login scroller, **not** MasterMind. MasterMind never
-  renders anything.
-- Ruled out: 68000-vs-68020 (moira is in M68020 mode); CLI command-name
-  BSTR at 0xf0080 (tried, no effect, reverted).
-- Real fix path: per-instruction tracing in `moira-wrapper.cpp` gated on
-  this door, walk forward from entry 0x2008 to find which indirect jump
-  computes the bad target and what register/memory it reads to do so.
-  See full handoff for breadcrumbs.
+Full writeup: `thoughts/shared/handoffs/2026-05-16_mastermind-deep-dive.md`.
+
+- Door is a hunk-format **Imploder-family unpacker stub** (548-byte
+  unpacker + 14252-byte packed DATA payload).
+- Two real fixes landed (uncommitted, both safe for other doors):
+  1. **`DoorLoader.ts`**: write `ExecBase` to AbsExecBase at
+     `$00000004`. Doors using `movea.l $4.w,A6` now resolve A6
+     correctly instead of the ROM reset PC vector.
+  2. **`DoorLoader.ts`**: signature-detect hunk-unpacker stubs by
+     their 14-byte prologue (`pea`/`movem`/`lea -$e(PC)`/`movea.l`)
+     and patch nextBPTR at `code_base-4` to standard Amiga convention
+     (BPTR → nextBPTR field, not size field). Only MASTERMIND-style
+     binaries are touched; WHO + AquaScan still pass.
+- Door progresses from "crashes ~13s in with 0 lib calls" → "14
+  AllocMems through the unpacker's descriptor loop, then garbage on
+  the 15th." **Still doesn't render** — closing the last gap requires
+  reverse-engineering the Imploder-family output format (~2–4 h).
+- Diagnostic helpers kept in tree: `DOOR_TRACE_RING=N` (deep PC ring
+  dumped on first OOB), `DOOR_RANDOM_SEED=HEX` (reproducible seed at
+  $400), `DOOR_TRACE_ALLOCMEM_CTX=1` (per-AllocMem register + A3-mem
+  context).
 
 ### Next session — punch list
 
-1. Verify each fix via telnet/web client.
-2. Commit. Suggested 4 commits:
-   - `fix(door): RETURNCOMMAND self-recursion guard`
-   - `fix(emulator): bare-relative path fallback to BBS root`
-   - `fix(emulator): DT_SECBOARD/SECLIBRARY/SECBULLETIN return correct fields`
-   - `chore(doors): install GrapeBooth config + dirs`
-3. Optional: deep-dive MASTERMIND (2-4h session).
-
-### Reverts before this handoff
-
-- Speculative 0xf0080 BSTR write in `DoorLoader.ts` — reverted.
-- `[AED-TRACE]` console.logs in `AEDoorLibrary.ts` — reverted.
-- Generic AEDoor trap-dispatcher tracing in `LibraryTraps.ts` — reverted
-  (had caused startup crash loop during the session).
+1. Verify the four earlier fixes via telnet/web client (commits already
+   on `main`: f3ed9e043, abfff8347, 319a99553, 2f589adba).
+2. Review & commit MASTERMIND deep-dive deltas in working tree:
+   - `fix(emulator): write AbsExecBase to $00000004 on door load`
+   - `fix(emulator): standard-Amiga BPTR for hunk-unpacker stubs`
+   - `feat(debug): DOOR_TRACE_RING / DOOR_RANDOM_SEED / DOOR_TRACE_ALLOCMEM_CTX`
+   See `thoughts/shared/handoffs/2026-05-16_mastermind-deep-dive.md`.
+3. Optional: finish MASTERMIND — Imploder unpacker-output format
+   reverse-engineering (where does HUNK_END appear in the unpacker's
+   descriptor stream?).
 
 ### Prior session (archived)
 
