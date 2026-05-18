@@ -19,6 +19,8 @@ status: in-progress
 | D15 disk CallersLog/UDLog dual-write | `994aa7850` | runPostDownload writes to both |
 | D16 Restricted-comment file rejection | `a9a542080` | per express.e checkFIBForFileSize |
 | (regression tests for above) | `74f218076` | 13/13 pass; pins shape against future drift |
+| D9 pGoodbye 10-sec countdown telnet/SSH | `a2451134f` | startPGoodbye made callable; runPostDownload owns trigger now |
+| U6 resumeStuff interactive prompt | `bc7f24961` | Y/N per partial + Delete (Y/N/All); fires before lrzsz spawn |
 
 ## Verified already in code (no action needed)
 
@@ -95,8 +97,8 @@ Web-picker pipeline is comprehensive (`processBatchFile` at `file-socket-handler
 
 **P1 (do this week)** — meaningful UX/admin features:
 3. ~~**U5**: `cleanPlayPen`~~ — **DONE** commit `3bd245d7e`.
-4. **U6**: `resumeStuff` — interactive prompt for each partial file in PartUpload. Needs line-buffered Y/N prompt adapter + rz `-r` flag passthrough so the resumed file size triggers a real ZMODEM resume. Deferred — partials are now preserved by U5 but not yet offered back to user.
-5. **U7**: `internalCommandU` (`U` command) telnet/SSH with line-buffered description batch prompt. Needs the same line-buffered prompt adapter as U6. Deferred.
+4. ~~**U6**: `resumeStuff`~~ — **DONE** commit `bc7f24961`. Y/N + Delete (Y/N/All) prompts. (rz `-r` flag passthrough for real ZMODEM resume is a follow-up — current behavior moves partial back to playpen, sender starts from beginning.)
+5. **U7**: `internalCommandU` (`U` command) telnet/SSH — **DONE structurally** via existing UPLOAD_FILENAME_INPUT + UPLOAD_OKAY_CONFIRM substates + startBatchUploadTransfer → startZmodemUpload. Only blocked by BBSCmd `U.info` override on this site (points U to UL-Logoff door instead of internal). Code path works; activation is a site config decision.
 6. ~~**U3**: `LVL_KEEP_UPLOAD_CREDIT`~~ — **DONE** commit `994aa7850`.
 7. ~~**D14+U1, D15+U2**: udLog + session divider~~ — **DONE** commits `994aa7850` + `950938607`.
 
