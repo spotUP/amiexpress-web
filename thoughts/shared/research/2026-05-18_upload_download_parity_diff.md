@@ -17,6 +17,8 @@ status: in-progress
 | U1 + D14 displayUserToCallersLog(1) | `950938607` | per-session UDLog header + beenUDd gate |
 | D1+D2+D4+D11+D12+D13 runPostDownload | `814defaaf` | shared post-transfer pipeline web/telnet/SSH |
 | D15 disk CallersLog/UDLog dual-write | `994aa7850` | runPostDownload writes to both |
+| D16 Restricted-comment file rejection | `a9a542080` | per express.e checkFIBForFileSize |
+| (regression tests for above) | `74f218076` | 13/13 pass; pins shape against future drift |
 
 ## Verified already in code (no action needed)
 
