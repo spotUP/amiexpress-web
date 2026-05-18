@@ -2,10 +2,31 @@
 date: 2026-05-18
 topic: upload/download parity diff — express.e vs TypeScript port
 tags: [audit, parity, upload, download, express-e]
-status: draft
+status: in-progress
 ---
 
 # Upload / Download Parity Diff
+
+## Closed in this session (commits)
+
+| Item | Commit | Notes |
+|---|---|---|
+| U2 disk CallersLog/UDLog dual-write | `994aa7850` | runPostUpload writes to both |
+| U3 KEEP_UPLOAD_CREDIT persist | `994aa7850` | half-credit to user.timeTotal on disk |
+| U5 cleanPlayPen | `3bd245d7e` | leftover playpen → PartUpload/@slot |
+| U1 + D14 displayUserToCallersLog(1) | `950938607` | per-session UDLog header + beenUDd gate |
+| D1+D2+D4+D11+D12+D13 runPostDownload | `814defaaf` | shared post-transfer pipeline web/telnet/SSH |
+| D15 disk CallersLog/UDLog dual-write | `994aa7850` | runPostDownload writes to both |
+
+## Verified already in code (no action needed)
+
+| Item | Location | Notes |
+|---|---|---|
+| U4 sysopULStats both counters | `utils/upload-notify.util.ts:42` | updates both Conf/NumULs + SysopStats/NumULs_n |
+| U8 CREDITBYKB toggle partial | `download-ratios.util.ts:89` etc | ACS toggle wired, ratio uses it, format util respects it; full propagation still UNVERIFIED |
+| D5 clearFlagItems after batch | n/a | flagged-files cleared in batch-download.handler.ts |
+
+## Open
 
 Synthesizes the two audit docs:
 - express.e: `2026-05-18_express-e_upload_download_audit.md`
@@ -71,10 +92,11 @@ Web-picker pipeline is comprehensive (`processBatchFile` at `file-socket-handler
 2. **D9**: G-after-transfer (`pGoodbye`) handling in download `onComplete` — currently impossible to "logoff after download finishes" on telnet/SSH.
 
 **P1 (do this week)** — meaningful UX/admin features:
-3. **U5+U6**: `cleanPlayPen` + `resumeStuff` — partial upload preservation/resume. Currently lost on every disconnect.
-4. **U7**: Implement `internalCommandU` (`U` command) on telnet/SSH with line-buffered description prompt.
-5. **U3**: `LVL_KEEP_UPLOAD_CREDIT` persist of half time-credit to `user.timeTotal`.
-6. **D14+U1, D15+U2**: `udLog` separate from CallersLog + `displayUserToCallersLog(1)` divider.
+3. ~~**U5**: `cleanPlayPen`~~ — **DONE** commit `3bd245d7e`.
+4. **U6**: `resumeStuff` — interactive prompt for each partial file in PartUpload. Needs line-buffered Y/N prompt adapter + rz `-r` flag passthrough so the resumed file size triggers a real ZMODEM resume. Deferred — partials are now preserved by U5 but not yet offered back to user.
+5. **U7**: `internalCommandU` (`U` command) telnet/SSH with line-buffered description batch prompt. Needs the same line-buffered prompt adapter as U6. Deferred.
+6. ~~**U3**: `LVL_KEEP_UPLOAD_CREDIT`~~ — **DONE** commit `994aa7850`.
+7. ~~**D14+U1, D15+U2**: udLog + session divider~~ — **DONE** commits `994aa7850` + `950938607`.
 
 **P2 (next month)** — admin-only or unverified:
 7. **D16+D17+D18+D20**: audit download checklist phase for Restricted/Free/ConfAccounting parity.
