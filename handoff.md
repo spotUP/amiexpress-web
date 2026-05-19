@@ -1,85 +1,85 @@
 # Handoff
 
+## 2026-05-19 — ZMODEM web unify shipped; doors cluster fixed; SQLite/disk audit started
+
+**Full archive**: `thoughts/shared/handoffs/2026-05-19_session-handoff.md`
+
+### Live state at session end
+- `https://bbs.uprough.net/health` → 200, container fresh as of `bf6b4b5f9`
+- Web RZ upload working end-to-end (DIZ → description → DIR → FR)
+- Telnet ZMODEM upload + download working (after a regression I introduced + fixed)
+- JPEG/binary download corruption FIXED (`9163fc483` + `d34222b07` — full 21-byte hex-header validation)
+- 68K doors back to working after overclock revert (`889312df6`)
+- J runs JoinCnf (was disabled via `!LOCATION`); splash suppressed; user records regenerated to binary user.data
+
+### Shipped (30 commits this session — `56389a447..HEAD`)
+- **ZMODEM web unification** + Phase 4 dead-code deletion (~141 lines net)
+- **32 regression tests** across 4 files
+- **Doors**: overclock revert + JoinCnf cluster (LOCATION enable, splash 9999, lowercase user.data with case-insensitive fallback)
+- **Corpus**: 324 captured + 320 assertions populated
+- **Ops**: `.github/workflows/fetch-live-logs.yml` manual-dispatch for live log + admin (backend / preview / xim / doors / confs / userdata / userdump / joincfg / regenerate-users)
+- **Live regen**: `regenerate-user-files.ts` ran inside container; spot now at slot 22 with backups at `*.before-regen-20260519T001829.bak`
+
+### Open items
+- **#15** DREWALL leaks menu prompt AFTER door exit — needs DREWALL_TRACE=1 repro locally
+- **#19** DEEP AUDIT: SQLite-only state 68K doors need on disk — first pass in `thoughts/shared/research/2026-05-18_sqlite-disk-parity-audit.md`. 8 unpaired `db.updateUser` sites identified. Strategic rec: centralize sync via hook on `db.updateUser()` rather than patching each site. Untouched state classes: messages, conferences, callers log, votes, file flags, message pointers, OLMs.
+
+### Important gotchas (memo to future-me)
+- AmiExpress binary `conferenceAccess` is **10 CHAR hard ceiling** — SQLite holds 25, binary truncates on regen. > 10 confs visible requires format extension.
+- macOS APFS case-insensitive vs Linux container case-sensitive bit a few times today (User.data vs user.data). Lowercase canonical + amigafs.resolvePath fallback now in place for `user.data`/`user.keys`/`user.misc`.
+- `J.info` shipped from sanctuary with `!LOCATION` (disabled). Patched in place — re-restoring BBSCmd from sanctuary will undo.
+- Default door overclock is back at **100x** (was 25000x but broke doors not in the bench corpus). Per-door speedup via `OVERCLOCK=N` in .info.
+
+### Quick resume entry points
+```
+# #19 audit re-run
+for f in $(grep -rln "db\\.updateUser\\b" web/backend/src --include="*.ts" | grep -v test); do
+  while IFS=: read line _; do
+    near=$(awk -v t="$line" 'NR>=t-3 && NR<=t+30' "$f" | grep -c userFileManager)
+    [ "$near" = "0" ] && echo "UNPAIRED: $f:$line"
+  done < <(grep -n "db\\.updateUser\\b" "$f")
+done
+
+# #15 DREWALL repro
+DREWALL_TRACE=1 ./dev/scripts/start-servers.sh --bbs-only
+
+# Validate corpus assertions
+cd web/backend && npx tsx src/scripts/corpus-integration-runner.ts --concurrency 1
+
+# Live log fetch (any time)
+gh workflow run fetch-live-logs.yml -f log=backend -f tail=2000 -f grep='ERROR|spawn'
+gh run view <id> --log | grep 'out:'
+```
+
+---
+
 ## 2026-05-18 — Overclock bench + in-process corpus tester + WSS endpoint
 
 **Full archive**: `thoughts/shared/handoffs/2026-05-18_overclock_corpus_wss_zmodem.md`
 
-### Shipped today
+### Shipped that day
 - **Door overclock bench** (`dev/scripts/bench-overclock.ts`). Swept all 324 corpus doors — **294 safe at 100000x**, 4 cap at 25000x, 25 pre-existing failures. Results in `report-overclock.json`.
 - **Batch-door overclock plumbing**: `runAmigaDoorViaRunner` reads `.info` `OVERCLOCK=` + applies 5000x floor for mtop/multitop; runner stderr now piped to parent log with `[runner:<name>]` prefix.
-- **In-process integration corpus runner v0.1** (`web/backend/src/scripts/corpus-integration-runner.ts`). Drives doors through real `executeDoor()` + mock socket + minimal session. WHO smoke test passes. `--capture-all` mode + `populate-integration.ts` helper for auto-generating assertions.
-- **WSS terminal endpoint** at `/ws/terminal` (`web/backend/src/server/ws-terminal-server.ts`). Mounts on existing HTTP server; same `setupTelnetSSHHandler` pipeline.
-- **BBSCmd restored** from sanctuary reference BBS (79 .info files). `gl`/`gwall`/`CONFTOP` etc now register.
-- **LOGOFF syscommand.util crash fix**: `runSysCommand` rebind in `system-commands.handler.ts`.
-
-### In flight, not finished
-- **mtop verification**: still timing out at 300s/5000x. Diagnostic logging just shipped — next BBS restart + logoff will reveal whether `DOOR_OVERCLOCK` env propagates through npx→tsx→runner. Grep `logs/backend.log` for `[runner:mtop] [DoorLifecycleManager] 🚀 Overclocking: ...`.
-- **Capture-all corpus sweep**: paused at ~200/324 doors. Resume:
-  ```
-  cd web/backend && npx tsx src/scripts/corpus-integration-runner.ts --capture-all --concurrency 4
-  npx tsx dev/scripts/door-corpus/populate-integration.ts
-  ```
-- **WSS endpoint**: shipped, not smoke-tested. Try `wscat -c ws://localhost:3001/ws/terminal`.
-
-### Next session — user-approved scope
-**ZMODEM web unification**: kill `/api/upload` HTTP route, route web through telnet/SSH lrzsz path. Frontend Sentry already wired (`packages/terminal/src/components/BBSTerminal.tsx:414`); backend `transfer-raw:*` bridge already at `socket-handlers.ts:857`. Needs: server emits `zmodem-start` event before spawning lrzsz, frontend arms Sentry on that event, web branch in `transfer-misc-commands.handler.ts:141-178` deleted, `~280` lines of `file-socket-handlers.ts` removed. Full plan + file pointers in archive.
-
-### Other open items
-- **25 corpus-broken doors** + 4 capped-at-25000x — uninvestigated, listed in archive.
-- **ByteKillHandler / QuickNew** timing out in batch too — same fix shape as mtop.
-- **Regression tests owed** for every fix shipped today (memory `feedback_add_regression_tests`).
-- **Raise DoorLifecycleManager default** from 100x → 25000x (bench data supports it).
-- **Local user `spot` is seclevel=10**: `gl`/`gwall` correctly deny him. Log in as `sysop` (255) for high-access tests, or bump spot.
-
-### Quick state pointers
-- Local: `./dev/scripts/start-servers.sh --bbs-only`. Log: `logs/backend.log`.
-- Live: `https://bbs.uprough.net/`. Deploy gates per `feedback_verify_live_deploy_freshness`.
-- Reference BBS: `/Users/spot/Downloads/testbbs/bbs_sanctuary/`.
+- **In-process integration corpus runner v0.1** (`web/backend/src/scripts/corpus-integration-runner.ts`). Drives doors through real `executeDoor()` + mock socket + minimal session.
+- **WSS terminal endpoint** at `/ws/terminal`.
+- **BBSCmd restored** from sanctuary reference BBS.
+- **LOGOFF syscommand.util crash fix**.
 
 ---
 
 ## 2026-05-17 — Live/local divergence audit + structural fixes
+
+**Full archive**: prior handoffs.
 
 After months of live behaving differently from localhost in ways that
 were always written off as one-offs, a deep audit found two genuine
 root causes and a class of stale-volume issues. All three fixed,
 verified live, regression-tested.
 
-### Root causes found + fixed
-
-1. **ACS path mismatch on prod (`d1320d624`).** `initializeSecurity`
-   computed `bbsRoot` as `path.resolve(cwd, '..', '..')` when `BBS_ROOT`
-   was unset. On localhost cwd is `web/backend`, so `../..` lands at the
-   project root with `Access/` present. In the container cwd is
-   `/app/web/backend`, so `../..` lands at `/app` — which has no
-   `Access/`; the BBS data is at `/app/data/bbs/Access/`.
-   **Fix:** fall back to `BBS_DATA_DIR` before cwd-relative.
-
-2. **Case-sensitive screen variant ordering (`faa210e66`).** The
-   loader scanned `BBSTITLE.TXT` (uppercase) before `BBSTITLE.txt`
-   (lowercase). macOS APFS hid this; prod Linux exposed it. **Fix:**
-   reorder all variant lists to prefer lowercase.
-
-3. **FRONTEND syscmd not invoked on telnet/SSH (`91272c522`).** Web
-   ran it; telnet/SSH skipped it. **Fix:** `setupTelnetSSHHandler`
-   stashes the emitter on the connection; both transport servers
-   await `runSysCommand(emitter, session, 'FRONTEND', '')` before
-   the graphics prompt.
-
-### Volume hot-fixes applied live + tiered sync policy (`629dc1cdf`)
-- `Access/ACS.255.info`, `Conf.DB`, `Screens/BBSTITLE.TXT` repaired.
-- `docker-entrypoint.sh` split into IMAGE-OWNED (hash-compared) vs
-  VOLUME-OWNED (init-once) to prevent future drift.
-
-### Other UX fixes
-- LF→CRLF normalize on telnet/SSH emitter (`81c317766`).
-- Standing SSH/restart authorization for Claude (`87b8ea3fa`).
-
-### Regression tests (`d91680017`)
-- `tests/utils/acs.util.test.ts` — bbsRoot resolution chain.
-- `tests/handlers/screen-loader-case.test.ts` — variant ordering.
-
-### Prior sessions archived
-- `thoughts/shared/handoffs/2026-05-16_door-bug-batch.md`
-- `thoughts/shared/handoffs/2026-05-16_mastermind-deep-dive.md`
-- `thoughts/shared/handoffs/2026-05-18_zmodem-muffinterm-upload-unification.md`
+### Root causes fixed
+1. ACS path mismatch on prod (`d1320d624`)
+2. Case-sensitive screen variant ordering (`faa210e66`)
+3. FRONTEND syscmd not invoked on telnet/SSH (`91272c522`)
+4. Volume hot-fixes applied live + tiered sync policy (`629dc1cdf`)
+5. LF→CRLF normalize on telnet/SSH emitter (`81c317766`)
+6. Regression tests (`d91680017`)
