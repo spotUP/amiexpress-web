@@ -22,7 +22,18 @@
 
 ### Open items
 - **#15** DREWALL leaks menu prompt AFTER door exit — needs DREWALL_TRACE=1 repro locally
-- **#19** DEEP AUDIT: SQLite-only state 68K doors need on disk — first pass in `thoughts/shared/research/2026-05-18_sqlite-disk-parity-audit.md`. 8 unpaired `db.updateUser` sites identified. Strategic rec: centralize sync via hook on `db.updateUser()` rather than patching each site. Untouched state classes: messages, conferences, callers log, votes, file flags, message pointers, OLMs.
+- **#19** DEEP AUDIT: SQLite-only state 68K doors need on disk — audit doc `thoughts/shared/research/2026-05-18_sqlite-disk-parity-audit.md` updated 2026-05-19.
+  - **Users table: SOLVED** — repo-level sync at `user-repository.ts:260-278` (since ad3f77d5d, 2026-01-04) covers all 36 `db.updateUser` sites. Original 8-unpaired finding was a false positive from grep-scope.
+  - **Messages: SOLVED** — `message-repository.ts` create/update/delete/move all paired with .msg + HeaderFile + A&lt;N&gt; writes.
+  - **Message pointers: RESOLVED 2026-05-19** — new `MessagePointerFileManager` (`web/backend/src/services/MessagePointerFileManager.ts`) writes 74-byte confBase records to `<bbsRoot>/Conf{N}/Conf.DB` at offset `(slot-1)*74`. Read-modify-write preserves all unrelated fields (handle, bytes, ratio, etc). Hooked into both `message-pointers.util.ts:updateReadPointer/updateScanPointer` and `message-repository.ts:updateReadPointer`. Best-effort sync (SQL authoritative). 8 regression tests pass, type-check clean, existing message-repository suite still green.
+  - Real raw-SQL gap: `initialization.ts:671` confaccess startup migration — one-shot, low impact (resyncs on next user write).
+  - Remaining state classes audited 2026-05-19:
+    - **Conferences: SOLVED** — `conference-repository.ts:153-193` pairs `conferenceFileManager.updateConferenceFile()`.
+    - **File flags: SOLVED** — `file-flag.util.ts` is disk-first (no SQLite).
+    - **Callers log: BIFURCATED BY DESIGN** — `callersLog()` (SQL) and `callersLogManager.*` (disk) are independent; call sites have to invoke both. Some don't (`conference.handler:308`, `file.handler:229/360`) — minor inconsistency.
+    - **OLMs: GAP, LOW PRIORITY** — SQLite-only; no known door consumer.
+    - **Votes: GAP, LOW PRIORITY** — SQLite-only; no known door consumer (express.e BBS core only).
+  - **Net priority work**: ConfDB message-pointer disk writer is the only high-impact gap.
 
 ### Important gotchas (memo to future-me)
 - AmiExpress binary `conferenceAccess` is **10 CHAR hard ceiling** — SQLite holds 25, binary truncates on regen. > 10 confs visible requires format extension.
