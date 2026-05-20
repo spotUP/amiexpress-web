@@ -1,125 +1,120 @@
 # Handoff
 
-## 2026-05-20 — multi-file upload fix cluster + parity diff closeout
+## 2026-05-20 evening — project wrap-up: audit closeout, corpus baseline, smoke gate
 
-**Full archive**: `thoughts/shared/handoffs/2026-05-20_session-handoff.md` (write at end of next session)
+**Full archive**: `thoughts/shared/handoffs/2026-05-20_evening_wrap-up.md`
 
 ### Live state at session end
-- `https://bbs.uprough.net/health` → 200, container fresh after deploys of
-  `99d83e1db` (slotnumber on createUser) and `18ee0f1eb` (conferences sync).
-- Live SQLite `conferences` table now mirrors disk `ConfConfig.info` —
-  all 14 conferences populated (was 3 seeded). Verified via the new
-  `conferences` case in `fetch-live-logs.yml`.
-- New web registrations now get `confAccess` from
-  `system_config.new_user_conf_access` (was hardcoded `XXX`).
-- Multi-file ZMODEM upload works end-to-end on web (was hung after
-  file 1 due to dead HTTP picker path).
-- DREWALL "no" in LOGON chain no longer flashes the BBS menu prompt
-  between chained doors (#15 closed).
+- `https://bbs.uprough.net/health` → 200, revision `5c2db3ca8`.
+  Tonight's 6 commits are **local, not pushed yet**.
+- SQLite `users` clean: 26 users, all `confaccess` length 14.
+- Binary `user.data` slot positions now mirror SQLite `slotnumber`
+  (re-aligned via `gh workflow run fetch-live-logs.yml -f log=regenerate-users`).
+- Two SQLite files exist on live: `/app/data/db/amiexpress.db` (active)
+  and `/app/data/bbs/data/amiexpress.db` (stale, 3 users from old
+  import). Audit always probes both.
 
-### Shipped this session (21 commits — `d9494d5f4..HEAD`)
+### Shipped this session (6 commits — `5c2db3ca8..HEAD`, unpushed)
 
-**Parity / data integrity:**
-- `e6fad0b4a` ConfDB message-pointer writer (74-byte confBase
-  read-modify-write at `<conf>/Conf.DB[(slot-1)*74]`). 8 unit tests.
-- `8194a2346` ConfDB pointer-sync wiring integration tests (4).
-- `99d83e1db` `userRepository.createUser` assigns `slotnumber = MAX+1`
-  on insert — fixed friend `notorious` lockout ("That account has
-  been deleted." on second login). 2 regression tests.
-- `18ee0f1eb` `db.syncConferencesFromDisk` mirrors `ConfConfig.info`
-  into SQLite `conferences` table at startup — root cause of the
-  "still only 4 confs" cascade. 4 regression tests.
-- `03d355935` callers-log dual-write SQL + disk for 3 SQL-only sites
-  (Joined conference, Deleted file, Moved file). 5 tests.
+```
+871d0e831 corpus: restore literal UTF-8 in corpus.json
+859b7b0ac corpus(integration): baseline triage + smoke gate + follow-up plan
+7d461beb8 docs(thoughts): archive untracked handoffs + research
+de6a24b0c docs(plans): stamp status on the three open plan documents
+41578d60e ops(corpus): npm scripts for in-bbs integration corpus runner
+5c2db3ca8 ops: confdb-access case — per-conf Conf.DB access flags
+```
 
-**Transfer pipeline:**
-- `cf2121c86` U command routes through ZMODEM (was emitting
-  `show-file-upload` → dead HTTP picker after Phase 4 cleanup). 4
-  regression tests.
-- `a0196a5e2` U/RZ upload + Z download pipeline cluster:
-    - `startZmodemUpload` + `startZmodemDownload` install real
-      socket-emit sender for web (was no-op placeholder from
-      `getTransferTransport`).
-    - U-command `onComplete` mirrors RZ pipeline (DIZ + description
-      + DIRn + FILES.BBS + log).
-    - `rz` flags transport-aware: `-y` overwrite for web (zmodem.js
-      can't ZRPOS), `-r` resume for telnet/SSH.
-    - `received[]` derived from rz stderr `Receiving:` lines (was
-      readdir-diff that failed under `-y` overwrites).
-    - Web registration `confAccess` from `system_config.new_user_conf_access`.
-- `9690e42ca` U13 — 2 MB playpen free-space floor; refuses upload
-  with express.e parity text "Not enough free space for uploading!".
-- `f28420aa8` D5 — `flaggedFilesManager.clearFiles(userId)` on
-  successful ZMODEM download (telnet/SSH path was leaking the queue).
-- `63b071975` D16 — Restricted-comment gate in batch download
-  (security-adjacent; user could flag then F+D-batch-download a
-  sysop-restricted file).
-- `faa53df80` D7 — extracted `displayULStats` to shared util so
-  pre- and post-transfer banners are identical.
+**Corpus integration runner — wired and baselined.**
+The runner existed with 324 entries and integration goldens but had
+no npm entry point. Wired:
 
-**Cleanup + ops:**
-- `44dfb635e` #15 chained-door menu-prompt leak in `launchAmigaDoor`
-  (RETURNCOMMAND chain → next door, but `subState=DISPLAY_MENU`
-  flashed first). 4 regression tests.
-- `3b5cbdedc` removed dead `startFileUpload` + 4 imports (72 lines).
-- `f9881547c` `conferences` case in `fetch-live-logs.yml` for
-  diagnosing conf-sync state on live.
-- `bb0aafe42` `__lastDoorT0` flag so first-JH_SM timing log fires
-  once per door entry instead of once per session.
-- `dd8162551` parity-diff doc updates: U8 / U9 / U11 audit
-  conclusions (design divergences documented, no code change needed).
+- `npm run corpus:integration` — all 324, concurrency=1.
+- `npm run corpus:integration:capture` — refresh goldens.
+- `npm run corpus:integration:smoke` — 175-door green subset (CI-safe).
 
-**Disk: 18 GB freed** — git gc (10 packs → 1), npm cache clean, brew
-cleanup, root-level orphans (`68klog.txt` 40 MB, stale tsx cache,
-`/tmp` debris). Repo down to 6.1 GB.
+Baseline run produced **pass=175 fail=149 skip=0**. Categorization
+saved to `dev/scripts/door-corpus/triage/2026-05-20_baseline.json`:
+63 timeouts, 85 drift (fragile assertions), 1 bogus (fixed:
+sent_fe). Full follow-up plan in `thoughts/shared/plans/2026-05-20-
+corpus-integration-triage.md`.
+
+**Sneaky-bug audit closed.** Swept for the three patterns the
+afternoon fix eliminated (slot-mismatch / fixed-width null-term /
+padding masks). No further code changes warranted — every other
+slot-indexed reader either uses inline byte loops or is for
+correctly null-terminated string fields. Findings in archive.
+
+**Live confaccess backfill — no-op needed.** Active SQLite is
+already uniform (26 users × 14-char). Stale legacy DB isn't
+connected.
+
+**Live regenerate-users ran clean.** Sysop → binary slot 25, spot →
+slot 23, etc. Backups: `*.before-regen-20260520T162948.bak`.
+
+**Plan statuses stamped:**
+- `2026-05-18-zmodem-web-unification` → `implemented`.
+- `2026-05-11-68k-door-coverage` → `partial` (Phase 1 done).
+- `2026-04-28-express-1to1-audit` → `superseded`.
+
+**Source TODOs triaged:** all 5 are intentional design markers
+(`audio-video` color renderer, `wizard.handler` template-string
+TODO meant for sysop-generated code, `message-scan` doPause with
+rationale, `user-commands` D16 parity note, `amiga-parser` admin-
+import placeholder). No actionable debt.
 
 ### Open items
 
-- **U7 telnet/SSH U command** — code path exists, blocked by site
-  `BBSCmd/U.info` pointing U to a different door (UL-Logoff). Site
-  config decision, not a code gap.
-- **U10 multi-node upload coordination** — `sendMasterUpload` cross-
-  node lock. Deferred — needs shared registry, rare scenario.
-- **D19/D20 ratio-check / per-conf accumulator audit** — UNVERIFIED;
-  lower-priority deep audit.
-- **OLM disk parity / Votes disk parity** — gaps, low priority, no
-  known door consumer.
-- **CREDITBYKB on sites with 68K-door co-writers** — TS port stores
-  bytes uniformly; would diverge from doors that write user.data with
-  the toggle on. Live (bbs.uprough.net) has it off, so non-issue.
-  Documented in parity diff.
+- **Push when ready.** 6 commits ahead of `origin/main`, none
+  destructive, all hook-clean. `git push origin main`.
+- **Corpus triage 149 reds** — backlog per follow-up plan. Smoke
+  gate covers the green 175 already.
+- **68K door coverage phases 2-5** — deferred; no Phase 1
+  regressions.
+- **Working-tree churn (448 entries)** — mostly runtime artifacts
+  (Node*/, Conf*/, Bulletins). Should mostly be `.gitignore`d but
+  aren't. Cosmetic.
 
 ### Important gotchas (memo to future-me)
-- AmiExpress binary `conferenceAccess` is **10 CHAR hard ceiling** —
-  SQLite holds 25, binary truncates on regen. >10 confs visible
-  requires format extension. 68K doors that read user.data see only
-  confs 1-10. Web BBS handlers use SQLite confAccess (full length).
-- macOS APFS case-insensitive vs Linux container case-sensitive bit
-  user.data lookups; lowercase canonical + amigafs.resolvePath
-  fallback in place.
-- `J.info` shipped from sanctuary with `!LOCATION` (disabled). Patched
-  in place — re-restoring BBSCmd from sanctuary will undo.
-- Default door overclock is **100x**. Per-door speedup via
-  `OVERCLOCK=N` in `.info`.
-- tsx esbuild cache at `/var/folders/.../T/tsx-501/` can serve stale
-  transpiled code across restarts. If a source change "doesn't
-  apply", clear that dir before restarting.
+
+- **`json.dump` defaults destroy UTF-8 diffs.** Editing
+  `corpus.json` via Python — always `ensure_ascii=False` +
+  trailing `\n`. Otherwise every non-ASCII byte rewrites as
+  `\uXXXX` and the diff balloons to hundreds of lines.
+- **populate-integration heuristic is fragile.** Picks longest
+  golden line as `mustContain`. For ~85 doors that line is non-
+  deterministic (session IDs, user state, ANSI art). v2 populator
+  needed — see follow-up plan.
+- **Bash background polling — use `until $PID; sleep 30`, not
+  Monitor.** Long sleeps in foreground Bash blow the 5-minute
+  prompt-cache TTL. `run_in_background: true` with an until-loop
+  gives a single completion notification.
+- **Corpus concurrency cap = 1.** Per
+  `feedback_avoid_parallel_emulator_heat` — 2+ sustained Moira
+  runs spin fans hard.
 
 ### Quick resume entry points
 
 ```bash
-# Live conferences table snapshot
+# Push tonight's work
+git push origin main
+
+# Smoke corpus (175 known-green, ~25 min)
+cd web/backend && npm run corpus:integration:smoke
+
+# Full corpus (324, ~45 min; expect 175/149 until triage done)
+cd web/backend && npm run corpus:integration
+
+# Re-trigger the run + re-categorize
+mkdir -p /tmp/corpus-triage
+cd web/backend && npx tsx src/scripts/corpus-integration-runner.ts --concurrency 1 > /tmp/corpus-triage/full-run.log 2>&1 &
+python3 /tmp/corpus-triage/triage.py /tmp/corpus-triage/full-run.log
+
+# Live ops (read-only diagnostic dumps)
+gh workflow run fetch-live-logs.yml -f log=users
 gh workflow run fetch-live-logs.yml -f log=conferences
-
-# Live backend log grep
+gh workflow run fetch-live-logs.yml -f log=confdb-access
 gh workflow run fetch-live-logs.yml -f log=backend -f tail=2000 -f grep='ERROR|spawn'
-gh run view <id> --log | grep 'out:'
-
-# DREWALL trace (if #15 ever returns)
-DREWALL_TRACE=1 ./dev/scripts/start-servers.sh --bbs-only
-
-# Corpus assertions
-cd web/backend && npx tsx src/scripts/corpus-integration-runner.ts --concurrency 1
 
 # Force-restart local backend (clears tsx cache)
 ps aux | grep -E "tsx.*backend|start-servers" | grep -v grep | awk '{print $2}' | xargs -I{} kill {} 2>/dev/null
@@ -130,18 +125,32 @@ disown
 
 ---
 
+## 2026-05-20 afternoon — multi-file upload fix cluster + parity diff closeout
+
+**Full archive**: `thoughts/shared/handoffs/2026-05-20_session-handoff.md`
+
+Earlier work today: ConfDB pointer writer + sync tests, createUser
+slotnumber assignment (fixed `notorious` "account deleted"
+lockout), `db.syncConferencesFromDisk` (root cause of "only 4
+confs"), callers-log dual-write, U/RZ/Z transfer pipeline fix
+(multi-file upload no longer hung), 2 MB playpen floor (U13),
+flaggedFilesManager queue cleanup (D5), restricted-comment batch
+gate (D16), DREWALL chained-door menu-prompt leak (#15). 21
+commits, all pushed and deployed before this evening's session.
+
+---
+
 ## 2026-05-19 — ZMODEM web unify shipped; doors cluster fixed; SQLite/disk audit started
 
 **Full archive**: `thoughts/shared/handoffs/2026-05-19_session-handoff.md`
 
-Earlier work: ZMODEM web unification + Phase 4 dead-code deletion
-(~141 lines net), 32 regression tests, doors-overclock revert,
-JoinCnf cluster fix, corpus capture (324 + 320 assertions),
-`fetch-live-logs.yml` manual-dispatch ops workflow, live regen of
-user.data/keys/misc from SQLite. See archived handoff for detail.
+ZMODEM web unification + Phase 4 dead-code deletion, 32 regression
+tests, doors-overclock revert, JoinCnf cluster fix, corpus capture
+(324 + 320 assertions), `fetch-live-logs.yml` manual-dispatch ops
+workflow, live regen of user.data/keys/misc.
 
-The SQLite ↔ disk parity audit started 2026-05-19 was closed across
-2026-05-19 and 2026-05-20 — see
+The SQLite ↔ disk parity audit started 2026-05-19 was closed
+across 2026-05-19 and 2026-05-20 — see
 `thoughts/shared/research/2026-05-18_sqlite-disk-parity-audit.md`.
 
 ---
@@ -150,7 +159,6 @@ The SQLite ↔ disk parity audit started 2026-05-19 was closed across
 
 **Full archive**: `thoughts/shared/handoffs/2026-05-18_overclock_corpus_wss_zmodem.md`
 
-Earlier work: door overclock bench (`dev/scripts/bench-overclock.ts`),
-in-process integration corpus runner v0.1, WSS terminal endpoint at
-`/ws/terminal`, BBSCmd restored from sanctuary, LOGOFF
-syscommand.util crash fix.
+Door overclock bench, in-process integration corpus runner v0.1,
+WSS terminal endpoint at `/ws/terminal`, BBSCmd restored from
+sanctuary, LOGOFF syscommand.util crash fix.
