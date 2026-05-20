@@ -2,7 +2,8 @@
 date: 2026-05-18
 topic: zmodem-web-unification
 tags: [zmodem, upload, web, lrzsz, refactor]
-status: draft
+status: implemented
+implemented_date: 2026-05-20
 ---
 
 # ZMODEM web unification — kill `/api/upload`
@@ -81,8 +82,8 @@ Once Phase 3 is live-verified:
 
 ## Success criteria
 
-- [ ] Web user runs RZ, browser ZMODEM dialog appears, file upload completes, description prompt fires, file ends up in FILES.BBS + DIR file + visible to `FR`.
-- [ ] Web user `F`lags a file, runs `D`, browser file save dialog appears, file downloads correctly.
-- [ ] Telnet/SSH transfer path unchanged (lrzsz still works, IAC BINARY still negotiated).
-- [ ] Both typecheck commands clean.
-- [ ] No new `[ZMODEM]` errors in backend log on web transfer.
+- [x] Web user runs RZ, browser ZMODEM dialog appears, file upload completes, description prompt fires, file ends up in FILES.BBS + DIR file + visible to `FR`.
+- [x] Web user `F`lags a file, runs `D`, browser file save dialog appears, file downloads correctly.
+- [x] Telnet/SSH transfer path unchanged (lrzsz still works, IAC BINARY still negotiated).
+- [x] Both typecheck commands clean.
+- [x] No new `[ZMODEM]` errors in backend log on web transfer.

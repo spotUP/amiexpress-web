@@ -2,7 +2,18 @@
 date: 2026-04-28
 topic: express-1to1-audit
 tags: [audit, express.e, compliance, 1:1]
-status: draft
+status: superseded
+superseded_date: 2026-05-20
+notes: |
+  The structured parallel-research plan was never executed; in practice
+  parity work happened reactively, ticket-by-ticket, with each fix
+  citing the relevant express.e line range. Net effect: the audit was
+  done piecemeal across April-May 2026 (see
+  thoughts/shared/handoffs/ for the running log). Specific parity items
+  closed: D5, D6, D7, D13, D16, D19, D20, U11 (design divergence),
+  ConfDB pointer sync, slot-mismatch elimination, JoinCnf access,
+  ZMODEM unification. Items deferred as wontfix-by-design: U8
+  (CREDITBYKB), U9 (mail-attach).
 ---
 
 # AmiExpress 1:1 Compliance Audit — Implementation Plan

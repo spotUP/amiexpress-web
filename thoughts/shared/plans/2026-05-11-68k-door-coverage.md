@@ -2,7 +2,15 @@
 date: 2026-05-11
 topic: 68k-door-full-coverage
 tags: [emulation, doors, testing, arexx, xim, lvo, planning]
-status: draft
+status: partial
+phase_1_status: implemented
+phase_2_5_status: deferred
+implemented_date: 2026-05-20
+notes: |
+  Phase 1 (harness + corpus) shipped — 324 doors in corpus.json with
+  integration assertions and goldens, runner wired via
+  `npm run corpus:integration`. Phases 2-5 (stub elimination, AREXX,
+  vamos differential, long tail) deferred to follow-up sessions.
 ---
 
 # Plan — Full 68K (and AREXX) door coverage
