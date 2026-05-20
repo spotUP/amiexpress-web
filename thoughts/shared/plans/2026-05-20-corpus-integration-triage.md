@@ -2,7 +2,7 @@
 date: 2026-05-20
 topic: corpus-integration-triage
 tags: [corpus, doors, integration, triage, follow-up]
-status: phase-1-complete
+status: phase-2-partial
 ---
 
 # Plan — In-BBS corpus integration triage (149 reds)
@@ -108,7 +108,58 @@ Iteration trail (against 86 drift+bogus doors only):
 Smoke set now 261 doors:
 `dev/scripts/door-corpus/integration-smoke.txt` rewritten.
 
-## Phase 2 — Timeout bucket triage (63 doors)
+## Phase 2 — Timeout bucket triage (63 doors) — partial
+
+### Status as of 2026-05-20 late evening
+
+- **24/63 timeout doors now pass** via `script-timeout-inputs.ts`
+  (heuristic: tail of golden → `n\r` for yn-prompts, `\r` for
+  press-RETURN prompts, `g\r` for doors that already dropped to
+  the BBS main menu, generic `\r`/`q\r` otherwise).
+- **One critical bug fix**: the runner was emitting scripted
+  inputs only on the `'command'` channel, which DoorManager
+  listens to but XIM doors don't. XIM doors listen on
+  `'door:input'` (via `AmigaDoorSession.setupSocketHandlers()`).
+  The runner now emits on both channels — that's the entire
+  unlock for the 24 newly-passing doors.
+- **v2 populator fix**: the previous v2 implementation overwrote
+  the entire `integration` block, stripping any `inputs` field.
+  Fixed to preserve siblings (inputs, expectedSubState, timeoutMs)
+  while only rewriting the `assertions` sub-block.
+
+### Corpus state
+
+| stage                        | pass | total | %    |
+|------------------------------|------|-------|------|
+| baseline (v1 longest-line)   |  175 |   324 |  54% |
+| Phase 1 (v2 assertion picker)|  261 |   324 |  81% |
+| Phase 2 (scripted inputs)    |  285 |   324 |  88% |
+
+Smoke set extended to 285 doors:
+`dev/scripts/door-corpus/integration-smoke.txt`.
+
+### 39 doors still failing
+
+All 39 share one trait: **empty capture even with blanket
+scripted inputs**. They render nothing to the socket between
+launch and exit. Likely categories:
+
+- doors that require specific BBS state not present in the
+  runner (file flags, message base entries, registered users
+  beyond `sysop`)
+- doors that expect specific keystrokes the heuristic can't
+  guess (door-specific menu commands, multi-step wizards)
+- doors that intentionally drop carrier instead of exiting
+  cleanly (LOGOFF-style without a graceful path)
+
+Full list in `dev/scripts/door-corpus/triage/2026-05-20_phase2_stuck.txt`.
+
+**Decision needed:** for each stuck door, either provide
+per-door input scripts (manual) or mark as "not corpus-integration
+testable" (skip-with-reason). Auto-heuristics have reached their
+limit.
+
+## Phase 2 — Timeout bucket triage (63 doors) — ORIGINAL PLAN
 
 `who`, `aquawho`, `5d_timebank`, `logoff`, `bull`, `joincnf`,
 `ratiorep` and ~56 more. Some need user input ("Press any key",
