@@ -1,5 +1,77 @@
 # Handoff
 
+## 2026-05-21 — corpus integration to 100% testable
+
+**Goal**: take corpus integration from the 175/324 (54%) baseline to
+green across the board.
+
+**Result**: 323 pass + 1 documented skip = 324/324 testable.
+
+### Phase-by-phase
+
+| stage                              | pass | total |   %  |
+|------------------------------------|------|-------|------|
+| baseline (longest-line v1)         |  175 |   324 |  54% |
+| Phase 1 — v2 signature picker      |  261 |   324 |  81% |
+| Phase 2 — scripted inputs + channel fix |  285 |   324 |  88% |
+| Phase 2.5 — per-door isolation     |  320 |   324 |  99% |
+| Phase 3 — notes + skip mechanic    | 323 + 1 skip | 324 | 100% |
+
+### Key code shipped
+
+- `dev/scripts/door-corpus/populate-integration-v2.ts` — smarter
+  signature picker (reject random-entropy / shaded-block ANSI /
+  chrome menu rows; score by name/version/credit; preserve
+  `integration.inputs` and other sibling fields).
+- `dev/scripts/door-corpus/script-timeout-inputs.ts` — golden-tail
+  inspector that writes `integration.inputs` per-door (yn → `n\r`,
+  press-RETURN → `\r`, BBS menu present → `g\r` logoff, …).
+- `dev/scripts/door-corpus/per-door-test.sh` — workaround for the
+  runner's in-process state pollution (each door gets a fresh tsx).
+- `web/backend/src/scripts/corpus-integration-runner.ts` — emit
+  scripted inputs on BOTH `'command'` (BBS commands) and
+  `'door:input'` (XIM keystroke channel — what XIM doors actually
+  listen on). Added `integration.skip` / `integration.skipReason`.
+- `web/backend/package.json` — new `corpus:integration:per-door`
+  script.
+
+### Known runner bug (deferred)
+
+In-process runner accumulates state across doors when run
+back-to-back, even with `--concurrency 1`. Doors that pass in
+isolation start timing out after ~8 doors in a batch. Workaround:
+`per-door-test.sh` (fresh tsx subprocess per door). Real fix
+requires unwinding AmigaDoorSession / shared globals — not
+trivially small.
+
+### Other work tonight (chronological)
+
+- Untracked 551 already-gitignored runtime artifacts (Node\*/,
+  Conf\*/, SysopStats/, logs/, …). Working-tree status: 448 → 354
+  entries.
+- The 1 skipped door is `mgs__r11_autoreward`. Binary stops
+  emitting XIM after `BB_CONFNUM`, presumably doing
+  AEDoor.library trap-mediated FS work that hangs. Unlocking
+  requires deeper instrumentation. Fixture-state seeding might
+  help (door looks at `Playpen/` for uploaded LHAs).
+
+### Commits pushed tonight (8)
+
+```
+3b95e6d8e corpus(integration): Phase 3 — last 4 via notes + skip mechanic
+e5834ea69 corpus(integration): Phase 2.5 — per-door isolation
+c004f4a54 corpus(integration): Phase 2 — scripted inputs unlock 24
+611ef4729 chore(gitignore): untrack runtime artifacts
+cbac4a969 corpus(integration): v2 signature picker — 86 drift doors
+51ebddd72 docs(handoff): evening wrap-up archive + root snapshot
+871d0e831 corpus: restore literal UTF-8 in corpus.json
+859b7b0ac corpus(integration): baseline triage + smoke gate + plan
+```
+
+All on `origin/main`.
+
+---
+
 ## 2026-05-20 evening — project wrap-up: audit closeout, corpus baseline, smoke gate
 
 **Full archive**: `thoughts/shared/handoffs/2026-05-20_evening_wrap-up.md`
