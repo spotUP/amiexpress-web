@@ -138,7 +138,33 @@ Smoke set now 261 doors:
 Smoke set extended to 285 doors:
 `dev/scripts/door-corpus/integration-smoke.txt`.
 
-### 39 doors still failing
+### Phase 2 continued — 2026-05-21 early morning
+
+**State-pollution bug discovered.** The in-process runner accumulates
+state across doors even with `--concurrency 1`. Doors that pass in
+isolation start timing out after ~8 doors in a back-to-back batch.
+Root cause sits in `AmigaDoorSession` / shared globals; not trivially
+fixable without unwinding several layers.
+
+**Workaround**: `dev/scripts/door-corpus/per-door-test.sh` runs each
+door in its own `tsx` subprocess. Slower (~3 s overhead per door) but
+reliable. Wired up as `npm run corpus:integration:per-door` against
+`dev/scripts/door-corpus/integration-smoke-isolated.txt`.
+
+**Result with per-door isolation on the 39 stuck doors**:
+- 7 pass in normal batch
+- +28 pass under per-door isolation
+- 4 still timeout even in isolation: exorcist, mdb_confupdater,
+  mgs__r11_autoreward, pwfail
+
+| stage                            | pass | total | %    |
+|----------------------------------|------|-------|------|
+| baseline                         |  175 |   324 |  54% |
+| Phase 1 (v2 assertions)          |  261 |   324 |  81% |
+| Phase 2 (scripted inputs)        |  285 |   324 |  88% |
+| Phase 2.5 (per-door isolation)   |  320 |   324 |  99% |
+
+### 4 doors still failing
 
 All 39 share one trait: **empty capture even with blanket
 scripted inputs**. They render nothing to the socket between
