@@ -58,7 +58,7 @@ Web-picker pipeline is comprehensive (`processBatchFile` at `file-socket-handler
 | U10 | `zmdupecheck` registers in-flight uploads across nodes via `sendMasterUpload(fname)` so two nodes can't simultaneously accept the same filename — express.e:13426 | MISSING — no multi-node coordination | Low (rare; only matters for multi-user concurrent uploads) | Defer — would need a shared lock/registry |
 | U11 | `skipdFiles` listing post-transfer: walks list, prints "Skipped <name>" per file + "...SKIPPED. They already exist or have symbols." — express.e:19112-19125 | UNVERIFIED — duplicate detection exists but skipped-file UX may differ | Low | Verify by uploading a file with same name as existing |
 | U12 | DIRn col-13 status flag = `F`/`P`/`N`/`D`/`checksym` — express.e:19451-19470 | PRESENT — `checkedMarker` set to same values at file-socket-handlers.ts:403 | OK | — |
-| U13 | `freeDiskSpace()` global check + 2MB playpen floor + `RAMWORK` tooltype override — express.e:18989-19001 | UNVERIFIED — disk-space displayed but the 2MB-or-RAMWORK gate may not exist | Low | Verify with low-disk scenario |
+| U13 | `freeDiskSpace()` global check + 2MB playpen floor + `RAMWORK` tooltype override — express.e:18989-19001 | **CLOSED 2026-05-20** — `displayUploadInterface` enforces `MIN_PLAYPEN_BYTES = 2*1024*1024` via shared `readFreeBytes(ulPath)` before transitioning to UPLOAD_FILENAME_INPUT; refuses with express.e parity text "Not enough free space for uploading!". 6 grep regression tests in `tests/upload-disk-space-floor.test.ts`. RAMWORK tooltype skipped — web has no ramdisk-override concept. | — | done |
 
 ## DOWNLOADS — major gaps
 
