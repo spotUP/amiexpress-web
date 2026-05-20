@@ -2,7 +2,7 @@
 date: 2026-05-20
 topic: corpus-integration-triage
 tags: [corpus, doors, integration, triage, follow-up]
-status: draft
+status: phase-1-complete
 ---
 
 # Plan — In-BBS corpus integration triage (149 reds)
@@ -40,7 +40,15 @@ are documented backlog — this plan.
 - **G3.** Document each genuinely-broken door as a regression to
   investigate, ideally with an issue or thoughts/ research note.
 
-## Phase 1 — Drift bucket triage (85 doors)
+## Status
+
+- **Phase 1 — DONE 2026-05-20 evening.** `populate-integration-v2.ts`
+  shipped. 86 drift+bogus doors re-derived. All 86 now pass.
+  Smoke set expanded from 175 → 261 doors. Corpus: 261/324 green
+  (80.6%). The 63 remaining reds are all in the `timeout` bucket
+  (Phase 2 territory). See "Phase 1 — outcome" below.
+
+## Phase 1 — Drift bucket triage (85 doors) — DONE
 
 Most "drift" failures look like fragile assertions, not regressions.
 Sample patterns from `2026-05-20_baseline.json`:
@@ -70,6 +78,35 @@ Sample patterns from `2026-05-20_baseline.json`:
    golden itself is stale (move to Phase 2).
 
 **Effort estimate:** ~4 hours (populator v2 + re-derive + re-run).
+
+### Phase 1 — outcome
+
+`populate-integration-v2.ts` filters and scores candidate lines:
+
+- **Reject shapes**: length ∉ [12,100]; unique chars < 8; single
+  char ≥ 60%; ASCII printable ratio < 0.85; shaded block-graphic
+  chars present (`░▒▓█▌▐■□▪▫▀▄`); shannon entropy > 4.8 (random
+  session-id dumps); date/time patterns; "Scanning dir N for…";
+  BBS chrome menu rows (two `[X] - WORD` segments).
+- **Score**: +10 door-name match, +5 version (`v0.0`), +5 credit
+  (`By`, `(c)`, `Copyright`), +3 brackets, +1 per length/30.
+- **Output**: top-1 line if score ≥ 6, plus a second only if it
+  independently scores ≥ 10 (door-name match). Otherwise
+  `mustNotContain`-only — honest about no stable signature.
+- **ANSI-strip** the candidate before storing, matching what
+  `corpus-integration-runner.ts` does to live raw output.
+
+Iteration trail (against 86 drift+bogus doors only):
+
+| round | tweak                              | pass | fail |
+|-------|------------------------------------|------|------|
+| v1    | longest line (baseline)            |    0 |   86 |
+| v2.1  | shape filter + 2 candidates        |   40 |   46 |
+| v2.2  | top-1 only (unless score ≥ 10)     |   71 |   15 |
+| v2.3  | chrome filter + score-6 floor      |   86 |    0 |
+
+Smoke set now 261 doors:
+`dev/scripts/door-corpus/integration-smoke.txt` rewritten.
 
 ## Phase 2 — Timeout bucket triage (63 doors)
 
