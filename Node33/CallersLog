@@ -1,0 +1,60 @@
+18-May-26 19:33 Door: 5D-FileId (SIM)
+18-May-26 19:33 Door exit: 5D-FileId (SIM)
+18-May-26 23:44 Door: 5D-FileId (SIM)
+18-May-26 23:44 Door exit: 5D-FileId (SIM)
+20-May-26 19:45 Door: 5D-FileId (SIM)
+20-May-26 19:45 Door exit: 5D-FileId (SIM)
+20-May-26 20:33 Door: ILT pumpsafe 1.0
+20-May-26 20:33 Door exit: ILT pumpsafe 1.0
+20-May-26 20:37 Door: ILT pumpsafe 1.0
+20-May-26 20:37 Door exit: ILT pumpsafe 1.0
+20-May-26 20:42 Door: ILT pumpsafe 1.0
+20-May-26 20:42 Door exit: ILT pumpsafe 1.0
+20-May-26 22:08 Door: DCS TNConfig
+20-May-26 22:13 Door exit: DCS TNConfig
+20-May-26 22:21 Door: DCS TNConfig
+20-May-26 22:26 Door exit: DCS TNConfig
+20-May-26 22:37 Door: DCS TNConfig
+20-May-26 22:42 Door exit: DCS TNConfig
+20-May-26 22:53 Door: DCS TNConfig
+20-May-26 22:58 Door exit: DCS TNConfig
+20-May-26 23:05 Door: DCS TNConfig
+20-May-26 23:10 Door exit: DCS TNConfig
+20-May-26 23:39 Door: MGS!-R11.LHA autoreward
+20-May-26 23:48 Door: MGS!-R11.LHA autoreward
+21-May-26 09:43 Door: 5D-DoorMenu
+21-May-26 09:43 Door exit: 5D-DoorMenu
+21-May-26 09:56 Door: 5D-FileId (SIM)
+21-May-26 09:56 Door exit: 5D-FileId (SIM)
+21-May-26 10:23 Door: ListSpeeder v1.2
+21-May-26 10:23 Door exit: ListSpeeder v1.2
+21-May-26 10:35 Door: MasterView (DPL)
+21-May-26 10:35 Door exit: MasterView (DPL)
+21-May-26 10:47 Door: SENT
+21-May-26 10:47 Door exit: SENT
+21-May-26 10:59 Door: WALL
+21-May-26 10:59 Door exit: WALL
+21-May-26 11:12 Door: FileDescription 1.1
+	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+21-May-26 11:12 	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+21-May-26 11:12 Door exit: FileDescription 1.1
+21-May-26 11:22 Door: FileDescription 1.1
+	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+21-May-26 11:22 	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+21-May-26 11:22 Door exit: FileDescription 1.1
+21-May-26 12:47 Door: AEXSETU.LHA who1.0
+21-May-26 12:48 Door exit: AEXSETU.LHA who1.0
+22-May-26 00:21 Door: 5D5ESA10 5D^SYSAVAIL
+22-May-26 00:26 Door exit: 5D5ESA10 5D^SYSAVAIL
+24-May-26 14:27 Door: FileDescription 1.1
+	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+24-May-26 14:27 	FILE DESCRIPTION ERROR: Cannot open configfile: Filedescription.config
+
+24-May-26 14:27 Door exit: FileDescription 1.1
+26-May-26 17:00 Door: CD_DL (Rioter Tools)
+26-May-26 17:01 Door exit: CD_DL (Rioter Tools)
