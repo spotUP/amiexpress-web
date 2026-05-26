@@ -1,5 +1,44 @@
 # Handoff
 
+## 2026-05-26 — new-user login flow fixed + MCI regression suite
+
+**Status**: confirmed golden by user.
+
+### Bugs fixed (2 sessions, commits 8f99f5d55..fd6b4b497)
+
+- **BULL screen "not found" error** — added `silent=true` matching express.e:6548-6550
+- **~f and ~N literal in menu** — `parseWipeMCI` left a leading `\n` after stripping
+  `~WX`, making `allowMCI=false` and disabling all MCI substitution. Fix: strip the
+  wipe code's line-ending too.
+- **Double-Enter on conference join pause** — `handleCommand` line guard changed
+  subState to READ_COMMAND before `paginatedScreen` was dismissed, skipping
+  `advanceDisplayFlow`. Added `!session.paginatedScreen` guard.
+- **join.txt display ordering** — `onComplete` fired before `processNextScreenSegment`,
+  emitting the name prompt before the questionnaire text. Migrated to
+  `screenSegments.onComplete` and call after last segment.
+- **Name prompt wiped by ~f after join.txt** — inline parseMciCodes queues output
+  through a 16ms buffer; `promptForName` emitted directly and arrived first, then
+  the buffered `\x1b[2J` cleared it. Fix: `flushOutput(socket)` before `segOnComplete`.
+- **First ANSI art line offset in wipe-animated menu** — `parseAnsiToGrid` was
+  recording `\x1b[H` (cursor-home from `~f`) into `currentAnsi`; `gridToAnsi`
+  re-emitted it as a color prefix, snapping cursor to home mid-row. Fix: only
+  update `currentAnsi` for SGR sequences ending in `m`.
+
+### Tests added
+
+- `tests/wipe-mci-allowmci.test.ts` — 6 tests for wipe stripping + allowMCI gate
+- `tests/handlers/mci-codes-regression.test.ts` — 61 tests: allowMCI invariants,
+  case sensitivity, non-inline mode (wipe path), inline sentinels, width-prefix
+- `tests/utils/screen-wipe.util.test.ts` — 2 new regression tests for grid parser
+
+### Open items
+
+- **Corpus reds** — 149 failing integration doors (timeouts + drift assertions)
+- **FAME/DD compat layers** — ~380 archive doors use FAMEDoorPort/DD_DoorPort
+- **Menu first-line todo** — added by user mid-session, tracked above (now fixed)
+
+---
+
 ## 2026-05-21 — corpus integration to 100% testable
 
 **Goal**: take corpus integration from the 175/324 (54%) baseline to
