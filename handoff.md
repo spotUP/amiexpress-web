@@ -1,5 +1,34 @@
 # Handoff
 
+## 2026-06-03/04 — DOORMAN v2 complete + dist/ enforcement
+
+**Status**: confirmed working by user. Doorman is finished for now.
+
+### What shipped
+
+- **DOORMAN v2** — full blessed UI door: ViewManager state machine, InstalledView, RepoView, DocView, StripView, ConfirmView, InputView, InfoEditorOverlay, FileExplorerOverlay, AmigaGuideViewer. All keys via `screen.on('keypress')` — widget.key() is unreliable with vi-mode lists. ESC handled correctly via ViewManager + `requestClose()` on overlays.
+- **AREXX door type badge** — `RX`/`AREXX` now shows as `RX` instead of `??`.
+- **InfoEditorOverlay ESC** — `overlay.key(['escape'])` only fires when overlay itself is focused (not children). Fixed by using `screen.on('keypress', _globalKeyHandler)` + `requestClose()` public method called from `InfoEditorOverlayView.onEsc()`.
+- **dist/ enforcement** — Burned an entire session because `dist/InfoEditorOverlay.js` was from 10:42, fixes landed 19:49. Three-layer defence: (1) pre-commit hook auto-rebuilds and stages `dist/` when `.ts` door files are staged; (2) Dockerfile `doors-builder` stage runs `npm install -g typescript@5 && tsc` from source — stale committed dist is overwritten at build time; (3) RULES.md Rule 5 + memory updated.
+
+### Key lesson (never again)
+
+TypeScript doors in `Doors/{name}/` run `dist/index.js`, **not source**. Always `cd Doors/{name} && npm run build` then commit `dist/` with the source. The pre-commit hook now does this automatically.
+
+### Dockerfile doors-builder quirks (for next person who touches it)
+
+- `npm ci` against door-manager's `package.json` triggers SDK build scripts via `file:../../sdk` dependency even with `--ignore-scripts` — do not use it.
+- `npm install -g typescript@5` (not unversioned — TS6 errors on `moduleResolution:node`).
+- SDK symlinked manually: `ln -sf /app/sdk node_modules/@amiexpress/bbs-door-sdk`.
+- Full SDK source copied via `COPY sdk ./sdk` so `moduleResolution:node` can follow `.ts` files in `sdk/engines/`.
+
+### Open backlog (not doorman)
+
+- Corpus reds — 149 failing integration doors
+- FAME/DD door compat layers
+
+---
+
 ## 2026-05-26 — new-user login flow fixed + MCI regression suite
 
 **Status**: confirmed golden by user.
