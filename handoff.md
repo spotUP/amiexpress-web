@@ -1,6 +1,12 @@
 # Handoff
 
-## 2026-08-14 (night) — WIP audit + Tier 0/1/2 execution
+## 2026-08-14 (night) — WIP audit + Tier 0/1/2 + corpus reds; NEXT = FAME compat
+
+**Full session archive + next-step playbook:**
+`thoughts/shared/handoffs/2026-08-14_wip-audit-tiers-and-fame-next.md` — READ
+THIS to resume. NEXT STEP: build FAME (FIM) door compat
+(`thoughts/shared/plans/2026-08-14-fame-fim-compat.md`, 9 TDD tasks).
+Do NOT run a full corpus/ledger sweep — one-door diagnostic only.
 
 Full-project WIP/stub audit (3 agents) → `thoughts/shared/plans/2026-08-14-wip-debt-master-plan.md`
 (86 actionable code items, 32 doc opens, emulator stub map). Executed:
