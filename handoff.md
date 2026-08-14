@@ -24,8 +24,23 @@ Full-project WIP/stub audit (3 agents) → `thoughts/shared/plans/2026-08-14-wip
   comment); tsx import+require duplicates singletons; corpus runner hangs so
   sweep uses single-door harness; door stdin must be </dev/null in the loop.
 
-Open tiers: 2-implementation (data-driven now), 4 (SQLite parity), 5 (corpus
-reds), plus tasks #12 (CONFTOP mail) and #13 (Tier 1 leftovers).
+- **Tier 2 CONCLUSION** (fa2cd2a86): targeted sweep of 24 tail-library doors
+  (intuition/graphics/socket/math) — STILL 0 stub, 0 missing. Emulator serves
+  the entire exercised corpus. gethostbyname/socket/connect/send/recv are real;
+  only IoctlSocket is a called stub (harmless no-op, door passed). No
+  data-supported stub target exists — do NOT implement S1-S8 blind. Ledger is
+  the standing early-warning (task #14). Building measurement first turned a
+  multi-week effort into a proven non-issue.
+- **Corpus reds RESOLVED** (f3a3cd9cb): all 19 were mostly a stale CI list, not
+  broken doors (LEDGER diagnosed). 17 phantom/renamed ids fixed (7 verified
+  renames added, 10 gone + who/aquawho dropped). zootility was the one real
+  door failure — slow paginated stats outran the 8000ms timeout; bumped to
+  13000 + 'ns' pause dismiss. smoke-all now 408 valid ids.
+  NOTE: corpus.json got fully reformatted by json.dump (indent change) — huge
+  diff, data intact (3170 entries verified). Use minimal sed edits next time.
+
+Open tiers: 4 (SQLite parity — architectural, needs buy-in), plus tasks #12
+(CONFTOP mail), #13 (Tier 1 leftovers), #5 (mgs door), #14 (ledger policy).
 
 ## 2026-08-14 (evening) — inline-door prompt bugs + GWALL hang fixed live
 
