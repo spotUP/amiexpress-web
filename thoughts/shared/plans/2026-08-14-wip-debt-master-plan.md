@@ -100,14 +100,35 @@ zero missing. The common door workload (status/wall/stats) only touches
 exec/dos/icon core functions, all implemented. Top calls: Forbid, FindPort,
 PutMsg, Permit, GetMsg, WaitPort, AllocMem, OpenLibrary, dos Output/Open/Lock.
 
-**Implication for the implementation half:** the audit's dishonest-success
-stubs (S1-S8 below) are REAL but LOW-FREQUENCY — they bite specific door
-classes (socket/timer/graphics/math), not the common corpus. So do NOT blindly
-implement all S1-S8. First run a BROADER sweep (targeted at socket/graphics/
-timer/math doors, or the full 3124 — ~13h serial, schedule it) to see which
-stubs/missing REAL doors actually hit, then implement by measured frequency.
-The priority stubs below stay as the static-analysis hazard list, now to be
-confirmed against sweep data:
+**Second finding — targeted tail-library sweep (24 doors that OPEN
+intuition/graphics/socket/gadtools/math):** 57 distinct LVOs, STILL all real,
+0 stub, 0 missing. The exotic libraries actually EXERCISED were aedoor.library
+(WriteStr/GetDT/GetString/CreateComm...) and bsdsocket.library (socket/connect/
+send/recv/gethostbyname/Errno/IoctlSocket) — every one implemented. Notably:
+- gethostbyname/socket/connect/send/recv are genuinely implemented (real DNS
+  via node dns). The audit's blanket "getXXXbyYYY are stubs" (S6) was
+  over-broad.
+- The ONLY called-but-stubbed handler was `IoctlSocket` (1 call), and the door
+  that called it PASSED — the no-op-success is harmless (node sockets are
+  already non-blocking). Comment made honest; behavior unchanged (no evidence
+  of breakage → no speculative patch).
+
+**ROADMAP CONCLUSION for Tier 2:** the emulator serves essentially the entire
+exercised door corpus. The static audit's never-implemented stubs (S1-S8) and
+dishonest-success handlers are NOT hit by real doors in practice — corpus runs
+are short and don't drive the deep feature paths that would reach them. There
+is currently **NO data-supported stub/missing target to implement.** Building
+the measurement was the correct move: it turned a plausible multi-week
+implementation effort into a proven non-issue.
+
+**Standing policy:** keep the ledger as a permanent early-warning. Any NEW door
+that fails is now run under `LEDGER=1` (or added to `ledger-sweep.sh`); if it
+records a stub/missing it actually needs, THAT becomes the implementation
+target — data-driven, one function at a time. The S1-S8 list below stays as the
+static hazard reference for when that happens; do NOT implement it blind.
+
+Original static hazard list (reference only — confirm against ledger before
+implementing):
 
 - **S1 — library-opened callback override drops generic LVO stubbing.** Any
   library not in `AmigaDoorSession`'s hardcoded list (math*, graphics, gadtools,
