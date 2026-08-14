@@ -1,5 +1,44 @@
 # Handoff
 
+## 2026-08-14 — CONFTOP "Reset date is out of range" root-caused + binary-patched
+
+**Status**: fixed and verified in harness; uncommitted (binaries + test).
+
+### Root cause (Y2K bug in Conftop v2.3 binary, emulator innocent)
+
+- Door stores resetdate in `Conf*/Conftop.Data` as: word `0x0400` version +
+  long resetdate = Unix-epoch seconds + 21600 (hardcoded CST tz, `"CST"` at
+  data+0xeee), always midnight. Prior 2026-04-25 research misread this as a
+  packed mystery format.
+- Reset catch-up loop (Conftop000.x code 0xdd4): advances resetdate by
+  DAYS*86400 until it passes `now`, but guards each step with
+  `cmpi.l #0x386F0580,d0` (946702720 = **2000-01-01 06:00**) — any resetdate
+  past Y2K during a multi-period catch-up → fatal error 6 *before* the file
+  rewrite, so the door stays bricked. Fires only when idle gap > 2×DAYS;
+  weekly resets through May 2026 worked, the 88-day summer gap killed it.
+- Fix: flipped guard `blt.b` (0x6DB0) → `bra.b` (0x60B0) at 0xE80
+  (Conftop000.x) / 0xE7C (Conftop020.x). Loop still terminates via the
+  `now < resetdate+period` exit. Originals in session scratchpad.
+- Verified: orig binary + stale data reproduces exact user error; patched
+  binary resets cleanly, resetdate Apr 27 → Aug 10 (15×7 days, alignment
+  preserved), full uploader board renders.
+- Regression test: `web/backend/tests/conftop-y2k-binary-patch.test.ts`
+  (6 tests; fails against unpatched binary — verified by revert).
+- `dev/scripts/reset-conftop-data.sh` band-aid now obsolete; door self-heals
+  stale Conf2/Conf5 data on next run.
+
+### Gotchas discovered
+
+- Harness `--command CONFTOP000.X` → door parses `.X` as uploaded filename →
+  "Cannot find uploaded file" path. Use `--command CONFTOP` for reset/display.
+  Corpus entry `conftop_2` uses the `.X` command — only exercises upload path.
+- `web/backend` had no node_modules; `SKIP_SDK_PREPARE=1 npm install
+  --ignore-scripts` works (backend postinstall web-assets build fails,
+  irrelevant for tests). `ts-node` absent → jest TS config fails; render
+  config to JSON via tsx and pass `--config <json>`.
+
+---
+
 ## 2026-06-03/04 — DOORMAN v2 complete + dist/ enforcement
 
 **Status**: confirmed working by user. Doorman is finished for now.
