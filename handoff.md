@@ -1,5 +1,15 @@
 # Handoff
 
+## 2026-08-16 (evening) — DD wave IN FLIGHT — READ THIS FIRST in a fresh session
+
+**Resume doc:** `thoughts/shared/handoffs/2026-08-16_dd-parallel-wave.md`
+(exact reconciliation steps for in-flight agent commits + SDD resume).
+Short: DD SDD T1 done, T2 committed/review-pending
+(`.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` = ledger);
+#14 fingerprint-match agent + #16 Strip-port agent were mid-flight,
+commit-only — check `git log origin/main..main` and the report files named
+in the resume doc, then review/ledger/push. #18 page-wait held until DD T6.
+
 ## 2026-08-15/16 — FAME 5D_Page shakedown: full paging pipeline works, live confirmed
 
 Follow-on from the FAME/FIM ship (see section below). A real door (5D_Page,
