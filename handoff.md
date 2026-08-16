@@ -16,13 +16,20 @@ invented `DreamDoorSessionUser` field names (`name`/`securityLevel`/
 populates (`username`/`secLevel`/`bytesUpload`/...) — every DreamDoor door
 was silently seeing "Guest" + all-default stats for every caller. Regression
 test added (`dreamdoor-library.test.ts`). Full report:
-`.superpowers/sdd/2026-08-15-daydream-dd-compat/task-8-report.md`.
+`.superpowers/sdd/2026-08-15-daydream-dd-compat/task-8-report.md`. T8 fix
+round (commit 93e3e958f): review caught avhbaudcheck_1's oracle shipping
+without its own `.cfg`, so it never actually exercised `dp_BpsRate` (the
+behavior it was chosen for) — installed the real `AVH-BaudCheck.cfg`
+(re-extracted read-only from Archives, `configs/avh-baudcheck.cfg`),
+confirmed live ("Van Helsing's BaudChecker v0.1" / "Fast Enough!"),
+updated assertions + timeoutMs, golden recaptured, tsc clean.
 **#14 fingerprint-match DONE**, **#16 Strip port DONE**, **#18 page-wait
 DONE** (2 fix rounds closed). Pushed through 4da8b1cc2 — commits from
-ef262b75b through a75ae05f9 (T8 + #18 rounds 1-2 + DM-alias strip) are
-**UNPUSHED**. Next: final whole-branch review (non-fable most-capable
-model), push, live Doors/ volume sync (ssh blocked in-session — needs
-user) for DreamTagWall/AVHBaudCheck + configs/tagwall.dat, DEBUG_68K off
+ef262b75b through 93e3e958f (T8 + fix round + #18 rounds 1-2 + DM-alias
+strip) are **UNPUSHED**. Next: final whole-branch review (non-fable
+most-capable model), push, live Doors/ volume sync (ssh blocked
+in-session — needs user) for DreamTagWall/AVHBaudCheck + configs/
+tagwall.dat + configs/avh-baudcheck.cfg, DEBUG_68K off
 when DD shakedown ends.
 
 Known out-of-scope leftover on disk (NOT committed, NOT mine to touch):
