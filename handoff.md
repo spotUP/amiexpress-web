@@ -1,14 +1,36 @@
 # Handoff
 
-## 2026-08-16 (evening) — DD wave IN FLIGHT — READ THIS FIRST in a fresh session
+## 2026-08-16 (night) — DD SDD T1-T8 ALL COMPLETE — READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-16_dd-parallel-wave.md`
-(exact reconciliation steps for in-flight agent commits + SDD resume).
-Short: DD SDD T1 done, T2 committed/review-pending
-(`.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` = ledger);
-#14 fingerprint-match agent + #16 Strip-port agent were mid-flight,
-commit-only — check `git log origin/main..main` and the report files named
-in the resume doc, then review/ledger/push. #18 page-wait held until DD T6.
+Ledger = `.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` (all
+rulings + per-task lines). **DD SDD T1-T8 COMPLETE.** T8 (corpus oracles +
+E2E) landed commit a75ae05f9: DreamTagWall + AVH-BaudCheck installed as
+real `dreamdoor.library` reference doors, corpus entries `dreamtagwall_1`/
+`avhbaudcheck_1` (doorType DD) both verified PASS via
+`corpus-integration-runner.ts --only`, `configs/tagwall.dat` fixture added
+(DreamTagWall's data-file open needs `configs/` to exist — real AmigaDOS
+Open() semantics, not an emulator bug). Same commit also fixed a real
+`DreamDoorLibrary.populateUserStruct` bug found by the live run: it read
+invented `DreamDoorSessionUser` field names (`name`/`securityLevel`/
+`bytesUploaded`/...) that the real `BBSSession`/`User` shape never
+populates (`username`/`secLevel`/`bytesUpload`/...) — every DreamDoor door
+was silently seeing "Guest" + all-default stats for every caller. Regression
+test added (`dreamdoor-library.test.ts`). Full report:
+`.superpowers/sdd/2026-08-15-daydream-dd-compat/task-8-report.md`.
+**#14 fingerprint-match DONE**, **#16 Strip port DONE**, **#18 page-wait
+DONE** (2 fix rounds closed). Pushed through 4da8b1cc2 — commits from
+ef262b75b through a75ae05f9 (T8 + #18 rounds 1-2 + DM-alias strip) are
+**UNPUSHED**. Next: final whole-branch review (non-fable most-capable
+model), push, live Doors/ volume sync (ssh blocked in-session — needs
+user) for DreamTagWall/AVHBaudCheck + configs/tagwall.dat, DEBUG_68K off
+when DD shakedown ends.
+
+Known out-of-scope leftover on disk (NOT committed, NOT mine to touch):
+uncommitted edits to `Doors/GWall/index.ts` (circuit-breaker removal,
+unrelated to DD) and BBS runtime-state diffs (`Node1/2 CallersLog`,
+`Node1/2 DoorLog`, `Conf.DB`) that are side effects of repeatedly running
+the two oracle doors during T8 verification — safe to leave or discard,
+not part of any deliverable.
 
 ## 2026-08-15/16 — FAME 5D_Page shakedown: full paging pipeline works, live confirmed
 
@@ -84,21 +106,10 @@ Local dev login: sysop/sysop; catalog+archives synced live 2026-08-15.
 ## 2026-08-14 (day/evening) — WIP audit tiers + corpus reds + prompt bugs
 
 **Archive:** `thoughts/shared/handoffs/2026-08-14_wip-audit-tiers-and-fame-next.md`
-
-- Tier 0 (29f33083b) + Tier 1 security (3dee329af: dead restricted-download
-  gate fixed, conf ACL, slot alloc, honest ARexx) + Tier 2 CLOSED as
-  measurement (ledger: 54 doors, 0 stub 0 missing — do NOT implement S1-S8)
-  + 19 corpus reds resolved (f3a3cd9cb, mostly stale CI list; zootility
-  timeout 13000). CONFTOP Y2K 2-byte patch + inline ~CC_ prompt guards +
-  GWALL fail-fast all confirmed live by user.
-- Standing: corpus/ledger SWEEP BANNED (one-door diagnostic only; bounded
-  --only slices acceptable). handleTrap is the live sink (not
-  handleTrapByOffset). tsx caches transpile output (clear /var/folders tsx-501
-  when a change "doesn't apply").
-
-Open tiers/tasks: #11 Tier 4 SQLite↔disk parity, #12 CONFTOP weekly-reset
-mail write, #13 Tier 1 leftovers (legacy import, SDK arexx WAITINPUT,
-area-based access), #5 mgs__r11_autoreward, #14 ledger policy cleanup.
+— Tier 0/1/2 audit closed, 19 corpus reds resolved, standing rule: corpus/
+ledger SWEEP BANNED (bounded `--only` slices only). Open tiers/tasks: #11
+Tier 4 SQLite↔disk parity, #12 CONFTOP weekly-reset mail write, #13 Tier 1
+leftovers, #5 mgs__r11_autoreward, #14 ledger policy cleanup.
 
 ---
 
