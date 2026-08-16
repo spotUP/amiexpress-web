@@ -1,36 +1,34 @@
 # Handoff
 
-## 2026-08-16 (night) — DD SDD T1-T8 ALL COMPLETE — READ THIS FIRST in a fresh session
+## 2026-08-16 (night) — DD WAVE SHIPPED: T1-T8 + final review + fix wave, pushed
 
-Ledger = `.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` (all
-rulings + per-task lines). **DD SDD T1-T8 COMPLETE.** T8 (corpus oracles +
-E2E) landed commit a75ae05f9: DreamTagWall + AVH-BaudCheck installed as
-real `dreamdoor.library` reference doors, corpus entries `dreamtagwall_1`/
-`avhbaudcheck_1` (doorType DD) both verified PASS via
-`corpus-integration-runner.ts --only`, `configs/tagwall.dat` fixture added
-(DreamTagWall's data-file open needs `configs/` to exist — real AmigaDOS
-Open() semantics, not an emulator bug). Same commit also fixed a real
-`DreamDoorLibrary.populateUserStruct` bug found by the live run: it read
-invented `DreamDoorSessionUser` field names (`name`/`securityLevel`/
-`bytesUploaded`/...) that the real `BBSSession`/`User` shape never
-populates (`username`/`secLevel`/`bytesUpload`/...) — every DreamDoor door
-was silently seeing "Guest" + all-default stats for every caller. Regression
-test added (`dreamdoor-library.test.ts`). Full report:
-`.superpowers/sdd/2026-08-15-daydream-dd-compat/task-8-report.md`. T8 fix
-round (commit 93e3e958f): review caught avhbaudcheck_1's oracle shipping
-without its own `.cfg`, so it never actually exercised `dp_BpsRate` (the
-behavior it was chosen for) — installed the real `AVH-BaudCheck.cfg`
-(re-extracted read-only from Archives, `configs/avh-baudcheck.cfg`),
-confirmed live ("Van Helsing's BaudChecker v0.1" / "Fast Enough!"),
-updated assertions + timeoutMs, golden recaptured, tsc clean.
-**#14 fingerprint-match DONE**, **#16 Strip port DONE**, **#18 page-wait
-DONE** (2 fix rounds closed). Pushed through 4da8b1cc2 — commits from
-ef262b75b through 93e3e958f (T8 + fix round + #18 rounds 1-2 + DM-alias
-strip) are **UNPUSHED**. Next: final whole-branch review (non-fable
-most-capable model), push, live Doors/ volume sync (ssh blocked
-in-session — needs user) for DreamTagWall/AVHBaudCheck + configs/
-tagwall.dat + configs/avh-baudcheck.cfg, DEBUG_68K off
-when DD shakedown ends.
+Ledger = `.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` (every
+ruling, verdict, deferred minor). **DD SDD T1-T8 COMPLETE + final
+whole-branch review (opus) + fix wave, all re-reviewed clean, pushed through
+cc7bf852d.** Side-tasks #14 fingerprint-match, #16 Strip port, #18 sysop
+page-wait all DONE + reviewed. Final review's Critical: DD input was wired
+to `door:input`, which the browser never emits — corpus was green on a
+production-dead path; live DD doors would hang 300s at first Prompt. Fix
+wave (2aa88dc96..cc7bf852d): door-input routing collapsed into ONE shared
+`routeAmigaDoorInput` (root cause of this + the 2026-08-15 FIM incident),
+`DreamDoorLibrary.isActive()` gating (type-ahead reachable), Prompt reads
+A0 buffer per spec with A1 legacy fallback (Xim.s confirms A1 = register
+residue; old garbled golden explained, recaptured), post-door page-wait no
+longer repaints menu over an accepted chat, typed chat imports, corpus
+`--command-channel-only` mode certifies the REAL input path (both DD
+oracles PASS in it), plus test-infra fix (reflect-metadata + SKIP_DB_INIT
+guards → full suite 251/253, the 40 chronic DB-init failures gone).
+
+**USER MANUAL CHECKS PENDING (3):** (1) run DTAGWALL or AVHBC live, answer
+first prompt — must respond instantly, not hang; (2) type-ahead before a
+prompt appears — chars must survive; (3) sysop accepts page during
+post-door dot animation — chat UI must appear with no menu flash.
+**Then:** live Doors/ volume sync (ssh needed — DreamTagWall, AVHBaudCheck,
+configs/tagwall.dat, configs/avh-baudcheck.cfg), DEBUG_68K off when DD
+shakedown ends. Follow-ups ledgered: TIM live-input bonus fix needs a
+corpus entry; LibraryManager.ts:538 XIM `securityLevel` field bug (every
+XIM door sees secLevel 1) needs its own regression pass; #18 CTRL-C abort
+wiring; dp_BpsRate hardcoded 115200.
 
 Known out-of-scope leftover on disk (NOT committed, NOT mine to touch):
 uncommitted edits to `Doors/GWall/index.ts` (circuit-breaker removal,
