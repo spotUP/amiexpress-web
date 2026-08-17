@@ -2,7 +2,8 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-17_doorrepo-c-and-door-repo-api.md`
+**Resume doc:** `thoughts/shared/handoffs/2026-08-17_bsdsocket-reachability.md`
+(previous: `thoughts/shared/handoffs/2026-08-17_doorrepo-c-and-door-repo-api.md`)
 Nothing is mid-flight, everything pushed.
 
 Shipped this session: the central door-repo **API is live** at
@@ -17,12 +18,19 @@ fix** — `bsdsocket` allocated socket descriptors at 100 while AmiTCP's
 `1L << s` idiom hung forever. Four distinct vulnerability classes were found
 and closed in the C door by adversarial review; see the resume doc.
 
-Both bsdsocket follow-ups from that doc are now DONE (`24028ea09`):
-`getdtablesize()` returns the real ceiling (`BSD_FD_SETSIZE`, 32) instead of a
-hardcoded 256, and `ECONNREFUSED`/`ETIMEDOUT` carry the classic BSD/AmigaOS
-numbers 61/60 instead of the Linux 111/110 — verified against the vendored
-Roadshow NDK header, with five regression tests confirmed failing on the
-pre-fix code.
+Both bsdsocket follow-ups from that doc are DONE (`24028ea09`) and, unlike
+their first pass, **proven reachable by running the real m68k binary**:
+`getdtablesize()` returns the real ceiling (32, not a hardcoded 256) and
+`ECONNREFUSED`/`ETIMEDOUT` carry the classic BSD/AmigaOS 61/60 (not the Linux
+111/110), read from the vendored Roadshow NDK header. DoorRepo was extended to
+use both (`805c1aa9b`) and the emulator log shows `getdtablesize() - returning
+32` firing between `Created socket fd=0` and `connect()`; against a closed port
+the door prints `(netio: connect() refused)`, and reverting the emulator errno
+to 111 degrades that same run to `(netio: connect() failed)` — the control that
+makes the first result mean something. A third emulator bug fell out of setting
+that up: `gethostbyname()` used `dns.resolve4()`, so dotted-quad literals and
+`localhost` both failed where a real Amiga resolves them; now `dns.lookup()`
+(`3e05f5de9`). 8 regression tests, every one verified failing pre-fix.
 
 Next: **send DoorRepo to the AmiExpress author** (`examples/doorrepo-c/README.md`
 is written for him, `docs/DOOR-REPO-API.md` is the contract). Open decisions
@@ -91,6 +99,10 @@ jest config → JSON via tsx (`ts-node` absent); emulator suites
 `SKIP_DB_INIT=1 SKIP_NETWORK_LISTENERS=1`; door runs redirect-never-pipe with
 `</dev/null`; Edit/Write destroys high-bit bytes — cp/python/sed for
 binaries/corpus.json; deploys never refresh live Doors/ volume.
+`run-amiga-door.ts` needs `SKIP_DB_INIT=1` (else it hangs silently after two
+`[DoorLogger]` lines) and `DEBUG_68K=1` to show `[BsdSocketLibrary]` traces.
+`grep` here is **ugrep** — use `LC_ALL=C grep -a` on emulator logs and Amiga
+headers or it returns false negatives on high-bit bytes.
 
 Older sessions: DOORMAN v2 + dist/ enforcement + CONFTOP root-cause detail →
 `thoughts/shared/handoffs/` (2026-08-14 archives + May rollup).
