@@ -41,9 +41,9 @@ health), integrator docs, Caddy exemption, DOORMAN repo-client with
 ETag cache + sha256 verification and a generated-type staleness guard,
 consumer-mode browsing (OFFLINE banner), consumer install (download →
 verify → existing extract flow → local catalog upsert, `source='door-repo'`),
-consumer curation gating, and a no-mocks E2E. **UNPUSHED: T5-T8 + T10**
-(consumer side) pending an in-flight fix — Node undici always sends
-`Cache-Control: no-cache`, so the 304 path never fired for a real client;
+consumer curation gating, and a no-mocks E2E. All pushed. One finding worth
+remembering: Node undici always sends `Cache-Control: no-cache` when
+`If-None-Match` is present, so the 304 path never fired for a real client —
 found only because the E2E test refused to mock fetch.
 
 **DOORMAN filter arc CLOSED, user-confirmed on live 2026-08-17.** Six rounds:
