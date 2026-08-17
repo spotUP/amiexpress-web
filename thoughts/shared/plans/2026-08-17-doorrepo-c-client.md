@@ -122,11 +122,35 @@ Defaults: host `bbs.uprough.net`, port 80, path `/api/door-repo`, download dir `
 
 **Interfaces produced:** `int  ae_start(int node)` (PortStart equivalent; 0 on success), `void ae_put(const char *text, int newline)` (PutString), `void ae_get(char *buf, int maxlen)` (GetString), `int  ae_check(void)` (CheckMessage: returns non-zero when the BBS asked us to stop / carrier lost), `void ae_shutdown(void)`, `void ae_fatal(int code)` (TakeOffEh).
 
-**Requirements:**
-- `struct JHMessage` declared exactly per `doordocs.txt`: `struct Message Msg; char String[200]; int Data; int Command; int NodeID; int LineNum; unsigned long signal; struct Process *task; APTR Semi;`
-- Commands per the doc: `JH_LI=0`, `JH_REGISTER=1`, `JH_SHUTDOWN=2`, plus the write/read codes the doc lists — take every value from the doc, and put the doc's line reference in a comment beside each.
-- Port name `AEDoorPort<node>`; node from `argv[1]`.
-- Strings longer than the 200-byte `String` buffer must be split across multiple sends, not truncated (long descriptions will hit this).
+**Requirements** (CORRECTED after protocol extraction — read
+`thoughts/shared/research/2026-08-17_xim-door-protocol-for-c-clients.md`
+first; it supersedes the summary that was here originally):
+- **`struct JHMessage` is 0x108 = 264 bytes and MUST be allocated in full.** It
+  does NOT stop at `Semi`: the tail is `APTR Filler1 (0xF8); APTR Filler2
+  (0xFC); char *strptr (0x100); LONG Filler3 (0x104)`. The BBS writes `NodeID`
+  (0xE4) and `LineNum` (0xE8) with no length guard, so a 248-byte allocation
+  gets written past. Set `mn_Length = sizeof(struct JHMessage)`; the optional
+  tail fields are length-gated and only usable when it is correct.
+- Usable `String` payload is **198 chars + NUL**, not 200 — chunk longer output
+  at 198.
+- **`JH_SM` (4) is the normal output call**, not `JH_WRITE` (3): it honours
+  `Data != 0` to append the line break and run the BBS pause check. Send text
+  with NO trailing newline and `Data = 1`; never both.
+- Input: `JH_PM` (5) for prompt+line, `JH_LI` (0) for a pre-filled default,
+  `JH_HK` (6) for a single keypress (key in `String[0]`). Always pass a sane
+  `Data` (max length) — `0` or `>= 65536` with an empty string auto-replies.
+- **`Data == -1` from any input call means carrier loss or timeout**: stop
+  work, send `JH_SHUTDOWN`, exit. This is the real "user is gone" signal.
+- `JH_REGISTER = 1` first, `JH_SHUTDOWN = 2` last and MANDATORY (without it the
+  BBS waits forever). Set `NodeID = -1` at register time.
+- Do NOT treat the register reply as a screen height (our emulator returns
+  9999); do NOT build pagination on `LineNum` (not zeroed per message here).
+- **Never start an output line with `bbs:`** — `JH_SM` reroutes such strings to
+  file display instead of printing. Our door prints paths, so this is a live
+  trap.
+- Port name `AEDoorPort<node>`; node from `argv[1]`; door creates its own reply
+  port (anonymous is fine) and waits on it, one outstanding message at a time.
+- Put a source citation in a comment beside each constant and offset.
 - `aedoor_native.c` implements the same six functions over stdio: `ae_put` writes to stdout, `ae_get` reads a line from stdin, `ae_check` returns 0, `ae_start`/`ae_shutdown` are no-ops. This is what makes the whole door runnable and testable here.
 
 - [ ] **Step 1: Failing tests** for the native implementation: `ae_put` with and without newline; `ae_get` truncates safely at `maxlen`; a >200-char string passed to `ae_put` is emitted in full (the splitting rule, verified on the native side where we can capture output).
