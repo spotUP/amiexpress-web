@@ -2,14 +2,23 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-17_door-repo-api-and-doorman-filter.md`
-— exact resume steps, the 15 unpushed commits, and the one sequencing trap:
-once the API mount is gated to owner mode, the production host needs
-`DOOR_REPO_ROLE=owner` in its `.env.local` BEFORE that deploy or the live
-API goes dark. SDD ledger: `.superpowers/sdd/2026-08-17-door-repo-api/progress.md`.
-Immediate next step: check whether the last agent finished the mount-gating
-(I5) + list.txt newline hardening (I6) in `web/backend/src`, then re-review
-the final fix set and push.
+**Resume doc:** `thoughts/shared/handoffs/2026-08-17_doorrepo-c-and-door-repo-api.md`
+Nothing is mid-flight. Head `44357cf22`, everything pushed.
+
+Shipped this session: the central door-repo **API is live** at
+`http://bbs.uprough.net/api/door-repo/` (plain HTTP for classic Amiga stacks;
+router gated on `DOOR_REPO_ROLE=owner`, which lives in the host's `.env` and
+must NEVER go in the compose `environment:` block); **DoorRepo**, a complete
+reference door in C89 for real 68K AmiExpress (`examples/doorrepo-c/`, 336
+tests, links a real AmigaOS binary, and **ran end-to-end inside our own
+emulator** against the live API with MD5 verification); and a **real emulator
+fix** — `bsdsocket` allocated socket descriptors at 100 while AmiTCP's
+`WaitSelect` fd_set is a 32-bit mask, so every network door using the standard
+`1L << s` idiom hung forever. Four distinct vulnerability classes were found
+and closed in the C door by adversarial review; see the resume doc.
+
+Next: a one-line `getdtablesize()` fix (still says 256, real cap is now 32),
+and sending the door to the AmiExpress author.
 
 ## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
 
