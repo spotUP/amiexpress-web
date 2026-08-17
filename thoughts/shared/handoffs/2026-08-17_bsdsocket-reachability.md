@@ -98,6 +98,80 @@ the pre-fix code.
   `fail_reason` assignments will pass on broken code — it did, first try, and
   that is what §3 of the reachability protocol is for.
 
+## Non-blocking connect — the standard AmigaOS idiom now actually works
+
+`IoctlSocket(FIONBIO)` was discarded on the reasoning that node sockets are
+already non-blocking. But a door does not see node's sockets; it sees
+`connect()`, which blocked regardless, for up to 30 seconds. So a door that
+set `FIONBIO` **precisely so it could impose its own connect timeout** — the
+standard AmigaOS sequence: non-blocking `connect` → `WaitSelect` with a
+`timeval` → `getsockopt(SO_ERROR)` — had that timeout silently ignored and
+stalled the whole emulator with it. `getsockopt()` was a stub that returned 0
+and wrote nothing, so a door could not have distinguished a connected socket
+from a failed one even if it got that far.
+
+Now implemented end to end:
+
+- `IoctlSocket(FIONBIO)` is honoured (request value `0x8004667e`, computed from
+  `sys/filio.h:87`'s `_IOW('f', 126, long)` and confirmed against the value a
+  real door actually sent).
+- `connect()` on a non-blocking socket returns `-1`/`EINPROGRESS` (36)
+  immediately.
+- `WaitSelect()` reports the socket writable on **failure as well as** success
+  — that is how BSD signals it, and waking only on success would leave a
+  refused connection blocked until the door's own timeout.
+- `getsockopt(SOL_SOCKET, SO_ERROR)` returns the pending error and clears it,
+  per `socket.h:145` ("get error status and clear").
+- `connectSync()`'s flat `ECONNREFUSED` for every failure is gone; both paths
+  share one Node-errno→Amiga-errno mapper, so a host-unreachable is no longer
+  misreported as "connection refused".
+- `netio.c`'s Amiga branch checks `SO_ERROR` after the wait, as the POSIX
+  branch always did.
+
+Blocking behaviour is unchanged for any door that does not set `FIONBIO`, and
+a test pins that.
+
+Proven with the real m68k binary, live API:
+
+```
+getdtablesize() - returning 32
+IoctlSocket(fd=0, FIONBIO, 1) -> nonBlocking=true
+connect: non-blocking, returning -1/EINPROGRESS
+WaitSelect returning 1
+getsockopt(fd=0, SO_ERROR) = 0
+```
+
+and against a closed port, `getsockopt(fd=0, SO_ERROR) = 61` → the door prints
+`(netio: connect() refused)`. That also made the door's own new `SO_ERROR`
+check reachable — it was dead code while `connect()` was synchronous.
+
+Red-check: 4 of the 5 new tests fail with `FIONBIO` discarded and `getsockopt`
+stubbed; the 5th is the control that must pass either way, and does. In the
+pre-fix run the two failing wait tests take 5.1s and 5.9s — that is the hang,
+visible in the timings.
+
+## CI — jest now runs on every push
+
+`.github/workflows/backend-tests.yml` added. Nothing in CI ran jest before:
+the disabled `door-ci.yml.disabled` runs `npm run door:ci` (doctor + fixture
+harness), not the suite — so re-enabling it would not have covered any of
+this. The new workflow runs `tsc --noEmit` plus the full jest suite, and a
+second job runs the DoorRepo C suite (`make test`, no deps beyond a host `cc`).
+
+**Two things previously believed about the suite are wrong, and the quickref
+said so:**
+
+- It does **not** OOM. A full run is 268 suites / ~5090 tests in 40-75 seconds.
+- `SKIP_DB_INIT=1` must **not** be used for a full run. It is for targeted
+  emulator suites; applied to everything it disables the test database the
+  ~39 database suites need and manufactures ~344 failures. The first
+  measurement this session was invalid for exactly that reason.
+
+Known flake, pre-existing and unrelated: `tests/api/info-editor-routes.test.ts`
+failed once under full-suite parallel load with `process.exit called with "1"`,
+and passes in isolation. It is an HTTP-route suite; nothing in it touches
+bsdsocket.
+
 ## What is worth doing next
 
 - **Send DoorRepo to the AmiExpress author.** `examples/doorrepo-c/README.md`
@@ -106,12 +180,9 @@ the pre-fix code.
 - **`.github/workflows/door-ci.yml.disabled`** — nothing runs jest, so all of
   the above regression tests are manual-only. User's call; the `.disabled`
   suffix looks deliberate.
-- **Not fixed, pre-existing:** the emulator's `connect()` never yields
-  `EINPROGRESS`, so DoorRepo's asynchronous-connect path (the `WaitSelect`
-  wait after a non-blocking `connect`) is still unexercised. Real stacks take
-  it. Also, `netio.c`'s Amiga branch does not check `SO_ERROR` after that wait
-  the way the POSIX branch does — deliberate, left out of scope here, and it
-  matters only on a real stack.
+- ~~Not fixed: the emulator's `connect()` never yields `EINPROGRESS` / the
+  Amiga branch does not check `SO_ERROR`.~~ **Both fixed later the same day —
+  see the "Non-blocking connect" section below.**
 - Live `DEBUG_68K=1` is still ON in `/app/amiexpress/docker-compose.yml`.
 - Still unverified by the user: DD door type-ahead; the sysop page-accept chat
   flow; the 19 DayDream doors live at ACCESS=0.

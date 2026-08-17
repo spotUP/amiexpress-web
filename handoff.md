@@ -32,11 +32,21 @@ that up: `gethostbyname()` used `dns.resolve4()`, so dotted-quad literals and
 `localhost` both failed where a real Amiga resolves them; now `dns.lookup()`
 (`3e05f5de9`). 8 regression tests, every one verified failing pre-fix.
 
+Also done: the emulator now honours `IoctlSocket(FIONBIO)` and implements the
+standard AmigaOS non-blocking connect (`-1/EINPROGRESS` → `WaitSelect` →
+`getsockopt(SO_ERROR)`), which previously blocked for up to 30s regardless of
+the door's own timeout; `getsockopt` was a stub that wrote nothing. Proven
+with the real m68k binary against both the live API and a closed port
+(`f0ea7318d`, `244d60d97`).
+
+**CI now runs jest** (`.github/workflows/backend-tests.yml`, `63ed5d9e1`) —
+type-check plus the full suite, and a second job for the DoorRepo C suite.
+Nothing ran jest before; `door-ci.yml.disabled` runs `npm run door:ci`, not
+the suite, so re-enabling it would not have helped.
+
 Next: **send DoorRepo to the AmiExpress author** (`examples/doorrepo-c/README.md`
-is written for him, `docs/DOOR-REPO-API.md` is the contract). Open decisions
-for you: whether to re-enable `.github/workflows/door-ci.yml.disabled` (nothing
-runs jest today, so the type-drift, path-traversal and fd-lifecycle tests are
-manual-only), and `DEBUG_68K=1` is still ON in the live compose file.
+is written for him, `docs/DOOR-REPO-API.md` is the contract). Still open for
+you: `DEBUG_68K=1` is ON in the live compose file.
 
 ## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
 
@@ -103,6 +113,10 @@ binaries/corpus.json; deploys never refresh live Doors/ volume.
 `[DoorLogger]` lines) and `DEBUG_68K=1` to show `[BsdSocketLibrary]` traces.
 `grep` here is **ugrep** — use `LC_ALL=C grep -a` on emulator logs and Amiga
 headers or it returns false negatives on high-bit bytes.
+The full jest suite does **not** OOM (268 suites / 5090 tests, ~60s) — but run
+it WITHOUT `SKIP_DB_INIT`, which is for targeted emulator suites only and
+manufactures ~344 failures when applied to everything. Only ever run one suite
+at a time: concurrent runs starve `deasync` and produce phantom failures.
 
 Older sessions: DOORMAN v2 + dist/ enforcement + CONFTOP root-cause detail →
 `thoughts/shared/handoffs/` (2026-08-14 archives + May rollup).
