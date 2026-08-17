@@ -1,5 +1,46 @@
 # Handoff
 
+## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
+
+**Central door repo API is live and verified on plain HTTP** (classic Amiga
+stacks need no TLS): `http://bbs.uprough.net/api/door-repo/{manifest,
+list.txt,archive/<name>,health}`. Read-only, no auth; curation stays in git.
+Public integrator reference: `docs/DOOR-REPO-API.md` (byte-exact list.txt
+spec, real captured examples, archive-name quoting, append-only versioning
+promise) — written for the original 68K AmiExpress author, who is
+implementing a client. Design + plan:
+`thoughts/shared/plans/2026-08-17-door-repo-central-api-design.md` and
+`...-door-repo-api.md`; SDD ledger `.superpowers/sdd/2026-08-17-door-repo-api/`.
+Plain-HTTP works because of a host-side Caddy exemption applied 2026-08-17
+(`/etc/caddy/Caddyfile`, backup `.bak-doorrepo-20260817-102750`) — deploys do
+NOT manage that file.
+
+Done + reviewed: checksum cache, manifest builder + latin1-safe list.txt,
+Express router (fd-pinned streaming, RFC-7232 conditional GET, count-only
+health), integrator docs, Caddy exemption, DOORMAN repo-client with
+ETag cache + sha256 verification and a generated-type staleness guard,
+consumer-mode browsing (OFFLINE banner), consumer install (download →
+verify → existing extract flow → local catalog upsert, `source='door-repo'`),
+consumer curation gating, and a no-mocks E2E. **UNPUSHED: T5-T8 + T10**
+(consumer side) pending an in-flight fix — Node undici always sends
+`Cache-Control: no-cache`, so the 304 path never fired for a real client;
+found only because the E2E test refused to mock fetch.
+
+**DOORMAN filter arc CLOSED, user-confirmed on live 2026-08-17.** Six rounds:
+f-leak → synchronous one-shot guards → KeyBinder return propagation (Tab) →
+filterBox made display-only (SDK Textbox self-edits on any focus; one mouse
+click enabled a parallel editor) → SDK parser buffering split CSI/SS3
+sequences (a chunk-split arrow key was misparsed as Escape and popped the
+view, losing the filter) → ESC-timeout reentrancy (double-fire could empty
+the view stack = frozen door). Standing gotcha: the pre-commit hook rebuilds
+a door's whole `dist/` from disk, so never run two tasks touching the same
+`Doors/<door>/` concurrently in one worktree.
+
+Also live: catalog re-typed + DayDream archives indexed (DD 10 / SIM 14 /
+FIM 67 / XIM 3201, 3301 total) so DOORMAN's system filter shows a real DD
+bucket; live DB merged via ATTACH staging (never text-dump SQL — doc_raw
+carries control bytes), backup `amiexpress.db.bak-catalog-delta`.
+
 ## 2026-08-16 (night) — DD WAVE SHIPPED: T1-T8 + final review + fix wave, pushed
 
 Ledger = `.superpowers/sdd/2026-08-15-daydream-dd-compat/progress.md` (every
@@ -82,31 +123,12 @@ Local dev login: sysop/sysop; catalog+archives synced live 2026-08-15.
 ## 2026-08-14/15 (late night) — FAME (FIM) door compat SHIPPED to main
 
 **Full archive:** `thoughts/shared/handoffs/2026-08-14_fame-fim-shipped.md`
-
-- 9-task plan executed via subagent-driven dev, 18 commits, merged FF to main
-  `8ef4ba0c2`, pushed (deploy auto-triggered ~23:30).
-- New: FIM constants / FAME.library / FIMProtocol (lifecycle, output, input
-  w/ line editing, info, args, NR_WaitChar), doorType FIM routing end-to-end,
-  FAMEDoorPort binary detection, TestDoor.FIM + FAMEWHO.FIM in corpus
-  (fametest_1 green golden; famewho_1 SMOKE-ONLY until FAMESemaphore).
-- **Root emulator fix**: library-opened callback now a compose list — was
-  last-writer-wins; AmigaDoorSession silently disabled LibraryManager's
-  vector installs for every door. 12-door corpus slice validated, 12/12.
-- Final opus review: 3 Critical + 5 Important found (header-contradicting
-  Data2/Data3 fields, blocking-vs-poll semantics, NODENR loss, .fim gate,
-  mode-7 echo leak, installer pick) — ALL fixed + re-reviewed. Header
-  (FAMEDoorCommands.h) always won over plan text.
-- Suite: zero new failures (door-logging 104 + file-flag fail identically on
-  main — pre-existing; log-retention was a load flake).
-
-**OPEN — next session / user:**
-1. USER: manual sysop check — install FIM door via DOORMAN, run, exit clean.
-2. Verify deploy freshness (green != fresh): /health revision = 8ef4ba0c2,
-   container age, docker logs clean. Then sync NEW doors to live volume:
-   `docker exec amiexpress-bbs sh -c 'cp -r /app/default-data/Doors/FAMETest
-   /app/default-data/Doors/FAMEWho /app/data/bbs/Doors/'` + verify.
-3. Backlog: FAMESemaphore (multi-node who-list — FAMEWHO output), DD compat
-   (task #11, disassembly targets in research doc), tasks #11-14 from audit.
+— 9-task plan, 18 commits, merged `8ef4ba0c2`. FIM constants / FAME.library /
+FIMProtocol + doorType FIM routing + FAMEDoorPort detection; root emulator
+fix (library-opened callback is a compose list — was last-writer-wins and
+silently disabled every door's vector installs); opus review found 3 Critical
++ 5 Important, all fixed (FAMEDoorCommands.h always beat plan prose).
+Backlog from it: FAMESemaphore (multi-node who-list, FAMEWHO output).
 
 ## 2026-08-14 (day/evening) — WIP audit tiers + corpus reds + prompt bugs
 
