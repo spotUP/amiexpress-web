@@ -1,5 +1,16 @@
 # Handoff
 
+## READ THIS FIRST in a fresh session
+
+**Resume doc:** `thoughts/shared/handoffs/2026-08-17_door-repo-api-and-doorman-filter.md`
+— exact resume steps, the 15 unpushed commits, and the one sequencing trap:
+once the API mount is gated to owner mode, the production host needs
+`DOOR_REPO_ROLE=owner` in its `.env.local` BEFORE that deploy or the live
+API goes dark. SDD ledger: `.superpowers/sdd/2026-08-17-door-repo-api/progress.md`.
+Immediate next step: check whether the last agent finished the mount-gating
+(I5) + list.txt newline hardening (I6) in `web/backend/src`, then re-review
+the final fix set and push.
+
 ## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
 
 **Central door repo API is live and verified on plain HTTP** (classic Amiga
