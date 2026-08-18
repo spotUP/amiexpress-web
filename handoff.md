@@ -2,51 +2,45 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-17_bsdsocket-reachability.md`
-(previous: `thoughts/shared/handoffs/2026-08-17_doorrepo-c-and-door-repo-api.md`)
-Nothing is mid-flight, everything pushed.
+**Resume doc:** `thoughts/shared/handoffs/2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`
+Nothing is mid-flight, everything pushed (`137c39ad0`). CI green, deploy green.
 
-Shipped this session: the central door-repo **API is live** at
-`http://bbs.uprough.net/api/door-repo/` (plain HTTP for classic Amiga stacks;
-router gated on `DOOR_REPO_ROLE=owner`, which lives in the host's `.env` and
-must NEVER go in the compose `environment:` block); **DoorRepo**, a complete
-reference door in C89 for real 68K AmiExpress (`examples/doorrepo-c/`, 336
-tests, links a real AmigaOS binary, and **ran end-to-end inside our own
-emulator** against the live API with MD5 verification); and a **real emulator
-fix** — `bsdsocket` allocated socket descriptors at 100 while AmiTCP's
-`WaitSelect` fd_set is a 32-bit mask, so every network door using the standard
-`1L << s` idiom hung forever. Four distinct vulnerability classes were found
-and closed in the C door by adversarial review; see the resume doc.
+**READ THIS FIRST — the live catalog is STALE.** This session's code shipped;
+its DATA did not. Live serves the pre-fix catalog: `/diz/$CP-PS12.LZX` 404s and
+`/files/!ALSTER.LHA` reports `61|0|Children` where the real size is 40092. The
+live container reads a VOLUME-MOUNTED database, so a deploy does not replace
+it. Sync it with an ATTACH staging database — never a SQL text dump, `doc_raw`
+carries control bytes. Full detail in the resume doc, section 1.
 
-Both bsdsocket follow-ups from that doc are DONE (`24028ea09`) and, unlike
-their first pass, **proven reachable by running the real m68k binary**:
-`getdtablesize()` returns the real ceiling (32, not a hardcoded 256) and
-`ECONNREFUSED`/`ETIMEDOUT` carry the classic BSD/AmigaOS 61/60 (not the Linux
-111/110), read from the vendored Roadshow NDK header. DoorRepo was extended to
-use both (`805c1aa9b`) and the emulator log shows `getdtablesize() - returning
-32` firing between `Created socket fd=0` and `connect()`; against a closed port
-the door prints `(netio: connect() refused)`, and reverting the emulator errno
-to 111 degrades that same run to `(netio: connect() failed)` — the control that
-makes the first result mean something. A third emulator bug fell out of setting
-that up: `gethostbyname()` used `dns.resolve4()`, so dotted-quad literals and
-`localhost` both failed where a real Amiga resolves them; now `dns.lookup()`
-(`3e05f5de9`). 8 regression tests, every one verified failing pre-fix.
+Shipped 2026-08-18 (19 commits, `35a31af58..137c39ad0`):
 
-Also done: the emulator now honours `IoctlSocket(FIONBIO)` and implements the
-standard AmigaOS non-blocking connect (`-1/EINPROGRESS` → `WaitSelect` →
-`getsockopt(SO_ERROR)`), which previously blocked for up to 30s regardless of
-the door's own timeout; `getsockopt` was a stub that wrote nothing. Proven
-with the real m68k binary against both the live API and a closed port
-(`f0ea7318d`, `244d60d97`).
+- **DoorRepo is at DOORMAN parity** — full-screen ANSI browser, live
+  client-side filter, system-type cycling, DIZ art, archive contents with ad
+  flags, doc viewer, scrollable detail pane, `*`/`[downloaded]` markers,
+  download-with-MD5-verify from the browser. `Ansi=no` keeps the old line
+  renderer.
+- **Two silent catalog-indexer bugs**, both in `lha -l` parsing and neither
+  ever logged: member rows starting with a Unix permission string were
+  discarded as rule lines (`TELSER40.LHA` parsed 11 of 59 members), and file
+  sizes were the COMPRESSION RATIO for `[generic]`-style rows — **83% of file
+  rows had a bogus size**, `.exe` files recorded as 1 byte. Parser moved to
+  `web/backend/src/utils/lha-list-parser.ts` with 6 tests.
+- **Catalog caching was impossible**, which is why the door was slow to start:
+  the revision was the image git SHA, absent in dev (`"unknown"`, which a
+  correct client must refuse) and changing on every deploy on live. Now
+  catalog-derived. First render 5s cold, 3s warm.
+- **Three additive endpoints** — `/diz`, `/files`, `/doc` — and `/archive` no
+  longer HTTP 500s on Latin-1 archive names (a bug that predated `/diz`).
+- **bsdsocket**: FIONBIO honoured, non-blocking connect, `recv()` drains across
+  queued chunks, `gethostbyname()` resolves literals and hosts-file names.
+- **CI runs jest** (`backend-tests.yml`). Its first run revealed the suite had
+  never run on Linux though the BBS deploys there; `netio.c`'s POSIX branch did
+  not compile on glibc at all.
 
-**CI now runs jest** (`.github/workflows/backend-tests.yml`, `63ed5d9e1`) —
-type-check plus the full suite, and a second job for the DoorRepo C suite.
-Nothing ran jest before; `door-ci.yml.disabled` runs `npm run door:ci`, not
-the suite, so re-enabling it would not have helped.
-
-Next: **send DoorRepo to the AmiExpress author** (`examples/doorrepo-c/README.md`
-is written for him, `docs/DOOR-REPO-API.md` is the contract). Still open for
-you: `DEBUG_68K=1` is ON in the live compose file.
+Next: sync the live catalog, then **send DoorRepo to the AmiExpress author**
+(top item for three sessions now). `DEBUG_68K=1` is still ON in the live
+compose file. Three `database.sqlite.bak-*` safety backups (~120 MB) are
+untracked and can be deleted once you are satisfied.
 
 ## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
 
@@ -108,7 +102,10 @@ Environment quickref: `SKIP_SDK_PREPARE=1 npm install --ignore-scripts`;
 jest config → JSON via tsx (`ts-node` absent); emulator suites
 `SKIP_DB_INIT=1 SKIP_NETWORK_LISTENERS=1`; door runs redirect-never-pipe with
 `</dev/null`; Edit/Write destroys high-bit bytes — cp/python/sed for
-binaries/corpus.json; deploys never refresh live Doors/ volume.
+binaries/corpus.json; deploys never refresh live Doors/ volume NOR the live
+catalog database (both are volume-mounted).
+The door-repo router 404s every route unless `DOOR_REPO_ROLE=owner` is set:
+`DOOR_REPO_ROLE=owner ./dev/scripts/start-servers.sh --bbs-only`, BBS on :3001.
 `run-amiga-door.ts` needs `SKIP_DB_INIT=1` (else it hangs silently after two
 `[DoorLogger]` lines) and `DEBUG_68K=1` to show `[BsdSocketLibrary]` traces.
 `grep` here is **ugrep** — use `LC_ALL=C grep -a` on emulator logs and Amiga
