@@ -146,9 +146,21 @@ one.
 
 ## Next
 
-1. **Send DoorRepo to the AmiExpress author** - unchanged, top item for four
-   sessions now.
-2. The live server has NOT been redeployed with the P1 `list.txt` change yet.
-   Deploy when convenient; old clients are unaffected either way, and the
-   catalog DATA on live is already current (synced this morning).
+1. **Send DoorRepo to the AmiExpress author (Phantasm).** The package is
+   BUILT and waiting: `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`
+   (239 KB, 50 files, git-ignored). LHA rather than zip for the audience.
+   Contains the m68k binary, the full C89 source, the 9 test programs, the
+   protocol contract, the door manual, the commented config example, and
+   six REAL captured responses from the live server as client fixtures.
+   `ReadMe.txt` is a cover letter for him. Verified by extracting the
+   archive and running `make test` + `make native` from the packaged source
+   (all green, zero warnings) and by checking the binary's MD5 and
+   `file` output survive the round trip. Everything is pure ASCII - the API
+   doc's four em-dashes were transliterated, since UTF-8 reads as mojibake
+   on an Amiga. Only the sending is left, and that needs the user.
+2. ~~Deploy the P1 `list.txt` change~~ - ALREADY LIVE. A deploy went out
+   from the pushes and recreated the container at 10:13 UTC 2026-08-18;
+   `bbs.uprough.net` returns ten-field rows (verified: `ABS-PLC2.LHA` gives
+   `author=LOOP/ABUSE group=ABS junk=4 hasdoc=1`). An earlier note in this
+   session said otherwise; it was written before that deploy landed.
 3. `DEBUG_68K=1` is still on in the live compose file.

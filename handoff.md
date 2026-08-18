@@ -16,34 +16,35 @@ catalog DB or the live `Doors/` volume (both volume-mounted).
 
 Shipped 2026-08-18 (two sessions):
 
-- **Live catalog synced** (above) and the **08-18 morning work**: DoorRepo at
-  DOORMAN parity for browsing, two silent `lha -l` parser bugs fixed, three
-  additive endpoints, bsdsocket non-blocking connect, CI running jest. Detail:
-  `thoughts/shared/handoffs/2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
-- **DoorRepo closes its last six gaps against DOORMAN** (afternoon):
-  `list.txt` grew fields 7-10 (`author|releaseGroup|junkCount|hasDoc`, header
-  stays version 1 - appending never bumps it); the door searches author and
-  group so its filter finally agrees with the server's `?q=`; `V=Doc` is
-  offered only when a door has documentation; downloads verify **SHA-256**
-  from the `X-Archive-SHA256` header with MD5 as fallback; **AmigaGuide**
-  documents render with node navigation (1-9 follow, B back) instead of raw
-  markup; and `I`/`U` **install and uninstall a door as a BBS command**,
-  writing a `.info` byte-identical to DOORMAN's. Mouse and owner-side
-  curation deliberately out of scope. Detail:
-  `thoughts/shared/handoffs/2026-08-18_doorrepo-doorman-parity.md`.
-- **A door installed while the BBS runs no longer needs a restart.** On a
-  real node `express.e:4630-4647` resolves every BBS command from disk per
-  invocation; this server loaded them once at boot. Now a BBSCMD miss
-  revalidates on the command directories' mtime (NOT an unconditional
-  rescan - a miss is the common case), a watcher on `Commands/BBSCmd/`
-  refreshes the listing paths, and `RULES.md` 10b records why. Also fixed a
-  pre-existing race in `door-repo-routes.test.ts` that only lost under
-  heavy machine load.
+- **08-18 morning**: live catalog synced (above), DoorRepo at DOORMAN parity
+  for browsing, two silent `lha -l` parser bugs, three endpoints, bsdsocket
+  non-blocking connect, CI running jest. Detail:
+  `2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
+- **DoorRepo closes every remaining gap against DOORMAN** (afternoon):
+  `list.txt` fields 7-10 (header stays version 1 - appending never bumps it);
+  filter searches author/group so it agrees with the server's `?q=`; `V=Doc`
+  gated on real documentation; **SHA-256** verification from the
+  `X-Archive-SHA256` header, MD5 fallback; **AmigaGuide** rendering with node
+  navigation; `I`/`U` **install/uninstall as a BBS command** with a `.info`
+  byte-identical to DOORMAN's; an install index (`DoorRepo.idx`) giving the
+  `+` mark, header count and pre-filled uninstall; and `S` to strip ads from
+  an installed door. Mouse and owner-side curation out of scope by choice.
+  Detail: `2026-08-18_doorrepo-doorman-parity.md`.
+- **A door installed while the BBS runs no longer needs a restart.** A
+  BBSCMD miss revalidates on the command directories' mtime (NOT an
+  unconditional rescan - a miss is the common case) and a watcher refreshes
+  the listing paths. Why, and why not to "simplify" it: `RULES.md` 10b.
 - Three bugs that came out of running it: `ExtractAfterDownload` never worked
   off Amiga (`lha x archive dir` treats the directory as a member filter); a
   97-into-96-byte overflow in the new SHA-256 message (AddressSanitizer); and
   the full-screen browser **spun forever at input EOF**, writing tens of GB of
   frames - now `flow_key_ends_session()`, tested.
+
+Next: **send DoorRepo to Phantasm.** Package is built and waiting at
+`thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (m68k binary, C89 source,
+tests, protocol contract, live captures, cover letter); only sending is left.
+The ten-field `list.txt` is already deployed and live. `DEBUG_68K=1` is still
+on in the live compose file.
 
 ## 2026-08-17 and earlier (archived)
 
@@ -63,9 +64,9 @@ checks; per-topic archives `2026-08-16_dd-parallel-wave.md`,
 ---
 
 Environment quickref: `SKIP_SDK_PREPARE=1 npm install --ignore-scripts`; jest
-config → JSON via tsx (`ts-node` absent); emulator suites `SKIP_DB_INIT=1
-SKIP_NETWORK_LISTENERS=1`; door runs redirect-never-pipe with `</dev/null`;
-Edit/Write destroys high-bit bytes — cp/python/sed for binaries/corpus.json.
+config → JSON via tsx; emulator suites `SKIP_DB_INIT=1 SKIP_NETWORK_LISTENERS=1`;
+door runs redirect-never-pipe; Edit/Write destroys high-bit bytes — use
+cp/python/sed for binaries.
 Start the stack with `DOOR_REPO_ROLE=owner ./dev/scripts/start-servers.sh
 --bbs-only`, BBS on :3001 (5173 is another app — leave it alone). That script
 can stall for MINUTES in its repo-wide `find -delete` step; for API-only work
