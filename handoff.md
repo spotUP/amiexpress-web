@@ -31,6 +31,14 @@ Shipped 2026-08-18 (two sessions):
   writing a `.info` byte-identical to DOORMAN's. Mouse and owner-side
   curation deliberately out of scope. Detail:
   `thoughts/shared/handoffs/2026-08-18_doorrepo-doorman-parity.md`.
+- **A door installed while the BBS runs no longer needs a restart.** On a
+  real node `express.e:4630-4647` resolves every BBS command from disk per
+  invocation; this server loaded them once at boot. Now a BBSCMD miss
+  revalidates on the command directories' mtime (NOT an unconditional
+  rescan - a miss is the common case), a watcher on `Commands/BBSCmd/`
+  refreshes the listing paths, and `RULES.md` 10b records why. Also fixed a
+  pre-existing race in `door-repo-routes.test.ts` that only lost under
+  heavy machine load.
 - Three bugs that came out of running it: `ExtractAfterDownload` never worked
   off Amiga (`lha x archive dir` treats the directory as a member filter); a
   97-into-96-byte overflow in the new SHA-256 message (AddressSanitizer); and

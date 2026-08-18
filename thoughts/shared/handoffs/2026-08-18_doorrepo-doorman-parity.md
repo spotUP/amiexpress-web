@@ -102,6 +102,48 @@ guide navigation, SHA-256 verified against the server's own header, TELSER40
 installed as `LOCATION=Doors:TELSER40/bin/telser` with both ad files removed,
 then uninstalled.
 
+## Follow-on: the last three gaps (same session)
+
+**Install state.** DOORMAN tags installed rows and counts them; this door
+could not, and `U` had to ask for a command name it had known once. An
+install now appends `<archive>|<CMD>` to `DownloadDir/DoorRepo.idx` and an
+uninstall removes it. That record drives the `+` list mark (over `*` for
+merely downloaded), the header's "N installed", the green `[CMD]` in the
+detail pane, and a pre-filled `U`. The alternative - probing `BBSCmdDir` per
+visible row per keystroke - is the per-row disk work this door already
+refuses to do on a real Amiga.
+
+**`S` strips ads from an already-installed door**, which DOORMAN could always
+do and this door could only do during an install. Needs the index for the
+same reason `U` does: without it there is no way to know which directory the
+archive went into. The footer switches `I` to `U` once installed and shows
+`S` only when the door is installed AND its archive has ads.
+
+**The BBS seeing a newly installed door.** Nothing to send the AmiExpress
+author: `express.e:4614-4647` resolves a BBS command from disk on EVERY
+invocation, so a `.info` is live on the next keypress on a real node. The
+cache is ours (`amigaDoorManager.doorCache`, filled at boot). Three parts
+now:
+
+1. `revalidateBbsCommandsIfChanged()` on a BBSCMD miss, keyed on the command
+   directories' mtime. Deliberately not an unconditional rescan: a miss is
+   the COMMON case (every internal command falls through SYSCMD then BBSCMD
+   first), so that would parse every `.info` on nearly every keystroke.
+2. `bbscmd-watcher.ts`, which clears the freshness stamp so the listing
+   paths see the change too. It reloads nothing itself, and nothing depends
+   on `fs.watch` firing.
+3. `RULES.md` 10b and the C door's README.
+
+`tests/handlers/bbscmd-freshness.test.ts` (8 tests); the two central cases
+were confirmed to FAIL against the pre-fix behaviour. Live: the running BBS
+logged the watcher firing within a second of a `.info` being written.
+
+Also fixed, not caused: `door-repo-routes.test.ts`'s fd-lifecycle test
+asserted a close that happens on the stream's own close handler, after the
+response supertest awaits - a race that lost at load average 60 and passed
+in isolation. It now waits for the close, then re-checks there is exactly
+one.
+
 ## Next
 
 1. **Send DoorRepo to the AmiExpress author** - unchanged, top item for four
