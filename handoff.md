@@ -2,8 +2,8 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`
-Nothing is mid-flight, everything pushed. CI green, deploy green.
+**Resume doc:** `thoughts/shared/handoffs/2026-08-18_doorrepo-doorman-parity.md`
+Nothing is mid-flight. CI green.
 
 **Live catalog SYNCED 2026-08-18 06:55 UTC** — the 08-18 parser fixes had
 shipped as code but not as data. Merged via an ATTACH staging database (never a
@@ -14,29 +14,28 @@ everything else replaced. Live is now revision `c3301-t1787029906`, 3263 DIZ /
 the resume doc, section 1** — reuse it verbatim, deploys never refresh the live
 catalog DB or the live `Doors/` volume (both volume-mounted).
 
-Shipped 2026-08-18 (19 commits, `35a31af58..137c39ad0`):
+Shipped 2026-08-18 (two sessions):
 
-- **DoorRepo is at DOORMAN parity** — full-screen ANSI browser, live filter,
-  system-type cycling, DIZ art, archive contents with ad flags, doc viewer,
-  scrollable detail pane, `*`/`[downloaded]` markers, download-with-MD5-verify.
-  `Ansi=no` keeps the old line renderer.
-- **Two silent catalog-indexer bugs**, both in `lha -l` parsing, never logged:
-  member rows starting with a Unix permission string were discarded as rule
-  lines, and file sizes were the COMPRESSION RATIO for `[generic]` rows — 83%
-  of file rows had a bogus size. Parser is now
-  `web/backend/src/utils/lha-list-parser.ts` with 6 tests.
-- **Catalog caching was impossible** (revision was the image git SHA), so
-  DoorRepo re-fetched ~580 KB every launch. Now catalog-derived; 5s cold, 3s warm.
-- **Three additive endpoints** — `/diz`, `/files`, `/doc`; `/archive` no longer
-  HTTP 500s on Latin-1 archive names.
-- **bsdsocket**: FIONBIO honoured, non-blocking connect, `recv()` drains across
-  queued chunks, `gethostbyname()` resolves literals and hosts-file names.
-- **CI runs jest** (`backend-tests.yml`); its first run showed the suite had
-  never run on Linux though the BBS deploys there.
-
-Next: **send DoorRepo to the AmiExpress author** (top item for three sessions).
-`DEBUG_68K=1` is still ON in the live compose file. Host root filesystem is at
-91%.
+- **Live catalog synced** (above) and the **08-18 morning work**: DoorRepo at
+  DOORMAN parity for browsing, two silent `lha -l` parser bugs fixed, three
+  additive endpoints, bsdsocket non-blocking connect, CI running jest. Detail:
+  `thoughts/shared/handoffs/2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
+- **DoorRepo closes its last six gaps against DOORMAN** (afternoon):
+  `list.txt` grew fields 7-10 (`author|releaseGroup|junkCount|hasDoc`, header
+  stays version 1 - appending never bumps it); the door searches author and
+  group so its filter finally agrees with the server's `?q=`; `V=Doc` is
+  offered only when a door has documentation; downloads verify **SHA-256**
+  from the `X-Archive-SHA256` header with MD5 as fallback; **AmigaGuide**
+  documents render with node navigation (1-9 follow, B back) instead of raw
+  markup; and `I`/`U` **install and uninstall a door as a BBS command**,
+  writing a `.info` byte-identical to DOORMAN's. Mouse and owner-side
+  curation deliberately out of scope. Detail:
+  `thoughts/shared/handoffs/2026-08-18_doorrepo-doorman-parity.md`.
+- Three bugs that came out of running it: `ExtractAfterDownload` never worked
+  off Amiga (`lha x archive dir` treats the directory as a member filter); a
+  97-into-96-byte overflow in the new SHA-256 message (AddressSanitizer); and
+  the full-screen browser **spun forever at input EOF**, writing tens of GB of
+  frames - now `flow_key_ends_session()`, tested.
 
 ## 2026-08-17 and earlier (archived)
 
@@ -60,7 +59,9 @@ config → JSON via tsx (`ts-node` absent); emulator suites `SKIP_DB_INIT=1
 SKIP_NETWORK_LISTENERS=1`; door runs redirect-never-pipe with `</dev/null`;
 Edit/Write destroys high-bit bytes — cp/python/sed for binaries/corpus.json.
 Start the stack with `DOOR_REPO_ROLE=owner ./dev/scripts/start-servers.sh
---bbs-only`, BBS on :3001 (5173 is another app — leave it alone).
+--bbs-only`, BBS on :3001 (5173 is another app — leave it alone). That script
+can stall for MINUTES in its repo-wide `find -delete` step; for API-only work
+run `DOOR_REPO_ROLE=owner npx tsx src/index.ts` from `web/backend` instead.
 `run-amiga-door.ts` needs `SKIP_DB_INIT=1` (else it hangs silently after two
 `[DoorLogger]` lines) and `DEBUG_68K=1` for `[BsdSocketLibrary]` traces.
 `grep` here is **ugrep** — use `LC_ALL=C grep -a` on emulator logs and Amiga
