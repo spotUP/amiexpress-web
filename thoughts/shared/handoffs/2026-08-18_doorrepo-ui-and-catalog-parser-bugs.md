@@ -19,7 +19,30 @@ Previous handoffs, for the chain of context:
 `2026-08-17_bsdsocket-reachability.md`, then
 `2026-08-17_doorrepo-c-and-door-repo-api.md`.
 
-## 1. THE ONE THING THAT IS NOT DONE: live catalog is stale
+## 1. RESOLVED 2026-08-18 06:55 UTC — live catalog was stale, now synced
+
+The sync ran: staging DB (`door_catalog` + `door_catalog_files` only, built with
+`CREATE TABLE ... AS SELECT *` over a read-only ATTACH of `database.sqlite`),
+gzipped 9 MB, scp'd to the host, `docker cp`'d into the container, merged in one
+`BEGIN IMMEDIATE` transaction that stashes live install state in a TEMP table,
+deletes+reinserts both tables from the attach, then re-applies the stash.
+
+Pre-flight checks that made delete+reinsert safe: the id sets were identical
+(3301 both sides) and `PRAGMA table_info(door_catalog)` matched column for
+column. Live had 64 `installed=1` rows against the local checkout's 79 — live
+install state is the authoritative one, so it is preserved and the local flags
+are discarded.
+
+Live after the merge: revision `c3301-t1787029906` (identical to local), 3263
+DIZ rows, 58406 file rows, 64 installed. `/diz/$CP-PS12.LZX` 200,
+`/files/!ALSTER.LHA` → `40092|0|Children`, `TELSER40.LHA` 50 members (11 before
+the parser fix). Host backup, taken with `VACUUM INTO` while the container ran:
+`/app/data/db/amiexpress.db.bak-before-catalog-fix-20260818` (38 MB). Staging
+files removed from host and container. Host root filesystem is at 91%.
+
+The original problem statement follows, for context.
+
+### Original: live catalog is stale
 
 Everything below shipped and is live as CODE. The catalog DATA is not.
 
@@ -233,16 +256,12 @@ runs on. That is a quarantine, not a verdict.
 
 ## What is worth doing next
 
-1. **Sync the fixed catalog to live** (section 1). Highest value: live is
-   serving ratios-as-sizes and no LZX DIZ. Use ATTACH staging, never a SQL
-   text dump.
+1. ~~Sync the fixed catalog to live~~ — DONE 2026-08-18, see section 1.
 2. **Send DoorRepo to the AmiExpress author.** `examples/doorrepo-c/README.md`
    now documents the UI and config; `docs/DOOR-REPO-API.md` is the contract.
    This has been the top item for two sessions and is still not done.
-3. Delete the three untracked safety backups when satisfied:
-   `database.sqlite.bak-before-lhaparse-fix`,
-   `database.sqlite.bak-before-lzx-reindex-20260818-011443`,
-   `database.sqlite.bak-before-reindex2` (~120 MB total).
+3. ~~Delete the three untracked safety backups~~ — deleted 2026-08-18 after the
+   live sync verified.
 4. `tests/message-scan-parity.test.ts` — the real investigation (section 7).
    Needs a Linux repro in a throwaway container with its OWN `node_modules`,
    never a mount over a macOS checkout.

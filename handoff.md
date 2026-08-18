@@ -5,12 +5,27 @@
 **Resume doc:** `thoughts/shared/handoffs/2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`
 Nothing is mid-flight, everything pushed (`137c39ad0`). CI green, deploy green.
 
-**READ THIS FIRST — the live catalog is STALE.** This session's code shipped;
-its DATA did not. Live serves the pre-fix catalog: `/diz/$CP-PS12.LZX` 404s and
-`/files/!ALSTER.LHA` reports `61|0|Children` where the real size is 40092. The
-live container reads a VOLUME-MOUNTED database, so a deploy does not replace
-it. Sync it with an ATTACH staging database — never a SQL text dump, `doc_raw`
-carries control bytes. Full detail in the resume doc, section 1.
+**Live catalog SYNCED 2026-08-18 06:55 UTC** (was stale — code had shipped, data
+had not). Merged with an ATTACH staging database built from the local re-indexed
+catalog; live install state (`installed`/`installed_as`/`install_dir`, 64 rows)
+preserved, everything else replaced. Live now reports revision
+`c3301-t1787029906`, 3263 DIZ rows, 58406 file rows; `/diz/$CP-PS12.LZX` 200,
+`/files/!ALSTER.LHA` → `40092|0|Children`, `TELSER40.LHA` 50 members (was 11).
+Host backup: `/app/data/db/amiexpress.db.bak-before-catalog-fix-20260818`.
+Method (repeat verbatim next time — never a SQL text dump, `doc_raw` carries
+control bytes):
+
+```
+sqlite3 stage.db "ATTACH 'file:database.sqlite?mode=ro' AS src;
+  CREATE TABLE door_catalog AS SELECT * FROM src.door_catalog;
+  CREATE TABLE door_catalog_files AS SELECT * FROM src.door_catalog_files;"
+scp stage.db.gz root@89.167.21.154:/root/ && docker cp ... amiexpress-bbs:/app/data/db/
+docker exec amiexpress-bbs sqlite3 /app/data/db/amiexpress.db < merge.sql
+```
+
+`merge.sql` = VACUUM INTO backup first, then one `BEGIN IMMEDIATE` transaction:
+stash live install state in a TEMP table, delete+insert both catalog tables from
+the staging attach, re-apply the stashed install state.
 
 Shipped 2026-08-18 (19 commits, `35a31af58..137c39ad0`):
 
@@ -37,10 +52,10 @@ Shipped 2026-08-18 (19 commits, `35a31af58..137c39ad0`):
   never run on Linux though the BBS deploys there; `netio.c`'s POSIX branch did
   not compile on glibc at all.
 
-Next: sync the live catalog, then **send DoorRepo to the AmiExpress author**
-(top item for three sessions now). `DEBUG_68K=1` is still ON in the live
-compose file. Three `database.sqlite.bak-*` safety backups (~120 MB) are
-untracked and can be deleted once you are satisfied.
+Next: **send DoorRepo to the AmiExpress author** (top item for three sessions
+now). `DEBUG_68K=1` is still ON in the live compose file. The three local
+`database.sqlite.bak-*` safety backups were deleted 2026-08-18 after the sync
+verified.
 
 ## 2026-08-17 — DOOR REPO API LIVE + DOORMAN filter arc closed (user-confirmed)
 
