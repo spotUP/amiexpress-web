@@ -163,4 +163,20 @@ one.
    `bbs.uprough.net` returns ten-field rows (verified: `ABS-PLC2.LHA` gives
    `author=LOOP/ABUSE group=ABS junk=4 hasdoc=1`). An earlier note in this
    session said otherwise; it was written before that deploy landed.
-3. `DEBUG_68K=1` is still on in the live compose file.
+3. ~~`DEBUG_68K=1` is still on in the live compose file~~ - WRONG, and it
+   had been carried forward across several handoffs. Verified 2026-08-18 by
+   reading the container's own environment: the live compose sets only
+   `DEBUG=false` and `XIM_DEBUG=0`, and `DEBUG_68K` appears nowhere.
+4. Live API readiness sweep, 2026-08-18, all green: every endpoint answers
+   on plain HTTP with no redirect (the Caddy exemption is intact and
+   `handle /api/door-repo/*` precedes the redirect block); `list.txt` is
+   3301 rows, every one ten fields, header count matching, CRLF, no chunked
+   encoding, `Content-Length` present; `%DF` in an archive name works on
+   /diz, /files, /doc and /archive (the old HTTP 500); a downloaded archive
+   matched `X-Archive-MD5`, `X-Archive-SHA256` and the `list.txt` digest;
+   `?type=`/`?q=` filter correctly, including author search; missing entries
+   404 rather than erroring. The real m68k-source door, built native, was
+   driven against live end to end - browse, filter, AmigaGuide navigation,
+   and a SHA-256-verified download.
+5. Host disk is at 89% (4.1 GB free) - worth watching before the next
+   catalog re-index.

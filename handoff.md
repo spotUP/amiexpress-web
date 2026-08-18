@@ -43,16 +43,17 @@ Shipped 2026-08-18 (two sessions):
 Next: **send DoorRepo to Phantasm.** Package is built and waiting at
 `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (m68k binary, C89 source,
 tests, protocol contract, live captures, cover letter); only sending is left.
-The ten-field `list.txt` is already deployed and live. `DEBUG_68K=1` is still
-on in the live compose file.
+Ten-field `list.txt` is deployed and live (`5fbeb2d6b`); the API passed a
+full readiness sweep 2026-08-18 (detail in the resume doc). **`DEBUG_68K` is
+NOT set on live** - earlier handoffs said it was, and were wrong. Host disk
+is at 89%.
 
 ## 2026-08-17 and earlier (archived)
 
-Door repo API live on plain HTTP (`http://bbs.uprough.net/api/door-repo/...`,
-read-only, gated on `DOOR_REPO_ROLE=owner`, curation stays in git; integrator
-contract `docs/DOOR-REPO-API.md`; plain HTTP depends on a host-side Caddy
-exemption that deploys do NOT manage). DOORMAN filter arc closed and
-user-confirmed. Full detail:
+Door repo API live on plain HTTP, read-only, gated on
+`DOOR_REPO_ROLE=owner`; contract `docs/DOOR-REPO-API.md`; plain HTTP depends
+on a host-side Caddy exemption that deploys do NOT manage. DOORMAN filter arc
+closed. Full detail:
 `thoughts/shared/handoffs/2026-08-17_door-repo-api-and-doorman-filter.md` and
 `2026-08-17_doorrepo-c-and-door-repo-api.md`.
 
