@@ -5,8 +5,11 @@
 **Resume docs:** `thoughts/shared/handoffs/2026-08-19_d-calc-download-investigation.md`
 (newest), then `..._repo-curation-and-doorrepo-fixes.md`.
 
-**UNCOMMITTED work is in the tree** - the diagnostics below. Nothing is
-deployed from it. Live still runs `1886fd527`.
+Nothing mid-flight. Everything is committed, pushed and **deployed**: the
+container was recreated 2026-08-19 10:42 and verified to carry
+`bsdsocket-tee.ts` and the current DoorRepo binary (md5 `94379b21`), with
+`/health` answering and `/archive/-D-CALC.LHA` still self-consistent. The
+diagnostics are live but INERT - neither switch is set.
 
 **The one real open bug:** `-D-CALC.LHA` computed the same wrong SHA-256 twice
 on live. It **does not reproduce**. Ruled out with measurements, not argument:
@@ -68,16 +71,16 @@ cached by revision.
 
 ## Next
 
-1. **Decide on the uncommitted diagnostics** - commit and deploy, or drop.
-   They are inert until switched on.
-2. **Send DoorRepo to Phantasm.** Package at
-   `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (also on the Desktop) -
-   REBUILD first: it predates both the blue-screen fix and
-   `KeepFailedDownloads`.
-3. Catch `-D-CALC.LHA` with the tee + `.bad` file (needs a deploy and one
-   reproduction on live).
-4. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
-5. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
+1. **Send DoorRepo to Phantasm.** Rebuilt and waiting:
+   `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` and the Desktop copy,
+   both md5 `0e42b78a`, 54 files, stamped `b2783ae2f`. Built by
+   `examples/doorrepo-c/package-for-amiga.sh`, which re-runs the tests, packs,
+   then extracts and builds the packed source again before it will say OK.
+   Only the sending is left.
+2. Catch `-D-CALC.LHA`: switch on `KeepFailedDownloads=yes` and
+   `BSDSOCKET_TEE_DIR`, reproduce once, then switch both off.
+3. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
+4. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
    `0f7b2806` (the pristine copy in `~/Code/amiexpress_doors`) while the served
    file has been 7943 bytes since 2026-06-02. The indexer never re-describes an
    archive that changed after indexing; any archive touched since carries wrong
