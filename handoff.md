@@ -5,14 +5,12 @@
 **Resume doc:** `thoughts/shared/handoffs/2026-08-18_doorrepo-doorman-parity.md`
 Nothing is mid-flight. CI green.
 
-**Live catalog SYNCED 2026-08-18 06:55 UTC** — the 08-18 parser fixes had
-shipped as code but not as data. Merged via an ATTACH staging database (never a
-SQL text dump: `doc_raw` carries control bytes); live install state preserved,
-everything else replaced. Live is now revision `c3301-t1787029906`, 3263 DIZ /
-58406 file rows, `TELSER40.LHA` 50 members (11 before the fix). Host backup
-`/app/data/db/amiexpress.db.bak-before-catalog-fix-20260818`. **Exact method in
-the resume doc, section 1** — reuse it verbatim, deploys never refresh the live
-catalog DB or the live `Doors/` volume (both volume-mounted).
+**Live catalog SYNCED 2026-08-18** — merged via an ATTACH staging database
+(never a SQL text dump: `doc_raw` carries control bytes); live install state
+preserved. Live revision `c3301-t1787029906`, 3263 DIZ / 58406 file rows.
+**Method in the resume doc, section 1** — reuse it verbatim; deploys never
+refresh the live catalog DB (volume-mounted). Host backup
+`amiexpress.db.bak-before-catalog-fix-20260818`.
 
 Shipped 2026-08-18 (two sessions):
 
@@ -21,24 +19,34 @@ Shipped 2026-08-18 (two sessions):
   non-blocking connect, CI running jest. Detail:
   `2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
 - **DoorRepo closes every remaining gap against DOORMAN** (afternoon):
-  `list.txt` fields 7-10 (header stays version 1 - appending never bumps it);
-  filter searches author/group so it agrees with the server's `?q=`; `V=Doc`
-  gated on real documentation; **SHA-256** verification from the
-  `X-Archive-SHA256` header, MD5 fallback; **AmigaGuide** rendering with node
-  navigation; `I`/`U` **install/uninstall as a BBS command** with a `.info`
-  byte-identical to DOORMAN's; an install index (`DoorRepo.idx`) giving the
-  `+` mark, header count and pre-filled uninstall; and `S` to strip ads from
-  an installed door. Mouse and owner-side curation out of scope by choice.
-  Detail: `2026-08-18_doorrepo-doorman-parity.md`.
+  `list.txt` fields 7-10, author/group search, `V=Doc` gating, SHA-256
+  verification, AmigaGuide rendering, `I`/`U` install/uninstall as a BBS
+  command, an install index (`DoorRepo.idx`) and `S` ad-stripping. Mouse and
+  owner-side curation out of scope by choice. Detail:
+  `2026-08-18_doorrepo-doorman-parity.md`.
 - **A door installed while the BBS runs no longer needs a restart.** A
   BBSCMD miss revalidates on the command directories' mtime (NOT an
   unconditional rescan - a miss is the common case) and a watcher refreshes
   the listing paths. Why, and why not to "simplify" it: `RULES.md` 10b.
-- Three bugs that came out of running it: `ExtractAfterDownload` never worked
-  off Amiga (`lha x archive dir` treats the directory as a member filter); a
-  97-into-96-byte overflow in the new SHA-256 message (AddressSanitizer); and
-  the full-screen browser **spun forever at input EOF**, writing tens of GB of
-  frames - now `flow_key_ends_session()`, tested.
+- Bugs found by running it: `ExtractAfterDownload` never worked off Amiga
+  (`lha x archive dir` = member filter); a 97-into-96-byte overflow in the
+  SHA-256 message; the browser **spun forever at input EOF** (tens of GB of
+  frames); and **a real node eats every cursor key** until the door sends
+  RAWARROW (501) - reported from Phantasm's node, invisible to our emulator.
+
+**Door startup was 13s of self-inflicted SQL.** The junk-count correlated
+subquery added with `list.txt` fields 7-10 made SQLite rescan every is_junk
+row per catalog row (13.05s on live; grouped join 0.03s). Fixed, plus a
+revision-keyed cache of the rendered catalog. Live: 9.13s -> 0.12s internal,
+15.7s -> 0.4s public, door cold start under 1s.
+
+**OPEN:** `-D-CALC.LHA` fails checksum verification through the EMULATOR on
+live - native build downloads it fine, server is self-consistent, same wrong
+digest twice. Needs the actual bytes; see the resume doc.
+
+**TRAP:** `Scripts/run-amiga-door.ts` runs `web/backend/dist/`, which was
+four months stale. Rebuild (`cd web/backend && npm run build`) before
+trusting anything it tells you.
 
 Next: **send DoorRepo to Phantasm.** Package is built and waiting at
 `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (m68k binary, C89 source,
@@ -57,10 +65,8 @@ closed. Full detail:
 `thoughts/shared/handoffs/2026-08-17_door-repo-api-and-doorman-filter.md` and
 `2026-08-17_doorrepo-c-and-door-repo-api.md`.
 
-Earlier sessions (DD wave, FAME/FIM, 5D_Page paging, WIP audit tiers) are in
-`2026-08-17_pre-0817-rollup.md` with their open pending items and user manual
-checks; per-topic archives `2026-08-16_dd-parallel-wave.md`,
-`2026-08-14_fame-fim-shipped.md`, `2026-08-14_wip-audit-tiers-and-fame-next.md`.
+Earlier sessions (DD wave, FAME/FIM, 5D_Page paging, WIP audit tiers):
+`2026-08-17_pre-0817-rollup.md` and the per-topic 08-14/08-16 archives.
 
 ---
 
@@ -81,5 +87,4 @@ WITHOUT `SKIP_DB_INIT`, which manufactures ~344 failures when applied to
 everything. Only ever run one heavy thing at a time: concurrent jest or
 emulator runs starve `deasync` and produce phantom failures.
 
-Older sessions: DOORMAN v2 + dist/ enforcement + CONFTOP root cause →
-`thoughts/shared/handoffs/` (2026-08-14 archives + May rollup).
+Older: DOORMAN v2, dist/ enforcement, CONFTOP → `thoughts/shared/handoffs/`.

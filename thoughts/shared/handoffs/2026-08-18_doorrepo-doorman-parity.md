@@ -144,6 +144,74 @@ response supertest awaits - a race that lost at load average 60 and passed
 in isolation. It now waits for the close, then re-checks there is exactly
 one.
 
+## Startup performance: 13s of every catalog fetch was a self-inflicted subquery
+
+Asked why the door was slow to start. Measured instead of guessing, and the
+transfer was never the problem: 619,662 bytes fetched from INSIDE the
+container took 9.13s over localhost and 8.99s through Caddy from the public
+host. Identical, so the cost was the server building the answer.
+
+The cause was the junk-count subquery added with `list.txt` fields 7-10:
+
+    (SELECT COUNT(*) FROM door_catalog_files f
+      WHERE f.catalog_id = door_catalog.id AND f.is_junk = 1)
+
+SQLite's plan on the live catalog is `SEARCH f USING INDEX idx_dcf_is_junk
+(is_junk=?)`, so each of 3301 catalog rows rescanned every row with
+is_junk=1. Measured on live: plain count 0.01s, correlated subquery 13.05s,
+same data as a grouped join 0.03s. It is now a grouped join, which is also
+immune to the planner choosing between two candidate indexes.
+
+The rendered catalog is additionally cached keyed by catalog revision +
+filters (the revision already changes exactly when the catalog does),
+bounded to 8 entries with superseded revisions dropped.
+
+Result, verified on live after deploy:
+
+| | before | after |
+|---|---|---|
+| list.txt from inside the container | 9.13s | 0.12s |
+| list.txt over the public internet | 15.7s | 0.4-0.7s |
+| door cold start (fetch+parse+render) | - | under 1s |
+| door warm start (revision check + cache) | - | ~1s |
+
+## OPEN: a download that fails checksum verification on live
+
+Reported while testing install on the live BBS: `-D-CALC.LHA` fails
+verification twice and the install stops. NOT yet root-caused.
+
+What is established:
+- The server is self-consistent. curl gets 7943 bytes whose SHA-256 matches
+  `X-Archive-Sha256` exactly. Content-Length matches too.
+- The catalog MD5 for that row IS stale (0f7b2806 vs the file's real
+  9127e079), so the door's "catalog digest is probably stale" note is
+  correct and not the failure.
+- The door computed `e44cef1b...` both attempts - the same wrong bytes
+  twice, so not a random transport error.
+- The NATIVE build downloads the same archive correctly and verifies. Same
+  C code, real sockets. So the door's HTTP/hash path is fine and the
+  suspicion falls on the emulator's bsdsocket recv path.
+- Guessed transformations of the real file (truncation at several offsets,
+  missing/duplicated chunks at 512/1024/2048/4096, CRLF translation, header
+  bytes leaking into the body, high-bit stripping) produce none of that
+  digest. Do not keep guessing - get the bytes.
+
+To get the bytes: the door deletes the mismatching file before retrying, so
+either grab `Doors/DoorRepo/downloads/` on live between the two attempts, or
+add a diagnostic that keeps the first mismatching download as `.bad`.
+
+## TRAP: Scripts/run-amiga-door.ts runs a STALE compiled backend
+
+It loads `web/backend/dist/`, not `src/`. That build was from 27 APRIL -
+four months stale - so the first two reproduction attempts above were
+testing April code (socket fds starting at 100, getdtablesize returning
+256, none of the 2026-08-17/18 bsdsocket work). Rebuilt with
+`cd web/backend && npm run build`.
+
+Anything "verified" with that harness since April was verified against the
+wrong code. The harness's own header comment says to rebuild first; nothing
+enforces it.
+
 ## Next
 
 1. **Send DoorRepo to the AmiExpress author (Phantasm).** The package is
