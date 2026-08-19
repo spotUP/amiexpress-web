@@ -28,6 +28,34 @@ the door's `KeepFailedDownloads=yes` keeps a mismatching download as
 build the head-less download probe. Enabling procedure: the investigation
 doc's "To actually catch it".
 
+## DoorRepo speed (2026-08-19, live)
+
+Reported: slow to start, "fetching" on every cursor key. Both real, both
+fixed as far as they can be without a protocol change. Measured with
+`BSDSOCKET_TEE_DIR` (socket count) and a scripted emulator session (wall
+clock), not estimated.
+
+| | before | after |
+|---|---|---|
+| cold start to browser | 12.9s | **5.3s** |
+| warm start (cached catalog) | 6.6s | **4.4s** |
+| arrow onto a visited entry | 427ms | **164ms**, no network |
+| arrow onto a new entry | 530-620ms | 290-400ms |
+| sockets for 6 arrow keys | 6 | 4 |
+
+Four causes, in order of what they cost: the emulator's `recv()` copied
+byte-by-byte through `writeMemory()` (which re-checks self-modifying code,
+ROM and watchpoints PER BYTE - 620,000 times for one catalog) and logged
+every chunk decoded as UTF-8; the door read bodies 4 KB at a time (152 round
+trips for a 620 KB catalog, now 32 KB and ~19); and all three info panes
+cached exactly ONE archive, so every cursor move refetched.
+
+**Still open, and the reason a first pass down a page is not instant:** one
+DIZ fetch per entry the door has not seen. The fix is a bulk endpoint
+returning the DIZ for a page of archives in one request - additive, but it
+changes the published contract and DoorRepo is no longer its only client, so
+it is a decision rather than a task. Notes in the investigation handoff.
+
 ## Where things stand
 
 **Door repository** (`http://bbs.uprough.net/api/door-repo/`, read-only,
@@ -73,14 +101,16 @@ cached by revision.
 
 1. **Send DoorRepo to Phantasm.** Rebuilt and waiting:
    `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` and the Desktop copy,
-   both md5 `0e42b78a`, 54 files, stamped `b2783ae2f`. Built by
+   both md5 `a1c023a2`, 57 files, stamped `b2783ae2f` and carrying the speed
+   work. Built by
    `examples/doorrepo-c/package-for-amiga.sh`, which re-runs the tests, packs,
    then extracts and builds the packed source again before it will say OK.
    Only the sending is left.
-2. Catch `-D-CALC.LHA`: switch on `KeepFailedDownloads=yes` and
+2. Decide on the bulk-DIZ endpoint (see the speed section).
+3. Catch `-D-CALC.LHA`: switch on `KeepFailedDownloads=yes` and
    `BSDSOCKET_TEE_DIR`, reproduce once, then switch both off.
-3. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
-4. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
+4. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
+5. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
    `0f7b2806` (the pristine copy in `~/Code/amiexpress_doors`) while the served
    file has been 7943 bytes since 2026-06-02. The indexer never re-describes an
    archive that changed after indexing; any archive touched since carries wrong
