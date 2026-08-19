@@ -5,14 +5,16 @@
 **Resume doc:** `thoughts/shared/handoffs/2026-08-19_doorrepo-speed-and-install-fixes.md`
 (then `..._d-calc-download-investigation.md` for the open bug).
 
-**TWO COMMITS ARE LOCAL AND UNPUSHED:** `7ace19931` (door: ad-file names +
-atomic `.info` write) and `b58ac0544` (BBS: BBSCmd freshness stamp covers the
-files, not just the directory). Both fix the reported "installed door not
-recognised until reconnect". Live runs `327c5e18d`.
+**Everything is pushed and live.** Live runs `9c6903303` (verified: image
+built 21:11 on 2026-08-19, container started 21:13, `Doors/DoorRepo/
+doorrepo.amiga` md5 `e8bf8b5652e4f072b09e4a5a76e16a3e` = local build). The two
+install fixes - ad-file names + atomic `.info` write (`7ace19931`) and the
+BBSCmd freshness stamp over the `.info` FILES (`b58ac0544`) - are live but
+**not yet confirmed by a real session**: install a door and use it WITHOUT
+reconnecting. That is the one open verification.
 
-**Before pushing:** the host is at **90% disk (3.7 GB)** and a docker build
-there caused two outages today. `docker builder prune -f` first (reclaimed
-3.4 GB earlier), check `uptime`, then push once.
+**Disk is at 90% / 3.7 GB again** - the deploy refilled what the pre-push
+prune reclaimed. `docker builder prune -f` before the next deploy.
 
 ## DoorRepo is usable now - and why it was not
 
@@ -56,21 +58,40 @@ Plus a pane debounce - list rows paint in **33-50 ms**, the detail pane waits
 
 ## Next
 
-1. **Push the two commits** (after pruning disk), then confirm on live that
-   installing a door makes it usable without reconnecting.
+1. **Confirm the install fix on live** (only open item from the push). Log in
+   as sysop, `DOORREPO`, install a door, then type its command name WITHOUT
+   reconnecting - it must run. Also check `[S]trip` now NAMES the ad files.
 2. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong digest
    twice; `-J-LCV30.LHA` gave TWO DIFFERENT wrong digests - a race, not a
    fixed transformation. `KeepFailedDownloads=yes` is live and committed, so
    the next failure keeps `<name>.bad`; diff it against curl's bytes.
-3. **Check for a duplicate `Cross-Origin-Resource-Policy` header** on live
-   (Express sends `cross-origin`; Caddy may still add `same-origin`, and the
-   Caddyfile is not in the repo). A duplicate breaks Phantasm's fetch.
-4. **Rebuild and send Phantasm's archive** -
-   `examples/doorrepo-c/package-for-amiga.sh`; the current one predates
-   everything after `b2783ae2f`.
-5. **DOORMAN parity** - full gap list in the resume doc. Keystone: DoorRepo
+3. **DOORMAN parity** - full gap list in the resume doc. Keystone: DoorRepo
    has no installed-doors list; a `dirscan_amiga.c`/`dirscan_native.c` shim
    unblocks seven features at once.
+4. Optional, found while verifying CORS: `HEAD /api/door-repo/archive/<name>`
+   404s although the preflight advertises `GET, HEAD, OPTIONS`
+   (`door-repo.routes.ts:379` returns early on any non-GET), and `Range` is
+   advertised as an allowed request header but ignored (full `200`, never
+   `206`). Neither breaks a plain browser GET.
+
+## Done 2026-08-19 late
+
+- **Duplicate `Cross-Origin-Resource-Policy` fixed at the source.** It was
+  **Caddy**, not Express: `/etc/caddy/Caddyfile` set the header itself on
+  lines 2 and 56, and Caddy's non-deferred `header` writes at request time
+  while `reverse_proxy` then copies the upstream header in - so both survived
+  (`cross-origin` + `same-origin` on the site root, `cross-origin` twice on
+  the API). Express's `doorRepoCors`
+  (`web/backend/src/server/door-repo-cors.ts:70`, mounted `app.ts:90`) already
+  sets it per path, so both Caddy lines were deleted and Express is now the
+  single source. Backup: `/etc/caddy/Caddyfile.bak-corp-dupe-20260819`.
+  Verified live: site root `same-origin`, `/api/door-repo/*` `cross-origin`
+  over HTTPS **and** plain HTTP, preflight 204 with the full allow set, a real
+  archive GET carrying `x-archive-md5`/`sha256`. **The Caddyfile is not in the
+  repo** - it lives only on the host.
+- **Phantasm's archive rebuilt** with `package-for-amiga.sh` (57 files; tests
+  pass before packing, extracted source rebuilt and re-tested, binary digest
+  round-tripped, matches the live md5). Ready to send.
 
 ## Environment quickref
 
