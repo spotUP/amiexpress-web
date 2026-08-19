@@ -2,18 +2,28 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-19_repo-curation-and-doorrepo-fixes.md`
+**Resume docs:** `thoughts/shared/handoffs/2026-08-19_d-calc-download-investigation.md`
+(newest), then `..._repo-curation-and-doorrepo-fixes.md`.
 
-Nothing mid-flight. Everything committed, pushed and **deployed** - live runs
-`1886fd527`, which is HEAD, with the current DOORMAN dist and DoorRepo binary
-(verified in the container, not assumed).
+**UNCOMMITTED work is in the tree** - the diagnostics below. Nothing is
+deployed from it. Live still runs `1886fd527`.
 
-**The one real open bug:** `-D-CALC.LHA` fails checksum verification when
-downloaded through the EMULATOR. Server is self-consistent, the native door
-build downloads it correctly, and the door computed the same wrong digest
-twice - so it points at the emulator's bsdsocket recv path. Guessing at
-corruptions has been tried and failed; the next step is capturing the actual
-bytes. Detail in the resume doc, "Open items".
+**The one real open bug:** `-D-CALC.LHA` computed the same wrong SHA-256 twice
+on live. It **does not reproduce**. Ruled out with measurements, not argument:
+the server (curl from inside the container is correct), the archive (untouched
+since 2026-06-02), http.c/the hash (a new head-less probe gets it right under
+the emulator), the emulator's recv path (same probe), the exact door binary
+that failed (`17b90db5f`, verifies fine here in both Ansi modes), and every
+other archive on live (none hashes to `e44cef1b`). What is left is the live
+BBS's own emulator instance under a real session - and the container was
+recreated 3 hours later, so that evidence is gone.
+
+Two instruments now exist to catch it next time, both OFF by default:
+`BSDSOCKET_TEE_DIR` captures wire-vs-recv bytes at the emulator boundary, and
+the door's `KeepFailedDownloads=yes` keeps a mismatching download as
+`<name>.bad` instead of deleting it. `make probe-native` / `make probe-amiga`
+build the head-less download probe. Enabling procedure: the investigation
+doc's "To actually catch it".
 
 ## Where things stand
 
@@ -58,11 +68,20 @@ cached by revision.
 
 ## Next
 
-1. **Send DoorRepo to Phantasm.** Package built at
+1. **Decide on the uncommitted diagnostics** - commit and deploy, or drop.
+   They are inert until switched on.
+2. **Send DoorRepo to Phantasm.** Package at
    `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (also on the Desktop) -
-   but REBUILD it first: the current one predates the blue-screen fix.
-2. Chase the `-D-CALC.LHA` corruption once its bytes can be captured.
-3. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
+   REBUILD first: it predates both the blue-screen fix and
+   `KeepFailedDownloads`.
+3. Catch `-D-CALC.LHA` with the tee + `.bad` file (needs a deploy and one
+   reproduction on live).
+4. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
+5. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
+   `0f7b2806` (the pristine copy in `~/Code/amiexpress_doors`) while the served
+   file has been 7943 bytes since 2026-06-02. The indexer never re-describes an
+   archive that changed after indexing; any archive touched since carries wrong
+   size and md5 in `list.txt`.
 
 ## Environment quickref
 
