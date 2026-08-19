@@ -2,107 +2,105 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-19_doorrepo-speed-and-install-fixes.md`
-(then `..._d-calc-download-investigation.md` for the open bug).
+**Resume doc:** `thoughts/shared/handoffs/2026-08-20_doorrepo-archiver-extraction.md`
+(then `2026-08-19_doorrepo-speed-and-install-fixes.md`, then
+`2026-08-19_d-calc-download-investigation.md` for the open download bug).
 
-**Everything is pushed and live.** Live runs `9c6903303` (verified: image
-built 21:11 on 2026-08-19, container started 21:13, `Doors/DoorRepo/
-doorrepo.amiga` md5 `e8bf8b5652e4f072b09e4a5a76e16a3e` = local build). The two
-install fixes - ad-file names + atomic `.info` write (`7ace19931`) and the
-BBSCmd freshness stamp over the `.info` FILES (`b58ac0544`) - are live but
-**not yet confirmed by a real session**: install a door and use it WITHOUT
-reconnecting. That is the one open verification.
+**Everything is pushed.** HEAD is `c2ff0b260`; a deploy runs on every push
+to main, so live should be the same - CHECK IT (`docker exec amiexpress-bbs
+cat /app/.git-sha`, and the image's build time, because a green workflow has
+lied before).
 
-**Disk is at 90% / 3.7 GB again** - the deploy refilled what the pre-push
-prune reclaimed. `docker builder prune -f` before the next deploy.
+**NOTHING HAS BEEN CONFIRMED END TO END.** No door has been installed
+successfully yet - no `Doors/5DD/`, no `Commands/BBSCmd/5DD.info`. Install
+one through DOORREPO and type its command WITHOUT reconnecting. That single
+test is what proves the last two sessions' work.
 
-## DoorRepo is usable now - and why it was not
+## Why a door could be "installed" and still not run
 
-It was the **modem-speed emulator**, not the door and not the CPU. Same
-binary: ~7 ms per 198-byte `JH_SM` with no modem emulator in the path,
-**~200 ms** on a session at 56000 bps. A redraw is 11-80 of those. 68K
-execution was **5 ms** against `trapMs=335` (`DOOR_PROFILE=1`).
+Three separate causes, all now fixed, found in this order:
 
-Fixed by making pacing **opt-in**: `THROTTLE=YES` in a door's `.info` keeps
-the modem look (Conftop's visuals need it), everything else runs full speed.
-Plus a pane debounce - list rows paint in **33-50 ms**, the detail pane waits
-240 ms of quiet.
+1. `.info` written with `fopen()` - published empty, filled in after
+   (`7ace19931`).
+2. The BBSCmd freshness stamp watched only the directory's mtime, which does
+   not change when a file is filled in or edited (`b58ac0544`).
+3. **The archive was never unpacked at all** (`4f94befdc`, `c2ff0b260`). The
+   door shelled out with C `system()`, and inside the 68K emulator that
+   reaches NOTHING - it returns 0, the success value, with no dos.library
+   call. Doors now call `Execute()`; `Execute()` unpacks LHA using the
+   backend's own reader; and an install that extracted nothing is refused
+   instead of reported OK.
 
 ## Standing traps
 
-- **The standalone harness lies.** `drive-door.js` / `Scripts/run-amiga-door.ts`
-  have no modem emulator, no real socket, and deliver arrows as single bytes.
-  Three bugs hid behind it today. **Test doors on the local BBS**
+- **`system()` is a no-op inside the emulator.** Any door that shells out
+  believes it succeeded. `Execute()` answers only allowlisted commands
+  (DATE, AVAIL, INFO, VERSION, SHOWCONFIG, COPY, DELETE, RENAME, LhA
+  extraction) and returns DOSFALSE for everything else. **LZX installs
+  refuse by design** - that extractor is async and a trap cannot await.
+- **Check WHICH server is running before believing a test result.** A
+  reported retest ran against a backend started three minutes before the fix
+  was written, with no watch mode. `lsof -nP -iTCP:3001 -sTCP:LISTEN` plus
+  `ps -o lstart -p <pid>`.
+- **The standalone harness lies.** `drive-door.js` /
+  `Scripts/run-amiga-door.ts` have no modem emulator, no real socket, and
+  deliver arrows as single bytes. **Test doors on the local BBS**
   (`DOOR_REPO_ROLE=owner ./dev/scripts/start-servers.sh --bbs-only`, :3001).
 - **The door binary is read at door LAUNCH.** Swapping
   `Doors/DoorRepo/doorrepo.amiga` does nothing for a session already inside
   it - `Q` out and re-enter.
+- **Pacing is opt-in for 68K doors.** `THROTTLE=YES` in a door's `.info`
+  keeps the modem look; without it the door runs full speed. The modem
+  emulator, not the CPU, was what made DoorRepo unusable (~200 ms per
+  198-byte `JH_SM` at 56000 bps against ~7 ms without it).
 - **Profile before optimising.** `DOOR_PROFILE=1` prints
-  `iters/traps/batchMs/trapMs/yieldMs` per second. Three rounds of mitigation
-  went by before anyone ran it. Beware windows containing an idle door -
-  they are dominated by waiting.
+  `iters/traps/batchMs/trapMs/yieldMs` per second.
 - **A regression test must be run against the OLD code.** Two tests here
-  passed against the very behaviour they were meant to condemn (both faked a
-  directory mtime that no real edit changes).
-- **`JH_FetchKey` consumes input; `GETKEY` (500) does not** - use GETKEY for
-  "is the user still typing".
-- **Never gate a whole frame on pending input** - anything that keeps the
-  queue non-empty starves the display and reads as a hang.
-- **Deploys DO refresh `Doors/` for committed doors** but never the live
-  catalog DB (volume-mounted; needs an ATTACH staging merge, never a SQL text
-  dump - `doc_raw` carries control bytes).
+  once passed against the very behaviour they condemned.
+- **`JH_FetchKey` consumes input; `GETKEY` (500) does not.**
+- **Never gate a whole frame on pending input** - it starves the display and
+  reads as a hang.
+- **Deploys DO refresh `Doors/`** for committed doors (only `/app/data` is a
+  volume) but never the live catalog DB - that needs an ATTACH staging
+  merge, never a SQL text dump (`doc_raw` carries control bytes).
+- **The live Caddyfile is not in the repo.** It lives at
+  `/etc/caddy/Caddyfile` on the host and can duplicate headers Express
+  already sets - that is what broke `Cross-Origin-Resource-Policy`.
 - **Edit/Write destroys high-bit bytes** - use cp/python/sed for binaries,
   corpus.json and anything Latin-1.
-- `grep` here is **ugrep**: use `LC_ALL=C grep -a` on emulator logs and Amiga
-  headers.
+- `grep` here is **ugrep**: use `LC_ALL=C grep -a` on emulator logs and
+  Amiga headers.
 
 ## Next
 
-1. **Confirm the install fix on live** (only open item from the push). Log in
-   as sysop, `DOORREPO`, install a door, then type its command name WITHOUT
-   reconnecting - it must run. Also check `[S]trip` now NAMES the ad files.
-2. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong digest
-   twice; `-J-LCV30.LHA` gave TWO DIFFERENT wrong digests - a race, not a
+1. **Install a door and run it without reconnecting.** The one open
+   verification. If extraction fails the door now says so and installs
+   nothing, which is itself the useful outcome.
+2. **The LOCATION picker.** `5D!DP002.LHA` was given `LOCATION=.../HiScore`,
+   which for a doorpack is almost certainly the wrong program. Files land
+   for real now, so this is finally visible.
+3. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong
+   digest twice; `-J-LCV30.LHA` gave TWO DIFFERENT ones - a race, not a
    fixed transformation. `KeepFailedDownloads=yes` is live and committed, so
    the next failure keeps `<name>.bad`; diff it against curl's bytes.
-3. **DOORMAN parity** - full gap list in the resume doc. Keystone: DoorRepo
-   has no installed-doors list; a `dirscan_amiga.c`/`dirscan_native.c` shim
-   unblocks seven features at once.
-4. Optional, found while verifying CORS: `HEAD /api/door-repo/archive/<name>`
-   404s although the preflight advertises `GET, HEAD, OPTIONS`
-   (`door-repo.routes.ts:379` returns early on any non-GET), and `Range` is
-   advertised as an allowed request header but ignored (full `200`, never
-   `206`). Neither breaks a plain browser GET.
-
-## Done 2026-08-19 late
-
-- **Duplicate `Cross-Origin-Resource-Policy` fixed at the source.** It was
-  **Caddy**, not Express: `/etc/caddy/Caddyfile` set the header itself on
-  lines 2 and 56, and Caddy's non-deferred `header` writes at request time
-  while `reverse_proxy` then copies the upstream header in - so both survived
-  (`cross-origin` + `same-origin` on the site root, `cross-origin` twice on
-  the API). Express's `doorRepoCors`
-  (`web/backend/src/server/door-repo-cors.ts:70`, mounted `app.ts:90`) already
-  sets it per path, so both Caddy lines were deleted and Express is now the
-  single source. Backup: `/etc/caddy/Caddyfile.bak-corp-dupe-20260819`.
-  Verified live: site root `same-origin`, `/api/door-repo/*` `cross-origin`
-  over HTTPS **and** plain HTTP, preflight 204 with the full allow set, a real
-  archive GET carrying `x-archive-md5`/`sha256`. **The Caddyfile is not in the
-  repo** - it lives only on the host.
-- **Phantasm's archive rebuilt** with `package-for-amiga.sh` (57 files; tests
-  pass before packing, extracted source rebuilt and re-tested, binary digest
-  round-tripped, matches the live md5). Ready to send.
+4. **Send Phantasm the archive** - rebuilt and ready at
+   `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
+5. **DOORMAN parity** - gap list in the 2026-08-19 resume doc. Keystone:
+   DoorRepo has no installed-doors list; a `dirscan_amiga.c` /
+   `dirscan_native.c` shim unblocks seven features at once.
 
 ## Environment quickref
 
 `SKIP_SDK_PREPARE=1 npm install --ignore-scripts`. Backend suite
 `cd web/backend && npx jest --config dev-scripts/jest.config.ts --rootDir .
---ci` (5193 pass; `config-routes` and `info-editor-routes` fail pre-existing,
-load-flaky). Type-check `cd web/backend && npx tsc --noEmit`. C suites
-`make -C examples/doorrepo-c test`, plus `native`, `amiga`, `probe-native`,
-`probe-amiga`. Byte capture: `BSDSOCKET_TEE_DIR=<dir>`. Door profiling:
-`DOOR_PROFILE=1`. Overclock override: `DOOR_OVERCLOCK=<n>` (default 100x, opt
-in per door via `OVERCLOCK=` in its `.info`). Live host `root@89.167.21.154`,
-container `amiexpress-bbs`.
+--ci` (5204 pass; `config-routes` and `info-editor-routes` fail
+pre-existing, load-flaky). Type-check `cd web/backend && npx tsc --noEmit`.
+C suites `make -C examples/doorrepo-c test`, plus `native`, `amiga`,
+`amiga-stub`, `probe-native`, `probe-amiga`. Byte capture:
+`BSDSOCKET_TEE_DIR=<dir>`. Door profiling: `DOOR_PROFILE=1`. Overclock
+override: `DOOR_OVERCLOCK=<n>` (default 100x, opt in per door via
+`OVERCLOCK=`). Live host `root@89.167.21.154`, container `amiexpress-bbs`;
+prune with `docker builder prune -f` before deploying (disk sits near 80%
+and a build fills it).
 
 Older sessions: `thoughts/shared/handoffs/`.
