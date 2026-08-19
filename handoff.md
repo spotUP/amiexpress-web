@@ -14,10 +14,9 @@ refresh the live catalog DB (volume-mounted). Host backup
 
 Shipped 2026-08-18 (two sessions):
 
-- **08-18 morning**: live catalog synced (above), DoorRepo at DOORMAN parity
-  for browsing, two silent `lha -l` parser bugs, three endpoints, bsdsocket
-  non-blocking connect, CI running jest. Detail:
-  `2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
+- **08-18 morning**: catalog synced, DoorRepo at DOORMAN browse parity, two
+  silent `lha -l` parser bugs, bsdsocket non-blocking connect, jest in CI.
+  Detail: `2026-08-18_doorrepo-ui-and-catalog-parser-bugs.md`.
 - **DoorRepo closes every remaining gap against DOORMAN** (afternoon):
   `list.txt` fields 7-10, author/group search, `V=Doc` gating, SHA-256
   verification, AmigaGuide rendering, `I`/`U` install/uninstall as a BBS
@@ -28,11 +27,10 @@ Shipped 2026-08-18 (two sessions):
   BBSCMD miss revalidates on the command directories' mtime (NOT an
   unconditional rescan - a miss is the common case) and a watcher refreshes
   the listing paths. Why, and why not to "simplify" it: `RULES.md` 10b.
-- Bugs found by running it: `ExtractAfterDownload` never worked off Amiga
-  (`lha x archive dir` = member filter); a 97-into-96-byte overflow in the
-  SHA-256 message; the browser **spun forever at input EOF** (tens of GB of
-  frames); and **a real node eats every cursor key** until the door sends
-  RAWARROW (501) - reported from Phantasm's node, invisible to our emulator.
+- Bugs found by running it: `ExtractAfterDownload` never worked off Amiga;
+  a 97-into-96-byte overflow in the SHA-256 message; the browser **spun
+  forever at input EOF**; and **a real node eats every cursor key** until the
+  door sends RAWARROW (501) - invisible to our emulator.
 
 **Door startup was 13s of self-inflicted SQL.** The junk-count correlated
 subquery added with `list.txt` fields 7-10 made SQLite rescan every is_junk
@@ -70,8 +68,7 @@ that deploys do NOT manage. Detail:
 `2026-08-17_door-repo-api-and-doorman-filter.md`,
 `2026-08-17_doorrepo-c-and-door-repo-api.md`.
 
-Earlier sessions (DD wave, FAME/FIM, 5D_Page paging, WIP audit tiers):
-`2026-08-17_pre-0817-rollup.md` and the per-topic 08-14/08-16 archives.
+Earlier (DD wave, FAME/FIM, 5D_Page, audit tiers): `2026-08-17_pre-0817-rollup.md`.
 
 ---
 
@@ -83,8 +80,8 @@ Start the stack with `DOOR_REPO_ROLE=owner ./dev/scripts/start-servers.sh
 --bbs-only`, BBS on :3001 (5173 is another app — leave it alone). That script
 can stall for MINUTES in its repo-wide `find -delete` step; for API-only work
 run `DOOR_REPO_ROLE=owner npx tsx src/index.ts` from `web/backend` instead.
-`run-amiga-door.ts` needs `SKIP_DB_INIT=1` (else it hangs silently after two
-`[DoorLogger]` lines) and `DEBUG_68K=1` for `[BsdSocketLibrary]` traces.
+`run-amiga-door.ts` needs `SKIP_DB_INIT=1` (else it hangs silently) and reads
+`web/backend/dist/` - rebuild it first.
 `grep` here is **ugrep** — use `LC_ALL=C grep -a` on emulator logs and Amiga
 headers or it returns false negatives on high-bit bytes.
 The full jest suite does **not** OOM (268 suites / 5090 tests, ~60s) — run it
