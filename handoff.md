@@ -48,6 +48,12 @@ digest twice. Needs the actual bytes; see the resume doc.
 four months stale. Rebuild (`cd web/backend && npm run build`) before
 trusting anything it tells you.
 
+**Repo deletion shipped** (`D` in DOORMAN's repo browser, owner mode only):
+removes the catalog rows AND the archive file, permanently, no undo. Archive
+file is unlinked FIRST so a failed unlink cannot leave the file for the next
+re-index to resurrect. Deletion ignores `installed` on purpose - an installed
+door keeps running, the repo just stops carrying it.
+
 Next: **send DoorRepo to Phantasm.** Package is built and waiting at
 `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha` (m68k binary, C89 source,
 tests, protocol contract, live captures, cover letter); only sending is left.
@@ -58,11 +64,10 @@ is at 89%.
 
 ## 2026-08-17 and earlier (archived)
 
-Door repo API live on plain HTTP, read-only, gated on
-`DOOR_REPO_ROLE=owner`; contract `docs/DOOR-REPO-API.md`; plain HTTP depends
-on a host-side Caddy exemption that deploys do NOT manage. DOORMAN filter arc
-closed. Full detail:
-`thoughts/shared/handoffs/2026-08-17_door-repo-api-and-doorman-filter.md` and
+Door repo API live on plain HTTP, read-only, `DOOR_REPO_ROLE=owner`; contract
+`docs/DOOR-REPO-API.md`; plain HTTP depends on a host-side Caddy exemption
+that deploys do NOT manage. Detail:
+`2026-08-17_door-repo-api-and-doorman-filter.md`,
 `2026-08-17_doorrepo-c-and-door-repo-api.md`.
 
 Earlier sessions (DD wave, FAME/FIM, 5D_Page paging, WIP audit tiers):
