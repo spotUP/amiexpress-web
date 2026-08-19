@@ -28,7 +28,36 @@ the door's `KeepFailedDownloads=yes` keeps a mismatching download as
 build the head-less download probe. Enabling procedure: the investigation
 doc's "To actually catch it".
 
-## DoorRepo speed (2026-08-19, live)
+## DoorRepo speed - ROOT CAUSE FOUND (2026-08-19)
+
+**It was the modem-speed emulator, and almost none of it was computation.**
+Same door binary, measured both ways: ~7ms per 198-byte `JH_SM` with no modem
+emulator in the path, **~200ms on a session throttled to 56000 bps**. A redraw
+is 11-80 such messages, so one keypress cost 1-2 seconds. 68K execution was
+**5ms** of it; trap handling was ~335ms; the CPU core is Moira C++ at -O3 in
+WASM and is not the problem. Optimising the door's own code would have been a
+1.5% win - it was measured and rejected.
+
+The cost is not baud arithmetic: `sendThrottled()` walks each payload in
+<=64-char slices and sleeps in **5ms quanta** whenever the byte budget runs
+dry, so latency comes in fixed lumps.
+
+Two fixes, both in:
+
+1. **Pacing is opt-in for 68K doors** (`THROTTLE=YES` in the `.info` keeps the
+   modem look, for doors like Conftop whose visuals depend on it). The restore
+   path is the dangerous half and carries 6 tests - a door exiting without
+   restoring would silently change how the whole board renders.
+2. **The detail pane is debounced** behind a 240ms quiet period (`Delay()` in
+   slices, abandoned the moment another key arrives), while the list rows and
+   footer always paint. Cursor movement 150-670ms -> **33-50ms**.
+
+Method note worth keeping: three rounds of mitigation (caching, coalescing,
+frame-skipping) were spent before anyone profiled. `DOOR_PROFILE=1` prints
+`batchMs` (68K execution) vs `trapMs` per second and would have pointed at
+this immediately.
+
+## DoorRepo speed - earlier mitigations (still valuable)
 
 Reported: slow to start, "fetching" on every cursor key. Both real, both
 fixed as far as they can be without a protocol change. Measured with
@@ -110,6 +139,12 @@ cached by revision.
 3. Catch `-D-CALC.LHA`: switch on `KeepFailedDownloads=yes` and
    `BSDSOCKET_TEE_DIR`, reproduce once, then switch both off.
 4. Phantasm's retest of the cursor-key (RAWARROW) fix - unverifiable here.
+4b. **From Phantasm: enable cross-site requests on the door-repo API** so he
+   can fetch the catalog from a browser and add searching. Needs
+   `Access-Control-Allow-Origin` on `/api/door-repo/*` (the endpoints are
+   already public, read-only and unauthenticated, so this exposes nothing new
+   - it only stops the browser refusing to read them). Caddy has a
+   `handle /api/door-repo/*` block already; decide there vs. in Express.
 5. **Stale catalog rows.** `-D-CALC.LHA`'s row says 10431 bytes / md5
    `0f7b2806` (the pristine copy in `~/Code/amiexpress_doors`) while the served
    file has been 7943 bytes since 2026-06-02. The indexer never re-describes an
