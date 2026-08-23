@@ -2,19 +2,14 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-23_full-session-handoff.md`
-(everything from 2026-08-23: what is live, what is half-built, what to do
-first). Then `2026-08-23_door-server-split-phase1.md`,
-`2026-08-23_doorrepo-reload-signal-and-rexx-picker.md`,
-`2026-08-20_doorrepo-archiver-extraction.md`,
-`2026-08-19_doorrepo-speed-and-install-fixes.md`, and
-`2026-08-19_d-calc-download-investigation.md` for the open download bug.
+**Resume doc:** `thoughts/shared/handoffs/2026-08-23_full-session-handoff.md`,
+then the rest of `thoughts/shared/handoffs/` newest-first (the door-server
+split, the reload signal and rexx picker, the archiver extraction, and
+`2026-08-19_d-calc-download-investigation.md` for the open download bug).
 
-**Traps and environment quickref** (unchanged, moved for the 5 KB cap):
-`thoughts/shared/handoffs/2026-08-23_standing-traps-and-environment.md`. Read
-it before touching doors, deploys or the emulator: `system()` is a no-op
-inside the emulator, the standalone door harness lies, deploys never refresh
-the live catalog DB, Edit/Write destroys high-bit bytes, host disk is at 91%.
+**Traps and environment quickref:**
+`thoughts/shared/handoffs/2026-08-23_standing-traps-and-environment.md` - read
+before touching doors, deploys or the emulator.
 
 **THREE BBS COMMITS ARE NOT PUSHED**: `5273075ed`, `614631462`, `05f82761d`.
 Live BBS is `daa68714f`. A push to main deploys; after pushing CHECK IT
@@ -38,16 +33,26 @@ CORS all deployed; deploy workflow green with its secrets in place.
 - `list.txt` still serves the RAW `description` column (box art included): its
   bytes are a parity contract with the AmigaDOS clients. Only `index.tsv` is
   classified. Changing that is a decision, not a bug.
-- Plan for the public browser + admin console:
-  `thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`.
-  Phase 0 done and deployed; **phase 1 is the overrides table**. Phase 2 of
+- **The site and its admin console are live**: `https://doors.uprough.net`
+  serves a React/Radix UI from the door server's own Express (same origin, no
+  CORS). Public: search, filter, sort, read a FILE_ID.DIZ verbatim, download.
+  Signed in: edit every field, revert one field, re-read from the DIZ, audit
+  trail. Login is `spot`; the password and JWT secret are in
+  `/app/doorserver/.env` on the host (600, not in the repo). An edit lands in
+  `door_catalog_overrides` and shows up in index.tsv, list.txt and the
+  manifest at once; the catalog revision carries the edit stamp so caches
+  cannot serve stale bytes.
+- Plan: `thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`.
+  Phases 0-6 done and deployed. **Phase 7, anonymous submissions with an
+  approval queue, is the only one left** (tables already exist). Phase 2 of
   the older split plan (the BBS proxying to the door server) is unstarted, on
   branch `phase2-door-proxy`.
+- Rotating the admin password means editing `.env` AND deleting the
+  `admin_users` row - bootstrap never overwrites an existing account. A
+  change-password endpoint does not exist yet.
 
-**Doors install and run on live.** ACC-V103 installed through DOORREPO and its
-command was accepted without reconnecting; all four install bugs are closed.
-The five causes behind "installed but will not run" are written up in the
-resume doc.
+**Doors install and run on live** (ACC-V103, without reconnecting). The five
+causes behind "installed but will not run", all fixed, are in the resume doc.
 
 ## Next
 
