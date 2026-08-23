@@ -135,3 +135,43 @@ Installed copy: `/app/data/bbs/Doors/ACCV103/Account/AccEd.Rexx` on live.
    waiting.
 3. If the index: port `description_rules.py` into `src/index-tsv.ts` with
    tests, re-review, push, verify, then send the two Desktop documents.
+
+---
+
+## Why a door could be "installed" and still not run
+
+FIVE separate causes, all now fixed, found in this order. Each one hid the
+next, which is why this took three sessions:
+
+1. `.info` written with `fopen()` - published empty, filled in after
+   (`7ace19931`).
+2. The BBSCmd freshness stamp watched only the directory's mtime, which does
+   not change when a file is filled in or edited (`b58ac0544`).
+3. **The archive was never unpacked at all** (`4f94befdc`, `c2ff0b260`). The
+   door shelled out with C `system()`, and inside the 68K emulator that
+   reaches NOTHING - it returns 0, the success value, with no dos.library
+   call. Doors now call `Execute()`; `Execute()` unpacks LHA using the
+   backend's own reader; and an install that extracted nothing is refused
+   instead of reported OK.
+4. **The watcher's reload signal was swallowed by the startup guard**
+   (`5273075ed`). `invalidateBbsCommandFreshness()` announced "reload now"
+   by setting the stamp to `null` - and `null` is exactly what
+   `revalidateBbsCommandsIfChanged()` reads as "first call, this is the
+   startup baseline, do not reload". A forced reload was therefore always
+   skipped, which is why the command still said "No such command!!" until
+   the BBS was restarted. Now a separate `bbscmdForcedStale` flag carries
+   the signal. Two existing tests had encoded the bug as correct and were
+   rewritten.
+5. **The picker could not find the door's program** (`614631462`,
+   `05f82761d`). `ACC-V103.LHA` ships no executable at all - only
+   `AccEd.Rexx`. The picker fell through to the command name and wrote an
+   impossible LOCATION, so the BBS said "Door executable not found.". Rule 3
+   now picks the largest `.rexx` when no binary exists, and such a door is
+   written as **`TYPE=AIM`**, not XIM: express.e runs AIM through
+   `REXXDOOR <node> <cmd>` (express.e:4272-4276) while XIM executes the
+   LOCATION file directly (express.e:4278), which a `.rexx` cannot do on a
+   real node. The override only applies when the catalog type is empty or
+   XIM.
+
+(Moved out of the root `handoff.md` on 2026-08-23 to keep it under its size
+cap; all five causes are fixed and the detail lives here as the audit trail.)
