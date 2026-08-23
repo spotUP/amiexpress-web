@@ -24,15 +24,18 @@ switch are phases 2 and 3.
    Both are committed here. The spec is also copied into the new repo.
 2. The new repo is cloned on the host at `/app/doorserver`, its volume is
    `doorserver-data` (`/data/doors.db` + `/data/Archives`).
-3. Two things are OPEN and need a human:
-   - **DNS**: `doors.uprough.net` still resolves through the `*.uprough.net`
-     wildcard to `97.75.89.139`, not to the VPS (`89.167.21.154`). Until an
-     explicit A record exists, the Caddy vhost cannot be added - the ACME
-     challenge would be answered by the wrong machine. The service is fine;
-     it is simply not published yet.
-   - **CI secrets**: `HETZNER_HOST` and `HETZNER_SSH_KEY` do not exist on the
-     new repo, so `deploy-doorserver.yml` fails red on every push. Either add
-     them or switch that workflow to `workflow_dispatch` only.
+3. **It is published**: `https://doors.uprough.net/api/door-repo/`. The A
+   record landed 2026-08-23 and the Caddy vhost was added the same day
+   (backup `/etc/caddy/Caddyfile.bak-doorserver-20260823-154935`). That block
+   carries NO `header` directives on purpose - Caddy's non-deferred `header`
+   is how `Cross-Origin-Resource-Policy` got duplicated on this host before.
+   Verified from off-host: health reports 3300 doors, `list.txt` is md5-identical
+   to the BBS's, an archive download's `x-archive-md5` matches its bytes, and
+   the Latin-1 name `%24CP-BU%DF1.LZX` returns 200.
+4. One thing is OPEN and needs a human: **CI secrets**. `HETZNER_HOST` and
+   `HETZNER_SSH_KEY` do not exist on the new repo, so `deploy-doorserver.yml`
+   fails red on every push. Either add them or switch that workflow to
+   `workflow_dispatch` only.
 
 ## What phase 1 actually established
 

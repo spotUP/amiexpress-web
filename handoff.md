@@ -103,13 +103,15 @@ next, which is why this took three sessions:
 
 ## Next
 
-0. **The door server is live but unpublished.** `github.com/spotUP/amiexpress-doorserver`
-   runs on the host at `127.0.0.1:3010`, serving the real 3300-door catalog
-   byte-identically to this BBS. Two things block publishing it: DNS for
-   `doors.uprough.net` still resolves through the `*.uprough.net` wildcard to
-   `97.75.89.139` instead of the VPS, and the new repo has no
-   `HETZNER_HOST`/`HETZNER_SSH_KEY` secrets so its deploy workflow fails red.
-   Phase 2 (the BBS proxying to it) has not started. See the resume doc.
+0. **The door server is LIVE and PUBLIC** at `https://doors.uprough.net/api/door-repo/`
+   (`github.com/spotUP/amiexpress-doorserver`), serving the real 3300-door
+   catalog byte-identically to this BBS - verified from outside the host:
+   `list.txt` md5 matches, `x-archive-md5` matches the downloaded bytes, the
+   Latin-1 archive name resolves. Caddy vhost added 2026-08-23 (backup:
+   `/etc/caddy/Caddyfile.bak-doorserver-20260823-154935`), no `header`
+   directives in it. Still open: the new repo has no
+   `HETZNER_HOST`/`HETZNER_SSH_KEY` secrets, so its deploy workflow fails red
+   on every push. Phase 2 (the BBS proxying to it) has not started.
 
 1. **Install a door and run it without reconnecting** - then push
    `5273075ed`, `614631462`, `05f82761d`. The one open verification. If
