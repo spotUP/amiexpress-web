@@ -9,7 +9,9 @@
 
 **THREE COMMITS ARE NOT PUSHED**: `5273075ed`, `614631462`, `05f82761d`.
 They are held deliberately until an install has been seen to run on the
-local BBS. Live is `c2ff0b260`; a deploy runs on every push to main, so
+local BBS. Live is `daa68714f` (verified in the container, not assumed - the
+handoff previously said `c2ff0b260`, one commit behind); a deploy runs on
+every push to main, so
 after pushing CHECK IT (`docker exec amiexpress-bbs cat /app/.git-sha`, and
 the image's build time, because a green workflow has lied before).
 
@@ -127,7 +129,9 @@ C suites `make -C examples/doorrepo-c test`, plus `native`, `amiga`,
 `BSDSOCKET_TEE_DIR=<dir>`. Door profiling: `DOOR_PROFILE=1`. Overclock
 override: `DOOR_OVERCLOCK=<n>` (default 100x, opt in per door via
 `OVERCLOCK=`). Live host `root@89.167.21.154`, container `amiexpress-bbs`;
-prune with `docker builder prune -f` before deploying (disk sits near 80%
-and a build fills it).
+prune with `docker builder prune -f` before deploying. **Disk is at 91%
+(3.6 GB free, measured 2026-08-23)** - docker holds 11.9 GB of images
+(11.3 GB reclaimable) and 6 GB of build cache (4 GB reclaimable), so prune
+BOTH before any build.
 
 Older sessions: `thoughts/shared/handoffs/`.
