@@ -113,10 +113,23 @@ next, which is why this took three sessions:
    `HETZNER_HOST`/`HETZNER_SSH_KEY` secrets, so its deploy workflow fails red
    on every push. Phase 2 (the BBS proxying to it) has not started.
 
-1. **Install a door and run it without reconnecting** - then push
-   `5273075ed`, `614631462`, `05f82761d`. The one open verification. If
-   extraction fails the door now says so and installs nothing, which is
-   itself the useful outcome.
+0b. **TODO - the ARexx engine hangs on a real door script.** `ACC-V103.LHA`
+   installs correctly on live and routes correctly (`TYPE=AIM` ->
+   executeARexxDoor), then the interpreter spins at **100% CPU with no log
+   output at all** after `Executing AREXX script: ACCV103`. Measured, not
+   guessed: it is looping, not blocked on I/O, and only a container restart
+   clears it. Reproduce OFF the BBS against `services/arexx.service.ts` -
+   it takes a whole core with it. Suspect constructs in the script's opening:
+   `signal on syntax/error/ioerr`, hex literals (`CR='0D 0A'x`),
+   `address value "AERexxControl"node`, host commands `GetUser`/`sendmessage`,
+   and `Open('Data','BBS:Node'NODE'/ComputerList','R')`. The installed copy is
+   at `/app/data/bbs/Doors/ACCV103/Account/AccEd.Rexx` on live.
+
+1. ~~**Install a door and run it without reconnecting**~~ **DONE on live
+   2026-08-23.** ACC-V103 installed through DOORREPO, junk ads stripped,
+   `.info` written with `TYPE=AIM` + `LOCATION=Doors:ACCV103/Account/AccEd.Rexx`,
+   and `accv103` was accepted at the menu WITHOUT reconnecting. All four
+   install bugs are closed; what remains is the ARexx hang above.
 2. **The LOCATION picker's judgement.** Finding *a* program is fixed;
    picking the RIGHT one is not. `5D!DP002.LHA` was given
    `LOCATION=.../HiScore`, which for a doorpack is almost certainly wrong.
