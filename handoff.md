@@ -2,7 +2,10 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-23_door-server-split-phase1.md`
+**Resume doc:** `thoughts/shared/handoffs/2026-08-23_full-session-handoff.md`
+(everything from 2026-08-23 in one place: what is live, what is half-built, and
+what to do first), then
+`thoughts/shared/handoffs/2026-08-23_door-server-split-phase1.md`
 (the door repository is now a standalone service, built and deployed; nothing
 is cut over yet), then
 `thoughts/shared/handoffs/2026-08-23_doorrepo-reload-signal-and-rexx-picker.md`
