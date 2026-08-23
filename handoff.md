@@ -2,23 +2,29 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-20_doorrepo-archiver-extraction.md`
-(then `2026-08-19_doorrepo-speed-and-install-fixes.md`, then
+**Resume doc:** `thoughts/shared/handoffs/2026-08-23_doorrepo-reload-signal-and-rexx-picker.md`
+(then `2026-08-20_doorrepo-archiver-extraction.md`,
+`2026-08-19_doorrepo-speed-and-install-fixes.md`, then
 `2026-08-19_d-calc-download-investigation.md` for the open download bug).
 
-**Everything is pushed.** HEAD is `c2ff0b260`; a deploy runs on every push
-to main, so live should be the same - CHECK IT (`docker exec amiexpress-bbs
-cat /app/.git-sha`, and the image's build time, because a green workflow has
-lied before).
+**THREE COMMITS ARE NOT PUSHED**: `5273075ed`, `614631462`, `05f82761d`.
+They are held deliberately until an install has been seen to run on the
+local BBS. Live is `c2ff0b260`; a deploy runs on every push to main, so
+after pushing CHECK IT (`docker exec amiexpress-bbs cat /app/.git-sha`, and
+the image's build time, because a green workflow has lied before).
 
-**NOTHING HAS BEEN CONFIRMED END TO END.** No door has been installed
-successfully yet - no `Doors/5DD/`, no `Commands/BBSCmd/5DD.info`. Install
-one through DOORREPO and type its command WITHOUT reconnecting. That single
-test is what proves the last two sessions' work.
+**NOT YET CONFIRMED END TO END.** Files now land (`Doors/BULLV/`, `Doors/ACC/`
+appeared), but no installed door has been seen to START. The remaining test:
+install through DOORREPO and type its command WITHOUT reconnecting. Retest
+target is `ACC-V103.LHA`, which should now write `TYPE=AIM` +
+`LOCATION=Doors:ACC/Account/AccEd.Rexx`. The local door binary is already
+rebuilt (`Doors/DoorRepo/doorrepo.amiga`, md5 `81c9cadce3346e6be522f16a6ee69f3a`)
+and the binary is read at door LAUNCH, so `Q` out and re-enter first.
 
 ## Why a door could be "installed" and still not run
 
-Three separate causes, all now fixed, found in this order:
+FIVE separate causes, all now fixed, found in this order. Each one hid the
+next, which is why this took three sessions:
 
 1. `.info` written with `fopen()` - published empty, filled in after
    (`7ace19931`).
@@ -30,6 +36,25 @@ Three separate causes, all now fixed, found in this order:
    call. Doors now call `Execute()`; `Execute()` unpacks LHA using the
    backend's own reader; and an install that extracted nothing is refused
    instead of reported OK.
+4. **The watcher's reload signal was swallowed by the startup guard**
+   (`5273075ed`). `invalidateBbsCommandFreshness()` announced "reload now"
+   by setting the stamp to `null` - and `null` is exactly what
+   `revalidateBbsCommandsIfChanged()` reads as "first call, this is the
+   startup baseline, do not reload". A forced reload was therefore always
+   skipped, which is why the command still said "No such command!!" until
+   the BBS was restarted. Now a separate `bbscmdForcedStale` flag carries
+   the signal. Two existing tests had encoded the bug as correct and were
+   rewritten.
+5. **The picker could not find the door's program** (`614631462`,
+   `05f82761d`). `ACC-V103.LHA` ships no executable at all - only
+   `AccEd.Rexx`. The picker fell through to the command name and wrote an
+   impossible LOCATION, so the BBS said "Door executable not found.". Rule 3
+   now picks the largest `.rexx` when no binary exists, and such a door is
+   written as **`TYPE=AIM`**, not XIM: express.e runs AIM through
+   `REXXDOOR <node> <cmd>` (express.e:4272-4276) while XIM executes the
+   LOCATION file directly (express.e:4278), which a `.rexx` cannot do on a
+   real node. The override only applies when the catalog type is empty or
+   XIM.
 
 ## Standing traps
 
@@ -73,12 +98,14 @@ Three separate causes, all now fixed, found in this order:
 
 ## Next
 
-1. **Install a door and run it without reconnecting.** The one open
-   verification. If extraction fails the door now says so and installs
-   nothing, which is itself the useful outcome.
-2. **The LOCATION picker.** `5D!DP002.LHA` was given `LOCATION=.../HiScore`,
-   which for a doorpack is almost certainly the wrong program. Files land
-   for real now, so this is finally visible.
+1. **Install a door and run it without reconnecting** - then push
+   `5273075ed`, `614631462`, `05f82761d`. The one open verification. If
+   extraction fails the door now says so and installs nothing, which is
+   itself the useful outcome.
+2. **The LOCATION picker's judgement.** Finding *a* program is fixed;
+   picking the RIGHT one is not. `5D!DP002.LHA` was given
+   `LOCATION=.../HiScore`, which for a doorpack is almost certainly wrong.
+   Files land for real now, so this is finally visible.
 3. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong
    digest twice; `-J-LCV30.LHA` gave TWO DIFFERENT ones - a race, not a
    fixed transformation. `KeepFailedDownloads=yes` is live and committed, so
