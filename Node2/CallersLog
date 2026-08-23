@@ -6170,3 +6170,69 @@ sysop: 	Upload Failed..
 26-May-26 21:03 Door: FRONTEND
 26-May-26 21:03 Door exit: FRONTEND
 26-May-26 21:03 	Password Failure (xxxx)
+16-Aug-26 19:19 Door: AVH-BaudCheck v0.1
+16-Aug-26 19:19 Door exit: AVH-BaudCheck v0.1
+16-Aug-26 19:21 Door: AVH-BaudCheck v0.1
+16-Aug-26 19:21 Door exit: AVH-BaudCheck v0.1
+16-Aug-26 19:26 Door: AVH-BaudCheck v0.1
+16-Aug-26 19:27 Door exit: AVH-BaudCheck v0.1
+17-Aug-26 00:53 Door: FRONTEND
+17-Aug-26 00:53 Door exit: FRONTEND
+**************************************************************
+17-Aug-26 00:53 [1] sysop (LOCAL) Server Room
+17-Aug-26 00:53 Door: DTAGWALL
+17-Aug-26 00:53 Door exit: DTAGWALL
+17-Aug-26 00:54 Door: DTAGWALL
+17-Aug-26 00:54 Door exit: DTAGWALL
+17-Aug-26 00:54 Door: DOORMAN
+17-Aug-26 02:10 Door: FRONTEND
+17-Aug-26 02:10 Door exit: FRONTEND
+17-Aug-26 08:39 Door: FRONTEND
+17-Aug-26 08:39 Door exit: FRONTEND
+**************************************************************
+17-Aug-26 08:39 [1] sysop (LOCAL) Server Room
+17-Aug-26 08:39 Door: DOORMAN
+17-Aug-26 19:40 Door: FRONTEND
+17-Aug-26 19:40 Door exit: FRONTEND
+18-Aug-26 00:04 Door: FRONTEND
+18-Aug-26 00:04 Door exit: FRONTEND
+**************************************************************
+18-Aug-26 00:04 [1] sysop (LOCAL) Server Room
+18-Aug-26 00:04 Door: DOORREPO
+18-Aug-26 00:09 Door exit: DOORREPO
+18-Aug-26 00:15 Door: DOORREPO
+18-Aug-26 00:19 Door exit: DOORREPO
+18-Aug-26 00:19 Door: DOORREPO
+18-Aug-26 00:23 Door exit: DOORREPO
+18-Aug-26 00:23 Door: DOORREPO
+18-Aug-26 00:28 Door exit: DOORREPO
+18-Aug-26 00:57 Door: FRONTEND
+18-Aug-26 00:57 Door exit: FRONTEND
+**************************************************************
+18-Aug-26 00:57 [1] sysop (LOCAL) Server Room
+18-Aug-26 00:57 Door: DOORREPO
+18-Aug-26 01:00 Door exit: DOORREPO
+18-Aug-26 01:00 Door: DOORREPO
+18-Aug-26 01:05 Door exit: DOORREPO
+19-Aug-26 19:19 Door: FRONTEND
+19-Aug-26 19:19 Door exit: FRONTEND
+**************************************************************
+19-Aug-26 19:19 [1] sysop (LOCAL) Server Room
+19-Aug-26 19:20 Door: DOORREPO
+19-Aug-26 19:25 Door exit: DOORREPO
+19-Aug-26 20:21 Door: FRONTEND
+19-Aug-26 20:21 Door exit: FRONTEND
+19-Aug-26 22:35 Door: FRONTEND
+19-Aug-26 22:35 Door exit: FRONTEND
+**************************************************************
+19-Aug-26 22:35 [1] sysop (LOCAL) Server Room
+19-Aug-26 22:35 Door: DOORMAN
+19-Aug-26 22:36 Door exit: DOORMAN
+19-Aug-26 22:36 Door: ZIPPY
+19-Aug-26 22:41 Door exit: ZIPPY
+20-Aug-26 00:29 Door: FRONTEND
+20-Aug-26 00:29 Door exit: FRONTEND
+**************************************************************
+20-Aug-26 00:29 [1] sysop (LOCAL) Server Room
+20-Aug-26 00:29 Door: DOORREPO
+20-Aug-26 00:31 Door exit: DOORREPO
