@@ -125,6 +125,21 @@ next, which is why this took three sessions:
    and `Open('Data','BBS:Node'NODE'/ComputerList','R')`. The installed copy is
    at `/app/data/bbs/Doors/ACCV103/Account/AccEd.Rexx` on live.
 
+0c. **Two external developers are waiting on the door server, and the work is
+   half-landed.** Documents for both are on the Desktop:
+   `door-repo-api-for-phantasm.md` and `door-repo-index-for-patrik.md`, both
+   now pointing at `doors.uprough.net`. **Do not send them until the deploy is
+   verified** - run
+   `scratchpad/verify-doorserver-live.sh` (10 checks; it currently fails 10
+   because CORS and the TSV index are not deployed yet, and passes the 4 that
+   are). Live already: plain `http://doors.uprough.net` with NO redirect, which
+   is what 68k clients need. Uncommitted in the door server repo: `index.tsv`
+   (tab-separated, ISO-8859-1, LF, `Filename Path Size System Description`),
+   `.diz` siblings at the archive's own path, and `/archive/<system>/<file>`.
+   CORS is specified and queued behind it. Phantasm's client currently carries
+   a FROZEN 2.75 MB manifest pasted into his HTML because CORS looked broken to
+   him in August - it was the duplicated CORP header, fixed since.
+
 1. ~~**Install a door and run it without reconnecting**~~ **DONE on live
    2026-08-23.** ACC-V103 installed through DOORREPO, junk ads stripped,
    `.info` written with `TYPE=AIM` + `LOCATION=Doors:ACCV103/Account/AccEd.Rexx`,
