@@ -2,7 +2,10 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-23_doorrepo-reload-signal-and-rexx-picker.md`
+**Resume doc:** `thoughts/shared/handoffs/2026-08-23_door-server-split-phase1.md`
+(the door repository is now a standalone service, built and deployed; nothing
+is cut over yet), then
+`thoughts/shared/handoffs/2026-08-23_doorrepo-reload-signal-and-rexx-picker.md`
 (then `2026-08-20_doorrepo-archiver-extraction.md`,
 `2026-08-19_doorrepo-speed-and-install-fixes.md`, then
 `2026-08-19_d-calc-download-investigation.md` for the open download bug).
@@ -99,6 +102,14 @@ next, which is why this took three sessions:
   Amiga headers.
 
 ## Next
+
+0. **The door server is live but unpublished.** `github.com/spotUP/amiexpress-doorserver`
+   runs on the host at `127.0.0.1:3010`, serving the real 3300-door catalog
+   byte-identically to this BBS. Two things block publishing it: DNS for
+   `doors.uprough.net` still resolves through the `*.uprough.net` wildcard to
+   `97.75.89.139` instead of the VPS, and the new repo has no
+   `HETZNER_HOST`/`HETZNER_SSH_KEY` secrets so its deploy workflow fails red.
+   Phase 2 (the BBS proxying to it) has not started. See the resume doc.
 
 1. **Install a door and run it without reconnecting** - then push
    `5273075ed`, `614631462`, `05f82761d`. The one open verification. If
