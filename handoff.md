@@ -18,38 +18,29 @@ green workflow has lied before).
 
 ## Current state
 
-**Door server: live, public, current.** `https://doors.uprough.net/api/door-repo/`
-(`github.com/spotUP/amiexpress-doorserver`), live SHA `78bfe26`, verified in
-the container. `index.tsv`, `.diz` siblings, `/archive/<system>/<file>` and
-CORS all deployed; deploy workflow green with its secrets in place.
+**Door server: fully built and live.** `https://doors.uprough.net`
+(`github.com/spotUP/amiexpress-doorserver`, live SHA `aeae5ca`, verified in
+the container). All 8 phases of
+`thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md` are
+done: public browse/search/sort/download/read-DIZ with no login; a signed-in
+admin console (edit any field, revert, redescribe, remove/restore a door,
+audit trail); anonymous submissions with a curator approval queue, where an
+uploaded LHA arrives with Name/Version/Author/Needs/Description already read
+from its FILE_ID.DIZ (`src/archive-reader.ts`, the BBS's own `lha.js`). A
+"Needs a name" toggle finds the ~800 doors whose name is a filename guess.
 
-- `src/describe.ts` is the description classifier, ported from
-  `dev/scripts/door-index/description_rules.py` and **verified equal to it row
-  for row across all 3301 rows and seven fields**. Change a rule in one,
-  change it in both, and run BOTH suites (`tests/describe.test.ts`,
-  `dev/scripts/door-index/test_description_rules.py`).
-- `door_catalog.requires_bbs` is live and backfilled (410 of 3300 doors name a
-  BBS version). Migrations run at startup from `src/migrations.ts`.
-- `list.txt` still serves the RAW `description` column (box art included): its
-  bytes are a parity contract with the AmigaDOS clients. Only `index.tsv` is
-  classified. Changing that is a decision, not a bug.
-- **The site and its admin console are live**: `https://doors.uprough.net`
-  serves a React/Radix UI from the door server's own Express (same origin, no
-  CORS). Public: search, filter, sort, read a FILE_ID.DIZ verbatim, download.
-  Signed in: edit every field, revert one field, re-read from the DIZ, audit
-  trail. Login is `spot`; the password and JWT secret are in
-  `/app/doorserver/.env` on the host (600, not in the repo). An edit lands in
-  `door_catalog_overrides` and shows up in index.tsv, list.txt and the
-  manifest at once; the catalog revision carries the edit stamp so caches
-  cannot serve stale bytes.
-- Plan: `thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`.
-  Phases 0-6 done and deployed. **Phase 7, anonymous submissions with an
-  approval queue, is the only one left** (tables already exist). Phase 2 of
-  the older split plan (the BBS proxying to the door server) is unstarted, on
-  branch `phase2-door-proxy`.
-- Rotating the admin password means editing `.env` AND deleting the
-  `admin_users` row - bootstrap never overwrites an existing account. A
-  change-password endpoint does not exist yet.
+- `src/describe.ts` is the description/name classifier, verified equal row
+  for row to `dev/scripts/door-index/description_rules.py` across the whole
+  catalog - change a rule in one, change it in both, run both test suites.
+- Edits live in `door_catalog_overrides`, never touch the scanned row, and
+  reach index.tsv/list.txt/manifest at once; the catalog revision carries an
+  edit/hide stamp so no cache serves stale bytes.
+- Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host
+  (600, not in the repo). Rotating the password needs BOTH editing `.env` and
+  deleting the `admin_users` row - bootstrap never overwrites an existing
+  account, and there is no change-password endpoint yet.
+- Phase 2 of the OLDER split plan (the BBS proxying to the door server,
+  branch `phase2-door-proxy`) is a separate, still-unstarted item.
 
 **Doors install and run on live** (ACC-V103, without reconnecting). The five
 causes behind "installed but will not run", all fixed, are in the resume doc.
