@@ -2,10 +2,12 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:** `thoughts/shared/handoffs/2026-08-23_full-session-handoff.md`,
-then the rest of `thoughts/shared/handoffs/` newest-first (the door-server
-split, the reload signal and rexx picker, the archiver extraction, and
-`2026-08-19_d-calc-download-investigation.md` for the open download bug).
+**Resume doc:**
+`thoughts/shared/handoffs/2026-08-24_doorserver-admin-live-arexx-hang-fixed-phase2-resume-authorized.md`
+(doorserver admin console shipped/live, the ARexx process-hang root-caused
+and fixed on its own branch, phase2-door-proxy scoped with resume
+AUTHORIZED through Task 7). Then `2026-08-23_full-session-handoff.md` and
+the rest of `thoughts/shared/handoffs/` newest-first.
 
 **Traps and environment quickref:**
 `thoughts/shared/handoffs/2026-08-23_standing-traps-and-environment.md` - read
@@ -19,50 +21,53 @@ green workflow has lied before).
 ## Current state
 
 **Door server: fully built and live.** `https://doors.uprough.net`
-(`github.com/spotUP/amiexpress-doorserver`, live SHA `aeae5ca`, verified in
-the container). All 8 phases of
-`thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md` are
-done: public browse/search/sort/download/read-DIZ with no login; a signed-in
-admin console (edit any field, revert, redescribe, remove/restore a door,
-audit trail); anonymous submissions with a curator approval queue, where an
-uploaded LHA arrives with Name/Version/Author/Needs/Description already read
-from its FILE_ID.DIZ (`src/archive-reader.ts`, the BBS's own `lha.js`). A
-"Needs a name" toggle finds the ~800 doors whose name is a filename guess.
+(`github.com/spotUP/amiexpress-doorserver`, live SHA `aeae5ca`). All 8 phases
+of `thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`
+done: public browse/search/sort/download/read-DIZ, no login; signed-in admin
+console (edit/revert/redescribe/remove-restore, audit trail); anonymous
+submissions with a curator queue - an uploaded LHA arrives with
+Name/Version/Author/Needs/Description already read from its FILE_ID.DIZ.
+Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host
+(600, not in the repo; rotating needs BOTH editing `.env` AND deleting the
+`admin_users` row).
 
-- `src/describe.ts` is the description/name classifier, verified equal row
-  for row to `dev/scripts/door-index/description_rules.py` across the whole
-  catalog - change a rule in one, change it in both, run both test suites.
-- Edits live in `door_catalog_overrides`, never touch the scanned row, and
-  reach index.tsv/list.txt/manifest at once; the catalog revision carries an
-  edit/hide stamp so no cache serves stale bytes.
-- Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host
-  (600, not in the repo). Rotating the password needs BOTH editing `.env` and
-  deleting the `admin_users` row - bootstrap never overwrites an existing
-  account, and there is no change-password endpoint yet.
-- Phase 2 of the OLDER split plan (the BBS proxying to the door server,
-  branch `phase2-door-proxy`) is a separate, still-unstarted item.
+**The ARexx process-hang is FIXED, on branch `fix/arexx-runaway-hang`
+(off main, 2 commits, NOT merged/pushed).** Root cause: `Do Until` against a
+file handle that never opened spun the interpreter in a pure-microtask loop
+that starves Node's event loop COMPLETELY - not just the script, the whole
+process (proved: a diagnostic timer never fired once in 4s). Fixed with a
+byte-accurate Seek/ReadCh rewrite (was line-accurate - wrong unit for the
+binary fixed-record files these doors use) plus a 30s runaway watchdog that
+periodically yields a real macrotask and then aborts through the same flags
+Ctrl+C uses. Also found+fixed a second hang in the same investigation: none
+of `executeDo`'s loop variants checked for a pending SIGNAL. Full backend
+suite: 5216 passed, 0 failed. Push/merge is your call (deploys the live BBS).
+Full detail + the (separate, unfixed) MSGLOG gap it surfaced: see resume doc.
+
+**`phase2-door-proxy` (28 commits, unmerged, nothing deployed) is scoped and
+resume is AUTHORIZED through Task 7** (you chose this when asked). Tasks 1-4
+done+reviewed; Task 5 (DOORMAN local installs) was dispatched but never
+completed; Task 6 (contract mirror) rehearsed, low-risk; Task 7 (deploy)
+needs a shared Docker network across two repos on the live host - measured
+and ruled already, don't re-derive. Task 8 (drop the BBS's own catalog
+tables) stays separately gated on your explicit approval regardless. Resume
+via `superpowers:subagent-driven-development` in a FRESH session - see the
+resume doc for the exact traps to carry into the Task 5/7 dispatches, and
+read `.superpowers/sdd/2026-08-23-door-server-phase2/progress.md` first.
 
 **Doors install and run on live** (ACC-V103, without reconnecting). The five
-causes behind "installed but will not run", all fixed, are in the resume doc.
+causes behind "installed but will not run", all fixed, are in the older
+resume docs.
 
 ## Next
 
-1. **The ARexx engine hangs on a real door script.** ACC-V103 routes
-   correctly (`TYPE=AIM` -> executeARexxDoor), then the interpreter spins at
-   100% CPU with no log output after `Executing AREXX script: ACCV103`.
-   Measured: looping, not blocked on I/O; only a container restart clears it.
-   Reproduce OFF the BBS against `services/arexx.service.ts` - it takes a
-   whole core. Suspects in the script's opening: `signal on syntax/error/ioerr`,
-   hex literals (`CR='0D 0A'x`), `address value "AERexxControl"node`, host
-   commands `GetUser`/`sendmessage`, and `Open('Data','BBS:Node'NODE'/...','R')`.
-   Installed copy: `/app/data/bbs/Doors/ACCV103/Account/AccEd.Rexx` on live.
+1. Decide: push/merge `fix/arexx-runaway-hang`? Then resume phase2-door-proxy
+   (fresh session, SDD skill, Task 5 onward) - both ready to go.
 2. **Tell Patrik and Phantasm.** Documents on the Desktop
    (`door-repo-index-for-patrik.md`, `door-repo-api-for-phantasm.md`) already
-   point at `doors.uprough.net`, and everything they waited for is live - run
-   `scratchpad/verify-doorserver-live.sh`, then send. Phantasm still carries a
-   FROZEN 2.75 MB manifest pasted into his HTML because CORS looked broken in
-   August; the duplicated CORP header that caused it is fixed. His archive is
-   ready at `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
+   point at `doors.uprough.net`, everything they waited for is live - run
+   `scratchpad/verify-doorserver-live.sh`, then send. His archive is ready at
+   `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
 3. **The LOCATION picker's judgement.** Finding *a* program is fixed; picking
    the RIGHT one is not - `5D!DP002.LHA` got `LOCATION=.../HiScore`, wrong for
    a doorpack.
