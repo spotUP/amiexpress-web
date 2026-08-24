@@ -2,84 +2,89 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Resume doc:**
-`thoughts/shared/handoffs/2026-08-24_doorserver-admin-live-arexx-hang-fixed-phase2-resume-authorized.md`
-(doorserver admin console shipped/live, the ARexx process-hang root-caused
-and fixed on its own branch, phase2-door-proxy scoped with resume
-AUTHORIZED through Task 7). Then `2026-08-23_full-session-handoff.md` and
-the rest of `thoughts/shared/handoffs/` newest-first.
+Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`
+(`github.com/spotUP/amiexpress-doorserver`). Both are LIVE and current as of
+this handoff. A push to either repo's `main` auto-deploys; after pushing,
+CHECK IT (`docker exec <container> cat /app/.git-sha` plus image build time -
+a green workflow has lied before).
 
-**Traps and environment quickref:**
-`thoughts/shared/handoffs/2026-08-23_standing-traps-and-environment.md` - read
-before touching doors, deploys or the emulator.
+## Current state (2026-08-24)
 
-**THREE BBS COMMITS ARE NOT PUSHED**: `5273075ed`, `614631462`, `05f82761d`.
-Live BBS is `daa68714f`. A push to main deploys; after pushing CHECK IT
-(`docker exec amiexpress-bbs cat /app/.git-sha` plus the image build time - a
-green workflow has lied before).
+**Phase 2 (`phase2-door-proxy`) is MERGED to main and LIVE.** The BBS is now
+a client of the standalone door server, not its own catalog owner. Plan:
+`docs/superpowers/plans/2026-08-23-door-server-phase2.md`. Ledger (full
+detail on every task, ruling, and finding):
+`.superpowers/sdd/2026-08-23-door-server-phase2/progress.md` - not yet
+deleted, keep it until you're confident nothing in it needs re-reading.
 
-## Current state
+- `/api/door-repo/*` proxies to `DOOR_SERVER_URL` (a shared Docker network,
+  `doorserver-net`, connects the two containers by service DNS - the door
+  server still binds loopback-only on the host, unchanged).
+- `door_installs` (not the old `door_catalog`) is now what THIS node
+  installed. DOORMAN records installs there directly (no more faking
+  catalog rows); BBSApi overlays it onto the doors list.
+- The final whole-branch review (opus, post-deploy) found **2 Critical,
+  confirmed-live regressions, both fixed same-session**: (1) `door_installs`
+  had 0 rows in production - nothing in the deploy path ran the backfill;
+  backed up the live DB and ran it, 36 installs recorded. (2) live `.env`
+  had a stale `DOOR_REPO_ROLE=owner` from before this BBS stopped owning
+  the catalog, which silently killed DOORMAN's owner-mode browse (the
+  service it looked for is no longer loaded into the process); commented
+  out in `.env`/`.env.local`, container recreated, verified.
+- The review's 8 Important findings were fixed in the same session:
+  case-insensitive `door_installs.command` lookups (AmigaDOS commands are
+  case-insensitive; real data has mixed case), the proxy's upstream path
+  now built as a plain string instead of `new URL()` (was re-encoding raw
+  high bytes and resolving `..` segments - a real traversal risk), an
+  upstream timeout + client-disconnect teardown, 405 on non-GET/HEAD
+  through the proxy, a vacuous-pass bug in the contract staleness test,
+  DOORMAN's install-lookup N+1 sqlite opens fixed to one query per browse,
+  and a dev-only DB-path default mismatch.
+- Live SHA after all of the above: `49b65a6fe` (verify before trusting this
+  number - it will be stale the moment anyone pushes again).
+- **Task 8** (drop the BBS's own now-legacy `door_catalog`/
+  `door_catalog_files` tables) remains explicitly gated on separate human
+  approval + a backup. Not done, not scheduled.
 
-**Door server: fully built and live.** `https://doors.uprough.net`
-(`github.com/spotUP/amiexpress-doorserver`, live SHA `aeae5ca`). All 8 phases
-of `thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`
-done: public browse/search/sort/download/read-DIZ, no login; signed-in admin
-console (edit/revert/redescribe/remove-restore, audit trail); anonymous
-submissions with a curator queue - an uploaded LHA arrives with
-Name/Version/Author/Needs/Description already read from its FILE_ID.DIZ.
-Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host
-(600, not in the repo; rotating needs BOTH editing `.env` AND deleting the
-`admin_users` row).
+**The ARexx process-hang is FIXED and LIVE** (was: `Do Until` against a
+never-opened file handle spun the interpreter in a pure-microtask loop that
+starved Node's event loop completely). Byte-accurate Seek/ReadCh rewrite +
+a 30s runaway watchdog. A separately-surfaced, still-open gap: AccEd.Rexx
+calls its own `MsgLog` PROCEDURE via function-call syntax
+(`MsgLog(args)`), and the interpreter doesn't fall back to internal-
+procedure resolution before throwing `Unknown function: MSGLOG` - so
+ACCV103 still won't run fully end-to-end. Separate, unscoped bug.
 
-**The ARexx process-hang is FIXED, on branch `fix/arexx-runaway-hang`
-(off main, 2 commits, NOT merged/pushed).** Root cause: `Do Until` against a
-file handle that never opened spun the interpreter in a pure-microtask loop
-that starves Node's event loop COMPLETELY - not just the script, the whole
-process (proved: a diagnostic timer never fired once in 4s). Fixed with a
-byte-accurate Seek/ReadCh rewrite (was line-accurate - wrong unit for the
-binary fixed-record files these doors use) plus a 30s runaway watchdog that
-periodically yields a real macrotask and then aborts through the same flags
-Ctrl+C uses. Also found+fixed a second hang in the same investigation: none
-of `executeDo`'s loop variants checked for a pending SIGNAL. Full backend
-suite: 5216 passed, 0 failed. Push/merge is your call (deploys the live BBS).
-Full detail + the (separate, unfixed) MSGLOG gap it surfaced: see resume doc.
-
-**`phase2-door-proxy` (28 commits, unmerged, nothing deployed) is scoped and
-resume is AUTHORIZED through Task 7** (you chose this when asked). Tasks 1-4
-done+reviewed; Task 5 (DOORMAN local installs) was dispatched but never
-completed; Task 6 (contract mirror) rehearsed, low-risk; Task 7 (deploy)
-needs a shared Docker network across two repos on the live host - measured
-and ruled already, don't re-derive. Task 8 (drop the BBS's own catalog
-tables) stays separately gated on your explicit approval regardless. Resume
-via `superpowers:subagent-driven-development` in a FRESH session - see the
-resume doc for the exact traps to carry into the Task 5/7 dispatches, and
-read `.superpowers/sdd/2026-08-23-door-server-phase2/progress.md` first.
-
-**Doors install and run on live** (ACC-V103, without reconnecting). The five
-causes behind "installed but will not run", all fixed, are in the older
-resume docs.
+**Door server admin console + public browser**: fully built and live at
+doors.uprough.net (all 8 phases of
+`thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`).
+Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host.
 
 ## Next
 
-1. Decide: push/merge `fix/arexx-runaway-hang`? Then resume phase2-door-proxy
-   (fresh session, SDD skill, Task 5 onward) - both ready to go.
+1. **DOORMAN parity gaps** - `resolveDoorRepoMode`'s `owner` branch is now
+   vestigial (nothing sets `DOOR_REPO_ROLE=owner` correctly points at
+   anything since the catalog service left the require graph) - worth
+   retiring or clearly re-scoping to phase 3's admin API rather than
+   leaving a live env var that can silently select a dead code path again.
 2. **Tell Patrik and Phantasm.** Documents on the Desktop
-   (`door-repo-index-for-patrik.md`, `door-repo-api-for-phantasm.md`) already
-   point at `doors.uprough.net`, everything they waited for is live - run
-   `scratchpad/verify-doorserver-live.sh`, then send. His archive is ready at
-   `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
-3. **The LOCATION picker's judgement.** Finding *a* program is fixed; picking
-   the RIGHT one is not - `5D!DP002.LHA` got `LOCATION=.../HiScore`, wrong for
-   a doorpack.
-4. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong digest
-   twice; `-J-LCV30.LHA` gave TWO different ones - a race, not a fixed
-   transformation. `KeepFailedDownloads=yes` is live, so the next failure
-   keeps `<name>.bad`; diff it against curl's bytes.
-5. **DOORMAN parity** - gap list in the 2026-08-19 resume doc. Keystone:
-   DoorRepo has no installed-doors list; a `dirscan_amiga.c` /
-   `dirscan_native.c` shim unblocks seven features at once.
-6. **Show BBS system in the main list.** (added 2026-08-24, not yet
+   (`door-repo-index-for-patrik.md`, `door-repo-api-for-phantasm.md`)
+   already point at `doors.uprough.net` - run
+   `scratchpad/verify-doorserver-live.sh`, then send. His archive is ready
+   at `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
+3. **The LOCATION picker's judgement.** Finding *a* program is fixed;
+   picking the RIGHT one is not - `5D!DP002.LHA` got
+   `LOCATION=.../HiScore`, wrong for a doorpack.
+4. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong
+   digest twice; `-J-LCV30.LHA` gave TWO different ones - a race, not a
+   fixed transformation. `KeepFailedDownloads=yes` is live, so the next
+   failure keeps `<name>.bad`; diff it against curl's bytes.
+5. **Show BBS system in the main list.** (added 2026-08-24, not yet
    scoped - clarify which "main list": doors.uprough.net's browser? the
    in-BBS door catalog? confirm before implementing.)
+6. **`Doors/door-manager/app.ts` is at the pre-commit hook's exact
+   2000-line cap.** Any future change to this file needs a real split
+   first (feature-based modules per the hook's own guidance), not another
+   comment-trim.
 
 Older sessions: `thoughts/shared/handoffs/`.
