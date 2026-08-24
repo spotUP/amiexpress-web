@@ -2,111 +2,104 @@
 
 ## READ THIS FIRST in a fresh session
 
-Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`
-(`github.com/spotUP/amiexpress-doorserver`). Both are LIVE and current as of
-this handoff. A push to either repo's `main` auto-deploys; after pushing,
-CHECK IT (`docker exec <container> cat /app/.git-sha` plus image build time -
-a green workflow has lied before).
+Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`.
+Both LIVE. Push to either repo's `main` auto-deploys; after pushing, CHECK IT
+(`docker exec <container> cat /app/.git-sha` — green CI has lied before).
+Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**
+(not the `:31337` known_hosts entry, that port refuses exec).
 
-## Current state (2026-08-24)
+**A peer Claude Code session works in this SAME repo checkout concurrently.**
+`git fetch` and check `git log --oneline origin/main..HEAD` /
+`HEAD..origin/main` before assuming history is your own doing, before
+pushing (a push can carry someone else's finished-but-uncommitted work
+along with it — happened twice on 2026-08-24), and before deleting/force-
+touching anything.
 
-**Phase 2 (`phase2-door-proxy`) is MERGED to main and LIVE.** The BBS is now
-a client of the standalone door server, not its own catalog owner. Plan:
-`docs/superpowers/plans/2026-08-23-door-server-phase2.md`. The SDD ledger
-(full detail on every task, ruling and finding) is deleted per the skill's
-own finish step - the record now lives in git history and this handoff.
+**Dev environment**: use `./dev/scripts/start-servers.sh` / `kill-servers.sh`
+/ `npm run dev:doors` — NOT ad-hoc `npm run dev &` + `pkill`. After any stop
+(including an automatic watcher restart), zombie-verify:
+`ps aux | grep -E "(start-servers|kill-servers|watch-doors|build-wasm|tsx .*src/index.ts)" | grep -v grep`
+(expect empty) before starting again, or you'll get EADDRINUSE crash loops.
+`start-servers.sh` has an intermittent unexplained mid-run failure (a
+`line 874: syntax error` that tears down a just-started server — `bash -n`
+finds nothing, cause unknown); `npm run dev:doors` sidesteps it and is what
+actually got used all of 2026-08-24.
 
-- `/api/door-repo/*` proxies to `DOOR_SERVER_URL` (a shared Docker network,
-  `doorserver-net`, connects the two containers by service DNS - the door
-  server still binds loopback-only on the host, unchanged).
-- `door_installs` (not the old `door_catalog`) is now what THIS node
-  installed. DOORMAN records installs there directly (no more faking
-  catalog rows); BBSApi overlays it onto the doors list.
-- The final whole-branch review (opus, post-deploy) found **2 Critical,
-  confirmed-live regressions, both fixed same-session**: (1) `door_installs`
-  had 0 rows in production - nothing in the deploy path ran the backfill;
-  backed up the live DB and ran it, 36 installs recorded. (2) live `.env`
-  had a stale `DOOR_REPO_ROLE=owner` from before this BBS stopped owning
-  the catalog, which silently killed DOORMAN's owner-mode browse (the
-  service it looked for is no longer loaded into the process); commented
-  out in `.env`/`.env.local`, container recreated, verified.
-- The review's 8 Important findings were fixed in the same session:
-  case-insensitive `door_installs.command` lookups (AmigaDOS commands are
-  case-insensitive; real data has mixed case), the proxy's upstream path
-  now built as a plain string instead of `new URL()` (was re-encoding raw
-  high bytes and resolving `..` segments - a real traversal risk), an
-  upstream timeout + client-disconnect teardown, 405 on non-GET/HEAD
-  through the proxy, a vacuous-pass bug in the contract staleness test,
-  DOORMAN's install-lookup N+1 sqlite opens fixed to one query per browse,
-  and a dev-only DB-path default mismatch.
-- Live SHA after all of the above: `49b65a6fe` (verify before trusting this
-  number - it will be stale the moment anyone pushes again).
-- **Task 8** (drop the BBS's own now-legacy `door_catalog`/
-  `door_catalog_files` tables) remains explicitly gated on separate human
-  approval + a backup. Not done, not scheduled.
+## Current state (2026-08-24, latest session)
 
-**The ARexx process-hang is FIXED and LIVE** (was: `Do Until` against a
-never-opened file handle spun the interpreter in a pure-microtask loop that
-starved Node's event loop completely). Byte-accurate Seek/ReadCh rewrite +
-a 30s runaway watchdog. A separately-surfaced, still-open gap: AccEd.Rexx
-calls its own `MsgLog` PROCEDURE via function-call syntax
-(`MsgLog(args)`), and the interpreter doesn't fall back to internal-
-procedure resolution before throwing `Unknown function: MSGLOG` - so
-ACCV103 still won't run fully end-to-end. Separate, unscoped bug.
+Full detail: `thoughts/shared/handoffs/2026-08-24_owner-curation-oom-webhook-fixes.md`
 
-**Door server admin console + public browser**: fully built and live at
-doors.uprough.net (all 8 phases of
-`thoughts/shared/plans/2026-08-23-door-repo-admin-and-public-browser.md`).
-Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host.
+**UNCOMMITTED work exists right now** — do this FIRST in a fresh session:
+`web/backend/src/handlers/command.handler.ts` (DISPLAY_CONF_BULL ordering
+fix), `web/backend/src/utils/menu.util.ts` (scrollable menu windowing),
+`Doors/arkanoid/client.ts` + rebuilt `dist/client.bundle.js` (double-submit
+fix). Commit, push, deploy, verify live SHA. Live is currently `3cb5d5f3b`,
+older than these fixes.
+
+**DoorRepo C door — owner-mode curation plan, 3 of 5 tasks done.**
+`docs/superpowers/plans/2026-08-24-doorrepo-owner-curation.md`, ledger at
+`.superpowers/sdd/2026-08-24-doorrepo-owner-curation/progress.md` (not
+deleted — plan incomplete). Tasks 3 (`http_request()`), 4 (`json_lite`,
+opus-reviewed security-focused), 1 (`owner_auth.c`, opus-reviewed
+credential-focused) are all done — reviewed, fix rounds closed, re-reviewed.
+Task 5+6 (the `O`-key UI: submissions queue, field-edit menu) is next —
+**must land in NEW files**, `doorrepo.c` is already 5533 lines against this
+project's 2000-line cap. Then final whole-branch review, then Task 8 (a
+live pass — needs the user to provide a real admin test account on
+`amiexpress-doorserver` first; pause and ask before touching that).
+
+**Live OOM incident, root-caused and fixed.** `bbs.uprough.net` was
+crash-looping. Real cause: `login-post.service.ts`'s fire-and-forget
+`runLoginBatches()` had no per-node guard — a fast reconnect to the same
+node re-fired it while the previous (detached, outlives its socket) run was
+still in flight, piling up duplicate `QuickNew` 68K emulator processes
+(5 counted live, ~2GB RSS, 2 confirmed kernel OOM kills). Fixed: per-nodeId
+`Set` guard in `batch-scheduler.ts`, tested (RED/GREEN, isolated from this
+checkout's real batch files via `jest.spyOn(config, 'getConfig')` — an
+env-var override does NOT work, `ConfigManager` caches once). Also applied
+live infra mitigations (not in any repo): 4GB swapfile, `docker update
+--memory 3g --memory-swap 5g amiexpress-bbs`, an `oom-log-mirror.service`
+systemd unit mirroring kernel OOM lines into the BBS data volume's log dir.
+
+**WEBHOOK command — 4 real bugs found+fixed live-testing with the user**,
+plus an arrow-key-picker UX upgrade for type/triggers (was free-text typing
+against an invisible list). Full bug-chain story (useful if anything
+regresses) is in the dated handoff above — short version: no per-keystroke
+line buffering existed for this flow, then a buffered-vs-unbuffered emit
+race broke line breaks, then `DISPLAY_CONF_BULL` subState reuse collided
+with the real login-flow's generic display advancer. All fixed, all in the
+uncommitted diff above.
+
+**Arkanoid double-webhook-fire, found+fixed.** `client.ts` had two
+independent paths (Enter key, mouse click) both calling `saveHighscore()`
+for the same screen with no dedup guard — one highscore, two Discord posts.
+Fixed with a `highscoreSaved` flag, `dist/` rebuilt. Uncommitted (see above).
+
+**Patrik/`uhcsearch` TSV index — already live, not this session's work,
+confirmed working.** `http://doors.uprough.net/api/door-repo/index.tsv`,
+plain HTTP, no redirect, art-filtered descriptions. Nothing to build here.
+
+**A live Discord webhook URL was pasted into chat by the user** while
+reporting a bug — flagged immediately, user said they'd regenerate it in
+Discord's channel settings. If you find an old-looking webhook row in the
+`webhooks` table, don't assume it's still valid.
 
 ## Next
 
-1. **DOORMAN parity gaps** - `resolveDoorRepoMode`'s `owner` branch is now
-   vestigial (nothing sets `DOOR_REPO_ROLE=owner` correctly points at
-   anything since the catalog service left the require graph) - worth
-   retiring or clearly re-scoping to phase 3's admin API rather than
-   leaving a live env var that can silently select a dead code path again.
-2. **Tell Patrik and Phantasm.** Documents on the Desktop
-   (`door-repo-index-for-patrik.md`, `door-repo-api-for-phantasm.md`)
-   already point at `doors.uprough.net` - run
-   `scratchpad/verify-doorserver-live.sh`, then send. His archive is ready
-   at `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
-3. **The LOCATION picker's judgement.** Finding *a* program is fixed;
-   picking the RIGHT one is not - `5D!DP002.LHA` got
-   `LOCATION=.../HiScore`, wrong for a doorpack. New concrete repro
-   (2026-08-24, live): `1OO-WALL.LHA` fails to install - the real program
-   is `PFiles/1oo/Wall/1oo_Wall`, three directories deep and not named
-   anything close to the command (`1OOWALL`), so the picker can't find it.
-   The archive's header also trips `lha l` here ("read header (level 87)
-   is unknown", though it still lists all 4 files despite the error) -
-   worth checking whether that contributes to "the archiver reported an
-   error" on the 68K side too, or is a red herring. Download itself is
-   confirmed byte-perfect (verified: local `curl`, through-proxy `curl`,
-   and the file actually written to
-   `/app/data/bbs/Doors/DoorRepo/downloads/1OO-WALL.LHA` on live all match
-   the manifest's md5 `f2778708ba1e183f8918c45fae04a369` exactly) - this is
-   purely an extraction/LOCATION-picking bug, not a download or proxy one.
-4. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong
-   digest twice; `-J-LCV30.LHA` gave TWO different ones - a race, not a
-   fixed transformation. `KeepFailedDownloads=yes` is live, so the next
-   failure keeps `<name>.bad`; diff it against curl's bytes.
-5. **Show BBS system in the main list.** (added 2026-08-24, not yet
-   scoped - clarify which "main list": doors.uprough.net's browser? the
-   in-BBS door catalog? confirm before implementing.)
-6. **`Doors/door-manager/app.ts` is at the pre-commit hook's exact
-   2000-line cap.** Any future change to this file needs a real split
-   first (feature-based modules per the hook's own guidance), not another
-   comment-trim.
-7. **Doorserver dedup check doesn't distinguish rejected from approved.**
-   (2026-08-24, live) User deleted `UP-DGC11.zip` from the submission
-   queue (rejected it) and re-uploaded the same file - got "the
-   repository already has that archive, as UP-DGC11.zip" even though it
-   was never approved/published. `storeSubmission()`'s sha256 check
-   (`src/submissions.ts`) queries `door_catalog` (published archives) and
-   separately blocks a duplicate *pending* submission - a rejected row
-   shouldn't trigger either, so either the reject path isn't fully
-   clearing something, or the message is misleadingly reporting a
-   different check (a still-pending duplicate, not `door_catalog`) as if
-   it were the catalog. Not investigated yet.
+1. Commit/push/deploy the uncommitted fixes above (see "UNCOMMITTED work").
+2. Resume owner-curation plan at Task 5+6 (UI), new files only.
+3. Final whole-branch review (opus) for owner-curation once 5+6 land.
+4. Task 8 (live pass) — needs a real admin test account, ask the user first.
+5. Older, lower-priority open items carried from earlier sessions (door
+   server phase2/ARexx/LOCATION-picker work — all separately merged/live
+   already, see `thoughts/shared/handoffs/` for that history if needed):
+   - DOORMAN's `resolveDoorRepoMode` `owner` branch is vestigial, worth
+     retiring.
+   - LOCATION-picker still picks the wrong program for deeply-nested
+     archives (`1OO-WALL.LHA` repro documented in prior handoffs).
+   - Doorserver dedup check may not distinguish rejected from approved
+     submissions (not investigated).
+   - `Doors/door-manager/app.ts` is at the pre-commit hook's exact
+     2000-line cap — needs a real split before its next edit.
 
 Older sessions: `thoughts/shared/handoffs/`.
