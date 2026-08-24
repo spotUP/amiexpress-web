@@ -12,10 +12,9 @@ a green workflow has lied before).
 
 **Phase 2 (`phase2-door-proxy`) is MERGED to main and LIVE.** The BBS is now
 a client of the standalone door server, not its own catalog owner. Plan:
-`docs/superpowers/plans/2026-08-23-door-server-phase2.md`. Ledger (full
-detail on every task, ruling, and finding):
-`.superpowers/sdd/2026-08-23-door-server-phase2/progress.md` - not yet
-deleted, keep it until you're confident nothing in it needs re-reading.
+`docs/superpowers/plans/2026-08-23-door-server-phase2.md`. The SDD ledger
+(full detail on every task, ruling and finding) is deleted per the skill's
+own finish step - the record now lives in git history and this handoff.
 
 - `/api/door-repo/*` proxies to `DOOR_SERVER_URL` (a shared Docker network,
   `doorserver-net`, connects the two containers by service DNS - the door
@@ -74,7 +73,19 @@ Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host.
    at `thoughts/spot/outgoing/DoorRepo-for-Phantasm.lha`.
 3. **The LOCATION picker's judgement.** Finding *a* program is fixed;
    picking the RIGHT one is not - `5D!DP002.LHA` got
-   `LOCATION=.../HiScore`, wrong for a doorpack.
+   `LOCATION=.../HiScore`, wrong for a doorpack. New concrete repro
+   (2026-08-24, live): `1OO-WALL.LHA` fails to install - the real program
+   is `PFiles/1oo/Wall/1oo_Wall`, three directories deep and not named
+   anything close to the command (`1OOWALL`), so the picker can't find it.
+   The archive's header also trips `lha l` here ("read header (level 87)
+   is unknown", though it still lists all 4 files despite the error) -
+   worth checking whether that contributes to "the archiver reported an
+   error" on the 68K side too, or is a red herring. Download itself is
+   confirmed byte-perfect (verified: local `curl`, through-proxy `curl`,
+   and the file actually written to
+   `/app/data/bbs/Doors/DoorRepo/downloads/1OO-WALL.LHA` on live all match
+   the manifest's md5 `f2778708ba1e183f8918c45fae04a369` exactly) - this is
+   purely an extraction/LOCATION-picking bug, not a download or proxy one.
 4. **Catch the download corruption.** `-D-CALC.LHA` gave the same wrong
    digest twice; `-J-LCV30.LHA` gave TWO different ones - a race, not a
    fixed transformation. `KeepFailedDownloads=yes` is live, so the next
