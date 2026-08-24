@@ -97,5 +97,16 @@ Login `spot`; password + JWT secret in `/app/doorserver/.env` on the host.
    2000-line cap.** Any future change to this file needs a real split
    first (feature-based modules per the hook's own guidance), not another
    comment-trim.
+7. **Doorserver dedup check doesn't distinguish rejected from approved.**
+   (2026-08-24, live) User deleted `UP-DGC11.zip` from the submission
+   queue (rejected it) and re-uploaded the same file - got "the
+   repository already has that archive, as UP-DGC11.zip" even though it
+   was never approved/published. `storeSubmission()`'s sha256 check
+   (`src/submissions.ts`) queries `door_catalog` (published archives) and
+   separately blocks a duplicate *pending* submission - a rejected row
+   shouldn't trigger either, so either the reject path isn't fully
+   clearing something, or the message is misleadingly reporting a
+   different check (a still-pending duplicate, not `door_catalog`) as if
+   it were the catalog. Not investigated yet.
 
 Older sessions: `thoughts/shared/handoffs/`.
