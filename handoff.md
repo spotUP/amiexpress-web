@@ -143,6 +143,9 @@ next, which is why this took three sessions:
 5. **DOORMAN parity** - gap list in the 2026-08-19 resume doc. Keystone:
    DoorRepo has no installed-doors list; a `dirscan_amiga.c` /
    `dirscan_native.c` shim unblocks seven features at once.
+6. **Show BBS system in the main list.** (added 2026-08-24, not yet
+   scoped - clarify which "main list": doors.uprough.net's browser? the
+   in-BBS door catalog? confirm before implementing.)
 
 ## Environment quickref
 
