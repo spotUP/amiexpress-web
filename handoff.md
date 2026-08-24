@@ -29,6 +29,19 @@ actually got used all of 2026-08-24.
 
 Full detail: `thoughts/shared/handoffs/2026-08-24_owner-curation-oom-webhook-fixes.md`
 
+**ARKANOID overhaul is DONE and user-confirmed** (parallel session, same
+day): flicker (SDK ScreenBuffer cell-diffing), physics (substepped +
+penetration-resolved + crossed-face reflection, 14 CI tests), pointer-lock
+mouse (with frozen-coords and menu-click fixes), Zabutom XM tracker music
+(TrackerEngine gain-routing + init-race SDK fixes, worklet serving route,
+CSP prep), auto-submitted highscores -> DOOR_SCORE webhooks, and the live
+hybrid-manifest bug (RPC handlers never registered in prod). Everything
+through `9b7f04c13` is pushed+deployed+live-verified; `58c68d362` ..
+`80a21ef76` are LOCAL-ONLY - push, deploy, verify live SHA, then sync the
+live Doors/ volume:
+`docker exec amiexpress-bbs sh -c 'cp -r /app/default-data/Doors/arkanoid /app/data/bbs/Doors/'`
+Full detail: `thoughts/shared/handoffs/2026-08-24_arkanoid-overhaul.md`
+
 **UNCOMMITTED work exists right now** — do this FIRST in a fresh session:
 `web/backend/src/handlers/command.handler.ts` (DISPLAY_CONF_BULL ordering
 fix), `web/backend/src/utils/menu.util.ts` (scrollable menu windowing),
