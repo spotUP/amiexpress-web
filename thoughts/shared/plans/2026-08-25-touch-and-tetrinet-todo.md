@@ -2,7 +2,7 @@
 date: 2026-08-25
 topic: Outstanding work - touch controls, TetriNET polish, and open bugs
 tags: [mobile, touch, tetrinet, livechat, grandmaster, todo]
-status: draft
+status: implemented
 ---
 
 # Open work, 2026-08-25
@@ -232,3 +232,41 @@ before changing behaviour.
 Still off after the valign work. The text inside modal dialogs should be
 centred horizontally and vertically; check what the modal widget does with
 `align`/`valign` for multi-line content, and whether the door passes them.
+
+---
+
+## Status, end of 2026-08-25
+
+Fixed and committed (local only - nothing pushed, so nothing deployed):
+
+| # | Item | Commit |
+|---|---|---|
+| 1 | Gesture-only controls for GMASTER | `6634af256` + guards in `1a2e8d5be` |
+| 3 | Pointer suppression on every client door | `e95b9f44d`, completed by the unload fix in `9e76b061b` |
+| 4 | LiveChat drawing two layouts | `138ea19fe` |
+| 5 | TetriNET black band | `b67a9ef05` |
+| 6 | Motion blur stutter | `17ede42bd` - a repaint gate, not the blur's cost |
+| 6b | iOS address bar over the top rows | `d57465a48` |
+| 8 | Arkanoid audio balance + space reverb | `9ebcc3db2` |
+| 9 | LiveChat mouse pointer | `9e76b061b` |
+| 10 | Help screen not closing on Escape | `9e76b061b` |
+| 11 | Joypad axes and binding labels | `9e76b061b` |
+| 13 | TetriNET line clearing | `812b29931` |
+| 14 | Versus garbage - not a bug, the label was | `812b29931` |
+| 15 | Modal text centring | `1ac1fd8de` |
+| 7 | ESLint config, pre-commit door rebuild | `ab9d577b1` |
+
+Still open:
+
+- **Item 2 - SDK-wide touch gestures for MENUS.** Partly done: pad-style
+  doors get menu gestures through `bbs:input-mode` (`1a2e8d5be`). What is
+  not done is the generic layer for EVERY door and the BBS itself, where
+  swipe would drive the List widgets with no per-door work.
+- **Item 12 - which mode the 8BitDo pad should be in.** Needs the pad in
+  hand: `MAPPING: n/a` says the current mode is not standard, and an
+  XInput-style mode may remove the need for hat decoding entirely.
+- **Item 7 leftovers**: ~4% unfilled width on a dpr-3 phone, the game pad
+  being portrait-only, and the two backend suites that are red in CI for
+  missing better-sqlite3 bindings (`execute-lha-extract`,
+  `arkanoid-score-webhook`) - both fail identically with every change of
+  this session stashed, so they are environmental rather than regressions.
