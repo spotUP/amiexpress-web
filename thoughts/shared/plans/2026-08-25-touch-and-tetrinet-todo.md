@@ -270,3 +270,22 @@ Still open:
   missing better-sqlite3 bindings (`execute-lha-extract`,
   `arkanoid-score-webhook`) - both fail identically with every change of
   this session stashed, so they are environmental rather than regressions.
+
+## 16. A TetriNET piece painted over LiveChat  (needs a reproduction)
+
+Screenshot 2026-08-25: after running TetriNET and then LiveChat, a magenta
+block from the game appeared over the LiveChat UI while tabbing.
+
+What has been ruled out by reading the code:
+
+- Grandmaster DOES destroy its Screen on exit (`app.ts`, end of the run
+  method), and `Screen.destroy()` clears its pending render timer - so a
+  dead door cannot paint.
+- LiveChat's Screen writes `ESC[2J` on its FIRST render (`_doRender`, the
+  `_hasRendered` branch), so anything left on the terminal is wiped when the
+  door starts.
+
+Those two together say the artifact should be impossible, which means one of
+them is not happening in practice. The cheap next step is to log every write
+to the socket with the door name attached for one session and see who wrote
+those cells - guessing further is not worth it without that.
