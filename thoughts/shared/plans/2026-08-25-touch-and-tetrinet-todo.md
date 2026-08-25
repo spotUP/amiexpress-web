@@ -128,3 +128,22 @@ Whatever the fit uses as its height budget has to subtract both.
 - **Backend tests are red in CI on every commit** (`execute-lha-extract`,
   `arkanoid-score-webhook`) because better-sqlite3's bindings are missing in
   that environment. They mask real regressions in the score-webhook path.
+
+## 8. Arkanoid audio: balance and space reverb  (requested 2026-08-25)
+
+Two parts, both in `Doors/arkanoid` + the SDK AudioEngine:
+
+- **The sound effects are much louder than the music.** Needs a real mix
+  balance, not a blanket volume cut: find where effects and the tracker
+  module are each gained (`playSound` vs the TrackerEngine output) and put
+  them on separate buses with a sane ratio, so raising the music does not
+  drown the hits.
+- **"Hall reverb and stuff so it sounds like it echoes in outer space - very
+  wet and nice."** A convolution or algorithmic reverb on the EFFECTS bus
+  only; the tracker music should stay dry or it turns to mush. Worth
+  checking whether the SDK AudioEngine already has an effects chain to hang
+  this on before building one - `sdk/engines/audio/` has both the
+  AudioEngine and TrackerEngine.
+
+Note the paddle/ball motion blur and half-cell movement landed in
+`d0601046c`; the audio work is independent of it.
