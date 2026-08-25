@@ -97,6 +97,22 @@ screen already renders at 20 fps with an 8 ms floor on input, so the cause
 is not the code that changed. Needs an instrumented run - per-frame render
 time and emitted byte count around a hard drop - rather than another guess.
 
+## 6b. iOS: the address bar covers the top of the screen
+
+Screenshot from an iPhone: Safari's floating address bar sits over the first
+two terminal rows, so the top of every screen is unreadable.
+
+The mobile fit pads for `env(safe-area-inset-left/right)` but not the top,
+and it sizes against the layout viewport rather than the VISIBLE one. On iOS
+the URL bar is browser chrome that overlaps a `100vh` page; sizing to
+`100dvh` / `visualViewport.height` and padding `env(safe-area-inset-top)` is
+what keeps rows out from under it. The refit already listens to
+`visualViewport.resize` - it just needs to use that height as the budget.
+
+Worth checking at the same time: the keyboard takes the lower half in that
+screenshot, so the terminal's usable height is roughly a third of the phone.
+Whatever the fit uses as its height budget has to subtract both.
+
 ## 7. Smaller items
 
 - **No ESLint config anywhere above `web/frontend`**, so `npm run lint`
