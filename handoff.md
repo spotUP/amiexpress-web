@@ -120,9 +120,10 @@ added this session):
 3. Backend test suite is **red in CI on every commit**, unrelated to this
    work: `tests/amiga-emulation/execute-lha-extract.test.ts` and
    `tests/doors/arkanoid-score-webhook.test.ts`, 9 tests, identical on
-   `e8217958f` and on 2026-08-24 runs. (An earlier note named a different
-   trio - better-sqlite3 / door-repo-proxy / info-editor-routes - which is
-   no longer what fails.) They mask real regressions there.
+   `e8217958f` and on 2026-08-24 runs. Root cause of at least the arkanoid
+   one is the environment, not the code: "Could not locate the bindings
+   file" from better-sqlite3, so `tests/setup.ts` cannot open a test DB.
+   They mask real regressions in the score-webhook path specifically.
 4. Deferred perf (measured as not dominant): network payload compaction
    (~10 KB JSON → ~0.5 KB), hoisting per-cell effect calls in renderBoard.
 
