@@ -21,7 +21,7 @@ The scheme, exactly as specified:
 | Gesture | Action |
 |---|---|
 | Drag thumb left / right | Piece follows the thumb, 1:1 and continuously - not stepwise |
-| Drag thumb down | Piece follows downwards (this replaces soft drop) |
+| Drag thumb down | Piece follows downwards, one row per cell - this IS the soft drop |
 | Swipe down (fast) | Hard drop |
 | Tap | Rotate clockwise - ONE direction only, which is enough |
 | Swipe up | Hold |
@@ -31,7 +31,8 @@ Notes for whoever builds it:
   and move the piece by the number of columns crossed, rather than firing a
   key per gesture. The existing pad sends key-down/key-up; this needs a
   position-tracking path closer to the Arkanoid trackpad.
-- Soft drop can be dropped entirely; do not invent a gesture for it.
+- There is no soft-drop BUTTON; dragging down is the soft drop and tracks
+  the thumb exactly as the sideways drag does.
 - Rotate counter-clockwise and the second rotation button are not needed.
 - It is a MODE, not a replacement: the button pad stays for players who
   prefer it. A toggle belongs wherever the player's other preferences live.
