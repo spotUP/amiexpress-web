@@ -151,9 +151,50 @@ Verified WORKING (don't touch): Zone mode, Dig mode, Shirase rising garbage,
 Ultra timer, training, attract, voice plumbing, score submit + anti-cheat,
 external TetriNET protocol incl. specials/garbage/winlist.
 
-## Implementation status
+## Implementation status (updated end of session)
 
-- Part 2 wiring fixes (attack router, AI attack managers, network attack
-  path, win detection, lobby settings, chat, key mismatch, cancelledLines):
-  IN PROGRESS this session — user mandate "fix it".
-- Part 1 perf plan: awaiting user sign-off on ordering; no code yet.
+Part 2 wiring - DONE (commit d3c7d6b6a): attack router for CPU + network,
+per-AI AttackManagers, network attack receive, win detection + overlay,
+alive:false death notices, lobby startLevel/garbage applied, dead Rule Set /
+Sudden Death removed from the versus lobby, broker lobby chat, TetriNET
+sudden-death key mismatch, cancelGarbage cumulative-counter bug. Plus the
+door's first test harness (`npm test`).
+
+Part 1 perf - DONE in two rounds (c15b3ead4, c163f0a0a):
+1. Differential rendering is now the SDK default (idle frame 2460 -> 0
+   bytes; one-char change -> 18 bytes). Full redraws still forced on first
+   render / resize / destroy / forceFullRedraw(); escape hatch via
+   setDifferentialRendering(false).
+2. Render-gate defeaters fixed (shineTimer out of the board hash,
+   sectionTime on a 250 ms timer); versus screen gated to 20 fps instead of
+   60 unconditional renders/s.
+3. Real DAS/ARR via BBSApi onKeyDown/onKeyUp; keypress path kept as a
+   fallback with its dasTimer-reset bug fixed; ACTION_DEBOUNCE 100 -> 33 ms;
+   render-on-input with an 8 ms floor.
+4. Netcode: 20 Hz sends, falling piece included in updates, opponent
+   repaints on receipt.
+5. AI evaluation on a reused Uint8Array scratch grid: 0.424 -> 0.11 ms per
+   think (73% faster), single-pass metrics, ZERO behavioural change
+   (differential test: 0 mismatches across 14,400 states).
+6. Lazy mouse index; per-keystroke backend stdout writes removed;
+   websocket-first production transports.
+
+FOUND WHILE DOING THIS - the most serious bug of the session:
+`core/board.ts clearLines()` spliced completed rows by their original
+indices in ascending order, so every double/triple/tetris removed the WRONG
+rows - leaving a completed row on the board and destroying an untouched
+partial row. Fixed (descending splice) with 4 RED-verified regression tests.
+It was caught only because the rewritten AI evaluator disagreed with the
+original on 264 of 14,400 states, always by an exact multiple of the holes
+weight.
+
+Still deferred (measured as not currently dominant):
+- Board payload compaction (~10 KB JSON -> ~0.5 KB). Do this before raising
+  the network tick rate further.
+- Hoisting getPlacementEffects() / getAnimationsByType() out of the 200-cell
+  loop in game-screen renderBoard.
+- Client-side ANSI regex passes per chunk (far cheaper now that diff
+  rendering shrank the chunks).
+- Prediction/rollback/interpolation scaffolding: still dead, and still
+  correct to leave dead (authoritative-local, in-process relay - there is no
+  round trip to hide). Candidate for deletion.
