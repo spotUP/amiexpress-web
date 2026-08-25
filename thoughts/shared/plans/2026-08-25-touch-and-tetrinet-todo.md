@@ -338,3 +338,48 @@ interpolated from the module's speed/BPM.
 
 Beyond bricks: the paddle glow, the ball trail brightness and the background
 border colour are all cheap things to pulse in time.
+
+## 20. LiveChat video: every second frame is broken in some render modes
+
+Reported 2026-08-26 (and earlier with a screenshot showing garbage in the
+top-left corner): in the video chat, alternate frames render wrong. Not all
+render modes - "most".
+
+Where to look, in order:
+
+- `Doors/livechat/client.ts` holds the encoders (`renderAscii`,
+  `renderHalfblock`, `renderBraille`). Their per-row VISIBLE width must
+  match the tile exactly: TetriNET had a bug of precisely this shape where
+  special blocks were 3 columns against everyone else's 2, and every row
+  carrying one shifted sideways (fixed in `194b92941`). A row that is one
+  column wide too many wraps and pushes every following row along, which
+  looks like "every second frame" when the content alternates.
+- The alternation itself suggests the frame is being written while the
+  previous one is still being consumed, or that the encoder reuses a buffer
+  across frames.
+- `halfblock` packs two source pixels per character and `braille` eight, so
+  the capture canvas is sized per mode (`pixelsPerChar`). A mode whose
+  canvas height is not an exact multiple of its packing will read past the
+  last row on alternate frames.
+
+A width/row-count assertion over each encoder, like
+`Doors/grandmaster/tests/tetrinet-cell-width.test.ts`, would catch this
+without a camera.
+
+## 21. TetriNET specials: confirm the keys work
+
+Reported as "I have an inventory of items but Tab or numbers do nothing".
+The wiring IS present end to end - `input/config.ts` maps 1-6, 0, Tab and
+Backspace, `keyToAction` returns `use_special_N` / `use_special_self` /
+`use_special_random` / `discard_special`, and `tetrinet-screen.ts` binds all
+of them - but the reporter was on a stale local build at the time.
+
+Note the behaviour is correct-but-quiet with no opponents: 1-6 beep an error
+when the slot is empty, and Tab returns silently when there is nobody to
+target. Only 0 (self) and Backspace (discard) do anything visible in a solo
+game. If it still fails with opponents present, start at
+`useSpecialOnSlot()` and `fireSpecial()`.
+
+Worth fixing regardless: the panel hint still reads "TAB: Next 1-5: Select",
+which describes a select-then-fire model the code no longer uses - the
+number key fires immediately.
