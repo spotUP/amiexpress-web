@@ -48,16 +48,17 @@ Add to it — every fix below should ship a RED-verified test.
 | Item | Status |
 |---|---|
 | 1. Specials + garbage route to local AI | **DONE** — router in `tetrinet-screen.ts` |
-| 2. Internal multiplayer | **OPEN** — needs a product decision, see below |
+| 2. Internal multiplayer | **DONE** — broker lobby + in-match transport |
 | 3. Three dropped lobby settings | **DONE** — `optionsFromLobbySettings()` |
 | 4. Winlist never populates | **DONE** — local high scores seed it, and TetriNET games now record a score at all |
-| 5. Opponent metadata stubs | **PARTLY** — local `hasImmunity` is real now; the network-path stubs stay until item 2 |
+| 5. Opponent metadata stubs | **DONE** — remote players are keyed, named and carry real alive/immunity |
 
-Door suite: **40 tests, 0 failures** (`cd Doors/grandmaster && npm test`), up
-from 24. New files `tests/tetrinet-routing.test.ts` (11) and
-`tests/tetrinet-lobby.test.ts` (5); 12 of the 16 were RED-verified against
-the pre-fix code (the other 4 are negative/default assertions that correctly
-pass either way).
+Door suite: **49 tests, 0 failures** (`cd Doors/grandmaster && npm test`), up
+from 24. New files `tests/tetrinet-routing.test.ts` (11),
+`tests/tetrinet-lobby.test.ts` (5) and `tests/tetrinet-netplay.test.ts` (9,
+two real broker nodes); 21 of the 25 were RED-verified against the pre-fix
+code (the other 4 are negative/default assertions that correctly pass
+either way).
 
 Fixed along the way, each found by the same "grep for a caller" pass:
 
@@ -118,14 +119,41 @@ gates on the lobby's Garbage toggle.
 **Watch out:** `useSpecial()` POPS the inventory before notifying, so the
 router must read the special from the callback argument, not the inventory.
 
-### 2. Internal multiplayer does not exist  — STILL OPEN, needs a decision
+### 2. Internal multiplayer does not exist  — DONE
 
-This is the one remaining item and it is a product decision, not a bug:
-does a TetriNET lobby of BBS users play each other over the in-process
-broker, or does TetriNET stay "local vs AI + external servers"? Everything
-else in the plan is done.
+**Status: BUILT** (user chose broker multiplayer on 2026-08-25).
 
-**Status: CONFIRMED DEAD.**
+Three layers, each reusing what versus mode already had:
+
+1. **Lobby.** `TetriNetLobbyAdapter` was loopback-only — it pushed actions
+   through `emitNetwork('tetrinet:*')`, which never leaves the process, and
+   listened for the same events coming back, so two BBS users each sat in
+   their own private lobby (verified: with the old adapter, alice still sees
+   only alice after bob joins her lobby id). It now EXTENDS
+   `BrokerLobbyAdapter`, which was extracted out of `ui/lobby-screen.ts`
+   into `network/broker-lobby-adapter.ts` so both lobbies share one
+   implementation. TetriNET adds only slots, teams, options and the
+   winlist. `createLobby` also takes a seat count now — every TetriNET
+   lobby was capped at TWO players by the versus mode map.
+2. **Transport.** `network/tetrinet-transport.ts` names the interface the
+   screen talks to; the external-server adapter implements the field half,
+   the new `TetriNetBrokerTransport` implements fields, specials and
+   garbage over the broker.
+3. **Match.** `app.ts startTetriNetNetworkGame()` runs when the lobby holds
+   more than one human. Bots are simulated by the HOST only and published
+   as ordinary participants, so no bot is ever driven twice and every node
+   sees the same field for it.
+
+**Trap worth remembering:** the broker client only forwards events whose
+name starts with `lobby:`, `game:`, `match:`, `state:` or `input:`
+(`BrokerClient.isProtocolEvent`). Anything else stays a local EventEmitter
+event and is silently dropped — the first cut used `tetrinet:*` names and
+nothing crossed. The packets are now `game:tnet_field`,
+`game:tnet_special`, `game:tnet_garbage`, `game:tnet_lobby`.
+
+Original diagnosis below.
+
+**Status when written: CONFIRMED DEAD.**
 
 `app.ts:1120` — every lobby result routes to
 `startTetriNetGame(result.mode, result.settings)`, which at `:1147-1150`
@@ -177,12 +205,14 @@ which is only ever emitted by the external protocol parser
 on the internal bus, so the lobby's Winlist tab is always empty in local
 play. Either populate it from local results or hide the tab for local games.
 
-### 5. Opponent metadata stubs  — PARTLY DONE
+### 5. Opponent metadata stubs  — DONE
 
-**Status: local half fixed.** Opponent `hasImmunity` is read from each bot's
-effect manager instead of the hardcoded `false`. The remaining stubs (name
-= playerId, opponent index 0, the Phase 5 join/leave events) live in
-`setupNetworkListeners()` and are unreachable until item 2 lands.
+Opponent `hasImmunity` is read from the effect manager instead of the
+hardcoded `false`. The network listener used to write every remote player
+into ONE board slot (`name: update.playerId // for now`, opponent index
+hardcoded `0`); remote participants now land in a keyed map and the whole
+strip is repainted from bots + remotes together, with real names, levels,
+alive and immunity flags.
 
 Original diagnosis below.
 

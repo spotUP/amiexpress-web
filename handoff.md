@@ -37,7 +37,7 @@ kill-servers run and left four backends stacked. Always zombie-verify.
 The 31 queued commits are PUSHED (live BBS auto-deploys — verify the
 container's `.git-sha`). TetriNET parity work sits on top of them.
 
-### TetriNET — parity items 1, 3, 4 done; item 2 is a decision
+### TetriNET — parity plan fully executed (items 1-5)
 
 Plan + execution log:
 `thoughts/shared/handoffs/2026-08-25_tetrinet-parity-plan.md`
@@ -57,11 +57,19 @@ Plan + execution log:
   for Special, Specials Added, Inventory Size) now reach the engine via
   `optionsFromLobbySettings()`; the Winlist tab is seeded from the door's
   own TetriNET high scores.
-- Door suite: **40 tests, 0 failures** (was 24). 12 of the 16 new tests were
-  RED-verified against the pre-fix code.
-- **Open decision:** internal (broker) TetriNET multiplayer. Today every
-  lobby result starts a local game vs 3 bots with no network, so humans who
-  joined the lobby are not in the match. Needs a yes/no before building.
+- **Internal multiplayer now exists.** The TetriNET lobby adapter was
+  loopback-only (`emitNetwork('tetrinet:*')` never leaves the process), so
+  two users each sat in a private lobby. It now extends `BrokerLobbyAdapter`
+  — extracted from `ui/lobby-screen.ts` so versus and TetriNET share one
+  implementation — and a match with more than one human runs through
+  `startTetriNetNetworkGame()` over `TetriNetBrokerTransport` (fields,
+  specials, classic garbage). Bots are simulated by the HOST only and
+  published as ordinary participants.
+- **Broker trap:** `BrokerClient.isProtocolEvent` forwards only
+  `lobby:/game:/match:/state:/input:` events; anything else is silently
+  local. TetriNET packets are `game:tnet_*`.
+- Door suite: **49 tests, 0 failures** (was 24), including 9 that run two
+  real broker nodes against each other.
 
 ### Grandmaster door — large session, all fixes live locally
 
@@ -101,10 +109,9 @@ added this session):
 
 ### Known-open
 
-1. **Internal TetriNET multiplayer** — the last parity item, and a decision
-   rather than a bug: should a lobby of BBS users play each other over the
-   in-process broker, or does TetriNET stay local-vs-AI plus external
-   servers? Everything else in the plan doc is done.
+1. **TetriNET internal multiplayer wants live testing** — the plan is fully
+   implemented and covered by two-node broker tests, but two humans on two
+   BBS nodes have not played a real match yet.
 2. `https://releases.uprough.net/` TLS failure. Diagnosed: DNS points at the
    BBS host but `/etc/caddy/Caddyfile` has **no site block for it** and
    nothing on the host references the name — Caddy's port-80 catch-all
