@@ -147,3 +147,64 @@ Two parts, both in `Doors/arkanoid` + the SDK AudioEngine:
 
 Note the paddle/ball motion blur and half-cell movement landed in
 `d0601046c`; the audio work is independent of it.
+
+## 9. LiveChat still hides the mouse pointer  (reported again 2026-08-25)
+
+LiveChat is an application, not a game, so the pointer must show. The
+manifest-driven fix (`capturePointer`, `BBSTerminal.tsx` around the
+`applyPointerCapture` helper) is in the shipped bundle and LiveChat does NOT
+declare `capturePointer`, and the backend log confirms it sends
+`capturePointer: false` - yet the pointer is still hidden. Every code path
+that writes `cursor: none` was read and only one exists, so the next step is
+NOT another guess: get the computed style from the live page
+
+```js
+const x = document.querySelector('.xterm'), t = x?.parentElement;
+console.log(JSON.stringify(t?.style.cursor), getComputedStyle(t).cursor,
+            getComputedStyle(x).pointerEvents);
+```
+
+and find which element actually carries it.
+
+## 10. The help screen does not close on Escape  (separate from the menus)
+
+Confirmed by the reporter as its own bug: menus opened with the MOUSE do
+close on Escape. `DocModal` binds its close keys on `_contentArea` and on
+itself and focuses `_contentArea` in `display()` - so the question is
+whether something takes focus back after the modal opens. The dropdown's
+focus-restore was one such thief and is now guarded; check whether anything
+else (the door's ~31 `inputBox.focus()` calls) does the same.
+
+## 11. Joypad: only D-pad RIGHT binds, and it binds as "RS-Y+"
+
+Follow-up to the hat-switch work. The reporter's device dump:
+
+```
+8BitDo NES30 Pro   Vendor: 2dc8  Product: 9001
+MAPPING: n/a       buttons B0..B14 (15, so no standard D-pad at 12-15)
+AXIS 0: 0.00392   AXIS 1: -0.00392  AXIS 2: 0        AXIS 3: -1.00000
+AXIS 4: -1.00000  AXIS 5..8: 0                       AXIS 9: 3.28571
+```
+
+- AXIS 9 = 3.28571 is the CENTRED hat value, so the hat exists and is axis 9.
+- AXIS 3 and AXIS 4 rest at -1.00000 and "light up when I press dpad
+  left/right" - so this pad ALSO reports the D-pad through those axes.
+- "RS-Y+" means the binder named axis 3 as the right stick Y. On a pad with
+  no standard mapping those names are fiction; the binder should show the
+  raw axis number for non-standard pads rather than a stick name.
+
+Open question needing one more observation: the exact values of AXIS 3 and
+AXIS 4 while each direction is HELD (left, right, up, down). That decides
+whether the D-pad is two -1..+1 axes or the axis 9 hat, and it cannot be
+guessed - the hat decoder already had to be narrowed to the last two axes
+because AXIS 4 resting at -1 decoded as a permanent D-pad UP.
+
+## 12. Joypad: is the pad in the right MODE?
+
+The reporter notes the NES30 Pro shows solid green LEDs. These pads have
+several pairing/HID modes (a start-up key combination selects them) and only
+some present as a standard-mapping gamepad to a browser. `MAPPING: n/a`
+above confirms this one does not. Worth documenting which mode to use, and
+what the LED pattern means, before writing more code around the raw layout -
+switching the pad to an XInput-style mode may make buttons 12-15 appear and
+remove the need for hat decoding entirely on this device.
