@@ -1,0 +1,113 @@
+---
+date: 2026-08-25
+topic: Outstanding work - touch controls, TetriNET polish, and open bugs
+tags: [mobile, touch, tetrinet, livechat, grandmaster, todo]
+status: draft
+---
+
+# Open work, 2026-08-25
+
+Everything below is committed locally but **not pushed** - pushing auto-deploys
+the live BBS, and the user deploys when the batch is finished.
+
+## 1. Gesture-only controls for GMASTER  (user request, spec is theirs)
+
+An iOS Tetris the user rates highly is controlled entirely by thumb, with no
+on-screen buttons. They want that as an option: **let the player hide the
+touch controls and play on gestures alone.**
+
+The scheme, exactly as specified:
+
+| Gesture | Action |
+|---|---|
+| Drag thumb left / right | Piece follows the thumb, 1:1 and continuously - not stepwise |
+| Drag thumb down | Piece follows downwards (this replaces soft drop) |
+| Swipe down (fast) | Hard drop |
+| Tap | Rotate clockwise - ONE direction only, which is enough |
+| Swipe up | Hold |
+
+Notes for whoever builds it:
+- "Follows perfectly" is the whole point. Track the thumb against cell width
+  and move the piece by the number of columns crossed, rather than firing a
+  key per gesture. The existing pad sends key-down/key-up; this needs a
+  position-tracking path closer to the Arkanoid trackpad.
+- Soft drop can be dropped entirely; do not invent a gesture for it.
+- Rotate counter-clockwise and the second rotation button are not needed.
+- It is a MODE, not a replacement: the button pad stays for players who
+  prefer it. A toggle belongs wherever the player's other preferences live.
+
+## 2. SDK-wide touch gestures for menus  (designed, not built)
+
+Every door and the BBS itself are List-driven: arrows plus Enter. A gesture
+layer in `packages/terminal` gives all of them touch navigation with no door
+changes, switched on the `game-mode` signal that already exists:
+
+- game mode OFF: swipe up/down -> ArrowUp/ArrowDown, swipe left/right ->
+  ArrowLeft/ArrowRight, tap -> Enter, plus a thin bar with Back (Escape) and
+  a Keyboard toggle (text entry still needs the real keyboard).
+- game mode ON: the per-door pad or trackpad.
+
+Three details decide whether it feels right: discrete steps (one swipe past a
+~24px threshold = one key, repeating every further ~24px) rather than
+momentum; a tap only counts if the finger barely moved; and it lives in the
+terminal package, not in each door.
+
+## 3. Pointer suppression is applied to every client door  (cause known)
+
+`web/backend/src/handlers/door.handler.ts:4091` emits `game-mode: true` for
+EVERY client door, and yesterday's `d86694d59` hides the cursor, sets
+`pointer-events: none` on the xterm layer and disables text selection
+whenever game mode is on. LiveChat is a client door, so it lost its mouse.
+
+The flag means "a client door is running" but is being used as "this is a
+real-time game". Drive the suppression from the door's own declaration (a
+manifest flag) instead, and clear it when a door loads so a stale state
+cannot leak into the next one.
+
+## 4. LiveChat draws two layouts on top of each other  (cause NOT known)
+
+Reported with screenshots, in both the standalone `/chat` page and the
+in-BBS door, so it is the door or the SDK rather than the page wrapper.
+
+**A tidy hypothesis was disproven - do not retry it.** The theory was that
+differential rendering skips the cells a moved panel vacates. Measured: a
+20x5 panel moving from row 0 to row 10 already writes 252 bytes AND
+repositions to row 1. Forcing a full redraw on geometry change (via
+`Element._invalidateCoords`) cost 2336 bytes for the same move and fixed
+nothing. The finding is recorded in that method as a comment.
+
+Next suspect, untested: LiveChat switches to a carousel below a width
+breakpoint (`enterMobileMode` / `exitMobileMode` in `Doors/livechat/server.ts`
+around the `responsiveLayout.onResize` handler). The overlap looks like a
+half-applied switch. It should be testable headlessly - drive the layout
+across the breakpoint and assert no two panels claim the same cells.
+
+## 5. TetriNET: black band across the middle of the playfield
+
+Reported as "as if a line was cleared". A separate artefact from the
+unpainted last row on a 25-row terminal, which is fixed (`b67a9ef05`).
+Prime suspect: the effect overlay, which now fires on every incoming
+special (`showIncomingWarning` / `showImmunityBlocked` from the router).
+
+## 6. Motion blur stutters in the GMASTER main modes
+
+The shared blur path is FASTER than the inline code it replaced (measured:
+0.029 ms vs 0.041 ms per frame with a full 76-cell streak) and the main
+screen already renders at 20 fps with an 8 ms floor on input, so the cause
+is not the code that changed. Needs an instrumented run - per-frame render
+time and emitted byte count around a hard drop - rather than another guess.
+
+## 7. Smaller items
+
+- **No ESLint config anywhere above `web/frontend`**, so `npm run lint`
+  cannot run there at all, while RULES.md requires zero lint warnings.
+- **The pre-commit hook does not rebuild every door's `dist/`.** It rebuilt
+  Grandmaster but not Arkanoid, so a source-only commit shipped a stale
+  bundle - caught by hand, could easily be missed.
+- **Mobile fit leaves ~4% of the width** on a dpr-3 phone: cells are whole
+  device pixels and xterm left-aligns the grid. Closable by centring it.
+- **The game pad only appears in portrait**, matching the existing keyboard
+  gate, but games are often played in landscape.
+- **Backend tests are red in CI on every commit** (`execute-lha-extract`,
+  `arkanoid-score-webhook`) because better-sqlite3's bindings are missing in
+  that environment. They mask real regressions in the score-webhook path.
