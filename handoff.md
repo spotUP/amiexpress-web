@@ -117,9 +117,12 @@ added this session):
    nothing on the host references the name — Caddy's port-80 catch-all
    redirects to HTTPS, then has no cert for that SNI. Needs a decision on
    what should serve it. Being assigned elsewhere.
-3. Backend test suite has **3 pre-existing failures** unrelated to this work
-   (`better-sqlite3` native bindings under jest, door-repo-proxy,
-   info-editor-routes). They currently mask real regressions there.
+3. Backend test suite is **red in CI on every commit**, unrelated to this
+   work: `tests/amiga-emulation/execute-lha-extract.test.ts` and
+   `tests/doors/arkanoid-score-webhook.test.ts`, 9 tests, identical on
+   `e8217958f` and on 2026-08-24 runs. (An earlier note named a different
+   trio - better-sqlite3 / door-repo-proxy / info-editor-routes - which is
+   no longer what fails.) They mask real regressions there.
 4. Deferred perf (measured as not dominant): network payload compaction
    (~10 KB JSON → ~0.5 KB), hoisting per-cell effect calls in renderBoard.
 
