@@ -208,3 +208,27 @@ above confirms this one does not. Worth documenting which mode to use, and
 what the LED pattern means, before writing more code around the raw layout -
 switching the pad to an XInput-style mode may make buttons 12-15 appear and
 remove the need for hat decoding entirely on this device.
+
+## 13. TetriNET does not clear lines correctly  (reported 2026-08-25)
+
+Line clearing in the TetriNET engine is wrong. Note the main modes had a
+line-clear bug of exactly this family before - clearLines() spliced rows by
+their ORIGINAL indices in ascending order, so each splice shifted the rest
+and the next splice removed the wrong row (fixed in core/board.ts, covered
+by tests/board-clear.test.ts). TetriNET has its OWN board in
+core/tetrinet/tetrinet-board.ts; check whether it repeats that mistake, and
+give it the same regression test if so.
+
+## 14. GMASTER versus: garbage setting produces no garbage at start
+
+With garbage lines enabled in the versus mode settings, the boards start
+empty. Either the setting is not read when the match board is built, or it
+means something else (garbage sent on line clears rather than pre-filled
+rows) - in which case the LABEL is wrong and should say so. Establish which
+before changing behaviour.
+
+## 15. GMASTER modal text is not centred on either axis
+
+Still off after the valign work. The text inside modal dialogs should be
+centred horizontally and vertically; check what the modal widget does with
+`align`/`valign` for multi-line content, and whether the door passes them.
