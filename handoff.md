@@ -20,99 +20,73 @@ touching anything.
 (including an automatic watcher restart), zombie-verify:
 `ps aux | grep -E "(start-servers|kill-servers|watch-doors|build-wasm|tsx .*src/index.ts)" | grep -v grep`
 (expect empty) before starting again, or you'll get EADDRINUSE crash loops.
-`start-servers.sh` has an intermittent unexplained mid-run failure (a
-`line 874: syntax error` that tears down a just-started server — `bash -n`
-finds nothing, cause unknown); `npm run dev:doors` sidesteps it and is what
-actually got used all of 2026-08-24.
+`start-servers.sh` has an intermittent mid-run failure that force-kills the
+backend it just started ("Backend crashed with code null"); it hit twice on
+2026-08-25. Workaround that works: run the backend DIRECTLY, from the REPO
+ROOT (data paths are relative — launching from `web/backend/` gives
+`ENOENT: data/bbs/node1.user.tmp` on login):
+```
+BBS_DATA_DIR="/Users/spot/Code/amiexpress-web" NODE_ENV=development \
+  npx tsx web/backend/src/index.ts
+```
+Also: a `cd` persisting into a later shell command silently skipped a
+kill-servers run and left four backends stacked. Always zombie-verify.
 
-## Current state (2026-08-24, latest session)
+## Current state (2026-08-25, latest session)
 
-Full detail: `thoughts/shared/handoffs/2026-08-24_owner-curation-oom-webhook-fixes.md`
+**31 commits queued on `main`, NOTHING PUSHED.** Confirm before pushing.
 
-**ARKANOID overhaul is DONE and user-confirmed** (parallel session, same
-day): flicker (SDK ScreenBuffer cell-diffing), physics (substepped +
-penetration-resolved + crossed-face reflection, 14 CI tests), pointer-lock
-mouse (with frozen-coords and menu-click fixes), Zabutom XM tracker music
-(TrackerEngine gain-routing + init-race SDK fixes, worklet serving route,
-CSP prep), auto-submitted highscores -> DOOR_SCORE webhooks, and the live
-hybrid-manifest bug (RPC handlers never registered in prod). Everything
-through `9b7f04c13` is pushed+deployed+live-verified; `58c68d362` ..
-`80a21ef76` are LOCAL-ONLY - push, deploy, verify live SHA, then sync the
-live Doors/ volume:
-`docker exec amiexpress-bbs sh -c 'cp -r /app/default-data/Doors/arkanoid /app/data/bbs/Doors/'`
-Full detail: `thoughts/shared/handoffs/2026-08-24_arkanoid-overhaul.md`
+### Grandmaster door — large session, all fixes live locally
 
-**UNCOMMITTED work exists right now** — do this FIRST in a fresh session:
-`web/backend/src/handlers/command.handler.ts` (DISPLAY_CONF_BULL ordering
-fix), `web/backend/src/utils/menu.util.ts` (scrollable menu windowing),
-`Doors/arkanoid/client.ts` + rebuilt `dist/client.bundle.js` (double-submit
-fix). Commit, push, deploy, verify live SHA. Live is currently `3cb5d5f3b`,
-older than these fixes.
+Full audit + perf research:
+`thoughts/shared/research/2026-08-25_gmaster-performance-and-wiring.md`
+TetriNET build plan (next session's main task):
+`thoughts/shared/handoffs/2026-08-25_tetrinet-parity-plan.md`
 
-**DoorRepo C door — owner-mode curation plan, 3 of 5 tasks done.**
-`docs/superpowers/plans/2026-08-24-doorrepo-owner-curation.md`, ledger at
-`.superpowers/sdd/2026-08-24-doorrepo-owner-curation/progress.md` (not
-deleted — plan incomplete). Tasks 3 (`http_request()`), 4 (`json_lite`,
-opus-reviewed security-focused), 1 (`owner_auth.c`, opus-reviewed
-credential-focused) are all done — reviewed, fix rounds closed, re-reviewed.
-Task 5+6 (the `O`-key UI: submissions queue, field-edit menu) is next —
-**must land in NEW files**, `doorrepo.c` is already 5533 lines against this
-project's 2000-line cap. Then final whole-branch review, then Task 8 (a
-live pass — needs the user to provide a real admin test account on
-`amiexpress-doorserver` first; pause and ask before touching that).
+Headline fixes, each with RED-verified regression tests (door suite: 24
+tests, `cd Doors/grandmaster && npm test` — the door's FIRST test harness,
+added this session):
 
-**Live OOM incident, root-caused and fixed.** `bbs.uprough.net` was
-crash-looping. Real cause: `login-post.service.ts`'s fire-and-forget
-`runLoginBatches()` had no per-node guard — a fast reconnect to the same
-node re-fired it while the previous (detached, outlives its socket) run was
-still in flight, piling up duplicate `QuickNew` 68K emulator processes
-(5 counted live, ~2GB RSS, 2 confirmed kernel OOM kills). Fixed: per-nodeId
-`Set` guard in `batch-scheduler.ts`, tested (RED/GREEN, isolated from this
-checkout's real batch files via `jest.spyOn(config, 'getConfig')` — an
-env-var override does NOT work, `ConfigManager` caches once). Also applied
-live infra mitigations (not in any repo): 4GB swapfile, `docker update
---memory 3g --memory-swap 5g amiexpress-bbs`, an `oom-log-mirror.service`
-systemd unit mirroring kernel OOM lines into the BBS data volume's log dir.
+- **Multi-line clears deleted the WRONG rows.** `clearLines()` spliced by
+  original indices ascending, so each splice shifted the rest; a double
+  removed rows 20 and 22. Every double/triple/tetris left a completed row on
+  the board and destroyed a partial one. Found by differential-testing a
+  rewritten AI evaluator against the original (264/14,400 disagreements,
+  always a multiple of the holes weight — the AI was right).
+- **The whole attack/garbage system was unrouted.** Complete AttackManager,
+  zero callers: `receiveAttack()` and `sendAttack()` had none, AI engines
+  had no AttackManager at all, so "No incoming attack" was permanent.
+  Routed for CPU + network. Win detection added (`allDead()` also had zero
+  callers — a CPU battle could only be LOST).
+- **Play continued above the visible playfield.** Board is 24 rows, only 20
+  are drawn; the only game-over was block-out, so the stack grew through 4
+  invisible rows. Added lock-out.
+- **Perf:** differential rendering is now the SDK default (idle frame
+  2460 → 0 bytes), real DAS/ARR via key-down/key-up (was OS auto-repeat,
+  ~3-4x sluggish), render-on-input, AI eval 73% faster with zero behaviour
+  change, per-keystroke backend stdout writes removed, websocket-first
+  transports.
+- **Browser tabs shared one login** — token was written to localStorage on
+  every login. Cross-tab sharing is now gated on the existing
+  `bbs_auto_login_enabled` preference; tabs are independent by default.
+- `valign` was accepted everywhere and implemented nowhere; dialogs now
+  centre both ways.
 
-**WEBHOOK command — 4 real bugs found+fixed live-testing with the user**,
-plus an arrow-key-picker UX upgrade for type/triggers (was free-text typing
-against an invisible list). Full bug-chain story (useful if anything
-regresses) is in the dated handoff above — short version: no per-keystroke
-line buffering existed for this flow, then a buffered-vs-unbuffered emit
-race broke line breaks, then `DISPLAY_CONF_BULL` subState reuse collided
-with the real login-flow's generic display advancer. All fixed, all in the
-uncommitted diff above.
+### Known-open
 
-**Arkanoid double-webhook-fire, found+fixed.** `client.ts` had two
-independent paths (Enter key, mouse click) both calling `saveHighscore()`
-for the same screen with no dedup guard — one highscore, two Discord posts.
-Fixed with a `highscoreSaved` flag, `dist/` rebuilt. Uncommitted (see above).
-
-**Patrik/`uhcsearch` TSV index — already live, not this session's work,
-confirmed working.** `http://doors.uprough.net/api/door-repo/index.tsv`,
-plain HTTP, no redirect, art-filtered descriptions. Nothing to build here.
-
-**A live Discord webhook URL was pasted into chat by the user** while
-reporting a bug — flagged immediately, user said they'd regenerate it in
-Discord's channel settings. If you find an old-looking webhook row in the
-`webhooks` table, don't assume it's still valid.
-
-## Next
-
-1. Commit/push/deploy the uncommitted fixes above (see "UNCOMMITTED work").
-2. Resume owner-curation plan at Task 5+6 (UI), new files only.
-3. Final whole-branch review (opus) for owner-curation once 5+6 land.
-4. Task 8 (live pass) — needs a real admin test account, ask the user first.
-5. Older, lower-priority open items carried from earlier sessions (door
-   server phase2/ARexx/LOCATION-picker work — all separately merged/live
-   already, see `thoughts/shared/handoffs/` for that history if needed):
-   - DOORMAN's `resolveDoorRepoMode` `owner` branch is vestigial, worth
-     retiring.
-   - LOCATION-picker still picks the wrong program for deeply-nested
-     archives (`1OO-WALL.LHA` repro documented in prior handoffs).
-   - Doorserver dedup check may not distinguish rejected from approved
-     submissions (not investigated).
-   - `Doors/door-manager/app.ts` is at the pre-commit hook's exact
-     2000-line cap — needs a real split before its next edit.
+1. **TetriNET parity** — the next big task; see the plan doc above. Same
+   missing-router disease Grandmaster had; the engine's
+   `applyIncomingSpecial`/`addGarbage` are called only by the external
+   server path, never locally.
+2. `https://releases.uprough.net/` TLS failure. Diagnosed: DNS points at the
+   BBS host but `/etc/caddy/Caddyfile` has **no site block for it** and
+   nothing on the host references the name — Caddy's port-80 catch-all
+   redirects to HTTPS, then has no cert for that SNI. Needs a decision on
+   what should serve it. Being assigned elsewhere.
+3. Backend test suite has **3 pre-existing failures** unrelated to this work
+   (`better-sqlite3` native bindings under jest, door-repo-proxy,
+   info-editor-routes). They currently mask real regressions there.
+4. Deferred perf (measured as not dominant): network payload compaction
+   (~10 KB JSON → ~0.5 KB), hoisting per-cell effect calls in renderBoard.
 
 Older sessions: `thoughts/shared/handoffs/`.
