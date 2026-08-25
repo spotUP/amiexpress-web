@@ -34,7 +34,34 @@ kill-servers run and left four backends stacked. Always zombie-verify.
 
 ## Current state (2026-08-25, latest session)
 
-**31 commits queued on `main`, NOTHING PUSHED.** Confirm before pushing.
+The 31 queued commits are PUSHED (live BBS auto-deploys — verify the
+container's `.git-sha`). TetriNET parity work sits on top of them.
+
+### TetriNET — parity items 1, 3, 4 done; item 2 is a decision
+
+Plan + execution log:
+`thoughts/shared/handoffs/2026-08-25_tetrinet-parity-plan.md`
+
+- **Specials and garbage now route between local players.** Both halves of
+  the exchange existed; the router did not. `setupAttackRouting()` in
+  `ui/tetrinet-screen.ts` resolves a target id to an engine and calls
+  `applyIncomingSpecial()` / `addGarbage(n, 'classic')`. Classic garbage
+  broadcasts to every other living player. Networked games are excluded —
+  the server fans out there, so local routing would double every hit.
+- Same pass, same disease: Clear Line applied nothing (self-only specials
+  were popped and dropped), Switch Fields bailed with 'Switch requires two
+  boards', bots could only target the human once every other bot was dead,
+  `allDead()` had zero callers so a local game could only be LOST, and a
+  TetriNET game recorded no score at all.
+- Lobby: the three settings the editor showed and the game discarded (Lines
+  for Special, Specials Added, Inventory Size) now reach the engine via
+  `optionsFromLobbySettings()`; the Winlist tab is seeded from the door's
+  own TetriNET high scores.
+- Door suite: **40 tests, 0 failures** (was 24). 12 of the 16 new tests were
+  RED-verified against the pre-fix code.
+- **Open decision:** internal (broker) TetriNET multiplayer. Today every
+  lobby result starts a local game vs 3 bots with no network, so humans who
+  joined the lobby are not in the match. Needs a yes/no before building.
 
 ### Grandmaster door — large session, all fixes live locally
 
@@ -74,10 +101,10 @@ added this session):
 
 ### Known-open
 
-1. **TetriNET parity** — the next big task; see the plan doc above. Same
-   missing-router disease Grandmaster had; the engine's
-   `applyIncomingSpecial`/`addGarbage` are called only by the external
-   server path, never locally.
+1. **Internal TetriNET multiplayer** — the last parity item, and a decision
+   rather than a bug: should a lobby of BBS users play each other over the
+   in-process broker, or does TetriNET stay local-vs-AI plus external
+   servers? Everything else in the plan doc is done.
 2. `https://releases.uprough.net/` TLS failure. Diagnosed: DNS points at the
    BBS host but `/etc/caddy/Caddyfile` has **no site block for it** and
    nothing on the host references the name — Caddy's port-80 catch-all

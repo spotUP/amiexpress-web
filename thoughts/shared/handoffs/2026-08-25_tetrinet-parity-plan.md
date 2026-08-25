@@ -1,8 +1,8 @@
 ---
 date: 2026-08-25
-topic: TetriNET mode — bring it up to Grandmaster parity (build plan for a fresh session)
+topic: TetriNET mode — bring it up to Grandmaster parity (build plan + execution log)
 tags: [grandmaster, tetrinet, handoff, wiring, multiplayer]
-status: final
+status: implemented
 ---
 
 # TetriNET parity — handoff
@@ -43,11 +43,50 @@ Door test harness exists now: `cd Doors/grandmaster && npm test`
 passing**, including `tetrinet-bots.test.ts` and `tetrinet-layout.test.ts`.
 Add to it — every fix below should ship a RED-verified test.
 
+## Execution status (updated 2026-08-25, later session)
+
+| Item | Status |
+|---|---|
+| 1. Specials + garbage route to local AI | **DONE** — router in `tetrinet-screen.ts` |
+| 2. Internal multiplayer | **OPEN** — needs a product decision, see below |
+| 3. Three dropped lobby settings | **DONE** — `optionsFromLobbySettings()` |
+| 4. Winlist never populates | **DONE** — local high scores seed it, and TetriNET games now record a score at all |
+| 5. Opponent metadata stubs | **PARTLY** — local `hasImmunity` is real now; the network-path stubs stay until item 2 |
+
+Door suite: **40 tests, 0 failures** (`cd Doors/grandmaster && npm test`), up
+from 24. New files `tests/tetrinet-routing.test.ts` (11) and
+`tests/tetrinet-lobby.test.ts` (5); 12 of the 16 were RED-verified against
+the pre-fix code (the other 4 are negative/default assertions that correctly
+pass either way).
+
+Fixed along the way, each found by the same "grep for a caller" pass:
+
+- `useSpecial()` popped SELF-ONLY specials off the inventory and applied
+  nothing — Clear Line ('C') was a slot that deleted itself.
+- Switch Fields reached `applySpecialEffect` without the sender's board and
+  bailed out with 'Switch requires two boards'. `applyIncomingSpecial()`
+  now takes an optional `sourceBoard`.
+- `pickTarget()` returned 'player' only when every OTHER bot was dead, so
+  while any bot lived the human could not be attacked at all.
+- `TetriNetAI.allDead()` had zero callers — a local TetriNET game could only
+  ever be LOST. `checkVictory()` now ends the match as a win.
+- A TetriNET game recorded no score whatsoever, so the mode's leaderboard
+  and the lobby Winlist had no possible source of entries.
+
 ## The work, in build order
 
-### 1. Specials + garbage must route to local AI  ← START HERE, biggest win
+### 1. Specials + garbage must route to local AI  — DONE
 
-**Status: CONFIRMED DEAD.** This is what makes local TetriNET not a game.
+**Status: FIXED.** `setupAttackRouting()` in `ui/tetrinet-screen.ts` resolves
+a target id to a participant engine (`HUMAN_TARGET_ID` = `'player'`, shared
+with the bots' `pickTarget()`), then calls `applyIncomingSpecial()` /
+`addGarbage(n, 'classic')`. Classic garbage broadcasts to every other LIVING
+player, matching the protocol's cs1/cs2/cs4. Networked games are excluded —
+the server owns fan-out there, and routing locally too would double the hit.
+
+Original diagnosis below.
+
+**Status when written: CONFIRMED DEAD.** This is what makes local TetriNET not a game.
 
 - Human uses a special: `tetrinet-screen.ts:210` `engine.onSpecialUsed(...)`
   plays a sound and animates. It never touches any AI engine.
@@ -79,7 +118,12 @@ gates on the lobby's Garbage toggle.
 **Watch out:** `useSpecial()` POPS the inventory before notifying, so the
 router must read the special from the callback argument, not the inventory.
 
-### 2. Internal multiplayer does not exist
+### 2. Internal multiplayer does not exist  — STILL OPEN, needs a decision
+
+This is the one remaining item and it is a product decision, not a bug:
+does a TetriNET lobby of BBS users play each other over the in-process
+broker, or does TetriNET stay "local vs AI + external servers"? Everything
+else in the plan is done.
 
 **Status: CONFIRMED DEAD.**
 
@@ -98,9 +142,14 @@ wanted, it needs the same broker plumbing Grandmaster now has — see
 the in-process `LobbyBroker`. This is the largest item; do item 1 first so
 local play is good regardless.
 
-### 3. Three lobby settings are silently dropped
+### 3. Three lobby settings are silently dropped  — DONE
 
-**Status: CONFIRMED DEAD.** The settings editor (`app.ts:1047-1070`) offers
+**Status: FIXED.** The mapping moved out of `app.ts` into
+`optionsFromLobbySettings(rule, settings)` in `core/tetrinet/game-rules.ts`
+(pure, so it is directly testable) and now carries all six editor keys.
+Classic mode ignores the three specials knobs, since it has no specials.
+
+**Status when written: CONFIRMED DEAD.** The settings editor (`app.ts:1047-1070`) offers
 **Lines for Special**, **Specials Added** and **Inventory Size**, but the
 mapping in `startTetriNetGame` (`app.ts:1135-1141`) copies only
 `startingLevel`, `startingHeight`, `delayBeforeSuddenDeath`,
@@ -112,7 +161,15 @@ were REMOVED rather than left advertising nothing (commit `d3c7d6b6a`) —
 the engine had no inputs for them. Check `TetriNetGameOptions` first; if the
 fields exist, wire them, since that is cheap.
 
-### 4. Internal winlist never populates
+### 4. Internal winlist never populates  — DONE
+
+**Status: FIXED.** `TetriNetLobbyAdapter.setLocalWinlist()` seeds the tab,
+app.ts fills it from `highScores.getTopScores('tetrinet', 10)`, and a
+finished TetriNET game now writes a score (`mode: 'tetrinet'`, `completed`
+set on a win) so the list actually grows.
+
+Original diagnosis below.
+
 
 `network/tetrinet-lobby-adapter.ts:145` listens for `'tetrinet:winlist'`,
 which is only ever emitted by the external protocol parser
@@ -120,7 +177,15 @@ which is only ever emitted by the external protocol parser
 on the internal bus, so the lobby's Winlist tab is always empty in local
 play. Either populate it from local results or hide the tab for local games.
 
-### 5. Opponent metadata stubs
+### 5. Opponent metadata stubs  — PARTLY DONE
+
+**Status: local half fixed.** Opponent `hasImmunity` is read from each bot's
+effect manager instead of the hardcoded `false`. The remaining stubs (name
+= playerId, opponent index 0, the Phase 5 join/leave events) live in
+`setupNetworkListeners()` and are unreachable until item 2 lands.
+
+Original diagnosis below.
+
 
 `ui/tetrinet-screen.ts:272-277`: opponent name is set to the playerId "for
 now", `hasImmunity: false // TODO`, opponent index hardcoded `0`. Line
@@ -183,8 +248,8 @@ Mostly unreachable until item 2 lands, but fix alongside it.
 
 ## Session state
 
-- **31 commits queued locally on `main`, NOTHING PUSHED.** Confirm with the
-  user before pushing.
+- The 31 queued commits were PUSHED on 2026-08-25 (auto-deploys the live
+  BBS); this session's TetriNET work is on top of them.
 - Backend currently running from the repo root, serving the latest builds.
 - Open, unrelated: `https://releases.uprough.net/` fails TLS. Diagnosed —
   DNS points at the BBS host (89.167.21.154) but `/etc/caddy/Caddyfile` has
