@@ -68,7 +68,16 @@ Plan + execution log:
 - **Broker trap:** `BrokerClient.isProtocolEvent` forwards only
   `lobby:/game:/match:/state:/input:` events; anything else is silently
   local. TetriNET packets are `game:tnet_*`.
-- Door suite: **49 tests, 0 failures** (was 24), including 9 that run two
+- **Score reporting closed the last real gap.** A TetriNET game reported
+  nothing anywhere: high scores, score server, livechat and the door_score
+  Discord webhook all come from a `GameResult`, `submitScore()` was gated on
+  the TGM engine, and `currentMode` was never `'tetrinet'` - so
+  `broadcastScore()`'s TetriNET label branch was unreachable. All three
+  paths now funnel through `reportTetriNetScore()`. Lobby voice chat added
+  to match versus. Not done, deliberately: replay recording (the TetriNET
+  engine has no recorder) and prediction/rollback netcode (versus-only,
+  pointless over an in-process broker).
+- Door suite: **55 tests, 0 failures** (was 24), including 9 that run two
   real broker nodes against each other.
 
 ### Grandmaster door — large session, all fixes live locally

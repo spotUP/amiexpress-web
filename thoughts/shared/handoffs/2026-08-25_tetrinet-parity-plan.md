@@ -43,6 +43,37 @@ Door test harness exists now: `cd Doors/grandmaster && npm test`
 passing**, including `tetrinet-bots.test.ts` and `tetrinet-layout.test.ts`.
 Add to it — every fix below should ship a RED-verified test.
 
+## Parity gaps closed after the plan (same day)
+
+The plan's five items were not the whole distance to Grandmaster parity. A
+feature-by-feature comparison afterwards found three more, all now closed:
+
+- **A TetriNET game reported no score anywhere.** High score table, BBS
+  score server, livechat feed and the door_score Discord webhook are all fed
+  from a `GameResult`, and none of the three TetriNET paths built one -
+  `submitScore()` was gated on `this.gameEngine`, the TGM engine. Meanwhile
+  `broadcastScore()` had carried a `'tetrinet' -> 'TetriNET'` label branch
+  the whole time that nothing could reach, and `state.currentMode` was never
+  set to `'tetrinet'`. TetriNET was the only game on the board whose scores
+  never appeared in Discord. `buildTetriNetResult()`
+  (`core/tetrinet/score-report.ts`) is now the single mapping, and all three
+  paths - local vs AI, BBS-internal multiplayer, external server - funnel
+  through `reportTetriNetScore()`. The networked path also broadcasts the
+  match result.
+- **No voice chat in the TetriNET lobby** while the versus lobby had it.
+  `startVoice()`/`stopVoice()` are generic and room-based; the TetriNET
+  lobby now joins one.
+- **Dead `// TODO: Send garbage to target via network` block** left in
+  `setupEngineCallbacks` after the router took the job over.
+
+Deliberately NOT closed, with reasons:
+
+- **Replay recording.** Only the TGM `GameEngine` records; the TetriNET
+  engine has no recorder. That is a feature to build, not a wiring gap.
+- **Prediction / rollback netcode.** Versus-only, and it exists for
+  input-latency-sensitive 1v1 over a network. Internal TetriNET runs over an
+  in-process broker on the same machine.
+
 ## Execution status (updated 2026-08-25, later session)
 
 | Item | Status |
@@ -53,7 +84,7 @@ Add to it — every fix below should ship a RED-verified test.
 | 4. Winlist never populates | **DONE** — local high scores seed it, and TetriNET games now record a score at all |
 | 5. Opponent metadata stubs | **DONE** — remote players are keyed, named and carry real alive/immunity |
 
-Door suite: **49 tests, 0 failures** (`cd Doors/grandmaster && npm test`), up
+Door suite: **55 tests, 0 failures** (`cd Doors/grandmaster && npm test`), up
 from 24. New files `tests/tetrinet-routing.test.ts` (11),
 `tests/tetrinet-lobby.test.ts` (5) and `tests/tetrinet-netplay.test.ts` (9,
 two real broker nodes); 21 of the 25 were RED-verified against the pre-fix
