@@ -289,3 +289,52 @@ Those two together say the artifact should be impossible, which means one of
 them is not happening in practice. The cheap next step is to log every write
 to the socket with the door name attached for one session and see who wrote
 those cells - guessing further is not worth it without that.
+
+## 17. Arkanoid sound effects are now too quiet  (regression, 2026-08-26)
+
+My doing, and a one-line-ish fix. Two changes stack up against the dry
+signal:
+
+- `sfxVolume` went 0.8 -> 0.45 -> 0.35 while chasing the music balance
+  (`Doors/arkanoid/client.ts`, the AudioEngine constructor).
+- The effects bus now runs through a reverb at `wet: 0.6` and an echo at
+  `wet: 0.4`. Wet mix REPLACES dry: at 0.6 wet only 40% of the hit's direct
+  sound survives, and the echo takes another bite before it.
+
+So the fix is not simply "turn sfx up": raise `sfxVolume` back toward 0.6-0.7
+AND drop the reverb wet to ~0.35-0.4 so the transient still cuts through,
+keeping the tail long for the space. The music is on its own context at 0.95
+(see item 8) and is not affected by any of this.
+
+## 18. Brick highlight should sweep row by row, top to bottom
+
+Currently `updateShineEffect()` (`Doors/arkanoid/client.ts`) walks
+`this.data.bricks` in ARRAY order and stamps `shineFrame = delay` with
+`delay += 2` per brick - so the sweep follows however the level generator
+happened to push bricks, not the screen. It should advance by ROW: every
+brick in a row lights together, then the next row down, so it reads as a
+band travelling down the wall.
+
+Sort by `brick.y` (or bucket bricks per row once at level init) and derive
+the delay from the row index rather than the array index.
+
+## 19. Sync the visuals to the music  (feature request)
+
+"Arkanoid seems like the perfect game to highlight blocks to notes and
+stuff." The pieces for this already exist:
+
+- `TrackerEngine` exposes a `PlaybackPosition` ({ position, order, pattern,
+  row }) and emits a `progress` event as the module plays
+  (`sdk/engines/audio/tracker-engine.ts`).
+- The brick shine is already a per-brick frame counter, so it can be driven
+  by anything.
+
+The obvious first version: on each `progress` row tick, light the brick row
+that corresponds to the pattern row (or pulse the whole wall on rows where
+the module hits a note in a chosen channel). Worth checking whether the
+progress event fires per ROW or only per pattern - per row is what makes
+this feel musical, and if chiptune3 only reports patterns, the row can be
+interpolated from the module's speed/BPM.
+
+Beyond bricks: the paddle glow, the ball trail brightness and the background
+border colour are all cheap things to pulse in time.
