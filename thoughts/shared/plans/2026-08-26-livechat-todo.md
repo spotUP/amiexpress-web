@@ -12,6 +12,57 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### Change the default video render mode from halfblock to coloured ASCII
+The user's judgement after using all of them: halfblock is the least nice of
+the modes, and coloured ASCII should be what people get without choosing.
+
+Three places seed the default, and they must agree or the header will
+disagree with what is actually being rendered:
+
+- `web/backend/src/handlers/audio-video.handler.ts:259` -
+  `mode = 'halfblock'` (the destructuring default, used when a client sends
+  no mode at all)
+- `Doors/livechat/server.ts:1275` - `currentRenderMode`, which seeds the
+  header text
+- `Doors/livechat/features/voice-channel-ux.ts:478` - `renderMode`
+
+Note the mode names are not spelled the same on both sides: the backend
+switch takes `'ascii' | 'hsv' | 'braille' | 'superres' | 'halfblock' |
+'shape'`, and the door tracks `'ascii' | 'color' | 'halfblock' | 'braille'`.
+Check which string the door's "coloured ASCII" actually sends before changing
+a default to it - the door's `'color'` and the backend's `'hsv'`/`colored`
+flag need to line up, or the default will silently fall through to the
+backend's own fallback.
+
+### Emoji picker: some cannot be sent, and Enter inserts a second one
+Two reports from 2026-08-26, probably one bug each, in the same feature.
+
+**(a) Some emojis never reach the chat.** The user's guess is that it depends
+on the characters the emoji starts with. Most likely cause: these are ASCII
+emojis, and the input box renders with blessed tags enabled - blessed eats
+`{...}` as a tag, so any emoji containing a brace disappears or corrupts the
+line. `/` as a first character is the other candidate: a line starting with
+`/` is parsed as a COMMAND, so an emoji inserted into an empty input could be
+swallowed by the command parser instead of sent.
+Check which emojis fail and what their first characters are before fixing -
+brace-eating and command-parsing need different fixes.
+
+**(b) Enter after picking inserts a SECOND emoji and sends nothing.** The
+picker registers its selection callback inside `show()`
+(`Doors/livechat/ui/emoji-picker.ts:84` - `this.picker.onSelect(...)`), and
+`show()` is called from three places (`server.ts:305`, `server.ts:2571`, and
+the `/emoji` command). If those registrations accumulate on the same list
+widget, one selection fires several callbacks - which is exactly "I get
+another one". The same class of fault as the type-ahead listener bug: patching
+or re-adding a blessed list handler without removing the previous one.
+That the message is then NOT sent points the same way: the Enter is being
+consumed by the still-listening picker rather than reaching the input box.
+
+Both insert with
+`inputBox.setValue(currentText + (emoji.display || emoji.code) + ' ')`, which
+bypasses the widget's own cursor bookkeeping - worth checking whether the
+input's internal state agrees with the value it was handed.
+
 ### A text effect applied mid-sentence breaks the log rendering
 Reported 2026-08-26 on the live site. Selecting part of a line and applying
 an effect (rainbow / pulse / sparkle / shake / wave / gradient) renders the
