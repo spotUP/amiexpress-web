@@ -91,34 +91,32 @@ a default to it - the door's `'color'` and the backend's `'hsv'`/`colored`
 flag need to line up, or the default will silently fall through to the
 backend's own fallback.
 
-### Emoji picker: some cannot be sent, and Enter inserts a second one
-Two reports from 2026-08-26, probably one bug each, in the same feature.
+### Emoji picker faults - BOTH FIXED 2026-08-26
 
-**(a) Some emojis never reach the chat.** The user's guess is that it depends
-on the characters the emoji starts with. Most likely cause: these are ASCII
-emojis, and the input box renders with blessed tags enabled - blessed eats
-`{...}` as a tag, so any emoji containing a brace disappears or corrupts the
-line. `/` as a first character is the other candidate: a line starting with
-`/` is parsed as a COMMAND, so an emoji inserted into an empty input could be
-swallowed by the command parser instead of sent.
-Check which emojis fail and what their first characters are before fixing -
-brace-eating and command-parsing need different fixes.
+**(a) Some emojis could not be sent.** The catalogue contains `/!\`, and both
+places that chose between a command and a message asked only
+`startsWith('/')`, so that emoji ran the command parser, got "Unknown
+command", and was reported as handled - the message never sent. A command is
+now a slash followed by a NAME (`looksLikeCommand`, shared by both call
+sites), and the test is data-driven over the real EMOJIS list so a future
+addition cannot quietly become unsendable.
 
-**(b) Enter after picking inserts a SECOND emoji and sends nothing.** The
-picker registers its selection callback inside `show()`
-(`Doors/livechat/ui/emoji-picker.ts:84` - `this.picker.onSelect(...)`), and
-`show()` is called from three places (`server.ts:305`, `server.ts:2571`, and
-the `/emoji` command). If those registrations accumulate on the same list
-widget, one selection fires several callbacks - which is exactly "I get
-another one". The same class of fault as the type-ahead listener bug: patching
-or re-adding a blessed list handler without removing the previous one.
-That the message is then NOT sent points the same way: the Enter is being
-consumed by the still-listening picker rather than reaching the input box.
+**(b) Enter inserted a second emoji instead of sending.** Reproduced with
+`\(^o^)/` and a screenshot.
 
-Both insert with
-`inputBox.setValue(currentText + (emoji.display || emoji.code) + ' ')`, which
-bypasses the widget's own cursor bookkeeping - worth checking whether the
-input's internal state agrees with the value it was handed.
+My first guess here was WRONG and is recorded so nobody repeats it: the
+callback is NOT accumulating. `CategoryPicker.onSelect` assigns
+(`this._onSelect = callback`) and fires once, and `trapModalInput` only
+absorbs arrow keys.
+
+The real cause was ordering. `_selectCurrentItem` ran the caller's callback
+and hid itself AFTERWARDS. The callback is where a caller moves focus -
+livechat focuses its message input there - but the picker's focus TRAP was
+still armed, and the trap reasserts itself on the next keypress
+(`core/screen.ts`: "A focus trap has to reassert itself whenever focus is
+outside it"). The focus the callback had just set was dragged back into the
+picker, so the next Enter re-selected the same item. Hiding before the
+callback fixes it; `_handleCancel` had the same latent fault.
 
 ### A text effect applied mid-sentence breaks the log rendering
 Reported 2026-08-26 on the live site. Selecting part of a line and applying
