@@ -12,6 +12,61 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### A text effect applied mid-sentence breaks the log rendering
+Reported 2026-08-26 on the live site. Selecting part of a line and applying
+an effect (rainbow / pulse / sparkle / shake / wave / gradient) renders the
+chat log broken. Wrapping a whole line reportedly works, so the fault is in
+handling an effect that has static text on BOTH sides of it.
+
+Where to look, in the order the text travels:
+
+1. `Doors/livechat/ui/format-picker.ts:29-35` - each effect wraps the
+   SELECTION in `~name~...~/name~`, so a mid-sentence apply produces
+   `static ~pulse~mid~/pulse~ static` on one line.
+2. `Doors/livechat/server.ts:1649-1697` - the picker's callback calls
+   `inputBox.replaceSelection(wrappedText)`. Check the selection offsets are
+   still right AFTER the wrap (the text got longer by the tag lengths).
+3. `sdk/engines/ui/blessed/utils/animations/parser.ts:28` -
+   `ANIMATION_TAG_REGEX` handles leading/trailing static segments in
+   principle; `hasAnimationTags` and `stripAnimationTags` both reset or
+   avoid `lastIndex`, so the classic module-level `/g` reuse bug does NOT
+   look present here. Confirm rather than assume.
+4. `Doors/livechat/server.ts:1938-1945` - `rebuildChatContent()` substitutes
+   `animationManager.getRendered(idx)` for the WHOLE line. If a rendered
+   frame ever loses or repeats the static segments around the effect, this
+   is where a half-line would turn into a broken line.
+
+Measure first: feed one mid-sentence line through `parseAnimationTags` and
+`renderSegments` in isolation and print the segments. If the segments are
+right, the fault is downstream in the log substitution, not the parser -
+those two need different fixes.
+
+Possibly the same root as the duplicate-nick report below; do not assume so.
+
+### A user reported seeing the nick twice
+Reported 2026-08-26 on the live site (which does NOT yet have the
+2026-08-26 door-ownership fix - see below). One user saw the reporter's
+nickname rendered twice.
+
+Three candidates, cheapest first:
+
+1. **The double-paint class.** The door renders each message from the
+   structured `chat:message` event AND the backend can also broadcast the
+   same message as raw ANSI. `broadcastAnsiToRoom` guards against this with
+   `doorOwnsTerminal(memberSession)`
+   (`web/backend/src/handlers/chat/group-chat.handler.ts`). This is exactly
+   the shape of the 2026-08-25 report where the same message appeared twice
+   in two colours.
+2. **Formatting.** `formatMessage` / `highlightMentions` in `server.ts` -
+   a nick that also matches a mention could be emitted by both.
+3. **The animated-line substitution** at `server.ts:1938-1945`, if a
+   rendered frame carries the `[time] <nick>` prefix that the static line
+   already has.
+
+Ask the reporter which it was: the nick twice on ONE line (formatting or
+animation), or the whole message twice (the double-paint class). Those point
+at different code and the screenshot settles it in one step.
+
 ### Voice audio still stutters - CONFIRMED after the jitter buffer (2026-08-26)
 Reported live while the user was in a real two-person call: "very sturrey
 audio". This is AFTER the jitter buffer (`sdk/media/pcm.ts` `scheduleStart`,
