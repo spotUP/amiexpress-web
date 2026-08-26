@@ -21,6 +21,14 @@ command handler does (`Doors/livechat/commands/msg-dm.ts` and the
 `handlers/input-submit-handler.ts`, which is where a command's `data` is
 turned into an action).
 
+### Right-click "Add Note" and "View History" are stubs
+Both print "(not implemented yet)" and do nothing -
+`Doors/livechat/features/context-menus.ts` around the `Add Note` and
+`View History` cases. They are offered in the menu as though they work, so
+either implement them or stop listing them. A note needs somewhere to live
+(per-user, per-sysop) and history needs the chat history question below
+answered first.
+
 ### Right-click "whois" does nothing
 Same menu, different entry. Check whether the handler is wired at all or
 whether it is another case of the menu knowing a click happened but not
