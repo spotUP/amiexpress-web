@@ -224,6 +224,41 @@ A drain-first or rolling restart - bring the new container up, let sessions
 finish or migrate, then retire the old one - is what would actually solve
 it. Until then, batch pushes and avoid deploying while somebody is testing.
 
+### Wanted: deploys that do not drop everybody (user request)
+
+The user asked for what their devilbox project does - the server stays up
+and users are merely notified. The constraints here are different, and were
+checked rather than assumed:
+
+- Caddy is a single `reverse_proxy localhost:3001` and reloads gracefully
+  without dropping established connections, so the proxy is the easy part.
+- **One SQLite database on a shared volume.** Two containers at once means
+  two processes writing `amiexpress.db`; WAL helps readers, not concurrent
+  writers across processes.
+- **Fixed ports.** Telnet binds 64128; a second instance cannot, so the old
+  container must release its ports.
+- **Sessions live in process memory** - node assignment, door state,
+  subState. Nothing exists to migrate them into.
+
+Devilbox is stateless HTTP, where blue/green is trivial. A BBS with
+long-lived terminal sessions is not the same problem.
+
+Achievable in order of effort:
+
+1. **Notify then restart.** Broadcast a countdown to every connected
+   session, let people finish their keystroke, then restart. Downtime stays
+   seconds but nobody vanishes mid-sentence. Nothing blocks this.
+2. **Auto-reconnect in /chat.** socket.io already reconnects on its own;
+   what is missing is re-entering the door on the far side. Nothing blocks
+   this either.
+3. **Session restore across a restart.** Reconnect lands you where you
+   were. Needs session state persisted outside the process first.
+4. **True blue/green, zero disconnects.** Needs the database and port
+   problems solved before it is worth attempting.
+
+Recommended: do 1 and 2, and treat 3 and 4 as a separate piece of work with
+its own design.
+
 Related: all GitHub Actions and server timestamps are **UTC**, two hours
 behind the user's CEST wall clock. Local Mac, UTC and the Hetzner server
 were verified in agreement to the second, so timing evidence taken from
