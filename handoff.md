@@ -32,108 +32,50 @@ BBS_DATA_DIR="/Users/spot/Code/amiexpress-web" NODE_ENV=development \
 Also: a `cd` persisting into a later shell command silently skipped a
 kill-servers run and left four backends stacked. Always zombie-verify.
 
-## Current state (2026-08-25, latest session)
+## Current state (2026-08-26, latest session)
 
-The 31 queued commits are PUSHED (live BBS auto-deploys — verify the
-container's `.git-sha`). TetriNET parity work sits on top of them.
+**Next task: implement the LiveChat stubs.** Full brief, with every file and
+what is actually in it, is in
+`thoughts/shared/handoffs/2026-08-26_livechat-stubs-implementation.md`.
+The living list is `thoughts/shared/plans/2026-08-26-livechat-todo.md`.
 
-### TetriNET — parity plan fully executed (items 1-5)
+Voice and video now work end to end in LiveChat, and all of it is live
+(verify with `docker exec amiexpress-bbs cat /app/.git-sha`).
 
-Plan + execution log:
-`thoughts/shared/handoffs/2026-08-25_tetrinet-parity-plan.md`
+What was wrong and is now fixed:
 
-- **Specials and garbage now route between local players.** Both halves of
-  the exchange existed; the router did not. `setupAttackRouting()` in
-  `ui/tetrinet-screen.ts` resolves a target id to an engine and calls
-  `applyIncomingSpecial()` / `addGarbage(n, 'classic')`. Classic garbage
-  broadcasts to every other living player. Networked games are excluded —
-  the server fans out there, so local routing would double every hit.
-- Same pass, same disease: Clear Line applied nothing (self-only specials
-  were popped and dropped), Switch Fields bailed with 'Switch requires two
-  boards', bots could only target the human once every other bot was dead,
-  `allDead()` had zero callers so a local game could only be LOST, and a
-  TetriNET game recorded no score at all.
-- Lobby: the three settings the editor showed and the game discarded (Lines
-  for Special, Specials Added, Inventory Size) now reach the engine via
-  `optionsFromLobbySettings()`; the Winlist tab is seeded from the door's
-  own TetriNET high scores.
-- **Internal multiplayer now exists.** The TetriNET lobby adapter was
-  loopback-only (`emitNetwork('tetrinet:*')` never leaves the process), so
-  two users each sat in a private lobby. It now extends `BrokerLobbyAdapter`
-  — extracted from `ui/lobby-screen.ts` so versus and TetriNET share one
-  implementation — and a match with more than one human runs through
-  `startTetriNetNetworkGame()` over `TetriNetBrokerTransport` (fields,
-  specials, classic garbage). Bots are simulated by the HOST only and
-  published as ordinary participants.
-- **Broker trap:** `BrokerClient.isProtocolEvent` forwards only
-  `lobby:/game:/match:/state:/input:` events; anything else is silently
-  local. TetriNET packets are `game:tnet_*`.
-- **Score reporting closed the last real gap.** A TetriNET game reported
-  nothing anywhere: high scores, score server, livechat and the door_score
-  Discord webhook all come from a `GameResult`, `submitScore()` was gated on
-  the TGM engine, and `currentMode` was never `'tetrinet'` - so
-  `broadcastScore()`'s TetriNET label branch was unreachable. All three
-  paths now funnel through `reportTetriNetScore()`. Lobby voice chat added
-  to match versus. Not done, deliberately: replay recording (the TetriNET
-  engine has no recorder) and prediction/rollback netcode (versus-only,
-  pointless over an in-process broker).
-- Door suite: **55 tests, 0 failures** (was 24), including 9 that run two
-  real broker nodes against each other.
+- **Voice channels had never worked.** A door cannot reach a server handler
+  by emitting on its socket - that direction is server to client - so
+  `voice:join-channel` was delivered to the browser and the backend logged
+  zero joins in its whole history. Now routed through `door.handler.ts` like
+  `room:join`.
+- **Peer audio had never been audible.** MediaRecorder fragments cannot be
+  decoded standalone. Replaced with PCM (16 kHz Int16), which also made the
+  WebMediaPlayer exhaustion crash structurally impossible. `/mic` selects
+  the input device - the system default can be a loopback like BlackHole.
+- **Video: 21 KB a frame at 2.3 fps, now under 2 KB.** Cells plus a
+  RUN/SKIP delta codec, keyframes every 30 frames, viewer-chosen render
+  mode, ANSI dithering, box-filtered downscaling for BBS-sized tiles.
+- **Live outage**: mouse motion was forwarded and logged per event with no
+  server-side throttle, which blocked the event loop while the container
+  still reported itself up. Throttled to 40ms in
+  `web/backend/src/doors/input-motion-throttle.ts`.
+- **Deploy**: sync by tar, a `.sync-complete` marker so verification waits
+  for the entrypoint rather than for `/health`, and a check that ignores the
+  door `.ts` sources the entrypoint deliberately deletes.
 
-### Grandmaster door — large session, all fixes live locally
+Two fixes are UNVERIFIED by the user and should be checked first:
 
-Full audit + perf research:
-`thoughts/shared/research/2026-08-25_gmaster-performance-and-wiring.md`
-TetriNET build plan (next session's main task):
-`thoughts/shared/handoffs/2026-08-25_tetrinet-parity-plan.md`
+1. the audio jitter buffer (the "stuttery robot" report predates it)
+2. the mouse-motion throttle, which may have made panel hover worse
 
-Headline fixes, each with RED-verified regression tests (door suite: 24
-tests, `cd Doors/grandmaster && npm test` — the door's FIRST test harness,
-added this session):
+Gotchas earned this session:
 
-- **Multi-line clears deleted the WRONG rows.** `clearLines()` spliced by
-  original indices ascending, so each splice shifted the rest; a double
-  removed rows 20 and 22. Every double/triple/tetris left a completed row on
-  the board and destroyed a partial one. Found by differential-testing a
-  rewritten AI evaluator against the original (264/14,400 disagreements,
-  always a multiple of the holes weight — the AI was right).
-- **The whole attack/garbage system was unrouted.** Complete AttackManager,
-  zero callers: `receiveAttack()` and `sendAttack()` had none, AI engines
-  had no AttackManager at all, so "No incoming attack" was permanent.
-  Routed for CPU + network. Win detection added (`allDead()` also had zero
-  callers — a CPU battle could only be LOST).
-- **Play continued above the visible playfield.** Board is 24 rows, only 20
-  are drawn; the only game-over was block-out, so the stack grew through 4
-  invisible rows. Added lock-out.
-- **Perf:** differential rendering is now the SDK default (idle frame
-  2460 → 0 bytes), real DAS/ARR via key-down/key-up (was OS auto-repeat,
-  ~3-4x sluggish), render-on-input, AI eval 73% faster with zero behaviour
-  change, per-keystroke backend stdout writes removed, websocket-first
-  transports.
-- **Browser tabs shared one login** — token was written to localStorage on
-  every login. Cross-tab sharing is now gated on the existing
-  `bbs_auto_login_enabled` preference; tabs are independent by default.
-- `valign` was accepted everywhere and implemented nowhere; dialogs now
-  centre both ways.
+- `packages/terminal` compiles the SDK sources under its own stricter
+  tsconfig and gates the Docker build. Three other typechecks can be green
+  while the deploy fails. Typecheck it before pushing anything under `sdk/`.
+- The entrypoint deletes door `.ts` from the volume after syncing, because
+  production runs `dist/`.
+- Eleven backend processes were found running at once, only one bound to the
+  port. Zombie-verify.
 
-### Known-open
-
-1. **TetriNET internal multiplayer wants live testing** — the plan is fully
-   implemented and covered by two-node broker tests, but two humans on two
-   BBS nodes have not played a real match yet.
-2. `https://releases.uprough.net/` TLS failure. Diagnosed: DNS points at the
-   BBS host but `/etc/caddy/Caddyfile` has **no site block for it** and
-   nothing on the host references the name — Caddy's port-80 catch-all
-   redirects to HTTPS, then has no cert for that SNI. Needs a decision on
-   what should serve it. Being assigned elsewhere.
-3. Backend test suite is **red in CI on every commit**, unrelated to this
-   work: `tests/amiga-emulation/execute-lha-extract.test.ts` and
-   `tests/doors/arkanoid-score-webhook.test.ts`, 9 tests, identical on
-   `e8217958f` and on 2026-08-24 runs. Root cause of at least the arkanoid
-   one is the environment, not the code: "Could not locate the bindings
-   file" from better-sqlite3, so `tests/setup.ts` cannot open a test DB.
-   They mask real regressions in the score-webhook path specifically.
-4. Deferred perf (measured as not dominant): network payload compaction
-   (~10 KB JSON → ~0.5 KB), hoisting per-cell effect calls in renderBoard.
-
-Older sessions: `thoughts/shared/handoffs/`.
