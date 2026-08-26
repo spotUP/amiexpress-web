@@ -12,39 +12,62 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
-### A user is locked out: "Jag kommer inte in igen", requires higher access
-Reported 2026-08-26 (Swedish: "I can't get in again"). The wording matters -
-they were in BEFORE, so this is a change in what their account can reach, not
-an account that never had access.
+### Qwan locked out of chat: "requires higher access" - CAUSE MEASURED
+Reported 2026-08-26. Confirmed from the live logs and the live database, not
+inferred.
 
-"Command requires higher access." is the per-COMMAND access check, not a login
-block. express.e:3037-3039. Emitted from:
+**The evidence:**
 
-- `web/backend/src/handlers/command-execution.handler.ts:427` (the main path)
-- `web/backend/src/handlers/command.handler.ts:3955`
-- `web/backend/src/handlers/message/message-commands.handler.ts:170`
-- `web/backend/src/utils/error-handling.util.ts:150` (`permissionDenied`)
+```
+ In PROCESS_COMMAND state, executing command: CHAT
+[SYSOP DEBUG] COMMAND: Access denied for command: CHAT
+{ "userSecLevel": 0, "requiredAccess": 20 }
+```
 
-**The answer is probably already in the live logs.** The denial at
-command-execution.handler.ts:415-421 logs a WARNING carrying
-`{ userSecLevel, requiredAccess, username }` next to
-`Access denied for command: <cmd>`. Pull the live logs (the
-`fetch-live-logs.yml` workflow) and grep `Access denied for command` before
-touching any code - that single line names the user, what they ran, the level
-they have and the level the command wants.
+Five times. Meanwhile the live database says:
 
-Prime suspect, given "again":
-`const userSecLevel = isScreenAutoCommand ? MAX : (session.user?.secLevel || 0)`
-(command-execution.handler.ts:409). If a session ends up with `session.user`
-present but `secLevel` missing, `|| 0` makes it zero and EVERY command with a
-non-zero access level denies - which looks exactly like an account that used
-to work and now cannot get in. Worth checking what the session carries after
-a reconnect, since `createSession` seeds `acsLevel: -1` (index.ts:1480) and
-the user record is filled in later.
+```
+username  seclevel  confaccess  newuser  calls
+Qwan      30        XXX         1        1
+```
 
-Ask the reporter WHICH command or menu entry produced it - conference join,
-a door, or the BBS menu itself. That narrows it from "the BBS" to one
-commandDef and its `access` value.
+**The session had secLevel 0 while the account has 30.** So this is not a
+permissions setting to change - the level never reached the session.
+
+Not a column-mapping fault: `mapUserFromDb`
+(`web/backend/src/database/user-repository.ts:199`) maps `seclevel` ->
+`secLevel` for BOTH `getUserById` and `getUserByUsername`, and every place
+that builds `session.user` (`chat-only-login.handler.ts:38`,
+`index.ts:773-777`, `login-post.service.ts:135`) carries it. A session
+holding a correctly-mapped user cannot read 0.
+
+`command-execution.handler.ts:409` is
+`session.user?.secLevel || 0` - which yields 0 when **`session.user` is
+undefined**. So the CHAT command ran on a session with NO logged-in user.
+
+**Leading hypothesis** (fits every line of evidence, not yet reproduced):
+the browser reconnected, got a FRESH anonymous session (Node21 in the log),
+and something from the still-running door client was routed into the BBS
+command handler:
+
+```
+[socket-handlers] ✗ NOT in door or no handler - routing to BBS command handler
+[handleCommand] ENTRY: data="" subState=process_command
+```
+
+Note `data=""` - an EMPTY input produced a CHAT command. Nobody typed that.
+On a session with no user, the access check denies and the user is told they
+need higher access, when the truth is that they are not logged in.
+
+**To confirm**: reproduce by reconnecting a /chat session (or deploying while
+one is open, which is what the restart-notice work is about) and watch
+whether a CHAT command is executed against a userless session.
+
+**Two separate faults are visible here even so:**
+1. Whatever replays CHAT with empty input on a session that has no user.
+2. The message itself. "Command requires higher access." for a session with
+   no user at all is wrong and unactionable - it should say the session is
+   not logged in. That is what sent the user chasing an access level.
 
 ### Change the default video render mode from halfblock to coloured ASCII
 The user's judgement after using all of them: halfblock is the least nice of
@@ -170,7 +193,21 @@ whether frames arrive late (network/pacing) or arrive on time and are played
 late (main-thread starvation). Those two have different fixes and the
 symptom sounds the same.
 
-### Stale users in the sidebar (cause found)
+### Stale users in the sidebar (cause found) - STILL HAPPENING 2026-08-26
+Reported again: coffe and DiNO still shown online when they are not.
+
+The live log shows the mechanism directly - `room:joined` carries the full
+membership every time anyone joins:
+
+```
+Sending room:joined to !cyke : {"memberCount":6,"members":[
+  {"username":"coffe"},{"username":"DiNO"},{"username":"Qwan"},
+  {"username":"spot"},{"username":"Varin0x"},{"username":"!cyke"}]}
+```
+
+That is everyone who has EVER joined the room, and the door marks every one
+of them `status: 'online'`.
+
 Reported with a screenshot: three users listed online when only one was.
 `handlers/room-socket-handlers.ts` fills `onlineUsers` from `d.members` on
 `room:joined` and marks every one `status: 'online'` - but membership is
