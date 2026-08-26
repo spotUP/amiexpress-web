@@ -69,6 +69,12 @@ Two fixes are UNVERIFIED by the user and should be checked first:
 1. the audio jitter buffer (the "stuttery robot" report predates it)
 2. the mouse-motion throttle, which may have made panel hover worse
 
+**A deploy kicks everybody out of /chat.** Every push to `main` recreates
+the container and drops all sessions. Documentation no longer triggers it
+(`paths-ignore` on the workflow), but a code deploy still does - batch
+pushes, and do not deploy while somebody is testing. A drain-first or
+rolling restart is the real fix and is not built.
+
 Gotchas earned this session:
 
 - `packages/terminal` compiles the SDK sources under its own stricter

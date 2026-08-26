@@ -208,6 +208,28 @@ Also reported and not addressed:
 
 ---
 
+## D2. Deploying kicks everybody out
+
+**Every deploy recreates the container, which drops every connected
+session.** On 2026-08-26 eight deploys went out in 46 minutes - three of
+them documentation-only - and the user was repeatedly thrown out of /chat
+while trying to test the fixes being deployed.
+
+Half-fixed: `thoughts/`, markdown and `docs/` are now in `paths-ignore` on
+the deploy workflow, so writing notes cannot disconnect anybody, and
+`workflow_dispatch` is there for when a docs change does need to ship.
+
+**Still open, and the real fix**: a code deploy still disconnects everyone.
+A drain-first or rolling restart - bring the new container up, let sessions
+finish or migrate, then retire the old one - is what would actually solve
+it. Until then, batch pushes and avoid deploying while somebody is testing.
+
+Related: all GitHub Actions and server timestamps are **UTC**, two hours
+behind the user's CEST wall clock. Local Mac, UTC and the Hetzner server
+were verified in agreement to the second, so timing evidence taken from
+container mtimes and workflow logs is sound - just remember to convert
+before quoting a time back to the user.
+
 ## E. Learnings that will save time
 
 **A door cannot call a server handler by emitting on its socket.** That
@@ -253,7 +275,34 @@ the cell cap was later raised on bandwidth evidence with no CPU measurement.
 
 ---
 
-## G. Other notes
+## G. State of the tree
+
+Everything described here is committed AND pushed - `origin/main` is at
+`0d4e7410d` and nothing is outstanding locally. The live site runs it;
+verify with `docker exec amiexpress-bbs cat /app/.git-sha`.
+
+The working tree carries unrelated noise that predates this work and should
+NOT be committed: runtime logs (`Doors/ByteKiller/logs/`,
+`web/backend/debug-display-flow.log`), node CallersLog/DoorLog churn, and a
+large set of untracked door data files under `Doors/ACCV105/` and similar.
+Add files by name, never `git add -A`.
+
+Commits from this session, newest first:
+
+| Commit | What |
+|---|---|
+| `0d4e7410d` | docs changes no longer trigger a deploy |
+| `a3634f823` | mute menu labels invert from state |
+| `b7e14bec9` | mouse-motion throttle - the live outage fix |
+| `6f46d14c8` | deploy verification ignores stripped door sources |
+| `760addd31` | wait for `.sync-complete`; box-filter video shrinking |
+| `fee2809a0` | door sync by tar |
+| `360acd9ff` | `packages/terminal` build fix |
+| `4ba4f7f78` | video cells + delta codec |
+| `a4bb80281` | PCM voice audio, `/mic` |
+| `460eff393` | voice channel routing, roster, meter |
+
+## G2. Other notes
 
 - A peer Claude session works in this same checkout. `git fetch` and check
   both directions before pushing.
