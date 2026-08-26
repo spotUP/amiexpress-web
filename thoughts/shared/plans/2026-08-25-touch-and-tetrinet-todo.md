@@ -383,3 +383,30 @@ game. If it still fails with opponents present, start at
 Worth fixing regardless: the panel hint still reads "TAB: Next 1-5: Select",
 which describes a select-then-fire model the code no longer uses - the
 number key fires immediately.
+
+## 22. A proper LiveChat <-> Discord bridge  (wanted, 2026-08-26)
+
+What exists today is NOT a bridge: `web/backend/src/services/webhook.service.ts`
+posts BBS events one way into a Discord channel (18 triggers, `type:
+'discord' | 'slack'`, per-door filtering), managed by the sysop `WEBHOOK`
+command. Webhooks can only push outward - they cannot read a channel.
+
+A real bridge needs a Discord BOT with a gateway connection, and then:
+
+- Discord -> LiveChat: the bot subscribes to one channel and injects
+  messages into the LiveChat room, attributed to the Discord author. The
+  chat rooms already accept messages from the backend, so the injection
+  point is the same one the BBS uses.
+- LiveChat -> Discord: send on room message rather than on the existing
+  event triggers, so it carries the author and the room.
+- Identity: a Discord user is not a BBS user. Decide whether they appear as
+  `name (discord)` or map to accounts, and make sure whatever is chosen
+  cannot be spoofed from the Discord side.
+- Loops: a message bridged out must not come back in. Tag bridged messages
+  and drop them on the way back.
+- Rate and size: Discord's 2000-character limit, its rate limits, and what
+  to do with ANSI art and colour tags that mean nothing there.
+
+Worth deciding first whether the bot lives in this backend (one more
+long-lived connection) or as a small separate service that talks to the BBS
+over the existing socket API.
