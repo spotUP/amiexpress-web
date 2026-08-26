@@ -12,6 +12,22 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### Stale users in the sidebar (cause found)
+Reported with a screenshot: three users listed online when only one was.
+`handlers/room-socket-handlers.ts` fills `onlineUsers` from `d.members` on
+`room:joined` and marks every one `status: 'online'` - but membership is
+everyone who has EVER joined the room, not who is connected now. `ou.delete`
+only fires for somebody who leaves while you are watching. Either the server
+sends presence, or the door cross-references `presenceService` before
+rendering.
+
+### Text selection marks the whole terminal
+Selecting chat log text to copy also selects everything else on screen, so
+the paste is unusable.
+
+### Login button sits one row too high
+`ui/login-modal.ts`, shown by `chat-only-login.ts`, on /chat.
+
 ### /msg does not send, though the context menu does
 `/msg @dino test` appears to do nothing, while right-clicking a user and
 choosing to send a message works. Two paths to the same feature, one of
