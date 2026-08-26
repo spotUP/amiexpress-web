@@ -12,6 +12,42 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### Deploy hole: doors only get npm dependencies if they use better-sqlite3
+Reported 2026-08-27, WHIP failing on the live site:
+
+```
+Error executing door: Cannot find module 'xml2js'
+Require stack: /app/data/bbs/Doors/whip/dist/core/party-calendar.js
+```
+
+`Doors/whip/package.json` declares `xml2js` and it was never installed.
+`docker-entrypoint.sh:426` decides whether to install a door's dependencies
+like this:
+
+```sh
+if grep -q '"better-sqlite3"' "$door_dir/package.json" 2>/dev/null; then
+    ... npm install --omit=dev
+fi
+```
+
+So a door gets `npm install` ONLY if it uses better-sqlite3. Every other door
+receives just the SDK symlink and no `node_modules` at all. node_modules is
+excluded from the Docker build, so nothing else supplies them.
+
+**This is not specific to WHIP.** Any door with a plain npm dependency is
+broken in production the moment it is called, and the failure surfaces to the
+user as a door that will not start.
+
+Fix: install when the dependencies are actually MISSING rather than when a
+particular package is named - e.g. a door has `dependencies` in its
+package.json and no `node_modules`, or a declared dependency does not resolve.
+Keep the existing better-sqlite3 branch, which additionally handles a native
+binary built for the wrong platform.
+
+Worth auditing at the same time which doors declare dependencies and whether
+they are present on the live volume, since a door nobody has run recently
+would fail the same way and nobody would know yet.
+
 ### Qwan locked out of chat: "requires higher access" - CAUSE MEASURED
 Reported 2026-08-26. Confirmed from the live logs and the live database, not
 inferred.
