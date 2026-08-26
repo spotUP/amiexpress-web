@@ -21,6 +21,21 @@ command handler does (`Doors/livechat/commands/msg-dm.ts` and the
 `handlers/input-submit-handler.ts`, which is where a command's `data` is
 turned into an action).
 
+### Mute/Ignore/Block labels never say "un-"
+Muting works - `toggleMute` flips the state and choosing the same level
+again lifts it - but the menu still reads "Mute User", so there is no way
+to tell whether somebody is muted, and the only way back looks like the
+way in.
+
+The cause is that the item list is a fixed array built without consulting
+the mute state (`Doors/livechat/features/context-menus.ts`, `scm()`):
+
+    its.push('View Profile', ..., 'Mute User', 'Ignore', 'Block');
+
+`extras.muteList` is available in the same scope and `core/mute-list.ts`
+can already report a user's level. Small fix: label each entry from the
+current level.
+
 ### Right-click "Add Note" and "View History" are stubs
 Both print "(not implemented yet)" and do nothing -
 `Doors/livechat/features/context-menus.ts` around the `Add Note` and
