@@ -12,6 +12,47 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### /msg does not send, though the context menu does
+`/msg @dino test` appears to do nothing, while right-clicking a user and
+choosing to send a message works. Two paths to the same feature, one of
+them broken - compare what the context menu does with what the `/msg`
+command handler does (`Doors/livechat/commands/msg-dm.ts` and the
+`selectMicDeviceId`-style result plumbing in
+`handlers/input-submit-handler.ts`, which is where a command's `data` is
+turned into an action).
+
+### Right-click "whois" does nothing
+Same menu, different entry. Check whether the handler is wired at all or
+whether it is another case of the menu knowing a click happened but not
+what was under it - the row-to-message mapping in `ui/chat-row-map.ts` was
+added for exactly that class of bug on the chat log.
+
+### Panel hover only highlights on the border, not inside it
+Hovering anywhere inside a panel used to highlight it, and edges used to
+colour to show they can be resized. Now only the border itself responds.
+`sdk/engines/ui/blessed/widgets/dockable-panel.ts` has the machinery -
+`mouseenter`/`mouseleave` set `isPanelHovered`, and
+`applyBorderHoverStyle()` paints per-edge colours from
+`currentHoverEdge`/`currentResizeEdge`. Worth checking whether the
+mouse-motion throttle added on 2026-08-26 (see
+`web/backend/src/doors/input-motion-throttle.ts`) is coarse enough to be
+losing enter/leave transitions, and whether `mouseenter` fires for the
+panel body now that children cover it.
+
+### Sidebar loses its border after being dragged
+`_originalBorderColor` is captured once at construction in DockablePanel
+and restored on mouseleave, defaulting to 'blue' when it cannot find one.
+Check what the panel's style looks like after a drag.
+
+### Chat history is not preserved
+Confirmed as never having worked, so this is a gap rather than a
+regression. There is no database under `Doors/livechat` on the live volume
+at all; decide where history should live before implementing.
+
+### How to create new channels
+No obvious path in the UI. `/join` creates a room server-side, but there is
+no channel-creation affordance in the sidebar.
+
 ### Focus outline is inconsistent between panels
 The message input draws a white outline on hover/focus; the left panel
 (sidebar) does not. Both should follow the same rule, whatever it is -
