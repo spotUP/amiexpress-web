@@ -12,6 +12,40 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### A user is locked out: "Jag kommer inte in igen", requires higher access
+Reported 2026-08-26 (Swedish: "I can't get in again"). The wording matters -
+they were in BEFORE, so this is a change in what their account can reach, not
+an account that never had access.
+
+"Command requires higher access." is the per-COMMAND access check, not a login
+block. express.e:3037-3039. Emitted from:
+
+- `web/backend/src/handlers/command-execution.handler.ts:427` (the main path)
+- `web/backend/src/handlers/command.handler.ts:3955`
+- `web/backend/src/handlers/message/message-commands.handler.ts:170`
+- `web/backend/src/utils/error-handling.util.ts:150` (`permissionDenied`)
+
+**The answer is probably already in the live logs.** The denial at
+command-execution.handler.ts:415-421 logs a WARNING carrying
+`{ userSecLevel, requiredAccess, username }` next to
+`Access denied for command: <cmd>`. Pull the live logs (the
+`fetch-live-logs.yml` workflow) and grep `Access denied for command` before
+touching any code - that single line names the user, what they ran, the level
+they have and the level the command wants.
+
+Prime suspect, given "again":
+`const userSecLevel = isScreenAutoCommand ? MAX : (session.user?.secLevel || 0)`
+(command-execution.handler.ts:409). If a session ends up with `session.user`
+present but `secLevel` missing, `|| 0` makes it zero and EVERY command with a
+non-zero access level denies - which looks exactly like an account that used
+to work and now cannot get in. Worth checking what the session carries after
+a reconnect, since `createSession` seeds `acsLevel: -1` (index.ts:1480) and
+the user record is filled in later.
+
+Ask the reporter WHICH command or menu entry produced it - conference join,
+a door, or the BBS menu itself. That narrows it from "the BBS" to one
+commandDef and its `access` value.
+
 ### Change the default video render mode from halfblock to coloured ASCII
 The user's judgement after using all of them: halfblock is the least nice of
 the modes, and coloured ASCII should be what people get without choosing.
