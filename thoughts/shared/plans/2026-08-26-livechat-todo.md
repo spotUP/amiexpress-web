@@ -12,6 +12,24 @@ fixed in that session and are listed only so the history is readable.
 
 ## Open
 
+### Voice audio still stutters - CONFIRMED after the jitter buffer (2026-08-26)
+Reported live while the user was in a real two-person call: "very sturrey
+audio". This is AFTER the jitter buffer (`sdk/media/pcm.ts` `scheduleStart`,
+80ms lead, 400ms cap) shipped, so that fix did NOT solve it and the earlier
+report no longer counts as predating a fix.
+
+Next suspect, per the previous session's own note: `ScriptProcessorNode` runs
+on the MAIN thread, alongside video encode and the blessed redraw. Any main
+thread stall drops audio frames, which is exactly what a robot stutter sounds
+like. The fix is an `AudioWorklet` (loadable from a Blob URL, so it still
+works with no separate asset to serve).
+
+Before writing any of it, MEASURE: log inter-arrival time of `audio:data` at
+the receiver and the underrun count at the ring buffer, so it is clear
+whether frames arrive late (network/pacing) or arrive on time and are played
+late (main-thread starvation). Those two have different fixes and the
+symptom sounds the same.
+
 ### Stale users in the sidebar (cause found)
 Reported with a screenshot: three users listed online when only one was.
 `handlers/room-socket-handlers.ts` fills `onlineUsers` from `d.members` on
