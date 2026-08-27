@@ -56,49 +56,48 @@ ignored or overwritten at the next boot.
 | SecurityPage | wrote `security_level_access` table; hardcoded level list; no delete control | reads and writes `Access/ACS.<level>.info`, levels come from the files that exist, can create a level |
 | DoorsPage (door edit) | looked up a positional id as a database row - "Door 349 not found" | writes `Commands/BBSCmd/<command>.info`, identified by command |
 
-### Broken in the same way - writes SQLite, BBS reads disk
+### CORRECTION - most of these pages were already disk-first
 
-Each of these needs the same treatment as SecurityPage: write the `.info`,
-mirror to the database.
+The first version of this document listed ten pages as writing SQLite while
+the BBS reads disk. **That was wrong.** It classified pages by counting
+filesystem calls against repository calls in the ROUTE file, and the route
+files delegate to services - which is where the disk writing happens.
 
-| Page | Should own | Severity |
+Checked by reading each service's mutation paths:
+
+| Page | Writes on update | Verdict |
 |---|---|---|
-| ConferencesPage | `ConfConfig.info`, `Conf<N>.info` | HIGH - boot overwrites the table from disk, so edits vanish |
-| SystemConfigPage | `bbsConfig.info` | HIGH - this is the BBS's own configuration |
-| DrivesPage | `Conf*.info` DLPATH.n / ULPATH.n | HIGH - upload and download paths |
-| ProtocolsPage | `Protocols.info`, `Protocols/` | MEDIUM |
-| ScreenTypesPage | `ScreenTypes.info` | MEDIUM |
-| LanguagesPage | `Languages.info`, `Languages/` | MEDIUM |
-| ComputersPage | `ComputerList.info` | LOW |
-| FileCheckersPage | disk file to be identified | LOW |
-| NodesPage | to be identified | MEDIUM |
-| UsersPage | `user.data` slots - login already syncs DB -> disk, so the direction exists | HIGH - user edits are what a sysop reaches for first |
+| SystemConfigPage | `saveBBSConfig()` -> `bbsConfig.info`; sensitive fields encrypted in the DB | correct, and a good model of disk-first |
+| ConferencesPage | `updateConferenceInfoFile()` -> `Conf<N>.info`; create runs `setupConference()` | correct |
+| DrivesPage | the same `Conf<N>.info` path, DLPATH.n / ULPATH.n | correct |
+| UsersPage | `user-repository` syncs every update to `user.data` via `userFileManager` | correct - all 31 live users have a slot |
+| Protocols, ScreenTypes, Languages, Computers, FileCheckers, Nodes | each service touches disk in its mutation paths | no evidence of a disk/DB split; not individually re-verified |
 
-### Broken for other reasons
+`security-config.service` was the ONE service with no filesystem access at
+all, which is why the Security page was genuinely disconnected - now fixed.
 
-| Page | Fault |
-|---|---|
-| NodeControlPage | System commands post to `/api/system/*`, which is mounted nowhere. The handlers live under `/api/nodes/*` - their own doc comments say `/api/system`. Toggle-chat and quiet-mode therefore 404. |
-| DoorsPage (create) | The form's defaults and dropdowns used a vocabulary nothing accepts (`68K`, `JS`, `TS`, `EXEC`, runtime `node`). Fixed for editing; creating a NEW door still writes only the database and produces no `.info`, so a door created here does not exist to the BBS. |
+The lesson for the redesign: the admin app is largely disk-first already. It
+does not need rebuilding on that account.
 
-### Read-only or not config
+### Still genuinely broken
 
-`AuditLogPage`, `StatisticsPage`, `LogsPage`, `HealthCheckPage`,
-`DeploymentPage`, `SessionLogsPage`, `OperatorChatPage`,
-`OperatorChatSettingsPage`, `ImportExportPage`, `LoginPage`. These read, act
-on the live process, or manage things that genuinely live in SQLite (operator
-chat, audit log). No disk/DB conflict.
+| Page | Fault | Severity |
+|---|---|---|
+| NodeControlPage | System commands post to `/api/system/*`, mounted nowhere - the handlers live under `/api/nodes/*`, and their own doc comments say `/api/system`. Toggle-chat and quiet-mode 404. | HIGH - silently does nothing |
+| DoorsPage (create) | `writeDoorInfoFile` writes TYPE from a runtime map that yields `TS` or `AMIGA`. Neither is a door type the loader knows (XIM, AIM, SIM, TIM, IIM, FIM, DD, typescript), so a created 68K door is not recognised as one. It also emits a bogus first line `<door_type>=<command>`. | MEDIUM |
+| DoorsPage (create over an existing command) | The same writer replaces an existing BINARY `.info` with a plain-text one. Both parse - the loaders have a text fallback, confirmed by test - but STACK, PRIORITY, NAME, MULTINODE and the Amiga icon are lost. | HIGH - destroys working configuration |
 
 ## Suggested order
 
-1. **UsersPage** and **SystemConfigPage** - most reached for, most surprising
-   when silently ineffective.
-2. **ConferencesPage** and **DrivesPage** - edits are actively overwritten at
-   the next boot, which is worse than being ignored.
-3. **NodeControlPage** `/api/system` - a one-line mount, currently a 404.
-4. **DoorsPage** create - route it through the same `.info` writer as edit.
-5. Protocols, ScreenTypes, Languages, Computers, FileCheckers, Nodes.
-6. Only then the Radix/dark redesign, over a data layer that tells the truth.
+1. **DoorsPage create** - it can destroy a working door's `.info`. Route it
+   through the same tooltype writer the edit path now uses, which preserves
+   what it is not asked to change.
+2. **NodeControlPage** `/api/system` - a one-line mount, currently a 404.
+3. Spot-check Protocols, ScreenTypes, Languages, Computers, FileCheckers and
+   Nodes the way Conferences and SystemConfig were checked - by reading the
+   service, not by counting.
+4. The Radix/dark redesign. The data layer underneath is in better shape than
+   this document first claimed.
 
 ## Method
 
@@ -111,6 +110,12 @@ The earlier endpoint-existence pass is in the companion document, including
 its three rounds of false positives; treat scripted counts here as leads and
 confirm by hand, which is how "14 of 28 pages broken" became one real dead
 endpoint.
+
+That lesson had to be learned twice. The storage classification in the first
+version of THIS document was also produced by counting - filesystem calls
+against repository calls, in the route files - and it was wrong about ten
+pages, because the route files delegate to services and the services write the
+disk. Read the mutation path.
 
 Not covered: whether each form's individual fields round-trip correctly. The
 door NAME field is a warning - it round-tripped a door's command into its
