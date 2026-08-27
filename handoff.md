@@ -3,85 +3,112 @@
 ## READ THIS FIRST in a fresh session
 
 Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`.
-Both LIVE. Push to either repo's `main` auto-deploys; after pushing, CHECK IT
-(`docker exec <container> cat /app/.git-sha` — green CI has lied before).
-Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**
-(not the `:31337` known_hosts entry, that port refuses exec).
+Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
+(`docker exec amiexpress-bbs cat /app/.git-sha` - green CI has lied before).
+Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
 
-**A peer Claude Code session works in this SAME repo checkout concurrently.**
-`git fetch` and check `git log --oneline origin/main..HEAD` /
-`HEAD..origin/main` before assuming history is your own doing, before
-pushing (a push can carry someone else's finished-but-uncommitted work
-along with it — happened twice on 2026-08-24), and before deleting/force-
-touching anything.
+**A deploy still disconnects /chat - but everyone now gets a 60-second
+countdown first**, and /chat reconnects itself. Proven on its first real run
+(signal 21:39:21, container recreated 21:40:22). Documentation changes do not
+deploy at all (`paths-ignore`).
 
-**Dev environment**: use `./dev/scripts/start-servers.sh` / `kill-servers.sh`
-/ `npm run dev:doors` — NOT ad-hoc `npm run dev &` + `pkill`. After any stop
-(including an automatic watcher restart), zombie-verify:
-`ps aux | grep -E "(start-servers|kill-servers|watch-doors|build-wasm|tsx .*src/index.ts)" | grep -v grep`
-(expect empty) before starting again, or you'll get EADDRINUSE crash loops.
-`start-servers.sh` has an intermittent mid-run failure that force-kills the
-backend it just started ("Backend crashed with code null"); it hit twice on
-2026-08-25. Workaround that works: run the backend DIRECTLY, from the REPO
-ROOT (data paths are relative — launching from `web/backend/` gives
-`ENOENT: data/bbs/node1.user.tmp` on login):
-```
-BBS_DATA_DIR="/Users/spot/Code/amiexpress-web" NODE_ENV=development \
-  npx tsx web/backend/src/index.ts
-```
-Also: a `cd` persisting into a later shell command silently skipped a
-kill-servers run and left four backends stacked. Always zombie-verify.
+**A peer Claude Code session may work in this SAME checkout.** `git fetch` and
+check both directions before pushing.
 
-## Current state (2026-08-26, latest session)
+**Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
+`kill-servers.sh`. Zombie-verify after every stop:
+`ps aux | grep -E "(start-servers|kill-servers|watch-doors|tsx .*src/index.ts)" | grep -v grep`
+(expect empty). **78 stale backends were found running at once this session** -
+`tsx` does not hot-reload, so a stale process serving old code looks exactly
+like a failed fix. If a change "does not apply" after a restart, clear the tsx
+cache: `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
-**Next task: implement the LiveChat stubs.** Full brief, with every file and
-what is actually in it, is in
-`thoughts/shared/handoffs/2026-08-26_livechat-stubs-implementation.md`.
-The living list is `thoughts/shared/plans/2026-08-26-livechat-todo.md`.
+## Current state (2026-08-27)
 
-Voice and video now work end to end in LiveChat, and all of it is live
-(verify with `docker exec amiexpress-bbs cat /app/.git-sha`).
+**6 commits on `main` are unpushed. Live runs `cc15a318f`, older than HEAD.**
+Full detail in
+`thoughts/shared/handoffs/2026-08-27_admin-audit-and-redesign.md` - read it.
 
-What was wrong and is now fixed:
+`Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin edit
+writing the repo's copy. Left uncommitted on purpose.
 
-- **Voice channels had never worked.** A door cannot reach a server handler
-  by emitting on its socket - that direction is server to client - so
-  `voice:join-channel` was delivered to the browser and the backend logged
-  zero joins in its whole history. Now routed through `door.handler.ts` like
-  `room:join`.
-- **Peer audio had never been audible.** MediaRecorder fragments cannot be
-  decoded standalone. Replaced with PCM (16 kHz Int16), which also made the
-  WebMediaPlayer exhaustion crash structurally impossible. `/mic` selects
-  the input device - the system default can be a loopback like BlackHole.
-- **Video: 21 KB a frame at 2.3 fps, now under 2 KB.** Cells plus a
-  RUN/SKIP delta codec, keyframes every 30 frames, viewer-chosen render
-  mode, ANSI dithering, box-filtered downscaling for BBS-sized tiles.
-- **Live outage**: mouse motion was forwarded and logged per event with no
-  server-side throttle, which blocked the event loop while the container
-  still reported itself up. Throttled to 40ms in
-  `web/backend/src/doors/input-motion-throttle.ts`.
-- **Deploy**: sync by tar, a `.sync-complete` marker so verification waits
-  for the entrypoint rather than for `/health`, and a check that ignores the
-  door `.ts` sources the entrypoint deliberately deletes.
+## Next task, agreed with the user
 
-Two fixes are UNVERIFIED by the user and should be checked first:
+Split across two workers:
 
-1. the audio jitter buffer (the "stuttery robot" report predates it)
-2. the mouse-motion throttle, which may have made panel hover worse
+1. **This session implements the admin redesign** - Phase 1 of
+   `thoughts/shared/plans/2026-08-27-admin-redesign.md`. Design needs the
+   user's visual feedback, so it belongs where they can steer it.
+2. **An agent finishes the audit** - Computers and Protocols have the
+   screen-types data-loss bug; per-field round-tripping is unverified
+   everywhere.
 
-**A deploy kicks everybody out of /chat.** Every push to `main` recreates
-the container and drops all sessions. Documentation no longer triggers it
-(`paths-ignore` on the workflow), but a code deploy still does - batch
-pushes, and do not deploy while somebody is testing. A drain-first or
-rolling restart is the real fix and is not built.
+**Tell the audit agent to read each service's mutation path, not to count.**
+Scripted counting gave the wrong answer three times this session: "14 of 28
+pages broken" became one real bug, and a later "ten pages write only SQLite"
+was wrong about every one of them.
 
-Gotchas earned this session:
+If both run at once, the second must work in a **git worktree** - the
+pre-commit hook rebuilds door `dist/` from disk, so concurrent commits in one
+checkout pull each other's half-finished work into a commit.
 
-- `packages/terminal` compiles the SDK sources under its own stricter
-  tsconfig and gates the Docker build. Three other typechecks can be green
-  while the deploy fails. Typecheck it before pushing anything under `sdk/`.
-- The entrypoint deletes door `.ts` from the volume after syncing, because
-  production runs `dist/`.
-- Eleven backend processes were found running at once, only one bound to the
-  port. Zombie-verify.
+### Phase 1, in order
 
+1. **The 117 dead Tailwind classes** - only six `bbs-*` colours are defined in
+   `web/config-app/tailwind.config.js`, but `bbs-border` (78 uses),
+   `bbs-secondary` (18), `bbs-background` (14), `bbs-hover` (6) and `bbs-error`
+   (1) are used across 14 files and compile to nothing. Invisible borders,
+   missing panel backgrounds. Cheapest visible win in the project.
+2. Tokens and design system, then the app shell and grouped navigation.
+3. The Overview dashboard, on polling only - it ships without any backend
+   change.
+
+**Hard rule: restyle only, never change a data path in the same commit.** The
+door NAME bug came from exactly that mistake - a field round-tripped a door's
+command into its title and renamed it.
+
+Phase 0 of that plan is already done, and so is its Phase 3 door work; the
+planning agent's snapshot predates both.
+
+## The admin app is disk-first already
+
+The BBS reads `.info` files from disk; SQLite is downstream. Two audits, with
+corrections, are in `thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
+`2026-08-27_admin-page-by-page.md`. **The redesign does not need a storage
+rewrite underneath it.**
+
+Fixed this session: the Security page now writes `Access/ACS.<level>.info`;
+door edit, rename and create write `Commands/BBSCmd/<command>.info` and can no
+longer destroy a working door; screen types no longer erase each other on save;
+node system commands reach a route that exists; `web/config-app` typechecks for
+the first time.
+
+## Unverified, waiting on the user
+
+- **Audio stutter.** One measured cause fixed - 58.4 ms of audio per minute was
+  discarded at capture block boundaries. Diagnostics are live: a stuttering
+  call now logs `[Audio][stutter]` saying whether the sender's main thread or
+  the network is late. Not confirmed fixed.
+- **DOORMAN cannot see the wall door.** Unexplained. WALL IS registered on live
+  and `getDoorList()` filters nothing, so two theories are ruled out. Need to
+  know which view: installed, or repo browse - a local door would not be in the
+  repo at all.
+- **`wall.info` NAME reads "WALL"** on live, overwritten before the rename fix
+  landed. The original is in `wall.info.backup` beside it.
+
+## Gotchas
+
+- **Read the mutation path; do not count.** Three false-positive rounds.
+- **`screen.focused` is a boolean about the Screen itself.** The focused
+  element is `screen.getFocused()`. This cost time twice, once in a door
+  diagnostic that could only ever print "none".
+- **SDK tests import the built `sdk/dist`.** A source edit is invisible until
+  `npm run build:cjs`.
+- **`packages/terminal` compiles the SDK under a stricter tsconfig and gates the
+  Docker build.** Typecheck it before pushing anything under `sdk/`.
+- **The live log is not the current log** - every deploy replaces the container.
+- **`head` truncates evidence.** "Live has no WALL door" was wrong because a
+  grep was cut off at six lines.
+- **Doors only got npm dependencies if they used better-sqlite3.** Fixed; 11
+  doors were repaired on the next deploy. `web/backend/scripts/door-needs-deps.sh`
+  decides, and it is tested.
