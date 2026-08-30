@@ -84,16 +84,14 @@ DOORREPO (the C door) was audited and is already repo-driven: `list.txt`,
 `archive_path` and `binary_name` stay local by nature - they describe this
 node's copy, not the catalog's.
 
-- **One fetch fills the rest** (`28e849852`). `/doors/:archiveName` carries
-  version, suggestedTooltypes, fileIdDiz, docFilename, doc and the file list;
-  `fetchDoorDetail` replaced `fetchDoc`/`fetchArchiveFiles`, and RepoView
-  caches it per archive (the info-pane fetch is debounced - it runs on every
-  cursor move). The manifest's own `hasDoc` and `junkCount` were being
-  dropped in `mapManifestDoorToEntry`, so the footer never advertised
-  `[V]=Doc` on any consumer row. The install record now carries the version,
-  the md5 and the manifest revision. **Committed, not pushed.** `app.ts`
-  crossed 2000 lines again: `installConsumerDoor` and the collision guard
-  moved to `install-core.ts`, re-exported from `app.ts`.
+- **One fetch fills the rest** (`28e849852`, **committed, not pushed**).
+  `fetchDoorDetail` (`/doors/:archiveName`) replaced `fetchDoc` and
+  `fetchArchiveFiles`; RepoView caches it per archive, and the info-pane
+  fetch is debounced because it runs on every cursor move. The manifest's
+  own `hasDoc`/`junkCount` were dropped in `mapManifestDoorToEntry`, so no
+  consumer row ever advertised `[V]=Doc`. The install record now carries
+  version, md5 and revision. `app.ts` crossed 2000 lines again:
+  `installConsumerDoor` moved to `install-core.ts`, re-exported.
 
 ## The door fixes, 2026-08-30
 
