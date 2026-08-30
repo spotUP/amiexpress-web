@@ -13,7 +13,7 @@ reader disagree** - the admin writes a setting one place and something else
 reads it from another, so both halves work perfectly on different data and
 nothing ever reports a failure.
 
-## 1. "Registered to UNREGISTERED" during login - OPEN
+## 1. "Registered to UNREGISTERED" during login - DONE
 
 **Reported 2026-08-31: "the bbs reports Registered to UNREGISTERED during
 login, shouldn't it report my sysop name from the admin page? amiexpress is
@@ -46,13 +46,15 @@ Two things are true at once:
   "Registered to Spot." The line still honours REG_KEY when one is set, for
   a board that carries one.
 
-Whichever is chosen, the read/write split has to be fixed with it, or the
-field stays unreachable. Either `reg_key` stops being classed as a secret and
-goes to disk with the rest of the configuration (it is a name, not a
-credential - the same argument that moved the password POLICY settings), or
-the banner reads it back through the merged accessor.
+**Fixed.** The argument settled itself: express.e:25696, :28786 and :29516
+print the value to every caller at login, so a value read from a plaintext
+tooltype and shown to everyone who connects is not a credential. `reg_key`
+left SENSITIVE_FIELDS and is disk configuration now, and the banner falls
+back to `sysop_name` - option (a) - with express.e's own 'NONE' behind that.
+The form's "empty means leave it alone" guard, which only made sense while it
+was a secret, is gone too, so the field can be cleared.
 
-## 2. Bulletins is a file, not a directory, in eight conferences - AWAITING A SHELL
+## 2. Bulletins is a file, not a directory, in eight conferences - DONE
 
 **Found while verifying the Health and Deployment report.**
 
@@ -74,7 +76,12 @@ preserve. The remedy, which needs a shell on the live host:
 The `[ ! -s ]` re-check is deliberate: it refuses to touch a Bulletins file
 that has gained content since this was written.
 
-## 3. The eleven-domain round-trip sweep - NOT STARTED
+**Run by the sysop on 2026-08-31**, all eight reported fixed and verified:
+Conf1, 2, 3, 6, 7, 9, 11, 12 and 13 all carry a Bulletins DIRECTORY now, so
+express.e:24648 can build Bulletins/Bull<n> and those conferences can show
+bulletins for the first time.
+
+## 3. The round-trip sweep across every domain - DONE
 
 The contract test that closed this class for System Configuration
 (`tests/services/system-config-field-coverage.test.ts`) starts from what the
@@ -88,6 +95,34 @@ a sysop rather than by the build.
 
 Shape, per domain: take what GET serves, feed it back to PUT unchanged, assert
 it validates and round-trips to disk.
+
+**Written as `tests/services/config-round-trip-contract.test.ts`**, covering
+nine domains: Nodes, Conferences, Doors, Languages, Protocols, Drives,
+Computers, Screen types and File checkers. It hands each served record to the
+schema that domain's own PUT validates with, field by field, so the failure
+names the field. It reads only - feeding values back through a real PUT would
+rewrite the .info files of whatever board the suite runs on.
+
+It found three faults on its first run, all verified against the live board
+before anything was changed:
+
+- `node_number: 0` rejected by `min(1)`, and **Node0 exists** on this board
+  and on live. The admin refused to save the first node it listed.
+- `node_start` capped at 200 characters, against a real multi-line NODESTART
+  block of 300+ (QUIETNODE, PRIORITY=-1, CONSOLE_OUTPUT_DEVICE and the rest).
+- `min_access_level: 0` rejected by `min(1)`, and level 0 is what a
+  conference open to everyone carries.
+
+The data was right in all three; the schemas were wrong about it.
+
+**Doors is not actually covered by this sweep.** ConfigService.getDoors()
+reads the `doors` TABLE and doors live on disk, so it is empty under test and
+the case passes vacuously - the file says so rather than pretending. That
+domain's GET/PUT vocabulary has its own suite,
+`tests/services/door-schema-roundtrip.test.ts`.
+
+Users and Access Levels are still not swept: neither goes through
+ConfigService, so both need their own case.
 
 ## 4. Pre-existing CI failures that are not admin - OPEN
 
