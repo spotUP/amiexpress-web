@@ -58,8 +58,9 @@ each with the commit that fixed it. All six are done and live.
 
 Nothing is queued. Open items, in the order they are worth doing:
 
-1. **Look at the admin in a browser.** Twenty-plus commits of redesign have
-   never been seen by anyone. Start at the Overview.
+1. **The admin redesign has been looked at** - the user was checking it in a
+   browser through the rework - but no defect list came back from it, so treat
+   "seen" as "not obviously broken", not as verified.
 2. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
    not rewrite it. System configuration saves land in `bbsConfig.info.txt`,
    which this BBS reads, and the admin says so - but the icon drifts until it
@@ -70,7 +71,7 @@ Nothing is queued. Open items, in the order they are worth doing:
 4. The plan's Configuration Files screen is four tabs, not the single tree
    with scope filters it describes. The tree is still the better end state.
 
-## The admin redesign is done, and unverified in a browser
+## The admin redesign is done
 
 `thoughts/shared/plans/2026-08-27-admin-redesign.md`, phases 0 to 5, with two
 deliberate departures noted below. What landed:
@@ -121,11 +122,11 @@ deliberate departures noted below. What landed:
 
 ### What has NOT been verified
 
-Nobody has opened any of this in a browser. `tsc` is clean, 51 frontend tests
-and the backend suite pass, the entry bundle is 187 kB gzip against a 400 kB
-budget - but no screen has been looked at, and the socket has never been
-exercised against a running BBS. **First job for anyone picking this up: run
-it and look.**
+The user watched the admin in a browser while it was being built, and nothing
+came back as broken - but that is not the same as verified. `tsc` is clean, 56
+frontend tests and 6056 backend tests pass, and the entry bundle is 187 kB
+gzip against a 400 kB budget. The socket has still never been exercised
+against a busy board.
 
 ## The admin app is disk-first already
 
