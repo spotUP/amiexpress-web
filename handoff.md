@@ -35,7 +35,7 @@ writing the repo's copy. Left uncommitted on purpose. The rest of the dirty
 tree is BBS runtime state - Bulletins, CallersLogs, Conf.DB, database.sqlite -
 which is deliberately never committed.
 
-The admin dev server may still be running on `http://localhost:5175/admin/`.
+The admin dev server may still be on `http://localhost:5175/admin/`.
 
 ## The DOORMAN incident - closed
 
