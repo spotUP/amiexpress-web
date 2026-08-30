@@ -144,3 +144,146 @@ Two things to decide:
 Related to the install-link work (item 4 / the door-db connection): a door
 installed through the recorder would have both halves recorded, and either
 half going missing becomes detectable.
+
+---
+
+## GrandMaster TetriNet: a lone bot should be full size, not a minimap
+
+Reported 2026-08-30 while testing the arcade doors.
+
+In TetriNet mode the opponent's board is drawn as a minimap even when there
+is only ONE bot in the game. With a single opponent there is room to show
+that board at full size, and the minimap costs readability for nothing.
+
+Wanted: full-size opponent board when there is exactly one opponent; keep
+the minimaps only once there are two or more, where the space genuinely has
+to be shared.
+
+Not started. The TetriNet layout already has a test
+(`Doors/grandmaster/tests/tetrinet-layout.test.ts`), so the sizing rule
+should be expressible there - assert one opponent renders at the full board
+width and that two or more fall back to minimaps.
+
+---
+
+## GrandMaster: "watch a game" always reports no game running
+
+Reported 2026-08-30 while testing the arcade doors.
+
+Choosing to watch/spectate a game in GrandMaster always answers that there
+is no game running, even when one is. So either the spectate lookup never
+sees live games, or games are not being registered in whatever list it
+queries.
+
+Not investigated. Starting points: `Doors/grandmaster/tests/spectator.test.ts`
+already covers the spectator path, so compare what that test sets up against
+what a real game actually registers - a live game that the test's fixture
+creates but the real start path never does would explain it exactly.
+
+---
+
+## The 10 arcade games need real ANSI graphics, not ASCII glyphs
+
+Requested 2026-08-30.
+
+The ten arcade doors (bubble-bobble, donkey-kong, frogger, galaga, joust,
+pengo, pipe-dream, super-qix, zoo-keeper, arkanoid) draw with single ASCII
+characters in one foreground colour. GrandMaster and Arkanoid already look
+far better, and they are the model.
+
+Wanted: think in 8-bit terms - SPRITES and BACKGROUND TILES. A sprite is a
+small block of coloured cells drawn at a position, not one character; a tile
+is a repeated background cell. Colour comes from the background attribute as
+much as the foreground, the way Super Qix's playfield now works
+(`BG_COLORS` in `Doors/super-qix/game/constants.ts`) - painting a space with
+a background colour gives a solid block, whereas colouring a space's
+foreground shows nothing at all.
+
+Worth designing once and sharing rather than nine times: a small sprite/tile
+helper in the SDK that takes a grid of {char, fg, bg} and blits it into a
+render buffer at x,y would serve every one of these doors. Super Qix's
+render already builds exactly that kind of buffer and would be the first
+consumer.
+
+Related: the revealed-ANSI-background feature (see below / brainstormed
+2026-08-30) uses the same cell model - `loadFile()` in
+`sdk/engines/ui/ansi-editor/core/file-ops.ts` already returns
+`Cell[][]` of {char, fg, bg}, which is the same shape a sprite would use.
+The two should share one representation.
+
+Note: that loader needs three fixes before it can be used from a door -
+`TextDecoder('cp437')` throws in Node so .ans/.asc fail outright, there is
+no CP437 to Unicode mapping, and only ESC[H/f cursor moves are handled
+(ESC[C and friends are ignored, so art that uses them renders misaligned).
+
+---
+
+## Super Qix: an attract screen that plays itself
+
+Requested 2026-08-31, with an arcade screenshot.
+
+The arcade sits in an attract loop: the HUD shows PLAYER-1 / HI-SCORE with
+ROUND 0 and RATIO 0%, the field is the plain blue playfield, the computer
+plays a demo game in the corner of it, and "GAME OVER / INSERT COIN" blinks
+in the middle. Skulls patrol the border and the Gremlin drifts about.
+
+For a BBS the coin line becomes something like PRESS A KEY TO PLAY, blinking
+the same way. The demo needs a simple自动 player - walk the frame, draw a
+box, repeat - not real AI; it only has to look alive.
+
+Where it fits: the door currently opens on an ASCII-art menu. The attract
+screen would either replace that or sit in front of it, with any keypress
+dropping into the menu (or straight into a game).
+
+Related pieces that already exist: the Time Meter border, the enemy update
+loop, and the renderer all run without a player, so an attract mode mostly
+needs a demo driver plus a blinking overlay - the banner helper added for
+the level-clear sequence (`overlayBanner` in game/qix-engine.ts) is the
+place to draw the blinking text from.
+
+## 6. The doors menu will not improve for the 370 existing doors
+
+**Seen 2026-08-31: every row reads `5DPAGER  5DPAGER`, command echoed as the
+name, no descriptions.**
+
+Two separate causes, and only one is a bug:
+
+- **Locally nothing fills at all** because `DOOR_SERVER_URL` is not set in the
+  dev backend's environment. With no door server configured the metadata index
+  is empty and the overlay returns every door untouched - by design. Live has
+  it set, so descriptions do fill there. To see it locally:
+  `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
+- **Names will still echo the command even with the door server up.** For a
+  door with no install record - all 370 - the overlay fills only EMPTY fields,
+  and `name` is non-empty because it already falls back to the command. The
+  plausibility rule that replaces a junk name applies only to LINKED doors,
+  which was the deliberate scope decision ("we can ignore the currently
+  installed doors").
+
+So making that middle column read "5D Pager" needs the archive-matching
+backfill that was deferred. The honest options are: match installed doors to
+catalog rows by fingerprint (file names and sizes from the archive's file
+list, which the door server already serves), or accept command-as-name until a
+door is reinstalled through the new recorder.
+
+## 7. The DoorRepo Amiga binary is stale, so the C work is inert on the board
+
+`Doors/DoorRepo/doorrepo.amiga` is tracked in git and dated 20 Aug locally,
+23 Aug on live. Every C change from 2026-08-30/31 - the archive-named command,
+the whole-path listing parse, the install reporting, and the BbsHost security
+fix - only reaches the board when that binary is cross-compiled again.
+`vbcc`/`vbccm68k` are on PATH and the NDK is vendored at
+`Documentation/7-Reference Sources/NDK3.2R4`, so `make amiga` in
+examples/doorrepo-c is all it takes. Do it before claiming any C change is
+live, and remember the deploy does not sync `Doors/` on its own.
+
+## 8. There were FOUR install paths, not three
+
+The spec's premise ("only one of three install paths ever wrote it") was wrong
+by one. `DoorInstaller.install()` - DOORMAN's [U]pload key, via
+BBSApi.deleteDoor's sibling `installDoorFromUpload` - extracts, writes the
+`.info`, reloads the registry and records nothing. Found by the final
+whole-branch review, fixed in the final fix wave. Worth remembering as a
+method: the pre-flight scan checked the interfaces between planned tasks but
+never grepped for every writer of `Commands/BBSCmd/*.info`, which is the
+question that would have found it.
