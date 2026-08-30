@@ -85,6 +85,17 @@ DOORREPO (the C door) was audited and is already repo-driven: `list.txt`,
 `archive_path` and `binary_name` stay local by nature - they describe this
 node's copy, not the catalog's.
 
+- **One fetch fills the rest** (`28e849852`). `/doors/:archiveName` carries
+  version, suggestedTooltypes, fileIdDiz, docFilename, doc and the file list;
+  `fetchDoorDetail` replaced `fetchDoc`/`fetchArchiveFiles`, and RepoView
+  caches it per archive (the info-pane fetch is debounced - it runs on every
+  cursor move). The manifest's own `hasDoc` and `junkCount` were being
+  dropped in `mapManifestDoorToEntry`, so the footer never advertised
+  `[V]=Doc` on any consumer row. The install record now carries the version,
+  the md5 and the manifest revision. **Committed, not pushed.** `app.ts`
+  crossed 2000 lines again: `installConsumerDoor` and the collision guard
+  moved to `install-core.ts`, re-exported from `app.ts`.
+
 ## The door fixes, 2026-08-30
 
 Nine commits, from `243e1d79a` to `3217daf3b`: the delete guard, the log
@@ -123,16 +134,9 @@ Nothing is queued by the user. Open work, in the order it is worth doing.
    which this BBS reads, and the admin now says so - but the icon drifts until
    it is re-created in Workbench or IconEdit. Needs an Amiga, not a commit.
 
-### Doors
-
-7. `GET /api/door-repo/doors/:archiveName` carries **version,
-   suggestedTooltypes, fileIdDiz and guide**, which DOORMAN still leaves at
-   neutral defaults in consumer mode. One fetch would replace the two narrower
-   ones and fill all of it.
-
 ### Elsewhere
 
-8. **Audio stutter** - one measured cause fixed, diagnostics live
+7. **Audio stutter** - one measured cause fixed, diagnostics live
    (`[Audio][stutter]` says whether the sender's thread or the network is
    late), never confirmed by the user.
 
