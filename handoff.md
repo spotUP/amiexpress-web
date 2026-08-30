@@ -39,153 +39,159 @@ The admin dev server may still be running on `http://localhost:5175/admin/`.
 
 ## The DOORMAN incident - closed
 
-Deleting doors on the live board removed every door, DOORMAN included. The
-volume confirmed it: `/app/data/bbs/Doors` did not exist, only `Doors.info`
-beside it, while `Commands/BBSCmd` still held 365 `.info` files.
+Deleting doors on the live board removed every door, DOORMAN included: the
+volume had no `Doors/` directory at all, while `Commands/BBSCmd` still held
+365 `.info` files. The uninstall force-deleted `PROJECT_ROOT/<install_dir>`
+unchecked, and `install_dir` is written as `Doors/${command}` - a record with
+no command gives `Doors/`.
 
-Cause: the repo-view uninstall ran a recursive force-delete of
-`PROJECT_ROOT/<install_dir>` with nothing checking the value, and `install_dir`
-is written as `Doors/${command}` - so a record with no command gives `Doors/`.
-The backend's own delete path already had this guard; DOORMAN's did not.
+Guarded in `Doors/door-manager/safe-install-dir.ts`, the doors were restored
+by the deploy's door sync, and the guard is confirmed running live. Full
+write-up, and the other five items raised the same day, in
+`thoughts/shared/todos/2026-08-30_queue.md`.
 
-**The doors are back** - the deploy's door sync restored them from the image,
-106 directories, DOORMAN among them - and the guard is confirmed running live.
+## The doors and the door repo
 
-`thoughts/shared/todos/2026-08-30_queue.md` has all six items the user raised,
-each with the commit that fixed it. All six are done and live.
+The catalog lives in a separate project: **`/Users/spot/Code/amiexpress-doorserver`**,
+live at **doors.uprough.net**. This BBS proxies `/api/door-repo/*` to it
+(`DOOR_SERVER_URL`, live `http://doorserver:3010`) and keeps answering at its
+own hostname, because the DoorRepo C door ships `RepoHost=bbs.uprough.net`
+baked into config on other people's machines.
+
+Client endpoints: `/manifest` (JSON), `/list.txt` (ISO-8859-1 for C89
+clients), `/files/:archive` (`FILES|count|junk` then `size|isJunk|path`),
+`/doc/:archive`, `/archive/:archive`, `/health`, and `/doors/:archive` which
+carries everything plus version, suggestedTooltypes, fileIdDiz and guide.
+
+**The live BBS runs DOORMAN in consumer mode** - neither `DOOR_REPO_ROLE` nor
+`DOOR_REPO_URL` is set, so `resolveDoorRepoMode` defaults to consumer against
+`https://bbs.uprough.net`, which loops back through this BBS's own proxy.
+
+Fixed 2026-08-30:
+
+- **DOORMAN's docs and file lists come from the repo** (`055ac8df9`). Both read
+  the LOCAL catalog service, which a consumer does not have: [V]iew doc did
+  nothing and browsing an archive said "no file data in catalog".
+- **Empty door descriptions** (`3217daf3b`). `getDoorList` overlaid metadata
+  from `door_installs`, which **does not exist on the live board**, so all 365
+  commands reached the doors menu with no description. It now asks the door
+  server's manifest, cached ten minutes, and fills only what is empty -
+  matching on name or archive base name, case and punctuation removed. A
+  door's own `.info` always wins.
+
+DOORREPO (the C door) was audited and is already repo-driven: `list.txt`,
+`/archive/`, `/health`, `/learned-patterns`. Its only local state is
+`DoorRepo.cfg` and the download directory, which is correct. `id`,
+`archive_path` and `binary_name` stay local by nature - they describe this
+node's copy, not the catalog's.
+
+## The door fixes, 2026-08-30
+
+Nine commits, from `243e1d79a` to `3217daf3b`: the delete guard, the log
+panels for install and uninstall, the list refresh, GRANDMASTER's zone meter,
+installing under the archive's own command, the install record naming what was
+actually installed, and the two repo-backed reads above. Each is named against
+its queue item in `thoughts/shared/todos/2026-08-30_queue.md`.
 
 ## Next
 
-Nothing is queued. Open items, in the order they are worth doing:
+Nothing is queued by the user. Open work, in the order it is worth doing.
 
-1. **The admin redesign has been looked at** - the user was checking it in a
-   browser through the rework - but no defect list came back from it, so treat
-   "seen" as "not obviously broken", not as verified.
-2. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
+### Admin, what is left
+
+1. **Configuration Files is four tabs, not the plan's single tree** with scope
+   filters over every `.info` file. Tabs preserved each editor exactly; the
+   tree is still the better end state.
+2. **Six pages still render their own tables**: Protocols, Computers, File
+   Checkers, Conferences, Drives and the Security flag editor. They are on the
+   design tokens, so they look right, but they sort by hand and do not get the
+   sticky header, keyboard-reachable row actions or the empty and loading
+   states. `components/ui/DataTable` is what they move to; Users, Doors,
+   Languages and Screen Types are already there.
+3. **Node Configuration deliberately stays on the old `DataGrid`** - its rows
+   turn into input fields in place, and a row being edited must not move
+   because a sort changed. Both files say so; leave it unless the edit model
+   changes.
+4. **`VITE_BYPASS_AUTH` in `App.tsx`** bypasses the frontend auth guard
+   entirely. It should go now that a sysop account exists. It has no influence
+   over the socket handshake, which reads `secLevel` server-side.
+5. **The realtime layer has never met a busy board.** Coalescing, the
+   Reconnecting state and the pages-waiting badge were all exercised by tests
+   and by hand, not by real traffic.
+6. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
    not rewrite it. System configuration saves land in `bbsConfig.info.txt`,
-   which this BBS reads, and the admin says so - but the icon drifts until it
-   is re-created in Workbench or IconEdit. This one needs an Amiga, not a
-   commit.
-3. **Audio stutter** - one measured cause fixed, diagnostics live
-   (`[Audio][stutter]`), never confirmed by the user.
-4. The plan's Configuration Files screen is four tabs, not the single tree
-   with scope filters it describes. The tree is still the better end state.
+   which this BBS reads, and the admin now says so - but the icon drifts until
+   it is re-created in Workbench or IconEdit. Needs an Amiga, not a commit.
+
+### Doors
+
+7. `GET /api/door-repo/doors/:archiveName` carries **version,
+   suggestedTooltypes, fileIdDiz and guide**, which DOORMAN still leaves at
+   neutral defaults in consumer mode. One fetch would replace the two narrower
+   ones and fill all of it.
+
+### Elsewhere
+
+8. **Audio stutter** - one measured cause fixed, diagnostics live
+   (`[Audio][stutter]` says whether the sender's thread or the network is
+   late), never confirmed by the user.
 
 ## The admin redesign is done
 
-`thoughts/shared/plans/2026-08-27-admin-redesign.md`, phases 0 to 5, with two
-deliberate departures noted below. What landed:
+Phases 0 to 5 of `thoughts/shared/plans/2026-08-27-admin-redesign.md`, marked
+implemented with an "As built" section recording two departures: TanStack
+Table **v9** (not the plan's v8 - different API, `useTable` plus explicit
+`tableFeatures`), and Configuration Files as four tabs rather than one scoped
+tree.
 
-- **Design tokens** in `web/config-app/src/styles/tokens.css`, mapped in
-  `tailwind.config.js`, with the `bbs-*` names kept as aliases. The five
-  colours that were used 122 times and never defined now exist. Roughly 400
-  raw palette classes across 31 files moved onto the ramp.
-- **Blue carries action, red is identity and danger**; body is 13 px sans with
-  mono reserved for real values; a density toggle drives row height.
-- **App shell** with grouped navigation, 14 destinations instead of 27 flat
-  entries, landing on a new **Overview** dashboard rather than a 1 729-line
-  form.
-- **Merged screens**, each behind tabs with the tab in the URL: Nodes (live
-  plus configuration), Conferences (plus file areas), Configuration Files (all
-  four tooltype editors), Lookup Tables (five lists), Health and Deployment,
-  Operator Chat (plus its settings). **Nothing inside those pages changed** -
-  several are the only route to a piece of configuration.
-  `src/routes/legacy-routes.ts` holds a permanent redirect for every path they
-  used to live at, and the tests walk that table.
-- **Realtime.** One socket for the whole app, handshaking `adminOnly=true`
-  against a new branch in `web/backend/src/index.ts`. Events invalidate query
-  keys on a 250 ms trailing window; polls speed up when the socket drops. New
-  Activity feed. A caller paging the sysop now raises a toast and a header
-  badge from any screen.
-- **The admin no longer occupies a BBS node.** It was falling through to node
-  assignment, so every Operator Chat visit burned a node and appeared as a
-  phantom user.
-- **System Configuration saves explicitly**, with a sticky bar and a Discard,
-  instead of writing `bbsConfig.info` 800 ms after a keystroke on a file the
-  running BBS reads.
-- **Deleting a user or a door asks for the name to be typed back.**
-- `InfoEditorPage` is reachable at last - 351 lines that nothing imported.
-- Computers and Protocols got the screen-types disk-first fix (from the audit
-  agent, merged after verifying 9 of its 12 tests fail without it).
+Design tokens, grouped navigation, an Overview dashboard, merged destinations
+behind tabs with permanent legacy redirects, a realtime layer, and the admin
+no longer occupying a BBS node. The full account, commit by commit, is in
+`thoughts/shared/handoffs/2026-08-30_admin-redesign-implemented.md`.
 
-### Departures from the plan, on purpose
+The user watched it in a browser while it was built and reported nothing
+broken - which is "not obviously wrong", not verified.
 
-1. **TanStack Table v9, not v8.** v9 is what installs today and its API is
-   different: `useTable` with explicit `tableFeatures` registration rather than
-   `useReactTable` with row-model options. A v9 table missing its feature
-   registration renders correctly and sorts nothing, which is what
-   `src/test/data-table.test.tsx` asserts against.
-2. **Configuration Files is four tabs, not one file tree with scope filters.**
-   Tabs preserve each editor exactly; the tree would have meant rewriting three
-   pages that are each the only route to their files. The deeper merge is still
-   worth doing.
+## The admin app is disk-first
 
-### What has NOT been verified
+The BBS reads `.info` files; SQLite is a downstream mirror. Audits:
+`thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
+`2026-08-27_admin-page-by-page.md`.
 
-The user watched the admin in a browser while it was being built, and nothing
-came back as broken - but that is not the same as verified. `tsc` is clean, 56
-frontend tests and 6056 backend tests pass, and the entry bundle is 187 kB
-gzip against a 400 kB budget. The socket has still never been exercised
-against a busy board.
-
-## The admin app is disk-first already
-
-The BBS reads `.info` files from disk; SQLite is downstream. Two audits, with
-corrections, are in `thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
-`2026-08-27_admin-page-by-page.md`. **The redesign does not need a storage
-rewrite underneath it.**
-
-Fixed across 2026-08-27 and 08-30: the Security page writes
-`Access/ACS.<level>.info`; door edit, rename and create write
-`Commands/BBSCmd/<command>.info` and can no longer destroy a working door;
-screen types, computer types and transfer protocols no longer erase the entries
-that exist only on disk (`config-merge.util.ts`, which also handles a rename
-now); node system commands reach a route that exists; `web/config-app`
-typechecks and has a vitest suite.
-
-**Per-field round-tripping is now verified** for system configuration,
+**Per-field round-tripping is verified** for system configuration,
 conferences, drives, doors, screen types, computers, protocols, languages,
 file checkers and nodes - each with tests that fail when the fix is reverted.
-It found seven faults, all of the same two shapes: a value written under one
-key and read back from another, or a writer rebuilding a file from the
-database (or from nothing) and dropping what it did not own. See
-`thoughts/shared/todos/2026-08-30_queue.md` and the commits from 2026-08-30.
+It found seven faults, all of two shapes: a value written under one key and
+read back from another, or a writer rebuilding a file from the database (or
+from nothing) and dropping what it did not own.
 
-**One finding needs a person:** this board's `bbsConfig.info` has a
-non-standard tooltype array, so the writer will not rewrite it. Saving system
-configuration works - the value goes to `bbsConfig.info.txt`, which this BBS
-reads, and the admin now says so - but the icon file will drift until it is
-re-created in Workbench or IconEdit.
+## Waiting on the user
 
-## Unverified, waiting on the user
-
-- **Audio stutter.** One measured cause fixed - 58.4 ms of audio per minute was
-  discarded at capture block boundaries. Diagnostics are live: a stuttering
-  call now logs `[Audio][stutter]` saying whether the sender's main thread or
-  the network is late. Not confirmed fixed.
-- **DOORMAN cannot see the wall door.** Unexplained. WALL IS registered on live
-  and `getDoorList()` filters nothing, so two theories are ruled out. Need to
-  know which view: installed, or repo browse - a local door would not be in the
-  repo at all.
+- **DOORMAN could not see the wall door.** Probably answered by the incident:
+  the whole `Doors/` tree was missing, so nothing under it could appear. Worth
+  re-checking now that the doors are back, and saying which view it was -
+  installed, or repo browse.
 - **`wall.info` NAME reads "WALL"** on live, overwritten before the rename fix
   landed. The original is in `wall.info.backup` beside it.
 
 ## Gotchas
 
 - **Read the mutation path; do not count.** Three false-positive rounds.
+- **A recursive delete needs a resolved-path guard, not a trusted string.**
+- **A door archive already names its own command** in
+  `Commands/BBSCmd/<COMMAND>.info`, with the tooltypes it was built with.
+- **Python rewrites line endings.** Much of this repo is CRLF; open with
+  `newline=''` on both ends or a four-line change becomes a whole-file diff.
 - **`screen.focused` is a boolean about the Screen itself.** The focused
-  element is `screen.getFocused()`. This cost time twice, once in a door
-  diagnostic that could only ever print "none".
+  element is `screen.getFocused()`.
 - **SDK tests import the built `sdk/dist`.** A source edit is invisible until
-  `npm run build:cjs`.
-- **`packages/terminal` compiles the SDK under a stricter tsconfig and gates the
-  Docker build.** Typecheck it before pushing anything under `sdk/`.
-- **The live log is not the current log** - every deploy replaces the container.
-- **`head` truncates evidence.** "Live has no WALL door" was wrong because a
-  grep was cut off at six lines.
-- **A merged screen must keep a redirect.** Several admin pages are the only
-  route to a piece of configuration; `src/routes/legacy-routes.ts` and its test
-  are what stop a merge from silently removing one.
-- **Doors only got npm dependencies if they used better-sqlite3.** Fixed; 11
-  doors were repaired on the next deploy. `web/backend/scripts/door-needs-deps.sh`
-  decides, and it is tested.
+  `npm run build:cjs`, and `packages/terminal` compiles the SDK under a
+  stricter tsconfig that gates the Docker build.
+- **A TypeScript door's `dist/` is what runs**, and the pre-commit hook
+  rebuilds it. Two agents touching the same door will pull each other's
+  half-finished work into a commit; use separate worktrees.
+- **The live log is not the current log** - every deploy replaces the
+  container. `head` truncates evidence; redirect to a file instead.
+- **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
+  and its test are what stop a merge from silently removing the only route to
+  a piece of configuration.

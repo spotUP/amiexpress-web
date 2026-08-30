@@ -5,11 +5,11 @@ tags: [handoff, admin, config-app, design-system, radix, tanstack-table, realtim
 status: final
 ---
 
-# Handoff - the admin redesign is built and unverified
+# Handoff - the admin redesign, built and deployed
 
-Twenty-one commits on `main`, unpushed. Live still runs `cc15a318f`. **Nobody
-has opened any of this in a browser.** The dev server was left running on
-`http://localhost:5175/admin/`.
+Written while the work was unpushed; it is all on `main` and live now, and the
+user watched it in a browser as it was built. The dev server was left running
+on `http://localhost:5175/admin/`.
 
 ## What was asked for
 
@@ -99,3 +99,67 @@ branch joins it.
 3. Per-field round-trip verification, still open from the audits.
 4. `VITE_BYPASS_AUTH` in `App.tsx` should go once a sysop account is
    guaranteed.
+
+---
+
+---
+
+## The redesign section, moved out of handoff.md when it passed its size cap
+
+## The admin redesign is done
+
+`thoughts/shared/plans/2026-08-27-admin-redesign.md`, phases 0 to 5, with two
+deliberate departures noted below. What landed:
+
+- **Design tokens** in `web/config-app/src/styles/tokens.css`, mapped in
+  `tailwind.config.js`, with the `bbs-*` names kept as aliases. The five
+  colours that were used 122 times and never defined now exist. Roughly 400
+  raw palette classes across 31 files moved onto the ramp.
+- **Blue carries action, red is identity and danger**; body is 13 px sans with
+  mono reserved for real values; a density toggle drives row height.
+- **App shell** with grouped navigation, 14 destinations instead of 27 flat
+  entries, landing on a new **Overview** dashboard rather than a 1 729-line
+  form.
+- **Merged screens**, each behind tabs with the tab in the URL: Nodes (live
+  plus configuration), Conferences (plus file areas), Configuration Files (all
+  four tooltype editors), Lookup Tables (five lists), Health and Deployment,
+  Operator Chat (plus its settings). **Nothing inside those pages changed** -
+  several are the only route to a piece of configuration.
+  `src/routes/legacy-routes.ts` holds a permanent redirect for every path they
+  used to live at, and the tests walk that table.
+- **Realtime.** One socket for the whole app, handshaking `adminOnly=true`
+  against a new branch in `web/backend/src/index.ts`. Events invalidate query
+  keys on a 250 ms trailing window; polls speed up when the socket drops. New
+  Activity feed. A caller paging the sysop now raises a toast and a header
+  badge from any screen.
+- **The admin no longer occupies a BBS node.** It was falling through to node
+  assignment, so every Operator Chat visit burned a node and appeared as a
+  phantom user.
+- **System Configuration saves explicitly**, with a sticky bar and a Discard,
+  instead of writing `bbsConfig.info` 800 ms after a keystroke on a file the
+  running BBS reads.
+- **Deleting a user or a door asks for the name to be typed back.**
+- `InfoEditorPage` is reachable at last - 351 lines that nothing imported.
+- Computers and Protocols got the screen-types disk-first fix (from the audit
+  agent, merged after verifying 9 of its 12 tests fail without it).
+
+### Departures from the plan, on purpose
+
+1. **TanStack Table v9, not v8.** v9 is what installs today and its API is
+   different: `useTable` with explicit `tableFeatures` registration rather than
+   `useReactTable` with row-model options. A v9 table missing its feature
+   registration renders correctly and sorts nothing, which is what
+   `src/test/data-table.test.tsx` asserts against.
+2. **Configuration Files is four tabs, not one file tree with scope filters.**
+   Tabs preserve each editor exactly; the tree would have meant rewriting three
+   pages that are each the only route to their files. The deeper merge is still
+   worth doing.
+
+### What has NOT been verified
+
+The user watched the admin in a browser while it was being built, and nothing
+came back as broken - but that is not the same as verified. `tsc` is clean, 56
+frontend tests and 6056 backend tests pass, and the entry bundle is 187 kB
+gzip against a 400 kB budget. The socket has still never been exercised
+against a busy board.
+
