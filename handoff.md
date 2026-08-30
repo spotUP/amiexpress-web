@@ -23,27 +23,52 @@ check both directions before pushing.
 like a failed fix. If a change "does not apply" after a restart, clear the tsx
 cache: `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
-## Current state (2026-08-30)
+## Current state (2026-08-30, evening)
 
-**21 commits on `main` are unpushed. Live still runs `cc15a318f`.** Nothing in
-this batch has been deployed or seen in a browser by anyone but the author of
-the diff.
+**Everything is pushed and deployed.** Live ran `a76fc207d` at the last check,
+with one more deploy in flight for `38937119b`. Verified by reading the running
+container, not the workflow's word for it: `/app/.git-sha`, and the new code
+greped directly out of the live `dist/`.
 
 `Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin edit
-writing the repo's copy. Left uncommitted on purpose.
+writing the repo's copy. Left uncommitted on purpose. The rest of the dirty
+tree is BBS runtime state - Bulletins, CallersLogs, Conf.DB, database.sqlite -
+which is deliberately never committed.
 
-The admin dev server was left running on `http://localhost:5175/admin/`.
+The admin dev server may still be running on `http://localhost:5175/admin/`.
 
-## Queued, not started
+## The DOORMAN incident - closed
 
-`thoughts/shared/todos/2026-08-30_queue.md`. Top of it is a **live data-loss
-incident**: deleting doors through DOORMAN on the live server took DOORMAN and
-apparently every other door with it. Server logs first. The rest are DOORMAN and
-DOORREPO defects (no log panel while deleting or installing, stale list after a
-delete, install should read the command from the door's own `.info`) and a
-GMASTER zone meter that does not render.
+Deleting doors on the live board removed every door, DOORMAN included. The
+volume confirmed it: `/app/data/bbs/Doors` did not exist, only `Doors.info`
+beside it, while `Commands/BBSCmd` still held 365 `.info` files.
 
-**This is the next task.**
+Cause: the repo-view uninstall ran a recursive force-delete of
+`PROJECT_ROOT/<install_dir>` with nothing checking the value, and `install_dir`
+is written as `Doors/${command}` - so a record with no command gives `Doors/`.
+The backend's own delete path already had this guard; DOORMAN's did not.
+
+**The doors are back** - the deploy's door sync restored them from the image,
+106 directories, DOORMAN among them - and the guard is confirmed running live.
+
+`thoughts/shared/todos/2026-08-30_queue.md` has all six items the user raised,
+each with the commit that fixed it. All six are done and live.
+
+## Next
+
+Nothing is queued. Open items, in the order they are worth doing:
+
+1. **Look at the admin in a browser.** Twenty-plus commits of redesign have
+   never been seen by anyone. Start at the Overview.
+2. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
+   not rewrite it. System configuration saves land in `bbsConfig.info.txt`,
+   which this BBS reads, and the admin says so - but the icon drifts until it
+   is re-created in Workbench or IconEdit. This one needs an Amiga, not a
+   commit.
+3. **Audio stutter** - one measured cause fixed, diagnostics live
+   (`[Audio][stutter]`), never confirmed by the user.
+4. The plan's Configuration Files screen is four tabs, not the single tree
+   with scope filters it describes. The tree is still the better end state.
 
 ## The admin redesign is done, and unverified in a browser
 
