@@ -117,10 +117,19 @@ that exist only on disk (`config-merge.util.ts`, which also handles a rename
 now); node system commands reach a route that exists; `web/config-app`
 typechecks and has a vitest suite.
 
-**Still unverified: per-field round-tripping**, for every page. The door NAME
-bug is the warning - a field that round-trips wrong renames things silently.
-Languages, FileCheckers and Nodes were never read closely enough to rule out
-the same read-disk / write-database asymmetry.
+**Per-field round-tripping is now verified** for system configuration,
+conferences, drives, doors, screen types, computers, protocols, languages,
+file checkers and nodes - each with tests that fail when the fix is reverted.
+It found seven faults, all of the same two shapes: a value written under one
+key and read back from another, or a writer rebuilding a file from the
+database (or from nothing) and dropping what it did not own. See
+`thoughts/shared/todos/2026-08-30_queue.md` and the commits from 2026-08-30.
+
+**One finding needs a person:** this board's `bbsConfig.info` has a
+non-standard tooltype array, so the writer will not rewrite it. Saving system
+configuration works - the value goes to `bbsConfig.info.txt`, which this BBS
+reads, and the admin now says so - but the icon file will drift until it is
+re-created in Workbench or IconEdit.
 
 ## Unverified, waiting on the user
 
