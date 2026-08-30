@@ -23,14 +23,16 @@ check both directions before pushing.
 like a failed fix. If a change "does not apply" after a restart, clear the tsx
 cache: `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
-## Current state (2026-08-27)
+## Current state (2026-08-30)
 
-**6 commits on `main` are unpushed. Live runs `cc15a318f`, older than HEAD.**
-Full detail in
-`thoughts/shared/handoffs/2026-08-27_admin-audit-and-redesign.md` - read it.
+**21 commits on `main` are unpushed. Live still runs `cc15a318f`.** Nothing in
+this batch has been deployed or seen in a browser by anyone but the author of
+the diff.
 
 `Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin edit
 writing the repo's copy. Left uncommitted on purpose.
+
+The admin dev server was left running on `http://localhost:5175/admin/`.
 
 ## Queued, not started
 
@@ -41,43 +43,64 @@ DOORREPO defects (no log panel while deleting or installing, stale list after a
 delete, install should read the command from the door's own `.info`) and a
 GMASTER zone meter that does not render.
 
-## Next task, agreed with the user
+**This is the next task.**
 
-Split across two workers:
+## The admin redesign is done, and unverified in a browser
 
-1. **This session implements the admin redesign** - Phase 1 of
-   `thoughts/shared/plans/2026-08-27-admin-redesign.md`. Design needs the
-   user's visual feedback, so it belongs where they can steer it.
-2. **An agent finishes the audit** - Computers and Protocols have the
-   screen-types data-loss bug; per-field round-tripping is unverified
-   everywhere.
+`thoughts/shared/plans/2026-08-27-admin-redesign.md`, phases 0 to 5, with two
+deliberate departures noted below. What landed:
 
-**Tell the audit agent to read each service's mutation path, not to count.**
-Scripted counting gave the wrong answer three times this session: "14 of 28
-pages broken" became one real bug, and a later "ten pages write only SQLite"
-was wrong about every one of them.
+- **Design tokens** in `web/config-app/src/styles/tokens.css`, mapped in
+  `tailwind.config.js`, with the `bbs-*` names kept as aliases. The five
+  colours that were used 122 times and never defined now exist. Roughly 400
+  raw palette classes across 31 files moved onto the ramp.
+- **Blue carries action, red is identity and danger**; body is 13 px sans with
+  mono reserved for real values; a density toggle drives row height.
+- **App shell** with grouped navigation, 14 destinations instead of 27 flat
+  entries, landing on a new **Overview** dashboard rather than a 1 729-line
+  form.
+- **Merged screens**, each behind tabs with the tab in the URL: Nodes (live
+  plus configuration), Conferences (plus file areas), Configuration Files (all
+  four tooltype editors), Lookup Tables (five lists), Health and Deployment,
+  Operator Chat (plus its settings). **Nothing inside those pages changed** -
+  several are the only route to a piece of configuration.
+  `src/routes/legacy-routes.ts` holds a permanent redirect for every path they
+  used to live at, and the tests walk that table.
+- **Realtime.** One socket for the whole app, handshaking `adminOnly=true`
+  against a new branch in `web/backend/src/index.ts`. Events invalidate query
+  keys on a 250 ms trailing window; polls speed up when the socket drops. New
+  Activity feed. A caller paging the sysop now raises a toast and a header
+  badge from any screen.
+- **The admin no longer occupies a BBS node.** It was falling through to node
+  assignment, so every Operator Chat visit burned a node and appeared as a
+  phantom user.
+- **System Configuration saves explicitly**, with a sticky bar and a Discard,
+  instead of writing `bbsConfig.info` 800 ms after a keystroke on a file the
+  running BBS reads.
+- **Deleting a user or a door asks for the name to be typed back.**
+- `InfoEditorPage` is reachable at last - 351 lines that nothing imported.
+- Computers and Protocols got the screen-types disk-first fix (from the audit
+  agent, merged after verifying 9 of its 12 tests fail without it).
 
-If both run at once, the second must work in a **git worktree** - the
-pre-commit hook rebuilds door `dist/` from disk, so concurrent commits in one
-checkout pull each other's half-finished work into a commit.
+### Departures from the plan, on purpose
 
-### Phase 1, in order
+1. **TanStack Table v9, not v8.** v9 is what installs today and its API is
+   different: `useTable` with explicit `tableFeatures` registration rather than
+   `useReactTable` with row-model options. A v9 table missing its feature
+   registration renders correctly and sorts nothing, which is what
+   `src/test/data-table.test.tsx` asserts against.
+2. **Configuration Files is four tabs, not one file tree with scope filters.**
+   Tabs preserve each editor exactly; the tree would have meant rewriting three
+   pages that are each the only route to their files. The deeper merge is still
+   worth doing.
 
-1. **The 117 dead Tailwind classes** - only six `bbs-*` colours are defined in
-   `web/config-app/tailwind.config.js`, but `bbs-border` (78 uses),
-   `bbs-secondary` (18), `bbs-background` (14), `bbs-hover` (6) and `bbs-error`
-   (1) are used across 14 files and compile to nothing. Invisible borders,
-   missing panel backgrounds. Cheapest visible win in the project.
-2. Tokens and design system, then the app shell and grouped navigation.
-3. The Overview dashboard, on polling only - it ships without any backend
-   change.
+### What has NOT been verified
 
-**Hard rule: restyle only, never change a data path in the same commit.** The
-door NAME bug came from exactly that mistake - a field round-tripped a door's
-command into its title and renamed it.
-
-Phase 0 of that plan is already done, and so is its Phase 3 door work; the
-planning agent's snapshot predates both.
+Nobody has opened any of this in a browser. `tsc` is clean, 51 frontend tests
+and the backend suite pass, the entry bundle is 187 kB gzip against a 400 kB
+budget - but no screen has been looked at, and the socket has never been
+exercised against a running BBS. **First job for anyone picking this up: run
+it and look.**
 
 ## The admin app is disk-first already
 
@@ -86,11 +109,18 @@ corrections, are in `thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
 `2026-08-27_admin-page-by-page.md`. **The redesign does not need a storage
 rewrite underneath it.**
 
-Fixed this session: the Security page now writes `Access/ACS.<level>.info`;
-door edit, rename and create write `Commands/BBSCmd/<command>.info` and can no
-longer destroy a working door; screen types no longer erase each other on save;
-node system commands reach a route that exists; `web/config-app` typechecks for
-the first time.
+Fixed across 2026-08-27 and 08-30: the Security page writes
+`Access/ACS.<level>.info`; door edit, rename and create write
+`Commands/BBSCmd/<command>.info` and can no longer destroy a working door;
+screen types, computer types and transfer protocols no longer erase the entries
+that exist only on disk (`config-merge.util.ts`, which also handles a rename
+now); node system commands reach a route that exists; `web/config-app`
+typechecks and has a vitest suite.
+
+**Still unverified: per-field round-tripping**, for every page. The door NAME
+bug is the warning - a field that round-trips wrong renames things silently.
+Languages, FileCheckers and Nodes were never read closely enough to rule out
+the same read-disk / write-database asymmetry.
 
 ## Unverified, waiting on the user
 
@@ -118,6 +148,9 @@ the first time.
 - **The live log is not the current log** - every deploy replaces the container.
 - **`head` truncates evidence.** "Live has no WALL door" was wrong because a
   grep was cut off at six lines.
+- **A merged screen must keep a redirect.** Several admin pages are the only
+  route to a piece of configuration; `src/routes/legacy-routes.ts` and its test
+  are what stop a merge from silently removing one.
 - **Doors only got npm dependencies if they used better-sqlite3.** Fixed; 11
   doors were repaired on the next deploy. `web/backend/scripts/door-needs-deps.sh`
   decides, and it is tested.

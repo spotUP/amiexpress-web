@@ -2,7 +2,7 @@
 date: 2026-08-27
 topic: Admin interface redesign - enterprise sysop dashboard, realtime, dark-first
 tags: [admin, config-app, ui, radix, shadcn, realtime, socket-io, design-system]
-status: draft
+status: implemented
 ---
 
 # Admin redesign - enterprise sysop dashboard
@@ -634,3 +634,36 @@ and tab; a click-through of all 18 destinations.
    `SystemConfigPage` saving itself. Call it out in the release note. It is
    still the right change: a debounced write to a file the running BBS reads is
    not a feature.
+
+---
+
+## As built, 2026-08-30
+
+Phases 0 to 5 are implemented, with two deliberate departures:
+
+1. **TanStack Table v9, not v8.** v9 is what installs today, and its API is
+   different: `useTable` with explicit `tableFeatures` registration instead of
+   `useReactTable` with row-model options. A v9 table missing its feature
+   registration renders correctly and sorts nothing, so
+   `web/config-app/src/test/data-table.test.tsx` drives the rendered table and
+   asserts the row order changes.
+2. **Configuration Files is four tabs, not one tree with scope filters.** Tabs
+   preserve each editor exactly; the tree meant rewriting three pages that are
+   each the only route to their files. The tree is still the better end state.
+
+Also delivered beyond the plan:
+
+- A caller paging the sysop raises a toast and a header badge from any screen,
+  seeded from `operator:get-pending-pages` and corrected when a page is
+  accepted or a chat ends.
+- `confirm()` gained `requireTypedConfirmation`, used for deleting a user and
+  deleting a door.
+- Computers and Protocols were given the screen-types disk-first fix, and
+  `mergeForWrite` gained a `rename` argument - without it an edit that changes
+  the key leaves the entry in the file twice.
+
+Not done:
+
+- Per-field round-trip verification, which the audits also left open.
+- The `VITE_BYPASS_AUTH` escape hatch in `App.tsx` is still there.
+- Nothing here has been opened in a browser.
