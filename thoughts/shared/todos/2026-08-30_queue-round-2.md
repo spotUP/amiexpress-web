@@ -109,3 +109,38 @@ registered doors.** So no delete has ever had a tracked file list to work
 from - they all fall back to the `.info`'s own LOCATION. Worth fixing at the
 install side, and it is why the DD failure could not be reproduced from the
 tracking data.
+
+## 5. BROADCAST is registered but its door is not on disk
+
+**Reported 2026-08-30, from the menu:**
+
+    Error: ARexx script not found: Doors/ANNOUNCE/ANNOUNCE.REXX
+    Please contact the sysop.
+
+Confirmed on live:
+
+- `Commands/BBSCmd/BROADCAST.info` exists, with
+  `LOCATION=DOORS:ANNOUNCE/ANNOUNCE.REXX`, `TYPE=AIM`, `ACCESS=20`,
+  `STACK=50000`, `MULTINODE=YES`.
+- `Doors/ANNOUNCE/` does not exist at all - no directory, no `.REXX`.
+
+So the command is registered and offered on the menu while the door it points
+at was never installed (or was removed without its registration). The exact
+mirror of the DD failure: DD had files and no registration, BROADCAST has a
+registration and no files.
+
+Two things to decide:
+
+- **Where the ANNOUNCE door is.** Is it in the door repo (an archive to
+  install), or was it a local door that went missing? The registration reads
+  like a stock AmiExpress ARexx announce/broadcast door.
+- **What the BBS should do with a registration whose LOCATION does not
+  exist.** Today it is listed on the menu and fails only when a user runs it.
+  `initializeDoors` already warns about LOCATIONs that resolve outside
+  `Doors/` - the same scan could warn (or hide the command) when the target
+  file is missing entirely, so a broken door is a sysop-visible startup
+  warning rather than a user-visible error mid-session.
+
+Related to the install-link work (item 4 / the door-db connection): a door
+installed through the recorder would have both halves recorded, and either
+half going missing becomes detectable.
