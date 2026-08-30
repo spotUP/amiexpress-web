@@ -40,10 +40,9 @@ The admin dev server may still be running on `http://localhost:5175/admin/`.
 ## The DOORMAN incident - closed
 
 Deleting doors on the live board removed every door, DOORMAN included: the
-volume had no `Doors/` directory at all, while `Commands/BBSCmd` still held
-365 `.info` files. The uninstall force-deleted `PROJECT_ROOT/<install_dir>`
-unchecked, and `install_dir` is written as `Doors/${command}` - a record with
-no command gives `Doors/`.
+uninstall force-deleted `PROJECT_ROOT/<install_dir>` unchecked, and
+`install_dir` is written as `Doors/${command}` - a record with no command
+gives `Doors/`.
 
 Guarded in `Doors/door-manager/safe-install-dir.ts`, the doors were restored
 by the deploy's door sync, and the guard is confirmed running live. Full
