@@ -57,3 +57,55 @@ was left.
   process that serves every node.
 - DOORMAN paints an ActionLog in the right panel as it goes, and refuses to
   say "deleted" while the door is still in the list it just re-fetched.
+
+## 3. The delete log must be verbose and live - DONE
+
+**Reported: "after a pause it shows the log, can the log be more verbose so I
+see what it does and can it be realtime?"**
+
+The whole log arrived at the end because DOORMAN called `deleteDoor` once and
+painted when it returned. `deleteDoor` now takes an `onStep` callback and
+reports as it goes - which registration it read, how many paths it is working
+from, each entry as it is removed (a door directory is emptied entry by entry
+rather than in one silent recursive call), any path it refused and why, each
+failure by name, the rescan and registry reload, and the final on-disk check.
+
+DOORMAN runs inside the backend's own process, so the callback is a direct
+call; the filesystem work between steps is asynchronous, so each repaint
+actually reaches the terminal.
+
+## 4. Installed doors should read their metadata from the door repo
+
+**Reported with a screenshot: DOORMAN's Name field and the list show ASCII
+art and mojibake for several doors ("[??] .____", a FILE_ID.DIZ rendered
+into the name).**
+
+The installed list is built from each door's own `Commands/BBSCmd/*.info`,
+and for these doors the `NAME` tooltype IS art - so the panel is faithfully
+showing junk. The door server knows the real name, description and DIZ for
+most of them.
+
+The overlay already exists for the doors MENU (`door-repo-metadata.ts`, used
+by `getDoorList`, commit `3217daf3b`) - it matches on name or archive base
+name and fills only empty fields. DOORMAN's installed view does not use it,
+and the rule would need to be stronger here: art in a NAME is worse than an
+empty one, so the repo's name should win over a `.info` NAME that is not
+plausibly a name.
+
+Also worth deciding: whether an installed door should record which archive it
+came from, so the match is exact rather than heuristic. `door_installs`
+already has `archive_name`, but only for doors installed through DOORMAN (37
+rows on live, against 370 registered commands).
+
+## Note: door file tracking is not what we thought
+
+`door_installed_files` exists and `db.trackDoorFiles` writes it - but only
+from `amigaDoorManager`'s own installer. DOORMAN's install path records into
+`door_installs` instead, and everything installed before either existed has
+nothing at all.
+
+**On live: 0 rows in `door_installed_files`, for every one of the 370
+registered doors.** So no delete has ever had a tracked file list to work
+from - they all fall back to the `.info`'s own LOCATION. Worth fixing at the
+install side, and it is why the DD failure could not be reproduced from the
+tracking data.
