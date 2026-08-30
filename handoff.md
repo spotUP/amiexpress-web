@@ -18,10 +18,11 @@ check both directions before pushing.
 **Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
 `kill-servers.sh`. Zombie-verify after every stop:
 `ps aux | grep -E "(start-servers|kill-servers|watch-doors|tsx .*src/index.ts)" | grep -v grep`
-(expect empty). **78 stale backends were found running at once this session** -
-`tsx` does not hot-reload, so a stale process serving old code looks exactly
-like a failed fix. If a change "does not apply" after a restart, clear the tsx
-cache: `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
+(expect empty). **The watcher used to orphan one backend per restart** - 104
+were found running at once; fixed in `b70a415d9` (`dev/scripts/lib/
+managed-process.ts`). A stale process serving old code still looks exactly
+like a failed fix, so if a change "does not apply", clear the tsx cache:
+`rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
 ## Current state (2026-08-30, evening)
 
@@ -30,10 +31,9 @@ with one more deploy in flight for `38937119b`. Verified by reading the running
 container, not the workflow's word for it: `/app/.git-sha`, and the new code
 greped directly out of the live `dist/`.
 
-`Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin edit
-writing the repo's copy. Left uncommitted on purpose. The rest of the dirty
-tree is BBS runtime state - Bulletins, CallersLogs, Conf.DB, database.sqlite -
-which is deliberately never committed.
+`Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin
+edit, left uncommitted on purpose. The rest of the dirty tree is BBS runtime
+state - Bulletins, CallersLogs, Conf.DB, database.sqlite - never committed.
 
 The admin dev server may still be on `http://localhost:5175/admin/`.
 
