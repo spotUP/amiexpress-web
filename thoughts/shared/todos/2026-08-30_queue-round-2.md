@@ -144,3 +144,74 @@ Two things to decide:
 Related to the install-link work (item 4 / the door-db connection): a door
 installed through the recorder would have both halves recorded, and either
 half going missing becomes detectable.
+
+---
+
+## GrandMaster TetriNet: a lone bot should be full size, not a minimap
+
+Reported 2026-08-30 while testing the arcade doors.
+
+In TetriNet mode the opponent's board is drawn as a minimap even when there
+is only ONE bot in the game. With a single opponent there is room to show
+that board at full size, and the minimap costs readability for nothing.
+
+Wanted: full-size opponent board when there is exactly one opponent; keep
+the minimaps only once there are two or more, where the space genuinely has
+to be shared.
+
+Not started. The TetriNet layout already has a test
+(`Doors/grandmaster/tests/tetrinet-layout.test.ts`), so the sizing rule
+should be expressible there - assert one opponent renders at the full board
+width and that two or more fall back to minimaps.
+
+---
+
+## GrandMaster: "watch a game" always reports no game running
+
+Reported 2026-08-30 while testing the arcade doors.
+
+Choosing to watch/spectate a game in GrandMaster always answers that there
+is no game running, even when one is. So either the spectate lookup never
+sees live games, or games are not being registered in whatever list it
+queries.
+
+Not investigated. Starting points: `Doors/grandmaster/tests/spectator.test.ts`
+already covers the spectator path, so compare what that test sets up against
+what a real game actually registers - a live game that the test's fixture
+creates but the real start path never does would explain it exactly.
+
+---
+
+## The 10 arcade games need real ANSI graphics, not ASCII glyphs
+
+Requested 2026-08-30.
+
+The ten arcade doors (bubble-bobble, donkey-kong, frogger, galaga, joust,
+pengo, pipe-dream, super-qix, zoo-keeper, arkanoid) draw with single ASCII
+characters in one foreground colour. GrandMaster and Arkanoid already look
+far better, and they are the model.
+
+Wanted: think in 8-bit terms - SPRITES and BACKGROUND TILES. A sprite is a
+small block of coloured cells drawn at a position, not one character; a tile
+is a repeated background cell. Colour comes from the background attribute as
+much as the foreground, the way Super Qix's playfield now works
+(`BG_COLORS` in `Doors/super-qix/game/constants.ts`) - painting a space with
+a background colour gives a solid block, whereas colouring a space's
+foreground shows nothing at all.
+
+Worth designing once and sharing rather than nine times: a small sprite/tile
+helper in the SDK that takes a grid of {char, fg, bg} and blits it into a
+render buffer at x,y would serve every one of these doors. Super Qix's
+render already builds exactly that kind of buffer and would be the first
+consumer.
+
+Related: the revealed-ANSI-background feature (see below / brainstormed
+2026-08-30) uses the same cell model - `loadFile()` in
+`sdk/engines/ui/ansi-editor/core/file-ops.ts` already returns
+`Cell[][]` of {char, fg, bg}, which is the same shape a sprite would use.
+The two should share one representation.
+
+Note: that loader needs three fixes before it can be used from a door -
+`TextDecoder('cp437')` throws in Node so .ans/.asc fail outright, there is
+no CP437 to Unicode mapping, and only ESC[H/f cursor moves are handled
+(ESC[C and friends are ignored, so art that uses them renders misaligned).
