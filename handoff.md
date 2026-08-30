@@ -103,7 +103,7 @@ its queue item in `thoughts/shared/todos/2026-08-30_queue.md`.
 
 ## Next
 
-Nothing is queued by the user. Open work, in the order it is worth doing.
+Nothing queued by the user. Open work, in the order worth doing.
 
 ### Admin, what is left
 
