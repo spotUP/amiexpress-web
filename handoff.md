@@ -32,6 +32,15 @@ Full detail in
 `Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin edit
 writing the repo's copy. Left uncommitted on purpose.
 
+## Queued, not started
+
+`thoughts/shared/todos/2026-08-30_queue.md`. Top of it is a **live data-loss
+incident**: deleting doors through DOORMAN on the live server took DOORMAN and
+apparently every other door with it. Server logs first. The rest are DOORMAN and
+DOORREPO defects (no log panel while deleting or installing, stale list after a
+delete, install should read the command from the door's own `.info`) and a
+GMASTER zone meter that does not render.
+
 ## Next task, agreed with the user
 
 Split across two workers:
