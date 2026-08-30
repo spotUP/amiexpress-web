@@ -24,18 +24,31 @@ managed-process.ts`). A stale process serving old code still looks exactly
 like a failed fix, so if a change "does not apply", clear the tsx cache:
 `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
-## Current state (2026-08-30, evening)
+## Current state (2026-08-31)
 
-**Everything is pushed and deployed.** Live ran `a76fc207d` at the last check,
-with one more deploy in flight for `38937119b`. Verified by reading the running
-container, not the workflow's word for it: `/app/.git-sha`, and the new code
-greped directly out of the live `dist/`.
+**The installed-door link is merged and live.** `main` is `178d8a74f`;
+verified by reading the running container, not the workflow - `/app/.git-sha`
+plus the new modules greped out of `/app/web/backend/src` (the container runs
+`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`).
 
-`Commands/BBSCmd/wall.info` is modified in the tree: the user's own admin
-edit, left uncommitted on purpose. The rest of the dirty tree is BBS runtime
-state - Bulletins, CallersLogs, Conf.DB, database.sqlite - never committed.
+Full account: `thoughts/shared/handoffs/2026-08-31_installed-door-link.md`.
+Every install path now records both the archive it came from and the files it
+wrote, so a delete removes exactly that. Neither door lets a sysop type a
+command name any more.
 
-The admin dev server may still be on `http://localhost:5175/admin/`.
+**The DoorRepo C door on the board is still the 23 Aug binary.** `make amiga`
+fails on a pre-existing vendored-include gap (`netio.c` -> `netdb.h` wants
+`sys/errno.h`; `amiga-netinclude-vendor/` has no `sys/`). So the C work -
+archive-named commands, the whole-path listing parse, install reporting, the
+`BbsHost` security fix - is merged source only until that build works.
+
+One peer commit is stranded on `feat/installed-door-link` and never reached
+main: `fix(admin): Configuration Files crashed on the first file it was ever
+sent`.
+
+The dirty tree is BBS runtime state plus another session's uncommitted work
+(`web/config-app` package files, `Doors/super-qix` backgrounds and tests -
+untracked, so one `git clean -fd` from gone).
 
 ## The DOORMAN incident - closed
 
@@ -57,49 +70,18 @@ live at **doors.uprough.net**. This BBS proxies `/api/door-repo/*` to it
 own hostname, because the DoorRepo C door ships `RepoHost=bbs.uprough.net`
 baked into config on other people's machines.
 
-Client endpoints: `/manifest` (JSON), `/list.txt` (ISO-8859-1 for C89
-clients), `/files/:archive` (`FILES|count|junk` then `size|isJunk|path`),
-`/doc/:archive`, `/archive/:archive`, `/health`, and `/doors/:archive` which
-carries everything plus version, suggestedTooltypes, fileIdDiz and guide.
+`DOOR_SERVER_URL` is NOT set in the dev environment, so the repo-metadata
+overlay does nothing locally. Start with it to test that path:
+`DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
 
-**The live BBS runs DOORMAN in consumer mode** - neither `DOOR_REPO_ROLE` nor
-`DOOR_REPO_URL` is set, so `resolveDoorRepoMode` defaults to consumer against
-`https://bbs.uprough.net`, which loops back through this BBS's own proxy.
+**The 370 doors already installed get no metadata improvement** - deliberate
+scope call. They have no install record, so the name column keeps echoing the
+command. Real names need the archive-matching backfill in
+`thoughts/shared/todos/2026-08-30_queue-round-2.md`.
 
-Fixed 2026-08-30:
-
-- **DOORMAN's docs and file lists come from the repo** (`055ac8df9`). Both read
-  the LOCAL catalog service, which a consumer does not have: [V]iew doc did
-  nothing and browsing an archive said "no file data in catalog".
-- **Empty door descriptions** (`3217daf3b`). `getDoorList` overlaid metadata
-  from `door_installs`, which **does not exist on the live board**, so all 365
-  commands reached the doors menu with no description. It now asks the door
-  server's manifest, cached ten minutes, and fills only what is empty -
-  matching on name or archive base name, case and punctuation removed. A
-  door's own `.info` always wins.
-
-DOORREPO (the C door) was audited and is already repo-driven: `list.txt`,
-`/archive/`, `/health`, `/learned-patterns`. Its only local state is
-`DoorRepo.cfg` and the download directory, which is correct. `id`,
-`archive_path` and `binary_name` stay local by nature - they describe this
-node's copy, not the catalog's.
-
-- **One fetch fills the rest** (`28e849852`, **committed, not pushed**).
-  `fetchDoorDetail` (`/doors/:archiveName`) replaced `fetchDoc` and
-  `fetchArchiveFiles`; RepoView caches it per archive, and the info-pane
-  fetch is debounced because it runs on every cursor move. The manifest's
-  own `hasDoc`/`junkCount` were dropped in `mapManifestDoorToEntry`, so no
-  consumer row ever advertised `[V]=Doc`. The install record now carries
-  version, md5 and revision. `app.ts` crossed 2000 lines again:
-  `installConsumerDoor` moved to `install-core.ts`, re-exported.
-
-## The door fixes, 2026-08-30
-
-Nine commits, from `243e1d79a` to `3217daf3b`: the delete guard, the log
-panels for install and uninstall, the list refresh, GRANDMASTER's zone meter,
-installing under the archive's own command, the install record naming what was
-actually installed, and the two repo-backed reads above. Each is named against
-its queue item in `thoughts/shared/todos/2026-08-30_queue.md`.
+The board's own management API is `/api/door-admin/*` (NOT `/api/doors`, which
+belongs to the existing door-asset router). It is token-gated: DOORREPO only,
+sysop only, token written 0600 per launch.
 
 ## Next
 
