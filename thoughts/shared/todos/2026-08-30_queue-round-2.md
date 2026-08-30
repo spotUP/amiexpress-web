@@ -215,3 +215,75 @@ Note: that loader needs three fixes before it can be used from a door -
 `TextDecoder('cp437')` throws in Node so .ans/.asc fail outright, there is
 no CP437 to Unicode mapping, and only ESC[H/f cursor moves are handled
 (ESC[C and friends are ignored, so art that uses them renders misaligned).
+
+---
+
+## Super Qix: an attract screen that plays itself
+
+Requested 2026-08-31, with an arcade screenshot.
+
+The arcade sits in an attract loop: the HUD shows PLAYER-1 / HI-SCORE with
+ROUND 0 and RATIO 0%, the field is the plain blue playfield, the computer
+plays a demo game in the corner of it, and "GAME OVER / INSERT COIN" blinks
+in the middle. Skulls patrol the border and the Gremlin drifts about.
+
+For a BBS the coin line becomes something like PRESS A KEY TO PLAY, blinking
+the same way. The demo needs a simple自动 player - walk the frame, draw a
+box, repeat - not real AI; it only has to look alive.
+
+Where it fits: the door currently opens on an ASCII-art menu. The attract
+screen would either replace that or sit in front of it, with any keypress
+dropping into the menu (or straight into a game).
+
+Related pieces that already exist: the Time Meter border, the enemy update
+loop, and the renderer all run without a player, so an attract mode mostly
+needs a demo driver plus a blinking overlay - the banner helper added for
+the level-clear sequence (`overlayBanner` in game/qix-engine.ts) is the
+place to draw the blinking text from.
+
+## 6. The doors menu will not improve for the 370 existing doors
+
+**Seen 2026-08-31: every row reads `5DPAGER  5DPAGER`, command echoed as the
+name, no descriptions.**
+
+Two separate causes, and only one is a bug:
+
+- **Locally nothing fills at all** because `DOOR_SERVER_URL` is not set in the
+  dev backend's environment. With no door server configured the metadata index
+  is empty and the overlay returns every door untouched - by design. Live has
+  it set, so descriptions do fill there. To see it locally:
+  `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
+- **Names will still echo the command even with the door server up.** For a
+  door with no install record - all 370 - the overlay fills only EMPTY fields,
+  and `name` is non-empty because it already falls back to the command. The
+  plausibility rule that replaces a junk name applies only to LINKED doors,
+  which was the deliberate scope decision ("we can ignore the currently
+  installed doors").
+
+So making that middle column read "5D Pager" needs the archive-matching
+backfill that was deferred. The honest options are: match installed doors to
+catalog rows by fingerprint (file names and sizes from the archive's file
+list, which the door server already serves), or accept command-as-name until a
+door is reinstalled through the new recorder.
+
+## 7. The DoorRepo Amiga binary is stale, so the C work is inert on the board
+
+`Doors/DoorRepo/doorrepo.amiga` is tracked in git and dated 20 Aug locally,
+23 Aug on live. Every C change from 2026-08-30/31 - the archive-named command,
+the whole-path listing parse, the install reporting, and the BbsHost security
+fix - only reaches the board when that binary is cross-compiled again.
+`vbcc`/`vbccm68k` are on PATH and the NDK is vendored at
+`Documentation/7-Reference Sources/NDK3.2R4`, so `make amiga` in
+examples/doorrepo-c is all it takes. Do it before claiming any C change is
+live, and remember the deploy does not sync `Doors/` on its own.
+
+## 8. There were FOUR install paths, not three
+
+The spec's premise ("only one of three install paths ever wrote it") was wrong
+by one. `DoorInstaller.install()` - DOORMAN's [U]pload key, via
+BBSApi.deleteDoor's sibling `installDoorFromUpload` - extracts, writes the
+`.info`, reloads the registry and records nothing. Found by the final
+whole-branch review, fixed in the final fix wave. Worth remembering as a
+method: the pre-flight scan checked the interfaces between planned tasks but
+never grepped for every writer of `Commands/BBSCmd/*.info`, which is the
+question that would have found it.
