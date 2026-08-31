@@ -282,6 +282,13 @@ with the classic border, label placement over a 2-row top edge.
    adoption, layout+gameplay tests updated. Visible on the local board.
 3. **Asset studio door** — fork, responsive shell, sprite mode + art
    mode, file browser RPC. Round-trips Pengo's real sprites.
+   **Gate before any forking**: the known ansi-edit defect is reproduced,
+   root-caused and fixed IN THE ORIGINAL first (reported live 2026-08-31:
+   attempting to load an image when there is none shows a "no image to
+   load" dialog and then a black screen - the door does not recover).
+   Fixing it in the original fixes both doors; forking first would mean
+   debugging it twice. The fix ships with a regression test in the
+   ansi-editor engine's suite.
 4. **Chrome theming + 9-slice runtime** — theme.ts, DEFAULT_THEME,
    identical-by-default snapshot tests, nine-slice renderer, Panel asset
    borders, arcade `MENU_COLORS` fed by theme. DOORMAN pilot themed.
