@@ -59,19 +59,17 @@ fine.
 
 Nothing queued by the user. Open:
 
-1. **Yours:** one "Learn as junk" click for `7hE-EdGE` in the admin UI fixes
-   that pattern for every archive.
-2. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
+1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
-3. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
-4. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
+3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
    next feature there needs an extraction first.
-5. Six admin pages still render their own tables instead of
+4. Six admin pages still render their own tables instead of
    `components/ui/DataTable`. Node Configuration deliberately stays on the
    old `DataGrid`.
-6. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
-7. Audio stutter: one cause fixed, diagnostics live, never confirmed.
+5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
+6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Gotchas
 

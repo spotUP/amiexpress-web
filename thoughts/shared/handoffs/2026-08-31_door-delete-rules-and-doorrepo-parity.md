@@ -165,8 +165,9 @@ explicitly not wanted.
 
 ## Still open
 
-- **Yours:** one "Learn as junk" click for `7hE-EdGE` in the admin UI, which
-  fixes that pattern for every archive.
+- `7hE-EdGE` matches no strip pattern. NOT tracked as work: the sysop marks
+  it "Learn as junk" in the admin UI when he next runs into it, and that one
+  click fixes the pattern for every archive.
 - **Yours:** nobody has driven DOORREPO's `T`, `H`, `ENTER` or an uninstall
   in a shared directory by hand. `emp_tools` is the interesting case.
 - The `.info` write route (`PUT /installed/:cmd/info`) and the streaming
