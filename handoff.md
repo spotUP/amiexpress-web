@@ -7,10 +7,9 @@ Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
 (`docker exec amiexpress-bbs cat /app/.git-sha` - green CI has lied before).
 Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
 
-**A deploy still disconnects /chat - but everyone now gets a 60-second
-countdown first**, and /chat reconnects itself. Proven on its first real run
-(signal 21:39:21, container recreated 21:40:22). Documentation changes do not
-deploy at all (`paths-ignore`).
+**A deploy disconnects /chat, but everyone gets a 60-second countdown first**
+and /chat reconnects itself. Documentation changes do not deploy
+(`paths-ignore`).
 
 **A peer Claude Code session may work in this SAME checkout.** `git fetch` and
 check both directions before pushing.
