@@ -35,100 +35,88 @@ strips types, so a test file can be green under jest and fail the typecheck.
 
 ## Current state (2026-08-31)
 
-**Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`.**
-Read that first in a fresh session; it carries the live deploy step below, the
-gotchas, and the ordered next steps.
+**Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`**
+- the deploy step, the gotchas, the ordered next steps.
 
-**The installed-door link is merged and live** (`178d8a74f`). Every install
-path records the archive a door came from and the files it wrote, so a delete
-removes exactly that; neither door lets a sysop type a command name.
+**The installed-door link is merged and live** (`178d8a74f`). Every install path
+records the archive a door came from and the files it wrote, so a delete removes
+exactly that; neither door lets a sysop type a command name.
 
 **The C startup failure is solved and the rebuilt door is committed**
 (`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
 caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
-500 KB the emulator gives a door and on top of exec.library's LVO table at
-0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
-executing anything and exited RETURN_FAIL. The emulator logged
-`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
+500 KB the emulator gives a door and onto exec.library's LVO table at 0x7fcf4.
+HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before executing
+anything and exited FAIL, while the emulator logged
+`VERIFICATION: 230 OK, 126 FAILED!` and carried on. Two fixes, two levels:
 
-Two fixes, two levels:
-
-- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses
-  (ExecBase 0x80000, stubs, AllocMem heap 0x100000, ENV 0x120000, ReadArgs
-  0x140000) and `assertDoorSegmentsFit` refuses the load BEFORE
-  `HunkLoader.load` writes a byte, naming the segment and what it would
-  destroy. It reaches the sysop over `door:error` and the probe report.
+- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses and
+  `assertDoorSegmentsFit` refuses the load BEFORE `HunkLoader.load` writes a
+  byte, naming the segment and what it would destroy. Reaches the sysop over
+  `door:error` and the probe report.
 - `examples/doorrepo-c/doorrepo.c`: DIZ cache 32->8, FILES 4->2, DOC 2->1.
-  BSS is 327 KB, segments end 0x06b47c, **80 KB of headroom left**. Code grew
-  40 KB in eleven days, so phases B-E will eat that; the guard now says so
-  loudly instead of dying silently.
+  BSS 327 KB, segments end 0x06b47c, **80 KB of headroom**. Code grew 40 KB in
+  eleven days, so D will eat that - the guard now says so loudly.
 
-**A compiling binary that contains the right strings is not a working binary.**
-Run it under the probe, and give it 20 s - a shorter budget kills the harness
-before it boots and reports an empty run that looks like a dead door:
+**A compiling binary with the right strings in it is not a working binary.**
+Probe it, and give it 20 s - less kills the harness before it boots and reports
+an empty run that looks like a dead door:
 
     npx tsx dev/scripts/door-probe/probe.ts Doors/DoorRepo/doorrepo.amiga \
       --command DOORREPO --timeout 20000
 
-**The door probe was broken for EVERY door** until `baefa28ff` (harness spawned
-with `cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error in a probe
-means that regressed.
+**The probe was broken for EVERY door** until `baefa28ff` (spawned with
+`cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error means that
+regressed.
 
 **Verify deploys by reading the container, and grep the right tree**: it runs
 `tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`.
 
-The dirty tree is BBS runtime state plus another session's uncommitted work
-(`web/config-app`, `Doors/super-qix` - untracked, one `git clean -fd` from
-gone).
+The dirty tree is BBS runtime state plus another session's untracked work
+(`web/config-app`, `Doors/super-qix`) - one `git clean -fd` from gone.
 
-## The DOORMAN incident - closed
+## DOORREPO: A, B and C are built; D and E are not
 
-An unchecked recursive delete of `PROJECT_ROOT/<install_dir>` resolved to
-`Doors/` and removed every door. Guarded in
-`Doors/door-manager/safe-install-dir.ts`; write-up in
-`thoughts/shared/todos/2026-08-30_queue.md`.
+The door-admin API is complete, reads and writes (`4d2e92927`, `1d6693f15`,
+`5dc45dd87` - local, NOT pushed): `installed`, `installed/:cmd/` +
+`files`/`file?p=`/`info`, plus `rescan`, `PUT info`, streaming `DELETE`.
+Formats in `docs/DOOR-REPO-API.md` s.11+; as-built in
+`thoughts/shared/plans/2026-08-31-doorrepo-phase-{b,c}.md`.
 
-## DOORREPO is not a DOORMAN replacement yet
+**D (screens) and E (retire DOORMAN) do not exist** - DOORREPO shows a sysop
+none of this yet. Three things D must not get wrong:
 
-DOORREPO still has no screen for any of it: enable/disable, upload, `.info`
-editing, file browsing, delete-with-log, metadata panel. Phases B-E of
-`docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`.
+- paths are contained by checking twice, resolved AND after `realpath`; a
+  symlink inside a door defeats a string comparison;
+- a text `.info` disables with `!KEY` only, binary DiskObjects honour `(KEY)`;
+- streaming `DELETE` puts success in `DONE`, not the HTTP status - the first
+  `STEP` already flushed the headers.
 
-**A and B are built. C is next, then D's screens.** The C blocker is gone too,
-so D is buildable once C lands.
+**Do not add a server-side `enabled`.** Enable/disable lives in the C door
+(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
+board has no API. The server offers `rescan` only.
 
-Phase B (`4d2e92927`, `1d6693f15`, local - NOT pushed) is the four read APIs,
-token-gated and sysop-gated: `GET /api/door-admin/installed`, and
-`installed/:cmd/` + `files` / `file?p=` / `info`. Nested under `/installed/`
-because `:cmd` matches the literal string `installed`. Formats in
-`docs/DOOR-REPO-API.md` section 11; as-built in
-`thoughts/shared/plans/2026-08-31-doorrepo-phase-b.md`.
-
-Two things phase C needs. `file`'s containment checks the path twice, resolved
-and after `realpath`, because a symlink inside a door defeats a string
-comparison - the writes need that guard, not a lighter one. And a plain-text
-`.info` marks a tooltype disabled with `!KEY` only, while the board's binary
-DiskObject files honour `(KEY)` too; the writer must know which it is editing.
+The DOORMAN incident is closed; see `thoughts/shared/handoffs/`.
 
 ## The doors and the door repo
 
-The catalog lives in a separate project: **`/Users/spot/Code/amiexpress-doorserver`**,
+The catalog is a separate project, **`/Users/spot/Code/amiexpress-doorserver`**,
 live at **doors.uprough.net**. This BBS proxies `/api/door-repo/*` to it
-(`DOOR_SERVER_URL`, live `http://doorserver:3010`) and keeps answering at its
-own hostname, because the DoorRepo C door ships `RepoHost=bbs.uprough.net`
-baked into config on other people's machines.
+(`DOOR_SERVER_URL`, live `http://doorserver:3010`) and keeps answering at its own
+hostname, because DoorRepo ships `RepoHost=bbs.uprough.net` baked into config on
+other people's machines.
 
-`DOOR_SERVER_URL` is NOT set in the dev environment, so the repo-metadata
-overlay does nothing locally. Start with it to test that path:
+`DOOR_SERVER_URL` is NOT set in dev, so the repo-metadata overlay does nothing
+locally. To exercise it:
 `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
 
-**The 370 doors already installed get no metadata improvement** - deliberate
-scope call. No install record, so the name column echoes the command and the
-API's `archive` field is empty for them. Real names need the archive-matching
-backfill in `thoughts/shared/todos/2026-08-30_queue-round-2.md`.
+**The 370 doors already installed get no metadata** - deliberate scope call. No
+install record, so the name column echoes the command and the API's `archive`
+field is empty. Real names need the backfill in
+`thoughts/shared/todos/2026-08-30_queue-round-2.md`.
 
-The board's own management API is `/api/door-admin/*`, NOT `/api/doors` (the
-existing door-asset router).
+The board's management API is `/api/door-admin/*`, NOT `/api/doors` (the
+door-asset router).
 
 ## Next
 
@@ -165,15 +153,6 @@ Nothing queued by the user. Open work, in the order worth doing.
    (`[Audio][stutter]` says whether the sender's thread or the network is
    late), never confirmed by the user.
 
-## The admin, as of 2026-08-31
-
-Redesign phases 0-5 shipped, then sixteen correctness fixes, then a
-six-agent audit. All of it - what is done, what is left, and the express.e
-citations - is in `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`
-and the plan it references. The admin app is disk-first: the BBS reads
-`.info` files, SQLite is a downstream mirror, and `getBoardConfig()` in
-`web/backend/src/services/bbs-config-file.service.ts` is the one accessor.
-
 ## Waiting on the user
 
 - **DOORMAN could not see the wall door.** Probably the incident: the whole
@@ -202,3 +181,26 @@ and the plan it references. The admin app is disk-first: the BBS reads
   container. `head` truncates evidence; redirect to a file.
 - **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
   and its test stop a merge silently removing the only route to a setting.
+
+## Admin remediation, executed (2026-08-31)
+
+`fix/admin-audit-remediation` in `/private/tmp/admin-remediation-wt`, twelve
+commits, **not pushed**. 28 of the plan's 29 items.
+
+- Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (now
+  `implemented`, with a "What was done" section holding the commit table and
+  the corrections to its own claims)
+- Handoff: `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`
+
+Backend 6374 passing / 0 failing; config-app 99 passing; both typechecks
+clean. The seven suites that fail to RUN are `Doors/*` module resolution in a
+fresh worktree, which CI installs.
+
+**Open decision for the sysop:** 64 of the 155 icons in `Commands/BBSCmd`
+carry `ACCESS=0`. express.e:4703 reads that as "nobody may run this door";
+`door.handler.ts:1091` reads it as "everybody". All 64 work here and would be
+dead on a real Amiga. Not the admin's doing - no `DRACCESS` exists anywhere -
+and not a change to make without you.
+
+**Before deploying:** phases 1-3 change what is written to a live board's
+configuration files. Take a copy of `/app/data/bbs` first.
