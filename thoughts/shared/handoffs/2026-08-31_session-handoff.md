@@ -130,29 +130,69 @@ Merged to main as `178d8a74f` (21 plan commits + 12 fix-wave commits), then
   review; a copy is in this session's scratchpad only, so treat git history and
   these documents as the record.
 
+## The parity gap - DOORREPO is NOT a DOORMAN replacement yet
+
+Phase A (this session) built the groundwork only: the recorder, the link, the
+report route, and the naming rule. Parity is phases B-E of the spec and none of
+it exists. What DOORREPO still cannot do that DOORMAN can:
+
+- enable / disable a door
+- upload an archive (`[U]`)
+- edit a door's `.info` tooltypes
+- browse an installed door's files, with the AmigaGuide viewer
+- delete with the live step-by-step log
+- show a metadata / FILE_ID.DIZ panel for an installed door
+
+Every one of those needs something a C89 door cannot do locally - enumerate a
+directory, read the sqlite, walk an installed door's tree - which is why the
+spec puts a BBS-side API (phases B and C) in front of the screens (phase D),
+and only retires DOORMAN in phase E.
+
 ## Next steps, in the order worth doing
 
-1. **Run DOORREPO on the board and install something.** The binary is live and
-   verified; what has NOT been exercised is an actual install reporting back
-   through `POST /api/door-admin/installed`. Confirm a row appears in both
-   tables, and that the token file appears at
-   `<dataDir>/Doors/DoorRepo/DoorRepo.token` on launch and is gone after exit.
-2. **Verify the recorder end to end on live**: install a door through DOORMAN,
-   check `door_installs` and `door_installed_files`, delete it, confirm the
-   panel logs each path and the door leaves the list.
-3. **SDK dialog buttons** - frame only the active button, white text on both.
-   Item 1 in `2026-08-30_queue-round-2.md`. It lives in
-   `sdk/engines/ui/blessed`, so it changes every door's dialogs at once.
-4. **Decide on the 370 existing doors.** They get no catalog names, by the
-   scope decision. Real names need archive matching - fingerprint installed
-   doors against the catalog's per-archive file lists, which the door server
-   already serves. Until then the doors menu shows `5DPAGER  5DPAGER`.
-5. **BROADCAST** points at `DOORS:ANNOUNCE/ANNOUNCE.REXX` and
-   `Doors/ANNOUNCE/` has never existed. Decide whether the door is in the repo
-   or the registration should go, and consider warning at startup when a
-   registration's LOCATION does not exist.
-6. **DOORREPO parity phases B-E** from the spec: read APIs, write APIs, the
-   screens, then retiring DOORMAN. Each needs its own plan.
+1. **Bisect the DOORREPO startup regression. Everything C-side is stacked
+   behind this.** A binary built from current source exits FAIL before the
+   AEDoor handshake; the board runs the 20 August build. Writing phase-D
+   screens against a source tree whose builds do not start would be a lot of C
+   nobody can execute. Method:
+
+       cd examples/doorrepo-c && make amiga
+       npx tsx dev/scripts/door-probe/probe.ts examples/doorrepo-c/doorrepo.amiga \
+         --command DOORREPO --timeout 20000
+
+   Working = XIM ops observed and thousands of bytes of stdout. Broken = 42
+   bytes, no XIM ops. Walk back through the commits touching
+   `examples/doorrepo-c/` since 20 August - several sessions contributed, so do
+   not assume it was the install-reporting work.
+
+2. **Verify the recorder end to end on live.** The TypeScript half IS live.
+   Install a door through DOORMAN, check `door_installs` and
+   `door_installed_files`, delete it, confirm the panel logs each path as it
+   goes and the door leaves the list immediately. Only doors installed from now
+   on have records; the 370 already there do not, so install something first.
+
+3. **Phase B (read APIs) and C (write APIs)** from the spec: installed list,
+   files, file, info, then enabled / info-write / delete-with-streaming-log.
+   Server-side and testable, and DOORMAN can use them too in the meantime. Each
+   needs its own plan.
+
+4. **Phase D - the DOORREPO screens** against a door that demonstrably runs,
+   and phase E - retire DOORMAN once you have actually used the replacement on
+   the board.
+
+5. **SDK dialog buttons** - frame only the active button, white text on both.
+   Item 1 in `2026-08-30_queue-round-2.md`. Lives in `sdk/engines/ui/blessed`,
+   so it changes every door's dialogs at once.
+
+6. **Decide on the 370 existing doors.** They get no catalog names, by the
+   scope decision you made. Real names need archive matching - fingerprint
+   installed doors against the catalog's per-archive file lists, which the door
+   server already serves. Until then the doors menu shows `5DPAGER  5DPAGER`.
+
+7. **BROADCAST** points at `DOORS:ANNOUNCE/ANNOUNCE.REXX` and `Doors/ANNOUNCE/`
+   has never existed. Decide whether the door is in the repo or the
+   registration should go, and consider warning at startup when a
+   registration's LOCATION does not resolve.
 
 ## Other notes
 

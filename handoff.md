@@ -80,6 +80,19 @@ by the deploy's door sync, and the guard is confirmed running live. Full
 write-up, and the other five items raised the same day, in
 `thoughts/shared/todos/2026-08-30_queue.md`.
 
+## DOORREPO is not a DOORMAN replacement yet
+
+Phase A shipped the groundwork only. DOORREPO still cannot enable/disable a
+door, upload an archive, edit `.info` tooltypes, browse an installed door's
+files, delete with the live log, or show a metadata/DIZ panel. Those are
+phases B-E of `docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`
+and none are built.
+
+**Bisect the C startup regression first** - a binary built from current source
+does not start, so phase D is unbuildable until it does. Method and the
+working/broken signatures are in
+`thoughts/shared/handoffs/2026-08-31_session-handoff.md`.
+
 ## The doors and the door repo
 
 The catalog lives in a separate project: **`/Users/spot/Code/amiexpress-doorserver`**,
