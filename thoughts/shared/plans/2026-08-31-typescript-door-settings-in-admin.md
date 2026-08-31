@@ -2,7 +2,7 @@
 date: 2026-08-31
 topic: TypeScript doors declare their settings; the admin edits them
 tags: [doors, sdk, admin, config]
-status: draft
+status: implemented (phases 1-3); phase 4 open
 ---
 
 # A door says what it can be configured with, and the admin renders it
@@ -162,3 +162,33 @@ working exactly as it does now.
 - It does not delete `GlobalWallPage.tsx`. That page can be retired once GWall
   itself is wired up again - the command was uninstalled on 2026-08-31 because
   its registration pointed at a 68K binary that does not exist.
+
+
+## What was built, and where it deviated (2026-08-31, `5bd5df113`)
+
+Phases 1-3 are in. Phase 4 - the doors themselves - is untouched, and every
+door behaves exactly as it did before until someone writes one a manifest.
+
+**The deviation: the backend does not import the SDK.** The plan had one
+implementation shared by both sides. Two things stopped it, both measured
+rather than assumed:
+
+- `web/backend/tsconfig.build.json` sets `rootDir: ./src`, so a relative import
+  of `sdk/core/settings.ts` fails the build with TS6059.
+- The package root (`@amiexpress/bbs-door-sdk`) re-exports the server bundle,
+  which imports the audio engine, which imports Tone.js - ESM that jest cannot
+  parse. A settings read has no business loading it. A `./settings` subpath
+  export was added and works at runtime, but does not resolve for `tsc` through
+  a worktree's symlinked `node_modules`, so it could not be verified here.
+
+So the door-side reader is `sdk/core/settings.ts` and the admin-side reader is
+`web/backend/src/doors/door-settings.service.ts`, and
+`web/backend/tests/services/door-settings-round-trip.test.ts` writes with one
+and reads back with the other. The duplication is about forty lines of
+validation; the alternative was a build that only works in Docker.
+
+**Verified:** SDK 9 tests, backend 6771 passing with the round trip among them,
+admin 127 across 22 files including a five-case render test. `tsconfig.build`
+and `tsconfig.tests` both clean.
+
+**Phase 4 stays as written.** `Doors/livechat` and `Doors/bbslink` first.
