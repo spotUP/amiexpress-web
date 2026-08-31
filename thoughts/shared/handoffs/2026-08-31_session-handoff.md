@@ -16,8 +16,8 @@ account). This file is the whole session, including what is half-done.
 1. **Done and live**: the installed-door link. Every install path records what
    a door is (its catalog archive) and what it wrote (its files), so a delete
    removes exactly that. Neither door lets a sysop type a command name.
-2. **Done, deploy in flight**: the DoorRepo Amiga binary rebuilt so this
-   session's C work actually runs on the board.
+2. **Done and verified live**: the DoorRepo Amiga binary rebuilt and shipped,
+   so this session's C work actually runs on the board.
 3. **Specced, not built**: DOORREPO reaching 1:1 parity with DOORMAN, phases
    B-E.
 4. **Raised, not built**: SDK dialog buttons; catalog names for the 370
@@ -78,8 +78,10 @@ Merged to main as `178d8a74f` (21 plan commits + 12 fix-wave commits), then
 - **The live container runs `tsx src/index.ts` from `/app/web/backend`, NOT
   `/app/dist`.** Greping `/app/dist` for your change returns nothing and looks
   exactly like a failed deploy. Grep `/app/web/backend/src`.
-- **Deploys never sync the live `Doors/` volume.** An image can be perfectly
-  up to date while the board runs an old door binary.
+- **Do not assume either way about the live `Doors/` volume.** An older note
+  said deploys never sync it; this deploy DID sync it. After any deploy that
+  changes a door binary, read the volume copy (`ls -la` for the size, `strings`
+  for a symbol you added) instead of trusting either rule.
 - **The NDK under `Documentation/7-Reference Sources/NDK3.2R4` is UNTRACKED.**
   A fresh git worktree therefore cannot build the Amiga target at all - the
   netinclude symlink dangles and you get `sys/errno.h not found`. That is not a
@@ -113,8 +115,11 @@ Merged to main as `178d8a74f` (21 plan commits + 12 fix-wave commits), then
 
 ## Next steps, in the order worth doing
 
-1. **Finish the binary deploy** (top of this file), then run DOORREPO on the
-   board and install something. Confirm a row appears in both tables.
+1. **Run DOORREPO on the board and install something.** The binary is live and
+   verified; what has NOT been exercised is an actual install reporting back
+   through `POST /api/door-admin/installed`. Confirm a row appears in both
+   tables, and that the token file appears at
+   `<dataDir>/Doors/DoorRepo/DoorRepo.token` on launch and is gone after exit.
 2. **Verify the recorder end to end on live**: install a door through DOORMAN,
    check `door_installs` and `door_installed_files`, delete it, confirm the
    panel logs each path and the door leaves the list.
