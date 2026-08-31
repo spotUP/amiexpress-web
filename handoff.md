@@ -45,20 +45,35 @@ strips types, so a test file can be green under jest and fail the typecheck.
 records the archive a door came from and the files it wrote, so a delete removes
 exactly that; neither door lets a sysop type a command name.
 
-**The C startup failure is solved.** No C regression: the door's caches had
-grown its BSS to 436 KB, putting its segments at 0x085d04, past the 500 KB the
-emulator gives a door and onto exec.library's LVO table at 0x7fcf4. HUNK_BSS is
-zeroed at load, so it blanked 126 exec vectors before executing anything and
-exited FAIL - while the emulator logged `VERIFICATION: 230 OK, 126 FAILED!` and
-carried on. Two fixes, two levels:
+**Today's full account: `thoughts/shared/handoffs/2026-08-31_doorrepo-doors-and-deploy-fixes.md`**
+- twelve commits, five defect classes found on the live board, and the ordered
+next steps. Read it before touching doors, the emulator or the deploy.
 
-- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses and
-  `assertDoorSegmentsFit` refuses the load BEFORE `HunkLoader.load` writes a
-  byte, naming the segment and what it would destroy. Reaches the sysop over
-  `door:error` and the probe report.
-- `examples/doorrepo-c/doorrepo.c`: DIZ cache 32->8, FILES 4->2, DOC 2->1.
-  BSS 327 KB, segments end 0x06b47c, **80 KB of headroom**. Code grew 40 KB in
-  eleven days, so D will eat that - the guard now says so loudly.
+**ONE THING IS BLOCKED ON YOU**: 277 command registrations point at files that
+do not exist - the tail of the 30 August `Doors/` wipe. `BR`, `BV`, `BADD`,
+`BROADCAST` are all this. The scanner is on the container, dry-run verified;
+the exact command is Next Step 0 of that handoff. It renames, never deletes.
+
+**The C startup failure was never a C regression.** The door's caches had grown
+its BSS to 436 KB, putting its segments past exec.library's LVO table at
+0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
+executing anything - while the emulator logged `VERIFICATION: 126 FAILED!` and
+carried on. `memory-map.ts` now refuses such a load by name; the door's caches
+were cut. **~46 KB of headroom left** after two new screens.
+
+**A 68K door cannot synchronously call the BBS it runs inside.** The emulator
+runs in the backend's process, so a door blocking in WaitSelect starves the loop
+that would answer it - the reply arrives after the 30 s timeout. `L` now reads
+`Doors/DoorRepo/DoorRepo.doors`, written beside the launch token.
+`report_install_to_bbs` has the same defect and has never worked here.
+
+**Do not add a server-side `enabled` route.** Enable/disable lives in the C door
+(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
+board has no API. The server offers `rescan`.
+
+**A failed deploy leaves the board DOWN** - the script stops the container,
+builds, then starts. That happened once today when the Docker daemon dropped its
+socket mid-build.
 
 **A compiling binary with the right strings in it is not a working binary.**
 Probe it, and give it 20 s - less kills the harness before it boots and reports
@@ -67,15 +82,8 @@ an empty run that looks like a dead door:
     npx tsx dev/scripts/door-probe/probe.ts Doors/DoorRepo/doorrepo.amiga \
       --command DOORREPO --timeout 20000
 
-**The probe was broken for EVERY door** until `baefa28ff` (spawned with
-`cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error means that
-regressed.
-
-**Verify deploys by reading the container, and grep the right tree**: it runs
-`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`.
-
-The dirty tree is BBS runtime state plus another session's untracked work
-(`web/config-app`, `Doors/super-qix`) - one `git clean -fd` from gone.
+**Verify deploys by reading the container**: it runs `tsx src/index.ts` from
+`/app/web/backend`, NOT `/app/dist`. The backend listens on **3001**.
 
 ## DOORREPO and the door repo
 
