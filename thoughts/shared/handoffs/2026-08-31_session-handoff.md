@@ -23,6 +23,46 @@ account). This file is the whole session, including what is half-done.
 4. **Raised, not built**: SDK dialog buttons; catalog names for the 370
    existing doors; BROADCAST's missing door.
 
+## RESOLVED 2026-08-31 (later session): it was never a C regression
+
+Everything below about "bisect the startup regression" is superseded. There was
+no bad commit. The door's static caches had grown its BSS to 436 KB, which put
+its segments at 0x085d04 - past the 500 KB of CODE+DATA+BSS the emulator gives
+a door, and on top of exec.library's LVO jump table at 0x7fcf4. HUNK_BSS is
+zeroed at load, so the door blanked 126 exec vectors before executing anything
+and exited RETURN_FAIL. Both builds ran the identical vbcc startup to PC 0x214c;
+the old one went on to AllocVec + StackSwap into main, the new one read the
+blanked memory and quit.
+
+The evidence that settles it, same emulator, back to back:
+
+    20 Aug build   BSS 0x599f4  segments end 0x06e8fc  VERIFICATION: all 356 OK
+    current build  BSS 0x6a7fc  segments end 0x085d04  VERIFICATION: 126 FAILED
+
+and current source with three cache constants trimmed runs the full browser,
+`L=Installed` footer included.
+
+Fixed at both levels:
+
+- `c0f510dd9` - `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed
+  addresses; `assertDoorSegmentsFit` refuses the load before
+  `HunkLoader.load` writes a byte and names the segment and the damage. Test:
+  `web/backend/tests/amiga-emulation/door-segment-limit.test.ts`.
+- `e3c1c6e16` - `examples/doorrepo-c/doorrepo.c` DIZ cache 32->8, FILES 4->2,
+  DOC 2->1. BSS 327 KB, segments end 0x06b47c, 80 KB of headroom. Rebuilt
+  binary shipped to `Doors/DoorRepo/doorrepo.amiga`.
+
+Both commits are LOCAL on `feat/installed-door-link`, not pushed.
+
+Two things learned that cost time here:
+
+- **The emulator detects this corruption and continues.** `VERIFICATION: 230
+  OK, 126 FAILED!` and `CRITICAL: 126 library trap(s) missing ILLEGAL
+  instruction!` were in the log the whole time and nothing acted on them.
+- **Give the door probe 20 s.** `--timeout 6000` or `12000` kills the harness
+  before it finishes booting and reports zero LVOs, zero output and no errors -
+  which reads exactly like a door that died instantly.
+
 ## Deploy state - the TypeScript is live, the C door is NOT
 
 Live is `4a261f5fb`. The TypeScript half of this work is running on the board
