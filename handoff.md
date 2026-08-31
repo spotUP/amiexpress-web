@@ -197,6 +197,14 @@ Backend 6374 passing / 0 failing; config-app 99 passing; both typechecks
 clean. The seven suites that fail to RUN are `Doors/*` module resolution in a
 fresh worktree, which CI installs.
 
+**Open, and waiting on you:** the volume reverts what the admin saves.
+`ComputerList.info`, `Drives.info`, `ScreenTypes.info`, `ConfConfig.info` and
+every `Commands/BBSCmd/*.info` are IMAGE-OWNED in `docker-entrypoint.sh`, so a
+restart overwrites them from the image - logging the sysop's own edit as "hash
+drift". Five of the domains this remediation fixed therefore save correctly
+and are reverted on the next restart. Two fixes and a recommendation are in
+`thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`.
+
 **The doors are done.** 62 of the 63 icons carrying `ACCESS=0` no longer do -
 express.e:4703 read that as "nobody may run this door" while this port reads
 it as "everybody", so they all worked here and were dead on a real Amiga.

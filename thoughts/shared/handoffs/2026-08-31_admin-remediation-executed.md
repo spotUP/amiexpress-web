@@ -123,3 +123,53 @@ that passes here whatever the code does. It only means something in CI.
   exist.
 - `npm test` writes to the repo's real `Conf.DB`, `Node1/CallersLog` and
   `web/backend/debug-display-flow.log`. Never `git add -A` after a run.
+
+---
+
+## Open, and waiting on a decision: the volume reverts what the admin saves
+
+Found 2026-08-31 while confirming the door-icon migration had landed. Read
+from `docker-entrypoint.sh`, not observed on the board - but the code is
+unambiguous.
+
+The entrypoint classifies files. IMAGE-OWNED means "always overwrite the
+volume", justified in its own comment as:
+
+> There is no sysop/admin path that legitimately modifies these.
+
+That is false for four of them, and for a whole directory:
+
+| File | Written by | Class |
+|---|---|---|
+| `ComputerList.info` | Computers page | IMAGE-OWNED - overwritten |
+| `Drives.info` | Drives page | IMAGE-OWNED - overwritten |
+| `ScreenTypes.info` | Screen Types page | IMAGE-OWNED - overwritten |
+| `ConfConfig.info` | conference name / location | IMAGE-OWNED - overwritten |
+| `Commands/BBSCmd/*.info` | every door edit | blanket dir sync - overwritten |
+
+`sync_image_owned` md5s both copies and overwrites on mismatch, logging it as
+"hash drift". A sysop's edit IS the drift. `Node*.info` and `Conf*.info` are
+correctly VOLUME-OWNED, which is why those survive.
+
+So five of the domains this remediation fixed save correctly and are reverted
+on the next container restart. That fits "we never could get it working
+properly" better than anything else found today.
+
+**Two ways to fix it.**
+
+A. Move the four to VOLUME_OWNED_INFO and seed `Commands/` only when a file
+   is missing. Small, and matches the file's own rule ("when in doubt,
+   default to VOLUME-OWNED"). Costs the other direction: a repo-side fix to a
+   door icon then never reaches an existing board, silently.
+
+B. Write a manifest of what each deploy put on the volume, and next time
+   overwrite only files whose volume copy still matches that hash. Untouched
+   and changed in the image -> update. Edited by the sysop -> keep. New in the
+   image -> create. No silent loss either way; more work in the deploy path.
+
+**Recommended: B.** A trades a silent revert for a silent staleness, and this
+entrypoint's comments record having been burned by exactly that already.
+
+Note on sequencing: the 62-icon migration RELIED on the current overwrite to
+reach the board, and did (deploy 33377282376). Whichever option is taken
+should land after it, which it now can.
