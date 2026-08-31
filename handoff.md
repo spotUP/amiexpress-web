@@ -172,8 +172,14 @@ Nothing queued by the user. Open work, in the order worth doing.
 
 ## Admin remediation, executed (2026-08-31)
 
-`fix/admin-audit-remediation` in `/private/tmp/admin-remediation-wt`, twelve
-commits, **not pushed**. 28 of the plan's 29 items.
+**Deployed 2026-08-31 08:50 UTC.** `main` is `7d7de02b4`; `/health` reports
+it. 28 of the plan's 29 items.
+
+Every deploy now snapshots the board's `.info` files first, to
+`/root/bbs-backups/bbs-config-<stamp>.tar.gz` (last 20 kept). The one taken
+before this deploy is `bbs-config-20260831-084639.tar.gz` - 1816 files, 328K.
+That is the rollback point for everything phases 1-3 changed about what gets
+written to disk.
 
 - Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (now
   `implemented`, with a "What was done" section holding the commit table and
