@@ -2,26 +2,37 @@
 
 ## READ THIS FIRST in a fresh session
 
+**Admin work: read `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`,
+then the plan it points at,
+`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`.** Sixteen admin
+fixes shipped on 2026-08-31; a six-agent audit then found considerably more,
+all of it in that plan, in severity order, with express.e line numbers.
+
+The plan's findings are marked VERIFIED or REPORTED. REPORTED means a lead,
+not a fact - this repo has produced confident false positives repeatedly.
+Confirm against `express.e` before changing anything.
+
 Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`.
 Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
 (`docker exec amiexpress-bbs cat /app/.git-sha` - green CI has lied before).
 Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
+`BBS_DATA_DIR=/app/data/bbs` - not `/app`, which holds a bare skeleton.
 
-**A deploy disconnects /chat, but everyone gets a 60-second countdown first**
-and /chat reconnects itself. Documentation changes do not deploy
+**`main` moves under you.** Other sessions push door and arcade work
+constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
+confirm ancestry before pushing AND before deleting the branch.
+
+**A deploy still disconnects /chat - but everyone gets a 60-second countdown
+first**, and /chat reconnects itself. Documentation changes do not deploy
 (`paths-ignore`).
 
-**A peer Claude Code session may work in this SAME checkout.** `git fetch` and
-check both directions before pushing.
-
 **Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
-`kill-servers.sh`. Zombie-verify after every stop:
-`ps aux | grep -E "(start-servers|kill-servers|watch-doors|tsx .*src/index.ts)" | grep -v grep`
-(expect empty). **The watcher used to orphan one backend per restart** - 104
-were found running at once; fixed in `b70a415d9` (`dev/scripts/lib/
-managed-process.ts`). A stale process serving old code still looks exactly
-like a failed fix, so if a change "does not apply", clear the tsx cache:
+`kill-servers.sh`. Zombie-verify after every stop. If a change "does not
+apply", clear the tsx cache:
 `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
+
+**Run `npm run typecheck:tests`, not just `npm test`** - jest uses swc and
+strips types, so a test file can be green under jest and fail the typecheck.
 
 ## Current state (2026-08-31)
 
@@ -33,46 +44,50 @@ gotchas, and the ordered next steps.
 path records the archive a door came from and the files it wrote, so a delete
 removes exactly that; neither door lets a sysop type a command name.
 
-**The C work is NOT running on the board.** I rebuilt the Amiga binary, shipped
-it, and it does not run: it exits FAIL before the AEDoor handshake. Rolled back
-in `4a261f5fb`; the board is on the 20 August binary (79652 bytes) that works.
+**The C startup failure is solved and the rebuilt door is committed**
+(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). There was never a C
+regression. The door's static caches had grown its BSS to 436 KB, which put
+its segments at 0x085d04 - past the 500 KB the emulator gives a door and on
+top of exec.library's LVO jump table at 0x7fcf4. HUNK_BSS is zeroed as it
+loads, so the door blanked 126 exec vectors before executing anything, then
+exited RETURN_FAIL. The emulator logged `VERIFICATION: 230 OK, 126 FAILED!`
+and carried on.
 
-Measured with the door probe, same emulator, back to back:
+Two fixes, two levels:
 
-    previous binary (79652B): 3477 bytes out, XIM ops observed, runs
-    my rebuild     (107008B): 42 bytes out, NO XIM ops, exits FAIL
-
-It is NOT established that this is any one session's C change. That binary was
-built on 20 August and the source has had eleven days of changes from several
-sessions since, so the rebuild is the first time any of them ran under the
-emulator. Which change broke startup is open - bisect with the probe.
+- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses
+  (ExecBase 0x80000, stubs, AllocMem heap 0x100000, ENV 0x120000, ReadArgs
+  0x140000) and `assertDoorSegmentsFit` refuses the load BEFORE
+  `HunkLoader.load` writes a byte, naming the segment and what it would
+  destroy. It reaches the sysop over `door:error` and the probe report.
+- `examples/doorrepo-c/doorrepo.c`: DIZ cache 32->8, FILES 4->2, DOC 2->1.
+  BSS is 327 KB, segments end 0x06b47c, **80 KB of headroom left**. Code grew
+  40 KB in eleven days, so phases B-E will eat that; the guard now says so
+  loudly instead of dying silently.
 
 **A compiling binary that contains the right strings is not a working binary.**
-I checked `strings` for the new symbols, saw them, and called it verified. Run
-it under the probe instead:
+Run it under the probe, and give it 20 s - a shorter budget kills the harness
+before it boots and reports an empty run that looks like a dead door:
 
     npx tsx dev/scripts/door-probe/probe.ts Doors/DoorRepo/doorrepo.amiga \
       --command DOORREPO --timeout 20000
 
-**The door probe was broken for EVERY door** until `baefa28ff`: probe.ts spawned
-the harness with `cwd=REPO_ROOT`, which has no tsconfig.json, so tsx compiled
-the backend with decorators off and every probe died on chat.handler.ts. If a
-probe fails with a decorator error, that regressed again.
+**The door probe was broken for EVERY door** until `baefa28ff` (harness spawned
+with `cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error in a probe
+means that regressed.
 
 **Verify deploys by reading the container, and grep the right tree**: it runs
-`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`. Greping
-`/app/dist` finds nothing and looks like a failed deploy.
+`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`.
 
 The dirty tree is BBS runtime state plus another session's uncommitted work
-(`web/config-app`, `Doors/super-qix` backgrounds and tests - untracked, so one
-`git clean -fd` from gone).
+(`web/config-app`, `Doors/super-qix` - untracked, one `git clean -fd` from
+gone).
 
 ## The DOORMAN incident - closed
 
-Deleting doors on the live board removed every door: the uninstall
-force-deleted `PROJECT_ROOT/<install_dir>` unchecked, and `install_dir` is
-written as `Doors/${command}`, so a record with no command gave `Doors/`.
-Guarded in `Doors/door-manager/safe-install-dir.ts`. Full write-up in
+An unchecked recursive delete of `PROJECT_ROOT/<install_dir>` resolved to
+`Doors/` and removed every door. Guarded in
+`Doors/door-manager/safe-install-dir.ts`; write-up in
 `thoughts/shared/todos/2026-08-30_queue.md`.
 
 ## DOORREPO is not a DOORMAN replacement yet
@@ -83,10 +98,9 @@ files, delete with the live log, or show a metadata/DIZ panel. Those are
 phases B-E of `docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`
 and none are built.
 
-**Bisect the C startup regression first** - a binary built from current source
-does not start, so phase D is unbuildable until it does. Method and the
-working/broken signatures are in
-`thoughts/shared/handoffs/2026-08-31_session-handoff.md`.
+The C blocker is gone: a binary built from current source runs under the probe
+again, so phase D is buildable. Phases B and C still come first - the screens
+need the BBS-side API.
 
 ## The doors and the door repo
 
@@ -131,9 +145,8 @@ Nothing queued by the user. Open work, in the order worth doing.
 4. **`VITE_BYPASS_AUTH` in `App.tsx`** bypasses the frontend auth guard
    entirely. It should go now that a sysop account exists. It has no influence
    over the socket handshake, which reads `secLevel` server-side.
-5. **The realtime layer has never met a busy board.** Coalescing, the
-   Reconnecting state and the pages-waiting badge were all exercised by tests
-   and by hand, not by real traffic.
+5. **The realtime layer has never met a busy board** - coalescing, Reconnecting
+   and the pages-waiting badge were exercised by tests and by hand only.
 6. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
    not rewrite it. System configuration saves land in `bbsConfig.info.txt`,
    which this BBS reads, and the admin now says so - but the icon drifts until
@@ -145,41 +158,19 @@ Nothing queued by the user. Open work, in the order worth doing.
    (`[Audio][stutter]` says whether the sender's thread or the network is
    late), never confirmed by the user.
 
-## The admin redesign is done
+## The admin, as of 2026-08-31
 
-Phases 0 to 5 of `thoughts/shared/plans/2026-08-27-admin-redesign.md`, marked
-implemented with an "As built" section recording two departures: TanStack
-Table **v9** (not the plan's v8 - different API, `useTable` plus explicit
-`tableFeatures`), and Configuration Files as four tabs rather than one scoped
-tree.
-
-Design tokens, grouped navigation, an Overview dashboard, merged destinations
-behind tabs with permanent legacy redirects, a realtime layer, and the admin
-no longer occupying a BBS node. The full account, commit by commit, is in
-`thoughts/shared/handoffs/2026-08-30_admin-redesign-implemented.md`.
-
-The user watched it in a browser while it was built and reported nothing
-broken - which is "not obviously wrong", not verified.
-
-## The admin app is disk-first
-
-The BBS reads `.info` files; SQLite is a downstream mirror. Audits:
-`thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
-`2026-08-27_admin-page-by-page.md`.
-
-**Per-field round-tripping is verified** for system configuration,
-conferences, drives, doors, screen types, computers, protocols, languages,
-file checkers and nodes - each with tests that fail when the fix is reverted.
-It found seven faults, all of two shapes: a value written under one key and
-read back from another, or a writer rebuilding a file from the database (or
-from nothing) and dropping what it did not own.
+Redesign phases 0-5 shipped, then sixteen correctness fixes, then a
+six-agent audit. All of it - what is done, what is left, and the express.e
+citations - is in `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`
+and the plan it references. The admin app is disk-first: the BBS reads
+`.info` files, SQLite is a downstream mirror, and `getBoardConfig()` in
+`web/backend/src/services/bbs-config-file.service.ts` is the one accessor.
 
 ## Waiting on the user
 
-- **DOORMAN could not see the wall door.** Probably answered by the incident:
-  the whole `Doors/` tree was missing, so nothing under it could appear. Worth
-  re-checking now that the doors are back, and saying which view it was -
-  installed, or repo browse.
+- **DOORMAN could not see the wall door.** Probably the incident: the whole
+  `Doors/` tree was missing. Worth re-checking now, saying which view it was.
 - **`wall.info` NAME reads "WALL"** on live, overwritten before the rename fix
   landed. The original is in `wall.info.backup` beside it.
 
