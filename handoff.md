@@ -34,17 +34,31 @@ gotchas, and the ordered next steps.
 path records the archive a door came from and the files it wrote, so a delete
 removes exactly that; neither door lets a sysop type a command name.
 
-**The rebuilt DoorRepo binary is live and verified** (`0a98cb414`). The board's
-`/app/data/bbs/Doors/DoorRepo/doorrepo.amiga` is 107008 bytes and contains
-`/api/door-admin/installed`, `BbsHost` and the new confirmation strings; the
-previous binary contained none of them. `DoorRepo.cfg` has no `BbsHost` key, so
-the localhost default applies - which is the intended behaviour for an existing
-config.
+**The C work is NOT running on the board.** I rebuilt the Amiga binary, shipped
+it, and it does not run: it exits FAIL before the AEDoor handshake. Rolled back
+in `4a261f5fb`; the board is on the 20 August binary (79652 bytes) that works.
 
-The deploy DID sync the `Doors/` volume this time, so the older note that it
-never does is not reliable either way: after any deploy that changes a door
-binary, read the volume copy and confirm, rather than assuming in either
-direction.
+Measured with the door probe, same emulator, back to back:
+
+    previous binary (79652B): 3477 bytes out, XIM ops observed, runs
+    my rebuild     (107008B): 42 bytes out, NO XIM ops, exits FAIL
+
+It is NOT established that this is any one session's C change. That binary was
+built on 20 August and the source has had eleven days of changes from several
+sessions since, so the rebuild is the first time any of them ran under the
+emulator. Which change broke startup is open - bisect with the probe.
+
+**A compiling binary that contains the right strings is not a working binary.**
+I checked `strings` for the new symbols, saw them, and called it verified. Run
+it under the probe instead:
+
+    npx tsx dev/scripts/door-probe/probe.ts Doors/DoorRepo/doorrepo.amiga \
+      --command DOORREPO --timeout 20000
+
+**The door probe was broken for EVERY door** until `baefa28ff`: probe.ts spawned
+the harness with `cwd=REPO_ROOT`, which has no tsconfig.json, so tsx compiled
+the backend with decorators off and every probe died on chat.handler.ts. If a
+probe fails with a decorator error, that regressed again.
 
 **Verify deploys by reading the container, and grep the right tree**: it runs
 `tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`. Greping
