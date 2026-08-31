@@ -117,13 +117,28 @@ line with a space in it is an argument rather than a verb. A TypeScript
 implementation should match those rules rather than invent its own, and the
 C tests are the specification.
 
-Open questions for whoever builds it:
+**What it completes: everything.** The sysop's words - "that autocompletes
+all doors and bbs commands". Both halves, from one list:
 
-1. **Which commands.** express.e's own precedence: CONFCMD > NODECMD >
-   BBSCMD (`4630-4647`), plus internal commands, which are not files
-   (`4732`).
-2. **Access filtering.** Only offer what the user may run - `express.e:4703`
-   reads ACCESS=0 as DENIED. Offering a command that then refuses is worse
-   than not offering it.
-3. **What to show beside a name.** MENUNAME from the .info; DoorRepo's `T`
-   screen already edits it.
+- every DOOR, which is a registration on disk: `Conf<N>Cmd`, `Node<N>Cmd`
+  and `BBSCmd`, in express.e's own precedence (`4630-4647`: CONFCMD >
+  NODECMD > BBSCMD, so a conference's own version of a name wins);
+- every INTERNAL BBS command, which are not files at all (`4732`) and so
+  cannot be found by listing a directory.
+
+On the web port both are already in one place: `commandCache` is what
+dispatch itself reads (`command-execution.handler.ts:390`) and what the
+internal-command router reads (`internal-commands.ts:127`). Completing
+against that is completing against exactly what would run - which is the
+only way the offer cannot lie.
+
+The one judgement call left:
+
+1. **Access filtering.** `express.e:4703` reads ACCESS=0 as DENIED, and a
+   name offered in grey that then refuses is worse than one never offered.
+   "All doors and BBS commands" is read here as "everything this user may
+   actually run" - worth confirming with the sysop before building, because
+   it is the difference between a helpful prompt and a lying one.
+2. **Nothing else is shown.** No description, no MENUNAME, no column of
+   help - that would be the menu the sysop does not want. Just the grey
+   tail.
