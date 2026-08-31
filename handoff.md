@@ -35,44 +35,38 @@ strips types, so a test file can be green under jest and fail the typecheck.
 
 ## Current state (2026-08-31)
 
-**Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`.**
-Read that first in a fresh session; it carries the live deploy step below, the
-gotchas, and the ordered next steps.
+**Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`**
+- the deploy step, the gotchas, the ordered next steps.
 
-**The installed-door link is merged and live** (`178d8a74f`). Every install
-path records the archive a door came from and the files it wrote, so a delete
-removes exactly that; neither door lets a sysop type a command name.
+**The installed-door link is merged and live** (`178d8a74f`). Every install path
+records the archive a door came from and the files it wrote, so a delete removes
+exactly that; neither door lets a sysop type a command name.
 
-**The C startup failure is solved and the rebuilt door is committed**
-(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
-caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
-500 KB the emulator gives a door and on top of exec.library's LVO table at
-0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
-executing anything and exited RETURN_FAIL. The emulator logged
-`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
+**The C startup failure is solved.** No C regression: the door's caches had
+grown its BSS to 436 KB, putting its segments at 0x085d04, past the 500 KB the
+emulator gives a door and onto exec.library's LVO table at 0x7fcf4. HUNK_BSS is
+zeroed at load, so it blanked 126 exec vectors before executing anything and
+exited FAIL - while the emulator logged `VERIFICATION: 230 OK, 126 FAILED!` and
+carried on. Two fixes, two levels:
 
-Two fixes, two levels:
-
-- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses
-  (ExecBase 0x80000, stubs, AllocMem heap 0x100000, ENV 0x120000, ReadArgs
-  0x140000) and `assertDoorSegmentsFit` refuses the load BEFORE
-  `HunkLoader.load` writes a byte, naming the segment and what it would
-  destroy. It reaches the sysop over `door:error` and the probe report.
+- `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses and
+  `assertDoorSegmentsFit` refuses the load BEFORE `HunkLoader.load` writes a
+  byte, naming the segment and what it would destroy. Reaches the sysop over
+  `door:error` and the probe report.
 - `examples/doorrepo-c/doorrepo.c`: DIZ cache 32->8, FILES 4->2, DOC 2->1.
-  BSS is 327 KB, segments end 0x06b47c, **80 KB of headroom left**. Code grew
-  40 KB in eleven days, so phases B-E will eat that; the guard now says so
-  loudly instead of dying silently.
+  BSS 327 KB, segments end 0x06b47c, **80 KB of headroom**. Code grew 40 KB in
+  eleven days, so D will eat that - the guard now says so loudly.
 
-**A compiling binary that contains the right strings is not a working binary.**
-Run it under the probe, and give it 20 s - a shorter budget kills the harness
-before it boots and reports an empty run that looks like a dead door:
+**A compiling binary with the right strings in it is not a working binary.**
+Probe it, and give it 20 s - less kills the harness before it boots and reports
+an empty run that looks like a dead door:
 
     npx tsx dev/scripts/door-probe/probe.ts Doors/DoorRepo/doorrepo.amiga \
       --command DOORREPO --timeout 20000
 
-**The door probe was broken for EVERY door** until `baefa28ff` (harness spawned
-with `cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error in a probe
-means that regressed.
+**The probe was broken for EVERY door** until `baefa28ff` (spawned with
+`cwd=REPO_ROOT`, no tsconfig, decorators off). A decorator error means that
+regressed.
 
 **Verify deploys by reading the container, and grep the right tree**: it runs
 `tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`.
@@ -81,10 +75,23 @@ The dirty tree is BBS runtime state plus another session's uncommitted work
 (`web/config-app`, `Doors/super-qix` - untracked, one `git clean -fd` from
 gone).
 
-## Closed, and in the archive
+## DOORREPO: A, B and C are built; D and E are not
 
-The DOORMAN incident and where DOORREPO stands are both settled; see
-`thoughts/shared/handoffs/`.
+The door-admin API is complete, reads and writes. Formats in
+`docs/DOOR-REPO-API.md` s.11+; as-built in
+`thoughts/shared/plans/2026-08-31-doorrepo-phase-{b,c}.md`.
+
+**D (screens) and E (retire DOORMAN) do not exist.** Three things D must not
+get wrong: paths are contained by checking twice, resolved AND after
+`realpath` (a symlink inside a door defeats a string comparison); a text
+`.info` disables with `!KEY` only, binary DiskObjects honour `(KEY)`; and
+streaming `DELETE` puts success in `DONE`, not the HTTP status.
+
+**Do not add a server-side `enabled`.** Enable/disable lives in the C door
+(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
+board has no API. The server offers `rescan` only.
+
+The DOORMAN incident is closed; see `thoughts/shared/handoffs/`.
 
 ## The doors and the door repo
 
