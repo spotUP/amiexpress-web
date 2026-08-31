@@ -18,17 +18,15 @@ Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
 Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
 `BBS_DATA_DIR=/app/data/bbs` - not `/app`, which holds a bare skeleton.
 
-**`main` moves under you.** Other sessions push door and arcade work
-constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
-confirm ancestry before pushing AND before deleting the branch.
+**`main` moves under you.** Cut a deploy worktree from a fresh `origin/main`,
+cherry-pick, and confirm ancestry before pushing and before deleting a branch.
 
 **`main` moves under you.** Other sessions push door and arcade work
 constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
 confirm ancestry before pushing AND before deleting the branch.
 
-**A deploy still disconnects /chat - but everyone gets a 60-second countdown
-first**, and /chat reconnects itself. Documentation changes do not deploy
-(`paths-ignore`).
+**A deploy disconnects /chat after a 60-second countdown**, and /chat
+reconnects itself. Documentation changes do not deploy (`paths-ignore`).
 
 **A deploy still disconnects /chat - but everyone gets a 60-second countdown
 first**, and /chat reconnects itself. Documentation changes do not deploy
@@ -184,22 +182,22 @@ and the plan it references. The admin app is disk-first: the BBS reads
 
 ## Gotchas
 
-- **Read the mutation path; do not count.** Three false-positive rounds.
+- **Read the mutation path; do not count.** Three false positives.
 - **A recursive delete needs a resolved-path guard, not a trusted string.**
-- **A door archive already names its own command** in
-  `Commands/BBSCmd/<COMMAND>.info`, with the tooltypes it was built with.
-- **Python rewrites line endings.** Much of this repo is CRLF; open with
-  `newline=''` on both ends or a four-line change becomes a whole-file diff.
-- **`screen.focused` is a boolean about the Screen itself.** The focused
+- **Frogger and Super Qix are FAQ-complete**; see each `CHECKLIST.md`.
+- **A door archive names its own command** in `Commands/BBSCmd/<CMD>.info`,
+  with the tooltypes it was built with.
+- **Much of this repo is CRLF.** Open files with `newline=''` at both ends,
+  or a four-line change becomes a whole-file diff.
+- **`screen.focused` is a boolean about the Screen itself**; the focused
   element is `screen.getFocused()`.
 - **SDK tests import the built `sdk/dist`.** A source edit is invisible until
-  `npm run build:cjs`, and `packages/terminal` compiles the SDK under a
-  stricter tsconfig that gates the Docker build.
-- **A TypeScript door's `dist/` is what runs**, and the pre-commit hook
-  rebuilds it. Two agents touching the same door will pull each other's
-  half-finished work into a commit; use separate worktrees.
-- **The live log is not the current log** - every deploy replaces the
-  container. `head` truncates evidence; redirect to a file instead.
+  `npm run build:cjs`; `packages/terminal` compiles it under a stricter
+  tsconfig that gates the Docker build.
+- **A TypeScript door's `dist/` is what runs** and the pre-commit hook
+  rebuilds it. Two agents on one door pull each other's half-finished work
+  into a commit; use separate worktrees.
+- **The live log is not the current log**: every deploy replaces the
+  container. `head` truncates evidence; redirect to a file.
 - **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
-  and its test are what stop a merge from silently removing the only route to
-  a piece of configuration.
+  and its test stop a merge silently removing the only route to a setting.
