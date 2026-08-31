@@ -70,14 +70,10 @@ The dirty tree is BBS runtime state plus another session's uncommitted work
 
 ## The DOORMAN incident - closed
 
-Deleting doors on the live board removed every door, DOORMAN included: the
-uninstall force-deleted `PROJECT_ROOT/<install_dir>` unchecked, and
-`install_dir` is written as `Doors/${command}` - a record with no command
-gives `Doors/`.
-
-Guarded in `Doors/door-manager/safe-install-dir.ts`, the doors were restored
-by the deploy's door sync, and the guard is confirmed running live. Full
-write-up, and the other five items raised the same day, in
+Deleting doors on the live board removed every door: the uninstall
+force-deleted `PROJECT_ROOT/<install_dir>` unchecked, and `install_dir` is
+written as `Doors/${command}`, so a record with no command gave `Doors/`.
+Guarded in `Doors/door-manager/safe-install-dir.ts`. Full write-up in
 `thoughts/shared/todos/2026-08-30_queue.md`.
 
 ## DOORREPO is not a DOORMAN replacement yet

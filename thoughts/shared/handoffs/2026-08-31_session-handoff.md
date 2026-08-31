@@ -130,6 +130,28 @@ Merged to main as `178d8a74f` (21 plan commits + 12 fix-wave commits), then
   review; a copy is in this session's scratchpad only, so treat git history and
   these documents as the record.
 
+## What the C door actually targets - read this before judging any test
+
+DoorRepo is a C89 door for REAL AmiExpress boards on real Amigas. That is the
+whole point of it: other sysops run it against this repo's catalog. This
+project's 68K emulator is a convenient proxy, NOT the arbiter of correctness.
+
+Two consequences:
+
+- **The startup regression matters MORE, not less.** A door that will not start
+  under the emulator may well fail on real hardware too, and a sysop on an
+  Amiga has no probe, no logs worth the name, and no way to tell us why. Do not
+  ship a binary that fails here on the theory that a real board differs.
+- **Install reporting is amiexpress-web-only, by design.** A real AmiExpress
+  board has no `/api/door-admin` and no token file, so `config_read_token`
+  finds nothing and `report_install_to_bbs` never runs. That silence is
+  correct; the door must keep working exactly as before on such a board. Any
+  change to that path has to preserve it - the door must never require the BBS
+  API to function.
+
+Validation on a real board (or WinUAE/vAmiga with a real AmiExpress) is the
+only genuine proof. The probe is a fast first filter, not the last word.
+
 ## The parity gap - DOORREPO is NOT a DOORMAN replacement yet
 
 Phase A (this session) built the groundwork only: the recorder, the link, the
