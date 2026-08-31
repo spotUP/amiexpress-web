@@ -90,6 +90,18 @@ So, concretely:
   when there is no match - the grey tail simply is not there.
 - Typing continues normally; the ghost follows what has been typed and
   disappears the moment it stops matching.
+- **The MAIN PROMPT only.** Not the every other place the BBS reads a line
+  - not a search term, not a filename, not a password, not a message
+  editor, not a door's own prompt. Those read free text, and a grey
+  suggestion there would be noise at best and would complete a password
+  field at worst.
+
+  This matters at implementation time because both targets read every line
+  through ONE function: `lineInput` on the Amiga (`express.e:2170`, called
+  from everywhere), and the web port's equivalent. The completion must
+  therefore be opt-in per call site and switched on at exactly one of them
+  - `SUBSTATE_READ_COMMAND` (`28620`) and its web counterpart - rather than
+  added inside the line reader where it would appear everywhere at once.
 
 This is the LIVECHAT/DoorRepo ghost text without the dropdown that
 accompanies it there - `flow_command_ghost` already computes exactly this
