@@ -2,12 +2,32 @@
 
 ## READ THIS FIRST
 
-**The admin, the .info parser and door settings:**
-`thoughts/shared/handoffs/2026-08-31_admin-audit-and-door-settings.md` is the
-current state - eighteen fixes, three live repairs, and the open work.
-**Doors, deletes, DOORREPO:** `..._door-delete-rules-and-doorrepo-parity.md`.
-Behind them: `..._admin-functional-audit.md` (how the admin was checked),
-`..._tooltype-length-prefix-and-the-orphan-prune.md` (the parser arc).
+**Door rendering, the deploy that lies, the disk:**
+`thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`
+is the current state.
+
+**The backend used to line-wrap screen paints.** Every door that paints at
+absolute cursor positions was being corrupted whenever one 198-byte XIM
+message ran past the wrap column - a newline pushed into the middle of a
+paint, so the rest of the row started the row below. Fixed by
+`positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`):
+a door that moves the cursor is PAINTING and has no lines to wrap. If a
+door still looks subtly wrong, check it against that.
+
+**Bytes are milliseconds in a 68K door.** ~45ms of emulation per 198-byte
+XIM message, measured. A screen paint's cost is its byte count. Do not send
+a colour already set, and do not pad rows on a screen that was just cleared.
+
+**Debugging a door's rendering: capture, do not guess.** Three wrong
+conclusions in one session ended the moment the door's real traffic was
+captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
+is written down in that handoff, including the log-parsing trap that
+manufactures a convincing fake reproduction.
+
+**Doors, deletes, DOORREPO:**
+`thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
+is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
+(the morning), `..._session-handoff.md` (admin, finished and deployed).
 
 **A door is its REGISTRATION.** Five live reports in one day were the same
 defect: the `.info` left behind, or another door's `.info` taken away.
@@ -57,41 +77,33 @@ skill. A crunched door needs MORE emulator memory, not less: crunched
 DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
 fine.
 
+## Sprite work (session of 2026-08-31 evening) - READ ON RESUME
+
+**Full handoff: `thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`.**
+Live (verified, container d8a0b20dc): cell-art sprite engine, Pengo
+rebuilt full-screen with arcade sprites + sfx + music, sprite studio 2a
+(SPRITED, sysop), watcher port-guard. LOCAL ONLY: plan 2b (studio editing)
+tasks 1-5 of 6 - resume from the SDD ledger at
+`.superpowers/sdd/2026-08-31-sprite-studio-2b-editing/progress.md`
+(Task 5 review pending, then sweep, final review, user checklist, deploy).
+User queue after that: shared 8-way scroller, Frogger sprites, pengo
+levelComplete one-liner - memory `project_arcade_sprite_queue`.
+
 ## Next
 
 Nothing queued by the user. Open:
 
-1. **Door settings phase 4** - the two pilot doors, `Doors/livechat` and
-   `Doors/bbslink`. Plan:
-   `thoughts/shared/plans/2026-08-31-typescript-door-settings-in-admin.md`.
-   Phases 1-3 are in; no door has a manifest yet, so nothing has changed for
-   any door.
-2. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
+1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
-3. `PUT /api/door-admin/installed/:cmd/info` 401s a config-API token - its own
-   router, its own auth - so its live behaviour is UNVERIFIED. Same for the
-   streaming `DELETE`.
-4. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
+3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
    next feature there needs an extraction first.
-5. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-6. The realtime admin layer has never met a busy board.
-7. The two security endpoints name the same flags differently (`ACS.CENSORED`
-   vs `CENSORED`); `dev/console` uses the mirror one, so it cannot just go.
-
-Checked 31 Aug, do not re-do: the six admin pages ARE on
-`components/ui/DataTable` (Security is a flag editor, not a table);
-`VITE_BYPASS_AUTH` is gone, `src/test/auth-guard.test.ts` keeps it gone;
-Configuration Files is two tabs; the wall door was never missing. Node
-Configuration deliberately stays on the old `DataGrid`.
-
-`bbsConfig.info` is writable now and the live icon is healed. Three data
-repairs landed on the board 31 Aug - MAX_NODES 255->32, 187 dead registrations
-deleted, GWALL uninstalled - each backed up under `/root/bbs-backups/`.
-
-**A green suite proved nothing here.** `tests/api/config-routes.test.ts`
-asserts "200 or 404" and mocks the user-file managers, which is how new users
-came to be written to a file nothing reads. Drive the API and read the bytes.
+4. Six admin pages still render their own tables instead of
+   `components/ui/DataTable`. Node Configuration deliberately stays on the
+   old `DataGrid`.
+5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
+6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Gotchas
 
