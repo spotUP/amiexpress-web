@@ -86,3 +86,36 @@ round-trips now.
   batches and node-control; all answer 200 with real data. The write sweep
   covered every domain above. Doors install/delete, user create/delete and the
   batch editor PUT were NOT round-tripped.
+
+## Second pass: doors
+
+**Add Door was broken for every door type the board uses.** `createDoor`
+inserted the mirror row FIRST, and `doors.door_type` is CHECKed against
+('SYSCMD','BBSCMD','INTERNAL') - the command's SCOPE - while the list the form
+is filled from reports the door's TYPE, which is what the .info carries: XIM,
+AIM, FIM, DD, SIM, typescript. So the insert threw "CHECK constraint failed:
+door_type" before the registration was written, and the sysop got a 500 with a
+raw SQLite message and no door. The registration is written first now and the
+mirror insert is best-effort, which is the order the rest of this config layer
+already uses; the field's two meanings are left alone, because the writer's
+reading of it (SYSCMD -> SysCmd, everything else -> BBSCmd) is correct.
+
+`POST /doors` also never reloaded the door registry, so a door created here
+would not have appeared in the list it was created from until a restart - the
+same defect the .info edit route already fixes with a reload, and now the same
+reload.
+
+**Editing a door works** (200, and the .info is rewritten): the mirror row for
+a disk-defined door does not exist, so `updateDoor` touches no rows and the
+CHECK is never reached.
+
+**Deleting a door works and is thorough** - `DELETE /config/doors/<CMD>`
+reported removing `Commands/BBSCmd/AUDITDOOR.info`, `Doors/auditdoor/auditdoor`
+and `Doors/auditdoor`, which is the installed-door link doing its job.
+
+**Not resolved:** a door created with a placeholder binary never reaches the
+registry - the reload runs and the command cache grows to include it, but
+`Registered door: AUDITDOOR` is never logged. The likely reason is that the
+placeholder is the text "placeholder" rather than an Amiga executable, and an
+XIM door with no loadable binary should be refused. Unverified: worth ten
+minutes with a real door binary before anyone calls it a defect.
