@@ -126,50 +126,66 @@ that passes here whatever the code does. It only means something in CI.
 
 ---
 
-## Open, and waiting on a decision: the volume reverts what the admin saves
+## Fixed: the volume no longer reverts what the admin saves
 
-Found 2026-08-31 while confirming the door-icon migration had landed. Read
-from `docker-entrypoint.sh`, not observed on the board - but the code is
-unambiguous.
+`ComputerList.info`, `Drives.info`, `ScreenTypes.info`, `ConfConfig.info`,
+`Languages.info`, `FCheck.info` and every `Commands/BBSCmd/*.info` were
+IMAGE-OWNED - "always overwrite the volume on every restart" - under a comment
+asserting "there is no sysop/admin path that legitimately modifies these".
+There is: they are what the admin's Computers, Drives, Screen Types,
+Conferences, Languages, File Checkers and Doors pages write. The overwrite was
+logged as "hash drift". The drift was the sysop.
 
-The entrypoint classifies files. IMAGE-OWNED means "always overwrite the
-volume", justified in its own comment as:
+Option B was chosen. `docker-entrypoint.sh` now records what each deploy PUT
+on the volume, in `.deployed-manifest`, and:
 
-> There is no sysop/admin path that legitimately modifies these.
+| state | what happens |
+|---|---|
+| missing on the volume | copied |
+| matches what we last wrote | untouched, so the image may update it |
+| differs from what we wrote | the sysop edited it; theirs is kept |
+| no baseline yet | record the IMAGE's hash, change nothing |
+| agrees with the image again | divergence over, tracking resumes |
 
-That is false for four of them, and for a whole directory:
+Two of those rules exist because a test of the shell function caught the first
+version getting them wrong. Recording the VOLUME's hash on a first run made
+the next deploy read a sysop's edit as untouched and overwrite it - the exact
+bug being fixed. And without the last rule a file stayed sysop-owned for ever
+and never took another update, which is the flaw in the simpler option A.
 
-| File | Written by | Class |
-|---|---|---|
-| `ComputerList.info` | Computers page | IMAGE-OWNED - overwritten |
-| `Drives.info` | Drives page | IMAGE-OWNED - overwritten |
-| `ScreenTypes.info` | Screen Types page | IMAGE-OWNED - overwritten |
-| `ConfConfig.info` | conference name / location | IMAGE-OWNED - overwritten |
-| `Commands/BBSCmd/*.info` | every door edit | blanket dir sync - overwritten |
+`tests/services/deploy-manifest-sync.test.ts` drives the real `sync_tracked`
+out of the real entrypoint rather than a re-implementation.
 
-`sync_image_owned` md5s both copies and overwrites on mismatch, logging it as
-"hash drift". A sysop's edit IS the drift. `Node*.info` and `Conf*.info` are
-correctly VOLUME-OWNED, which is why those survive.
+**The first deploy after this ADOPTS and changes nothing** - it has no record
+of what the previous deploy wrote and will not guess. The protection is live
+from the second deploy on.
 
-So five of the domains this remediation fixed save correctly and are reverted
-on the next container restart. That fits "we never could get it working
-properly" better than anything else found today.
+## The three the sysop reported, 2026-08-31
 
-**Two ways to fix it.**
+**SMTP.** Two faults behind one report. `SMTP_USERNAME` was in
+SENSITIVE_FIELDS, so a save encrypted it into the database and stripped it
+from the icon - while the field's badge said `bbsConfig.info : SMTP_USERNAME`
+and it read back empty. express.e:31810 reads it from that file, so it goes
+there now. Its PASSWORD stays encrypted: express.e:31811 wants that on disk
+too, but unlike AUTOVAL_PASSWORD it is the sysop's own credential and the
+Configuration Files page would display it. Parity gap taken deliberately.
 
-A. Move the four to VOLUME_OWNED_INFO and seed `Commands/` only when a file
-   is missing. Small, and matches the file's own rule ("when in doubt,
-   default to VOLUME-OWNED"). Costs the other direction: a repo-side fix to a
-   door icon then never reaches an existing board, silently.
+The "test just spins" was port 465. That is SMTPS - TLS from the first byte,
+no plaintext greeting - so connecting without `secure` WAITS rather than
+failing, against nodemailer defaults of a 30s greeting and 10-minute socket
+timeout. 465 is now always implicit TLS, both transports carry explicit
+timeouts, and 587-with-SSL is refused up front.
 
-B. Write a manifest of what each deploy put on the volume, and next time
-   overwrite only files whose volume copy still matches that hash. Untouched
-   and changed in the image -> update. Edited by the sysop -> keep. New in the
-   image -> create. No silent loss either way; more work in the deploy path.
+**Security levels looked invented.** The page listed the FILES in `Access/`
+(10, 20, 50, 255) on a board whose new users are level 30. Nothing was wrong
+with the list; it answered the wrong question. express.e:3025-3034 rounds a
+level down to a multiple of five and walks down, so a level-30 caller is
+served by ACS.20.info. The page now also shows the levels users HOLD, how
+many hold each, and which file serves it.
 
-**Recommended: B.** A trades a silent revert for a silent staleness, and this
-entrypoint's comments record having been burned by exactly that already.
-
-Note on sequencing: the 62-icon migration RELIED on the current overwrite to
-reach the board, and did (deploy 33377282376). Whichever option is taken
-should land after it, which it now can.
+**Usernames could not be edited.** The field was disabled with "Username
+cannot be changed", but userToStruct has always written `user.username` into
+the record. Only validation was missing: non-empty, at most 31 characters,
+and not already taken. A rename does not rewrite history - messages, the
+callers log and file uploaders keep the name they were written with - and the
+form says so.
