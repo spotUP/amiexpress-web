@@ -23,26 +23,21 @@ account). This file is the whole session, including what is half-done.
 4. **Raised, not built**: SDK dialog buttons; catalog names for the 370
    existing doors; BROADCAST's missing door.
 
-## THE FIRST THING TO DO IN A FRESH SESSION
+## Deploy state - DONE and verified
 
-**Finish the binary deploy.** At the time of writing, live runs `817bad77f`
-and `0a98cb414` (the binary commit) is still deploying.
+`0a98cb414` is live. Verified by reading the running container, not the
+workflow:
 
-    ssh -i ~/.ssh/hetzner_deploy -p 22 root@89.167.21.154 \
-      'docker exec amiexpress-bbs cat /app/.git-sha'
+- `/app/.git-sha` = `0a98cb414`
+- `/app/data/bbs/Doors/DoorRepo/doorrepo.amiga` = 107008 bytes and contains
+  `/api/door-admin/installed`, `BbsHost`, and "named by the archive". The
+  previous binary (23 Aug, 79652 bytes) contained none of them.
+- `DoorRepo.cfg` carries no `BbsHost` key, so the `localhost:3001` default
+  applies - the backward-compatible path the fix was written for.
 
-When that reads `0a98cb414`, the IMAGE has the new binary but **the live volume
-still will not**. Deploys do not sync `Doors/`. Verified at handoff time:
-`/app/data/bbs/Doors/DoorRepo/doorrepo.amiga` is still the 23 Aug build, 79652
-bytes, and `strings ... | grep -c door-admin` returns 0.
-
-Copy it in and verify by reading the binary, not by trusting the copy:
-
-    ssh -i ~/.ssh/hetzner_deploy -p 22 root@89.167.21.154 \
-      'docker exec amiexpress-bbs sh -lc "cp /app/Doors/DoorRepo/doorrepo.amiga /app/data/bbs/Doors/DoorRepo/doorrepo.amiga && strings /app/data/bbs/Doors/DoorRepo/doorrepo.amiga | grep -c door-admin"'
-
-Expect `1`, and the size to become 107008. Until then the board runs a DoorRepo
-door that predates every C change in this session.
+The `Doors/` volume DID sync on this deploy. An older note in `handoff.md`
+said deploys never sync it. Treat neither as a rule: after a deploy that
+changes a door binary, read the volume copy and check its size and strings.
 
 ## Critical references
 
