@@ -2,15 +2,18 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Admin work: read `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`,
-then the plan it points at,
-`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`.** Sixteen admin
-fixes shipped on 2026-08-31; a six-agent audit then found considerably more,
-all of it in that plan, in severity order, with express.e line numbers.
+**Admin work: read
+`thoughts/shared/handoffs/2026-08-31_session-handoff.md` first.** It carries
+the current state, the three unpushed commits, and what still needs testing.
+Behind it: `..._admin-remediation-executed.md` for phase-by-phase detail,
+`..._admin-audit-and-fixes.md` for the day the audit was run, and the plan
+itself, `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`, now
+`status: implemented` with a section correcting its own claims.
 
-The plan's findings are marked VERIFIED or REPORTED. REPORTED means a lead,
-not a fact - this repo has produced confident false positives repeatedly.
-Confirm against `express.e` before changing anything.
+The plan's findings were marked VERIFIED or REPORTED. REPORTED means a lead,
+not a fact - this repo has produced confident false positives repeatedly, and
+executing the plan disproved three of its own REPORTED claims. Confirm against
+`express.e` before changing anything.
 
 Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`.
 Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
@@ -143,33 +146,38 @@ Nothing queued by the user. Open work, in the order worth doing.
 - **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
   and its test stop a merge silently removing the only route to a setting.
 
-## Admin remediation, executed (2026-08-31)
+## Admin work, 2026-08-31 - START HERE
 
-Deployed. 28 of the plan's 29 items, plus the sysop's three reports and the
-volume-ownership fix. Full detail, the corrections to the plan's own claims,
-and what is still open:
-`thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`.
+Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`.
+Phase-by-phase detail: `..._admin-remediation-executed.md`. Plan (implemented):
+`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`.
 
-**Fixed:** the board no longer reverts what the admin saves. Six root `.info`
-files and every door icon were IMAGE-OWNED, so a restart overwrote them and
-logged the sysop's own edit as "hash drift". The entrypoint now tracks what
-each deploy wrote. **The first deploy after this adopts a baseline and changes
-nothing** - the protection starts from the second, which matters when testing
-it.
+**THREE COMMITS ARE UNPUSHED** in `/private/tmp/admin-remediation-wt` on
+`fix/admin-audit-remediation` - conference create/delete fixes and entrypoint
+hardening. Held back because the sysop was about to test and a push recreates
+the container. Push them first.
 
-**Also fixed, from the sysop's report:** SMTP username reaches disk
-(express.e:31810); the SMTP test answers instead of spinning on port 465 (that
-is SMTPS - no plaintext greeting, so it waited); the Security page shows the
-levels users actually hold and which ACS file serves each (express.e:3025
-rounds down and walks down, so level 30 is served by ACS.20); usernames can be
-renamed.
+**The big one, deployed and verified:** the board used to revert what the admin
+saved. Six root `.info` files and every door icon were IMAGE-OWNED, so a
+restart overwrote them and logged the sysop's own edit as "hash drift". The
+entrypoint now tracks what each deploy wrote (`.deployed-manifest`,
+`sync_tracked`). Confirmed live: 258 files tracked, steady state a clean no-op.
 
-**62 door icons** no longer carry `ACCESS=0`, which express.e:4703 reads as
-"nobody". `GLC.info` is left - its tooltypes have no length prefixes, so the
-array cannot be located and the admin's editor refuses it too.
+**Also deployed:** the audit plan's phases 1-6; the sysop's three reports (SMTP
+username now reaches disk and the test no longer hangs on port 465; the
+Security page shows the levels users actually hold and which ACS file serves
+each; usernames can be renamed); and 62 door icons that no longer carry
+`ACCESS=0`, which express.e:4703 reads as "nobody".
 
-**Still open:** 5.3 (per-page `columns` memo - the cheap version introduced a
-staleness bug its own test caught) and `GLC.info`.
+**Unpushed and audited, not yet tested:** conference delete used to leave a
+half-existing conference (ConfConfig.info untouched), and create never
+registered the conference at all. A conference is a POSITION
+(express.e:8506), so only the LAST one can be removed - the refusal says why.
+Neither touches the conference DIRECTORY; its path is reported instead.
+
+**Open:** the SMTP password stays encrypted, so a real Amiga cannot SMTP-auth -
+a deliberate parity gap, and the sysop's call. 5.3 (per-page `columns` memo)
+and `GLC.info` are left with their reasons.
 
 **Each deploy snapshots the board's `.info` files first**, to
 `/root/bbs-backups/bbs-config-<stamp>.tar.gz`, last 20 kept.
