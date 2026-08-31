@@ -76,6 +76,16 @@ against `eol=lf`, so `git checkout --` re-dirties them instantly and
 `git checkout stash@{0} -- <explicit paths>`. Costed twenty minutes; recorded
 in memory.
 
+**Verifying with the same parser that made the change proves nothing.** The
+door migration's first run compared PARSED tooltypes before and after, agreed
+with itself, and had silently truncated 19 DESCRIPTION values - because the
+parser had already dropped the bytes, so both sides read the same damage. The
+byte-level check that replaced it found four separate defects in the writer
+the admin uses on every door edit: non-ASCII values truncated, UTF-8 written
+over Latin-1, trimmed values re-rendered lossily, and the WORD "FORM" treated
+as an IFF chunk (which would have written one file out twice over). Compare
+bytes, not your own representation of them.
+
 **I guessed at a tool twice in a row, in both directions.** The backup uses
 `find | tar -T -`. I wrote it without checking whether busybox tar accepts
 `-` for stdin, then mid-deploy talked myself into "fixing" it to a temp file
@@ -92,12 +102,12 @@ that passes here whatever the code does. It only means something in CI.
    in the deploy's `paths-ignore`, so pushing one recreates the container and
    drops every connected session. `4fa07bfc2` (a comment) waits for the next
    real deploy.
-1. **The 64 doors.** `Commands/BBSCmd` holds 155 command icons and 64 carry
-   `ACCESS=0`, with no `DRACCESS` anywhere - so this is the board's own
-   state, not the admin's doing. express.e:4703 reads `ACCESS=0` as "nobody",
-   `door.handler.ts:1091` reads it as "everybody". All 64 work here and would
-   be dead on a real Amiga. Stripping the tooltype is what "open to everyone"
-   is actually spelled as. **A decision for the sysop, not a fix.**
+1. **The doors are done.** 62 of the 63 icons that carried `ACCESS=0` no
+   longer do. `GLC.info` is the exception: a real DiskObject whose tooltypes
+   are stored without length prefixes, so the array cannot be located and the
+   file cannot be re-serialised without guessing at its layout. The admin's
+   editor refuses it for the same reason, correctly. Re-make that icon in
+   Workbench/IconEdit if it matters; it is one door.
 2. Done - see above. The backup is no longer a thing to remember: the deploy
    takes it.
 3. After deploying, ask the sysop to walk: save a computer type, a protocol,
