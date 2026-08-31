@@ -42,13 +42,12 @@ strips types, so a test file can be green under jest and fail the typecheck.
 records the archive a door came from and the files it wrote, so a delete removes
 exactly that; neither door lets a sysop type a command name.
 
-**The C startup failure is solved and the rebuilt door is committed**
-(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
-caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
-500 KB the emulator gives a door and on top of exec.library's LVO table at
-0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
-executing anything and exited RETURN_FAIL. The emulator logged
-`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
+**The C startup failure is solved.** No C regression: the door's caches had
+grown its BSS to 436 KB, putting its segments at 0x085d04, past the 500 KB the
+emulator gives a door and onto exec.library's LVO table at 0x7fcf4. HUNK_BSS is
+zeroed at load, so it blanked 126 exec vectors before executing anything and
+exited FAIL - while the emulator logged `VERIFICATION: 230 OK, 126 FAILED!` and
+carried on. Two fixes, two levels:
 
 - `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses and
   `assertDoorSegmentsFit` refuses the load BEFORE `HunkLoader.load` writes a
@@ -75,10 +74,23 @@ regressed.
 The dirty tree is BBS runtime state plus another session's untracked work
 (`web/config-app`, `Doors/super-qix`) - one `git clean -fd` from gone.
 
-## Closed, and in the archive
+## DOORREPO: A, B and C are built; D and E are not
 
-The DOORMAN incident and where DOORREPO stands are both settled; see
-`thoughts/shared/handoffs/`.
+The door-admin API is complete, reads and writes. Formats in
+`docs/DOOR-REPO-API.md` s.11+; as-built in
+`thoughts/shared/plans/2026-08-31-doorrepo-phase-{b,c}.md`.
+
+**D (screens) and E (retire DOORMAN) do not exist.** Three things D must not
+get wrong: paths are contained by checking twice, resolved AND after
+`realpath` (a symlink inside a door defeats a string comparison); a text
+`.info` disables with `!KEY` only, binary DiskObjects honour `(KEY)`; and
+streaming `DELETE` puts success in `DONE`, not the HTTP status.
+
+**Do not add a server-side `enabled`.** Enable/disable lives in the C door
+(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
+board has no API. The server offers `rescan` only.
+
+The DOORMAN incident is closed; see `thoughts/shared/handoffs/`.
 
 ## The doors and the door repo
 
@@ -166,8 +178,14 @@ Nothing queued by the user. Open work, in the order worth doing.
 
 ## Admin remediation, executed (2026-08-31)
 
-`fix/admin-audit-remediation` in `/private/tmp/admin-remediation-wt`, twelve
-commits, **not pushed**. 28 of the plan's 29 items.
+**Deployed 2026-08-31 08:50 UTC.** `main` is `7d7de02b4`; `/health` reports
+it. 28 of the plan's 29 items.
+
+Every deploy now snapshots the board's `.info` files first, to
+`/root/bbs-backups/bbs-config-<stamp>.tar.gz` (last 20 kept). The one taken
+before this deploy is `bbs-config-20260831-084639.tar.gz` - 1816 files, 328K.
+That is the rollback point for everything phases 1-3 changed about what gets
+written to disk.
 
 - Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (now
   `implemented`, with a "What was done" section holding the commit table and

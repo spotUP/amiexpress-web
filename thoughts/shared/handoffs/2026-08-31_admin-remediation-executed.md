@@ -9,8 +9,14 @@ status: final
 
 ## Start here
 
-Branch `fix/admin-audit-remediation`, cut from `origin/main` at `bab20fd7c`,
-eleven commits, **not pushed** (pushing auto-deploys).
+**Deployed 2026-08-31 08:50 UTC as `7d7de02b4`**, verified: `/health` reports
+that revision, the container was recreated 5s before the check, the door
+sync completed and the volume matches the image.
+
+The deploy took a snapshot first - `bbs-config-20260831-084639.tar.gz`, 1816
+`.info` files in 328K, under `/root/bbs-backups` on the host. That is the
+rollback point for everything phases 1-3 changed about what is written to
+disk.
 
 The plan is `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`,
 now `status: implemented`, with a "What was done" section at the bottom
@@ -70,21 +76,30 @@ against `eol=lf`, so `git checkout --` re-dirties them instantly and
 `git checkout stash@{0} -- <explicit paths>`. Costed twenty minutes; recorded
 in memory.
 
+**I guessed at a tool twice in a row, in both directions.** The backup uses
+`find | tar -T -`. I wrote it without checking whether busybox tar accepts
+`-` for stdin, then mid-deploy talked myself into "fixing" it to a temp file
+on exactly as little evidence. The deploy settled it - 1816 files into 328K -
+and the "fix" was reverted. A comment now records the evidence.
+
 **macOS still cannot see the case-sensitivity class.** 1.3c's fix (resolve
 the path once, use the resolved path for read, backup and write) has a test
 that passes here whatever the code does. It only means something in CI.
 
 ## Next steps
 
+0. **Two commits are held back deliberately.** A workflow-only change is not
+   in the deploy's `paths-ignore`, so pushing one recreates the container and
+   drops every connected session. `4fa07bfc2` (a comment) waits for the next
+   real deploy.
 1. **The 64 doors.** `Commands/BBSCmd` holds 155 command icons and 64 carry
    `ACCESS=0`, with no `DRACCESS` anywhere - so this is the board's own
    state, not the admin's doing. express.e:4703 reads `ACCESS=0` as "nobody",
    `door.handler.ts:1091` reads it as "everybody". All 64 work here and would
    be dead on a real Amiga. Stripping the tooltype is what "open to everyone"
    is actually spelled as. **A decision for the sysop, not a fix.**
-2. Push when the sysop says deploy. Phases 1, 2 and 3 change what is written
-   to a live board's configuration files - take a copy of `/app/data/bbs`
-   first.
+2. Done - see above. The backup is no longer a thing to remember: the deploy
+   takes it.
 3. After deploying, ask the sysop to walk: save a computer type, a protocol,
    a drive and a node; edit a door's `.info`; rename a conference; page the
    sysop from a non-sysop account.
