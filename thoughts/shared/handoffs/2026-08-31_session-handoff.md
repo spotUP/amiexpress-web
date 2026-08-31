@@ -23,21 +23,38 @@ account). This file is the whole session, including what is half-done.
 4. **Raised, not built**: SDK dialog buttons; catalog names for the 370
    existing doors; BROADCAST's missing door.
 
-## Deploy state - DONE and verified
+## Deploy state - the TypeScript is live, the C door is NOT
 
-`0a98cb414` is live. Verified by reading the running container, not the
-workflow:
+Live is `4a261f5fb`. The TypeScript half of this work is running on the board
+and was verified by reading `/app/web/backend/src` in the container.
 
-- `/app/.git-sha` = `0a98cb414`
-- `/app/data/bbs/Doors/DoorRepo/doorrepo.amiga` = 107008 bytes and contains
-  `/api/door-admin/installed`, `BbsHost`, and "named by the archive". The
-  previous binary (23 Aug, 79652 bytes) contained none of them.
-- `DoorRepo.cfg` carries no `BbsHost` key, so the `localhost:3001` default
-  applies - the backward-compatible path the fix was written for.
+**The C half is not.** I rebuilt `doorrepo.amiga` from current source, shipped
+it (`adb2356b8`), and it does not run - 42 bytes of output, no XIM ops, exits
+FAIL before the AEDoor handshake. The previous binary produces 3477 bytes and
+completes the handshake. Rolled back in `baefa28ff` / `4a261f5fb`; the board is
+on the 20 August binary (79652 bytes).
 
-The `Doors/` volume DID sync on this deploy. An older note in `handoff.md`
-said deploys never sync it. Treat neither as a rule: after a deploy that
-changes a door binary, read the volume copy and check its size and strings.
+So these remain merged source that has never run on a board: the archive-named
+command, the whole-path listing parse, install reporting, and the BbsHost
+security fix.
+
+**Do not assume the break is recent work.** The working binary was built on
+20 August; the source has eleven days of changes from several sessions. The
+rebuild is simply the first build of all of it. Bisect with the probe:
+
+    cd examples/doorrepo-c && make amiga        # builds ./doorrepo.amiga
+    npx tsx dev/scripts/door-probe/probe.ts examples/doorrepo-c/doorrepo.amiga \
+      --command DOORREPO --timeout 20000
+
+A working door shows XIM ops and thousands of bytes of stdout; the broken one
+shows 42 bytes and none. Under the harness the last thing it does is open
+dos.library and one 31-byte AllocMem, then exit.
+
+**The door probe itself was broken for every door** until `baefa28ff` - it
+spawned the harness with `cwd=REPO_ROOT`, which has no tsconfig.json, so tsx
+compiled the backend with decorators disabled and every probe died on
+chat.handler.ts's parameter decorators. Control check: AquaScan should probe
+exit 0 with ~1124 bytes.
 
 ## Critical references
 
