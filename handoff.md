@@ -49,10 +49,14 @@ exactly that; neither door lets a sysop type a command name.
 - twelve commits, five defect classes found on the live board, and the ordered
 next steps. Read it before touching doors, the emulator or the deploy.
 
-**ONE THING IS BLOCKED ON YOU**: 277 command registrations point at files that
-do not exist - the tail of the 30 August `Doors/` wipe. `BR`, `BV`, `BADD`,
-`BROADCAST` are all this. The scanner is on the container, dry-run verified;
-the exact command is Next Step 0 of that handoff. It renames, never deletes.
+**A tooltype 32 characters long was read as a comment.** Its length byte is
+0x21; the scraper glued it to the front and dropped it, so LOCATION vanished
+and the command left the registry.
+`BADD`, `BS`, `M`, `edit`, `open`, `va`, `_s`, `<` and eight more were that,
+not the `Doors/` wipe. The parser reads the array as icon.library wrote it now
+(1545 icons: 48 tooltypes back, 0 lost), and
+`dev/scripts/prune-orphan-registrations.ts` renamed the 13 dead. Live: 139
+registrations, zero dead.
 
 **The C startup failure was never a C regression.** The door's caches had grown
 its BSS to 436 KB, putting its segments past exec.library's LVO table at
@@ -105,10 +109,8 @@ Nothing queued by the user. Open work, in the order worth doing.
    sticky header, keyboard-reachable row actions or the empty and loading
    states. `components/ui/DataTable` is what they move to; Users, Doors,
    Languages and Screen Types are already there.
-3. **Node Configuration deliberately stays on the old `DataGrid`** - its rows
-   turn into input fields in place, and a row being edited must not move
-   because a sort changed. Both files say so; leave it unless the edit model
-   changes.
+3. **Node Configuration deliberately stays on the old `DataGrid`** - a row
+   being edited turns into input fields and must not move. Both files say so.
 4. **`VITE_BYPASS_AUTH` in `App.tsx`** bypasses the frontend auth guard
    entirely. It should go now that a sysop account exists. It has no influence
    over the socket handshake, which reads `secLevel` server-side.
