@@ -26,29 +26,32 @@ like a failed fix, so if a change "does not apply", clear the tsx cache:
 
 ## Current state (2026-08-31)
 
-**The installed-door link is merged and live.** `main` is `178d8a74f`;
-verified by reading the running container, not the workflow - `/app/.git-sha`
-plus the new modules greped out of `/app/web/backend/src` (the container runs
-`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`).
+**Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`.**
+Read that first in a fresh session; it carries the live deploy step below, the
+gotchas, and the ordered next steps.
 
-Full account: `thoughts/shared/handoffs/2026-08-31_installed-door-link.md`.
-Every install path now records both the archive it came from and the files it
-wrote, so a delete removes exactly that. Neither door lets a sysop type a
-command name any more.
+**The installed-door link is merged and live** (`178d8a74f`). Every install
+path records the archive a door came from and the files it wrote, so a delete
+removes exactly that; neither door lets a sysop type a command name.
 
-**The DoorRepo C door on the board is still the 23 Aug binary.** `make amiga`
-fails on a pre-existing vendored-include gap (`netio.c` -> `netdb.h` wants
-`sys/errno.h`; `amiga-netinclude-vendor/` has no `sys/`). So the C work -
-archive-named commands, the whole-path listing parse, install reporting, the
-`BbsHost` security fix - is merged source only until that build works.
+**UNFINISHED, do this first:** the rebuilt DoorRepo Amiga binary is on main as
+`0a98cb414` and deploying. A deploy does NOT sync the live `Doors/` volume, so
+after it lands the board still runs the 23 Aug binary until you copy it in:
 
-One peer commit is stranded on `feat/installed-door-link` and never reached
-main: `fix(admin): Configuration Files crashed on the first file it was ever
-sent`.
+    ssh -i ~/.ssh/hetzner_deploy -p 22 root@89.167.21.154 \
+      'docker exec amiexpress-bbs sh -lc "cp /app/Doors/DoorRepo/doorrepo.amiga /app/data/bbs/Doors/DoorRepo/doorrepo.amiga && strings /app/data/bbs/Doors/DoorRepo/doorrepo.amiga | grep -c door-admin"'
+
+Expect `1` and 107008 bytes. Until then the C work - archive-named commands,
+the whole-path listing parse, install reporting, the BbsHost security fix -
+does not run on the board.
+
+**Verify deploys by reading the container, and grep the right tree**: it runs
+`tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`. Greping
+`/app/dist` finds nothing and looks like a failed deploy.
 
 The dirty tree is BBS runtime state plus another session's uncommitted work
-(`web/config-app` package files, `Doors/super-qix` backgrounds and tests -
-untracked, so one `git clean -fd` from gone).
+(`web/config-app`, `Doors/super-qix` backgrounds and tests - untracked, so one
+`git clean -fd` from gone).
 
 ## The DOORMAN incident - closed
 
