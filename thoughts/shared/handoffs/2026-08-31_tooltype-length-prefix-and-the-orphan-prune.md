@@ -127,3 +127,54 @@ Still true, and now measured rather than remembered:
   changed. Invisible, not lost.
 - Node Configuration stays on `DataGrid` deliberately, and the realtime layer
   has still never met a busy board.
+
+## Second pass: the other two readers of the same bytes
+
+The prune left three questions open. All three are closed.
+
+**The wall door was never missing.** `Commands/BBSCmd/wall.info` parses, its
+LOCATION is `Doors/dRE/dRE!WAll/dRE!WAll`, the binary is there (11,416 bytes,
+nested two levels deep under a directory whose name carries an exclamation
+mark), `commandLocationIsLive` says live, and `scanCommandDirectory` admits
+WALL to the registry at access 50 alongside GWALL, GWWALL and LINKWALL. The
+sighting dates from the window when the whole `Doors/` tree was absent. Its
+`NAME` reads `dRE!WAll v2.0`, byte-identical to `wall.info.backup`, so that
+half of the report is stale too.
+
+**The orphaned registrations are gone for good.** 182 `.orphaned` files and
+five AmigaDOS temporary-name icons (`.!19106!n.info` and friends) deleted from
+the live board - 370 files under `Commands` down to 183, 100 live BBSCmd
+registrations. `FONTTEST.info` was kept: it is a real name, not a temp file.
+All 187 are in `/root/bbs-backups/orphaned-registrations-20260831-181358.tar.gz`
+on the host, verified by listing the archive before deleting.
+
+Nothing will bring them back. The image ships none of the 13 pruned names, and
+`.deployed-manifest` has no entry for any of them, so `sync_tracked` will not
+re-create them; a name absent from the volume WITH a manifest entry is treated
+as a sysop deletion and left alone, which is what stopped door deletions
+reverting on the next deploy.
+
+**Two more readers had the same defect** (`622594b17`). `info-file.util.ts` -
+the admin's reader and writer - and one more corner of the door parser:
+
+- An array at an ODD offset was never found: the finder stepped two bytes at a
+  time and `FCheck/LHA.info` keeps its array at 439, so the file fell back to
+  the printable-run scan and reported `SOPTIONS` for a tooltype spelled
+  `OPTIONS` - the entry's length byte 0x53 is 'S'. 636 tooltypes recovered
+  across the repo, the modem CONNECT strings in `CONNECT.DEF.info` included.
+- A tooltype appended past the array's end is read into the array now, so the
+  admin can see and edit it and the next save writes it where icon.library
+  looks. Only a NUL-terminated `KEY=VALUE` run qualifies: the first rule was
+  looser and `info-editor-round-trip` caught it absorbing a fixture's
+  `IMAGE-BYTES` stand-in image, which would have moved bitmap bytes into a
+  tooltype array.
+- Tooltypes invented from bitmaps are gone. `W`` `, `D@` and `K@B` were keys on
+  drawer icons; a PNG saved as `Conf11Cmd.info` produced 178 more, `IHDR` and
+  `GAMA` among them. Where the parse guesses, a key must look like a key: 5714
+  invented keys across 2691 files down to 63, nothing longer than three
+  characters lost. Entries out of a length-prefixed array keep the looser rule -
+  they are real by construction - and a TEXT .info's literal `(INTERNAL)` key
+  still reads as one, which `door-admin-info` insisted on.
+
+`typecheck:tests` earned its keep here: jest's swc stripped an `updateTooltype`
+arity error that the typecheck caught.

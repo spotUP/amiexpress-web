@@ -114,9 +114,9 @@ done - do not take this list on trust, it has been wrong before.
    reads; the icon drifts until Workbench or IconEdit re-creates it. The strict
    reader in `amiga-command-parser.util.ts` does not help - the writer is
    `info-file.util.ts`.
-4. **The admin never sees a tooltype appended past the array's end**
-   (`WHAT.info`'s `OVERCLOCK=100`). A save does NOT destroy it - verified on a
-   copy, the bytes survive - it is invisible, not lost.
+Closed 31 Aug: appended tooltypes, invented tooltypes and odd-offset arrays
+(`622594b17`); the wall door was never missing; 187 orphaned registrations
+deleted, backed up on the host.
 
 Checked on `main`, not assumed: the six own-table pages are on
 `components/ui/DataTable` (Security is a flag editor, not a table);
