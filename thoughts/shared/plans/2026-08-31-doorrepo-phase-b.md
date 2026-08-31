@@ -2,7 +2,7 @@
 date: 2026-08-31
 topic: DOORREPO phase B - the four read APIs
 tags: [doorrepo-c, door-admin, api, plan]
-status: draft
+status: implemented
 ---
 
 # Phase B - read APIs
@@ -248,3 +248,28 @@ Phase C's writes (`enabled`, `info` write, streaming `DELETE`), the C screens
 (phase D), and any change to DOORMAN. The 370 existing doors still get no
 backfill - they will render with an empty `archive` field, which is correct
 and is the scope call recorded at spec:60.
+
+## As built
+
+Implemented 2026-08-31 in `4d2e92927` (B1) and `1d6693f15` (B2-B6). Every
+step landed as planned. Three things worth recording:
+
+- **`resolveDoorDirectory` was extracted too.** B3 needed to resolve a command
+  to the same directory the list reports, and the candidate order (recorded
+  location, `Doors/<command>`, lower-cased) is the answer to that question. It
+  now lives in `door-list.ts` and both the list and the guard call it, rather
+  than the guard carrying a second copy.
+- **The `.info` comment syntax is not uniform**, and this was measured, not
+  assumed. In a plain-text `.info` only `!KEY` marks a tooltype disabled;
+  `(KEY)` comes back as a literal key named `(KEY)`. Both forms are honoured in
+  the binary DiskObject files the board actually holds. `extractTooltypesFallback`
+  in `utils/info-file.util.ts` is where the difference lives. Pinned by a test
+  rather than fixed - the utility is shared with the admin app, whose
+  round-tripping has its own verified tests, so changing it is its own piece of
+  work. **Phase C's writer must know which form it is editing.**
+- **`file` refusal tests assert absence of content, not just status.** A 403
+  that still put the bytes in the body would pass a status-only assertion.
+
+Automated verification at the end of the phase: 103 suites, 1102 tests,
+`tsc --noEmit` and `typecheck:tests` both clean. The manual checklist below is
+untouched and remains for the sysop.
