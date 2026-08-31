@@ -65,11 +65,17 @@ Nothing queued by the user. Open:
 2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
 3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
    next feature there needs an extraction first.
-4. Six admin pages still render their own tables instead of
-   `components/ui/DataTable`. Node Configuration deliberately stays on the
-   old `DataGrid`.
-5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
-6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
+4. Audio stutter: one cause fixed, diagnostics live, never confirmed.
+5. The realtime admin layer has never met a busy board.
+
+Checked 31 Aug, do not re-do: the six admin pages ARE on
+`components/ui/DataTable` (Security is a flag editor, not a table);
+`VITE_BYPASS_AUTH` is gone, `src/test/auth-guard.test.ts` keeps it gone;
+Configuration Files is two tabs; the wall door was never missing. Node
+Configuration deliberately stays on the old `DataGrid`.
+
+`bbsConfig.info` is writable now (`ae40c17df`); the LIVE icon still holds the
+old bytes and is healed by the first System Configuration save.
 
 ## Gotchas
 
