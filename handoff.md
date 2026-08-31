@@ -190,3 +190,18 @@ run `npm run typecheck:tests` (I broke CI without it); never import
 `server/initialization` from a service (it boots a second BBS in the worker);
 import module-level singletons inside the write path, not at file top; a test
 that mocks the half the bug lives in passes while the bug is live.
+
+**Review + slot-1 incident (evening).** Three adversarial agents reviewed
+conference create/edit/delete; findings and fixes are in `e42f6602e` (worst:
+the delete migrated every user "into" slot 0 - fs.writeSync writes negative
+positions at byte 0 - destroying slot 1, the -TCB!- account; the mirror shift
+cascade-ate the conference above; every UI edit silently skipped the mirror).
+Live repaired from `/root/user-files-pre-repair-*` + the remove-9 backup:
+slot 1 restored, keys/misc rebuilt from the DB, all 64 drifted disk access
+strings regenerated from the mirror; second dry run plans zero. Repair script:
+this session's scratchpad `repair-user-files.ts`. STILL OPEN, decisions:
+user.data is CHAR[10] vs 12+ conferences (disk cannot hold access for 11+);
+PRIVATE/MIN_ACCESS tooltypes are not enforced at join and access expansion
+grants new conferences to everyone; the message runtime is NUMBER-keyed
+(MessageFileManager, bbs-paths.util) so drifted boards need a directory
+renumber heal before create works past the refusal.
