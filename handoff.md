@@ -2,10 +2,12 @@
 
 ## READ THIS FIRST
 
-**Doors, deletes, DOORREPO:**
-`thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
-is the current state. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
-(the morning), `..._session-handoff.md` (admin, finished and deployed).
+**The admin, the .info parser and door settings:**
+`thoughts/shared/handoffs/2026-08-31_admin-audit-and-door-settings.md` is the
+current state - eighteen fixes, three live repairs, and the open work.
+**Doors, deletes, DOORREPO:** `..._door-delete-rules-and-doorrepo-parity.md`.
+Behind them: `..._admin-functional-audit.md` (how the admin was checked),
+`..._tooltype-length-prefix-and-the-orphan-prune.md` (the parser arc).
 
 **A door is its REGISTRATION.** Five live reports in one day were the same
 defect: the `.info` left behind, or another door's `.info` taken away.
@@ -59,14 +61,23 @@ fine.
 
 Nothing queued by the user. Open:
 
-1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
+1. **Door settings phase 4** - the two pilot doors, `Doors/livechat` and
+   `Doors/bbslink`. Plan:
+   `thoughts/shared/plans/2026-08-31-typescript-door-settings-in-admin.md`.
+   Phases 1-3 are in; no door has a manifest yet, so nothing has changed for
+   any door.
+2. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
-3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
+3. `PUT /api/door-admin/installed/:cmd/info` 401s a config-API token - its own
+   router, its own auth - so its live behaviour is UNVERIFIED. Same for the
+   streaming `DELETE`.
+4. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
    next feature there needs an extraction first.
-4. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-5. The realtime admin layer has never met a busy board.
+5. Audio stutter: one cause fixed, diagnostics live, never confirmed.
+6. The realtime admin layer has never met a busy board.
+7. The two security endpoints name the same flags differently (`ACS.CENSORED`
+   vs `CENSORED`); `dev/console` uses the mirror one, so it cannot just go.
 
 Checked 31 Aug, do not re-do: the six admin pages ARE on
 `components/ui/DataTable` (Security is a flag editor, not a table);
@@ -74,8 +85,13 @@ Checked 31 Aug, do not re-do: the six admin pages ARE on
 Configuration Files is two tabs; the wall door was never missing. Node
 Configuration deliberately stays on the old `DataGrid`.
 
-`bbsConfig.info` is writable now (`ae40c17df`); the LIVE icon still holds the
-old bytes and is healed by the first System Configuration save.
+`bbsConfig.info` is writable now and the live icon is healed. Three data
+repairs landed on the board 31 Aug - MAX_NODES 255->32, 187 dead registrations
+deleted, GWALL uninstalled - each backed up under `/root/bbs-backups/`.
+
+**A green suite proved nothing here.** `tests/api/config-routes.test.ts`
+asserts "200 or 404" and mocks the user-file managers, which is how new users
+came to be written to a file nothing reads. Drive the API and read the bytes.
 
 ## Gotchas
 
