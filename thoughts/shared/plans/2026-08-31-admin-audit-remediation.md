@@ -2,7 +2,7 @@
 date: 2026-08-31
 topic: Fixing what a six-agent audit found in the admin app
 tags: [admin, config-app, disk-vs-db, express-e-parity, info-files, plan]
-status: draft
+status: implemented
 ---
 
 # Admin audit remediation
@@ -449,3 +449,86 @@ Take a copy of `/app/data/bbs` before deploying either.
   (`DEFAULT_MENUNAME`, `HISTORY`, `USERNOTES`, `TIMEOUT_LC`, the sixteen
   `EXECUTE_ON_*` events). That is a feature gap, not a defect.
 - The two pre-existing CI clusters, now green.
+
+
+---
+
+## What was done, 2026-08-31
+
+Every phase executed except one item, on `fix/admin-audit-remediation`.
+Each fix ships a test that was revert-checked: the fix taken out, the test
+watched to fail, the fix restored.
+
+| Item | Commit |
+|---|---|
+| 1.1 the invalid icon writer, ten call sites | `9953590aa` |
+| 1.2 the mirror injected into disk, four writers | `5e5f5483a` |
+| 1.3 + 1.3a/b/c the tooltype editor | `d8a4a7cb8` |
+| 2.1 six zod-stripped fields | `1aae96448` |
+| 2.2 five domains editing by the wrong id | `cfc1a25bb`, `8282155f9` |
+| 2.3 Add Door, 2.4 SMTP username | `afb5d3540` |
+| 6.1-6.4 the guards | `52484f875` |
+| 3.1-3.3 PASSWORD_SECURITY, TELNET, ACS `=NO` | `569782bbc` |
+| 3.4-3.6 dead ACS flags, tooltype names, ranges | `45b110de6` |
+| 4.1-4.4 dead controls | `b5f0200ae` |
+| 5.1, 5.2, 5.4 error states, the reset effect, dialogs | `743645571` |
+
+### Corrections to this plan, found while executing it
+
+- **1.3b did not reproduce as written.** A blank Add Tooltype row does write
+  the entry `"="`, but it does NOT make every later save take the sidecar
+  path: the tooltype-array scanner recovers by finding a later start offset.
+  The entry is still junk in the sysop's icon and is still dropped.
+- **1.1's root was two parsers, not one bad writer.** `InfoFileParser.parse`
+  splits the file on NUL bytes, so it cannot read a plain-text `.info` at
+  all, while `parseInfoFile` reads both. That is how one half of the codebase
+  could write a file the other half could not read. The fourteen read sites
+  that pair with these writers were moved onto `readTooltypeMap()`.
+- **3.6's `max_conferences` claim was not applied.** axobjects.e:38 declares
+  `conferenceAccess` as `ARRAY OF CHAR [10]`, which would cap a board at
+  nine - but this board runs fourteen today, and express.e:8505-8512 has a
+  second path for exactly that case. Clamping would have broken a working
+  board on a reading of one struct.
+- **3.3 deliberately does NOT match express.e.** `checkToolTypeExists`
+  (tooltypes.e:204-218) reads key PRESENCE only, so `ACS.DOWNLOAD=NO` GRANTS
+  download on a real AmiExpress. Matching that would silently grant every
+  permission a sysop has written `=NO`. This port keeps denying and the
+  Security page names the flags affected.
+- **5.3 was not done, and the cheap version was tried and reverted.** Keying
+  DataTable's column model on the column IDS makes the accessors keep
+  whatever `value` function they were built with, so a column whose accessor
+  changes under a stable id stops re-sorting - a worse fault than the wasted
+  map it removes, and one its own test caught. Doing it properly means
+  memoising nine pages' columns AND every handler they close over. The plan
+  itself calls this wasted work rather than a visible bug; it stays open.
+
+### Found while executing, not in the plan
+
+- **A conference could not be renamed.** `ConferenceConfigSchema` never
+  declared `name`, so zod stripped it before any writer saw it. The widened
+  key-set guard (6.1) caught this on its first run. It now writes NAME.n into
+  ConfConfig.info, which is where express.e:31852 reads it.
+- **Three mapped fields had no default**, so `loadBBSConfig` could not infer
+  their type: `system_password`, `credit_by_kb`, `arexx_engine` came back as
+  strings. A guard now asserts every mapped field has one.
+
+### For the sysop: 64 doors are open here and closed on a real Amiga
+
+`Commands/BBSCmd` holds 155 command icons and **64 of them carry
+`ACCESS=0`**. None carries a `DRACCESS`, so none of this is the admin's
+doing - it is the board's own state, and it predates the door work.
+
+It matters because the two systems read it opposite ways:
+
+- express.e:4703 - `IF access=0 THEN RETURN TRUE`, and TRUE is
+  RESULT_NOT_ALLOWED (axenums.e:23). **Nobody may run the door.**
+- this port - `door.handler.ts:1091` is
+  `(session.user?.secLevel || 0) >= door.accessLevel`, and everything is
+  `>= 0`. **Everybody may run the door.**
+
+So all 64 work here and would be dead on a real AmiExpress. Matching
+express.e would take 64 doors offline on this board immediately, which is not
+a change to make without the sysop. The two options are to strip `ACCESS=0`
+from the 64 icons (which is what "open to everyone" is actually spelled as -
+an absent tooltype), or to leave the divergence and document it. **This is a
+decision, not a fix.**

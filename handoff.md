@@ -45,10 +45,10 @@ exactly that; neither door lets a sysop type a command name.
 **The C startup failure is solved and the rebuilt door is committed**
 (`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
 caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
-500 KB the emulator gives a door and onto exec.library's LVO table at 0x7fcf4.
-HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before executing
-anything and exited FAIL, while the emulator logged
-`VERIFICATION: 230 OK, 126 FAILED!` and carried on. Two fixes, two levels:
+500 KB the emulator gives a door and on top of exec.library's LVO table at
+0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
+executing anything and exited RETURN_FAIL. The emulator logged
+`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
 
 - `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed addresses and
   `assertDoorSegmentsFit` refuses the load BEFORE `HunkLoader.load` writes a
@@ -75,28 +75,10 @@ regressed.
 The dirty tree is BBS runtime state plus another session's untracked work
 (`web/config-app`, `Doors/super-qix`) - one `git clean -fd` from gone.
 
-## DOORREPO: A, B and C are built; D and E are not
+## Closed, and in the archive
 
-The door-admin API is complete, reads and writes (`4d2e92927`, `1d6693f15`,
-`5dc45dd87` - local, NOT pushed): `installed`, `installed/:cmd/` +
-`files`/`file?p=`/`info`, plus `rescan`, `PUT info`, streaming `DELETE`.
-Formats in `docs/DOOR-REPO-API.md` s.11+; as-built in
-`thoughts/shared/plans/2026-08-31-doorrepo-phase-{b,c}.md`.
-
-**D (screens) and E (retire DOORMAN) do not exist** - DOORREPO shows a sysop
-none of this yet. Three things D must not get wrong:
-
-- paths are contained by checking twice, resolved AND after `realpath`; a
-  symlink inside a door defeats a string comparison;
-- a text `.info` disables with `!KEY` only, binary DiskObjects honour `(KEY)`;
-- streaming `DELETE` puts success in `DONE`, not the HTTP status - the first
-  `STEP` already flushed the headers.
-
-**Do not add a server-side `enabled`.** Enable/disable lives in the C door
-(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
-board has no API. The server offers `rescan` only.
-
-The DOORMAN incident is closed; see `thoughts/shared/handoffs/`.
+The DOORMAN incident and where DOORREPO stands are both settled; see
+`thoughts/shared/handoffs/`.
 
 ## The doors and the door repo
 
@@ -110,13 +92,13 @@ other people's machines.
 locally. To exercise it:
 `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
 
-**The 370 doors already installed get no metadata** - deliberate scope call. No
-install record, so the name column echoes the command and the API's `archive`
-field is empty. Real names need the backfill in
-`thoughts/shared/todos/2026-08-30_queue-round-2.md`.
+**The 370 doors already installed get no metadata improvement** - deliberate
+scope call. No install record, so the name column echoes the command and the
+API's `archive` field is empty for them. Real names need the archive-matching
+backfill in `thoughts/shared/todos/2026-08-30_queue-round-2.md`.
 
-The board's management API is `/api/door-admin/*`, NOT `/api/doors` (the
-door-asset router).
+The board's own management API is `/api/door-admin/*`, NOT `/api/doors` (the
+existing door-asset router).
 
 ## Next
 
