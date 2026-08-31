@@ -2,10 +2,10 @@
 
 ## READ THIS FIRST in a fresh session
 
-**Admin work: read
-`thoughts/shared/handoffs/2026-08-31_session-handoff.md` first.** It carries
-the current state, the three unpushed commits, and what still needs testing.
-Behind it: `..._admin-remediation-executed.md` for phase-by-phase detail,
+**Read `thoughts/shared/handoffs/2026-08-31_conferences-doors-and-the-docker-outage.md`
+first.** It has the afternoon's state, the Docker incident and its repair, and
+what is open. Behind it: `2026-08-31_session-handoff.md` for the morning,
+`..._admin-remediation-executed.md` for phase-by-phase detail,
 `..._admin-audit-and-fixes.md` for the day the audit was run, and the plan
 itself, `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`, now
 `status: implemented` with a section correcting its own claims.
@@ -154,38 +154,39 @@ Nothing queued by the user. Open work, in the order worth doing.
 - **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
   and its test stop a merge silently removing the only route to a setting.
 
-## Admin work, 2026-08-31 - START HERE
+## Conferences, the J door, and the Docker incident (2026-08-31 pm)
 
-Full session handoff: `thoughts/shared/handoffs/2026-08-31_session-handoff.md`.
-Phase-by-phase detail: `..._admin-remediation-executed.md`. Plan (implemented):
-`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`.
+Archive: `thoughts/shared/handoffs/2026-08-31_conferences-doors-and-the-docker-outage.md`.
+Everything here is deployed and verified on the live board.
 
-**THREE COMMITS ARE UNPUSHED** in `/private/tmp/admin-remediation-wt` on
-`fix/admin-audit-remediation` - conference create/delete fixes and entrypoint
-hardening. Held back because the sysop was about to test and a push recreates
-the container. Push them first.
+**Conferences work end to end now.** Name field on the form; row click edits;
+every `Conf<N>.info` / `Node<N>.info` saves (the parser walks the DiskObject
+to the tooltype array instead of guessing, and heals the mixed-prefix layout on
+first save); a rename/create/delete reaches the running board through
+`services/conference-change-bus.ts` with the arrays replaced IN PLACE; a
+conference can be removed from ANY position - `ConferenceRemovalService`
+renumbers ConfConfig.info, the icons, every account's `conferenceAccess`, six
+SQLite tables and Conf.DB together, after a copy to `_conf-backups/`; the
+delete-files switch is in the confirm dialog; the mirror prunes stale rows
+(`{ complete: true }` only); create writes disk -> mirror row -> config row;
+new conferences are numbered `NCONFS+1`, read-only.
 
-**The big one, deployed and verified:** the board used to revert what the admin
-saved. Six root `.info` files and every door icon were IMAGE-OWNED, so a
-restart overwrote them and logged the sysop's own edit as "hash drift". The
-entrypoint now tracks what each deploy wrote (`.deployed-manifest`,
-`sync_tracked`). Confirmed live: 258 files tracked, steady state a clean no-op.
+**J lists the board's real conferences.** `Doors:emp_tools/joincnf` prefers a
+`CNF_NAME.n` line in its cfg over the icon's `NAME.n`; the 36 hand-typed lines
+are gone from `Doors/emp_tools/joincnf.cfg`, binary and emulator untouched.
 
-**Also deployed:** the audit plan's phases 1-6; the sysop's three reports (SMTP
-username now reaches disk and the test no longer hangs on port 465; the
-Security page shows the levels users actually hold and which ACS file serves
-each; usernames can be renamed); and 62 door icons that no longer carry
-`ACCESS=0`, which express.e:4703 reads as "nobody".
+**INCIDENT: dockerd crashed on every build** (`panic: page N already freed`,
+buildkit's bbolt cache db), six times, each stopping every container on the
+host. Trigger, unproven but only new variable: the per-deploy
+`docker builder prune` I had added. Removed (`9af19730f`). Repair: stop
+`docker.socket` AND `docker`, move `/var/lib/docker/buildkit/{cache.db,
+history_c8d.db}` aside, start, `docker start` the eight containers -
+`unless-stopped` did NOT bring them back. **Never restart dockerd while a
+`docker compose` process runs.** Live-restore was being enabled at the end of
+the session; check `docker info | grep -i "live restore"`.
 
-**Unpushed and audited, not yet tested:** conference delete used to leave a
-half-existing conference (ConfConfig.info untouched), and create never
-registered the conference at all. A conference is a POSITION
-(express.e:8506), so only the LAST one can be removed - the refusal says why.
-Neither touches the conference DIRECTORY; its path is reported instead.
-
-**Open:** the SMTP password stays encrypted, so a real Amiga cannot SMTP-auth -
-a deliberate parity gap, and the sysop's call. 5.3 (per-page `columns` memo)
-and `GLC.info` are left with their reasons.
-
-**Each deploy snapshots the board's `.info` files first**, to
-`/root/bbs-backups/bbs-config-<stamp>.tar.gz`, last 20 kept.
+**Gotchas from today:** `SKIP_DB_INIT=1` breaks every DB suite in a full run;
+run `npm run typecheck:tests` (I broke CI without it); never import
+`server/initialization` from a service (it boots a second BBS in the worker);
+import module-level singletons inside the write path, not at file top; a test
+that mocks the half the bug lives in passes while the bug is live.
