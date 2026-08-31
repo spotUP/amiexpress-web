@@ -2,7 +2,7 @@
 date: 2026-08-31
 topic: TypeScript doors declare their settings; the admin edits them
 tags: [doors, sdk, admin, config]
-status: implemented (phases 1-3); phase 4 open
+status: implemented (phases 1-4 pilot doors); the remaining doors are open
 ---
 
 # A door says what it can be configured with, and the admin renders it
@@ -192,3 +192,71 @@ admin 127 across 22 files including a five-case render test. `tsconfig.build`
 and `tsconfig.tests` both clean.
 
 **Phase 4 stays as written.** `Doors/livechat` and `Doors/bbslink` first.
+
+
+## Phase 4, the pilot doors (2026-08-31)
+
+`Doors/bbslink` and `Doors/livechat` ship a manifest, read it, and are
+covered by tests that fail when the wiring is undone. What phase 4 found was
+that the plan's own instruction - "reads through `readDoorSettings(__dirname)`"
+- could not work on the board.
+
+**`__dirname` is not one place.** `door.handler.ts` imports a door's
+`index.ts` in development and its `dist/index.js` in production, so the same
+call arrives from `Doors/<door>` in one and `Doors/<door>/dist` in the other,
+while the admin only ever writes to `Doors/<door>`. Every compiled door would
+have read an empty settings object and silently run on its defaults. The SDK
+resolves the door root now (`resolveDoorRoot`, walking up for the manifest)
+and both the declaration and the values are read from it.
+
+**BBSLink was already broken by that same split.** It resolved its
+credentials with `path.resolve(__dirname, 'bbslink.cfg')` and `dist/` does not
+carry the file, so on the live board every launch died on
+"syscode/authcode/schemecode missing from bbslink.cfg" with the credentials
+one directory up. `Doors/bbslink/config.ts` resolves the door root for the cfg
+too; `tests/doors/bbslink-config-layering.test.ts` covers it.
+
+**A default cannot be allowed to overwrite the old file.** The plan says a
+door keeps reading its old config for one release. `readDoorSettings` merges
+declared defaults with the sysop's values and cannot tell them apart, so a
+manifest default would silently overwrite what `bbslink.cfg` set - the live
+board's `TIMEOUT=5` would have become the declared 10. The SDK gained
+`readDoorSettingOverrides`, which returns only keys the sysop actually set,
+and BBSLink layers defaults -> bbslink.cfg -> overrides.
+
+**A door importing settings must not load the whole SDK.** Doors compile with
+`moduleResolution: node`, which ignores the `exports` map, so the subpath the
+backend uses (`@amiexpress/bbs-door-sdk/settings`) resolved for node and not
+for `tsc`. `sdk/settings.ts` is that subpath as a real file now, and the
+package's `./settings` export points at its build, so the compiler and the
+runtime mean the same module - and neither reaches the audio engine.
+
+**BBSLink's package.json named a command the board does not run.**
+`bbsCommand` was `LINKMENU`; the live registration is `Commands/BBSCmd/bbslink.info`
+(`BBSCMD=BBSLINK`, `TYPE=TS`), which is also what the door's own `metadata`
+says. It is `BBSLINK` now. **Still open, for the sysop:**
+`Commands/BBSCmd/linkmenu.info` is a second registration for the same door -
+`TYPE=XIM`, `LOCATION=Doors:bbslink/bbslink`, a 68K binary that is not on the
+board. That is the GWALL case again and it is a live data change, so it is
+not made here.
+
+**What each door declares.** BBSLink: the three BBSLink credentials (two of
+them secrets), server host, both ports, timeout, default game. The per-game
+door codes stay in `bbslink.cfg` - they are a map, and a manifest declares
+fields. LiveChat: default channel (auto-join, the channel created on an empty
+board, and the one that cannot be left), sound effects, sidebar width,
+reconnect attempts - each one replacing a literal that was in `server.ts`
+or `handlers/room-socket-handlers.ts`.
+
+`Doors/*/settings.json` is gitignored: the declaration ships, the values do
+not.
+
+**Verified:** SDK 427 tests across 36 suites; backend 6789 passing including
+the three new door suites (`bbslink-config-layering`, `livechat-settings`,
+`shipped-door-manifests`); `typecheck:tests` clean; both doors rebuilt, and
+LiveChat's client bundle is byte-identical. Each new suite was checked by
+breaking the fix and watching it fail.
+
+**Manual (sysop):** open Doors -> BBSLINK -> Settings, set the codes, run the
+door; open LIVECHAT -> Settings, change the default channel, and see the next
+launch land there.
