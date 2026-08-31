@@ -2,25 +2,37 @@
 
 ## READ THIS FIRST in a fresh session
 
+**Admin work: read `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`,
+then the plan it points at,
+`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`.** Sixteen admin
+fixes shipped on 2026-08-31; a six-agent audit then found considerably more,
+all of it in that plan, in severity order, with express.e line numbers.
+
+The plan's findings are marked VERIFIED or REPORTED. REPORTED means a lead,
+not a fact - this repo has produced confident false positives repeatedly.
+Confirm against `express.e` before changing anything.
+
 Live BBS: `https://bbs.uprough.net`. Door server: `https://doors.uprough.net`.
 Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
 (`docker exec amiexpress-bbs cat /app/.git-sha` - green CI has lied before).
 Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
+`BBS_DATA_DIR=/app/data/bbs` - not `/app`, which holds a bare skeleton.
 
-**A deploy disconnects /chat, but everyone gets a 60-second countdown first**
-and /chat reconnects itself. Documentation changes do not deploy
+**`main` moves under you.** Other sessions push door and arcade work
+constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
+confirm ancestry before pushing AND before deleting the branch.
+
+**A deploy still disconnects /chat - but everyone gets a 60-second countdown
+first**, and /chat reconnects itself. Documentation changes do not deploy
 (`paths-ignore`).
 
-**A peer Claude Code session may work in this SAME checkout.** `git fetch` and
-check both directions before pushing.
-
 **Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
-`kill-servers.sh`. Zombie-verify after every stop:
-`ps aux | grep -E "(start-servers|kill-servers|watch-doors|tsx .*src/index.ts)" | grep -v grep`
-(expect empty; the watcher used to orphan a backend per restart, fixed in
-`b70a415d9`). A stale process serving old code looks exactly like a failed fix,
-so if a change "does not apply", clear the tsx cache:
+`kill-servers.sh`. Zombie-verify after every stop. If a change "does not
+apply", clear the tsx cache:
 `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
+
+**Run `npm run typecheck:tests`, not just `npm test`** - jest uses swc and
+strips types, so a test file can be green under jest and fail the typecheck.
 
 ## Current state (2026-08-31)
 
@@ -146,33 +158,14 @@ Nothing queued by the user. Open work, in the order worth doing.
    (`[Audio][stutter]` says whether the sender's thread or the network is
    late), never confirmed by the user.
 
-## The admin redesign is done
+## The admin, as of 2026-08-31
 
-Phases 0 to 5 of `thoughts/shared/plans/2026-08-27-admin-redesign.md`, marked
-implemented with an "As built" section recording two departures: TanStack
-Table **v9** (not the plan's v8 - different API, `useTable` plus explicit
-`tableFeatures`), and Configuration Files as four tabs rather than one scoped
-tree.
-
-Design tokens, grouped navigation, an Overview dashboard, merged destinations
-behind tabs with permanent legacy redirects, a realtime layer, and the admin no
-longer occupying a BBS node. Commit-by-commit account in
-`thoughts/shared/handoffs/2026-08-30_admin-redesign-implemented.md`. The user
-watched it being built and reported nothing broken - "not obviously wrong", not
-verified.
-
-## The admin app is disk-first
-
-The BBS reads `.info` files; SQLite is a downstream mirror. Audits:
-`thoughts/shared/research/2026-08-27_admin-ui-audit.md` and
-`2026-08-27_admin-page-by-page.md`.
-
-**Per-field round-tripping is verified** for system configuration,
-conferences, drives, doors, screen types, computers, protocols, languages,
-file checkers and nodes - each with tests that fail when the fix is reverted.
-It found seven faults, all of two shapes: a value written under one key and
-read back from another, or a writer rebuilding a file from the database (or
-from nothing) and dropping what it did not own.
+Redesign phases 0-5 shipped, then sixteen correctness fixes, then a
+six-agent audit. All of it - what is done, what is left, and the express.e
+citations - is in `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`
+and the plan it references. The admin app is disk-first: the BBS reads
+`.info` files, SQLite is a downstream mirror, and `getBoardConfig()` in
+`web/backend/src/services/bbs-config-file.service.ts` is the one accessor.
 
 ## Waiting on the user
 
