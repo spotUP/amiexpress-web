@@ -192,13 +192,41 @@ are `SysCmd` event hooks (`annlogon`, `PWFAIL`, `quick`, `ANSI`, `EXAMINE`,
 `XPR`) - if logon or password-fail behaves differently afterwards, restore those
 first.
 
-### 1. Registry guard: a dead registration should not enter the menu
+### 1. Registry guard: DONE, on `fix/dead-registration-guard`, NOT PUSHED
 
-Skip a command whose resolved LOCATION does not exist when `initializeDoors`
-builds the registry. Fixes the `BR`/`BV`/`G` class permanently rather than by
-cleanup, and would have prevented the logoff breakage outright. Log what was
-skipped so a sysop can see it. `door.handler.ts:4120` is where the registry is
-assembled; `resolveDoorDirectory` in `door-list.ts` already resolves the path.
+`10154db2f`. `commandLocationIsLive` in `amiga-command-parser.util.ts`, applied
+in `scanCommandDirectory`. Nine tests in
+`web/backend/tests/handlers/dead-registration-guard.test.ts`, including one that
+drives `runBbsCommand` and proves the dead command returns RESULT_FAILURE while
+a live one still reaches `executeDoor`.
+
+**This step's instruction above was written at the wrong level and is corrected
+here.** `initializeDoors` was named as the place to filter, but the shadowing
+does not live there: dispatch reads `commandCache`
+(`command-execution.handler.ts:390`) and so does the internal-command router
+(`command-handler/internal-commands.ts:127`, which hands any name present in
+`commandCache.bbscmd` straight to the door). Filtering the `doors` registry
+would have tidied the doors MENU and left `G` still swallowing the goodbye.
+`scanCommandDirectory` is the single funnel feeding the cache, the registry and
+every list built from them.
+
+The rule is deliberately conservative, and measurement is why: of 149 local
+BBSCmd registrations, 107 resolve to a file, 41 resolve only to their DIRECTORY
+and 1 to nothing. Those 41 are live - 24 of them are TypeScript doors pointing
+at `Doors/bbslink/bbslink`, which has never existed. So a missing FILE under an
+existing door directory stays registered; only a missing DIRECTORY counts as
+dead, which is the shape the 30 August wipe left. INTERNAL aliases
+(express.e:4732) and MCI commands (express.e:4295) are exempt - neither reads
+LOCATION from disk.
+
+Locally this drops `BESTCONF` and the five dead SysCmd hooks (`ANSI`, `PWFAIL`,
+`XPR`, `ANNLOGON`, `QUICK`); on live it should drop the 277. Next Step 0's prune
+is still worth running - the guard stops a dead registration ANSWERING, it does
+not remove the files.
+
+Also found and NOT fixed: `loadCommandFromInfo` returns null when a .info has no
+LOCATION, so an INTERNAL-only registration never enters the cache at all.
+express.e:4732 supports one. Nothing on this board needs it today.
 
 ### 2. A failed deploy must not leave the board down
 
