@@ -36,39 +36,72 @@ bug rather than a navigation one.
 each accepts to leave and what its footer claims, and put that table in
 front of the sysop before changing anything.
 
-## 2. A 68K door that gives the BBS PROMPT autocomplete
+## 2. Autocomplete at the BBS prompt
 
-**Asked:** "let's write a 68k door in C that adds autocomplete to the bbs
-prompt - is that possible so it works on Amiga 68k AmiExpress?"
+**DEFERRED. Decided 2026-09-01, after reading express.e.**
 
-Short answer from what this repo already proves: **the completion logic is
-the easy half and already exists; whether it can wrap the BBS's own prompt
-is the open question.**
+### The finding that settles the shape
 
-What is already true:
+A door cannot do it on real AmiExpress. The prompt loop is
+`express.e:28577-28648`:
 
-- `flow_command_suggest` / `flow_command_ghost` (`examples/doorrepo-c/flow.c`)
-  are C89, no allocation, no platform calls - they are the same logic a
-  prompt completer needs, and they cross-compile to 68K today.
-- DoorRepo already draws a live-updating panel over a running screen in
-  ANSI on a real serial terminal (`ui_command_bar`), so the DRAWING half is
-  solved and can be lifted.
+- `28597` `displayMenuPrompt()` draws the prompt.
+- `28620` `SUBSTATE_READ_COMMAND` calls
+  `lineInput('','',255,INPUT_TIMEOUT,commandText)` - **the BBS reads the
+  whole line itself**.
+- `28647` `SUBSTATE_PROCESS_COMMAND` calls `processCommand(commandText)` -
+  the first point a door is reached.
 
-What is not known and decides the whole thing:
+No hook, no callback, no door type invoked during input. A door is handed a
+finished command, never a keystroke.
 
-- **A door does not own the prompt.** AmiExpress reads the command line
-  itself; a door runs when a command is dispatched. So a door cannot
-  intercept keystrokes at the main prompt unless AmiExpress hands them over.
-  Check `express.e` for what the prompt loop does per keystroke and whether
-  any door type is given the line before it is parsed.
-- If it cannot, the honest shapes are: (a) a door that OWNS a
-  prompt - the sysop runs it and gets a completing prompt that dispatches
-  back via RETURNCOMMAND (XIM 136), which this door already does; or (b) a
-  change to AmiExpress-web's own prompt handling, which helps the web board
-  and does nothing for real 68K AmiExpress.
-- Option (a) is buildable today and reuses everything above. Say so before
-  anybody starts (b).
+Three related facts from the same read:
 
-**First step:** read `express.e`'s prompt loop and answer, with line
-numbers, whether a keystroke at the main prompt can reach a door at all.
-Everything else follows from that answer.
+- `lineInput` (`2170`) is already a line editor: history on up/down
+  (`historyBuf`), CTRL-B, CTRL-X, cursor movement. The machinery an
+  autocompleting prompt needs is already there.
+- **TAB is unused.** `lineInput` has no TAB case and printable characters
+  require `ch > 31`, so TAB is dropped today. Nothing breaks by giving it a
+  meaning.
+- `processCommand` (`28229`) splits on the first space into one command and
+  its parameters. No separator, so nothing can chain "run X then reopen me".
+- A `.keys` file beside a MENU screen (`6567-6574`) switches the prompt to
+  single-key mode (`translateShortcut`, `28434`, TAB included). A static
+  map, and it replaces line input entirely - nothing can be typed.
+
+### The decision
+
+**No menu.** A door that opens a palette was considered and rejected by the
+sysop: the point is the PROMPT completing as you type, not a second screen
+to go to.
+
+- **Web port: build it in TypeScript, inline at the prompt.** The web BBS
+  owns its own input handling, so completion belongs there - the same shape
+  a shell has, with the command list coming from the same command cache
+  dispatch already reads. No door involved.
+- **Real Amiga: for Phantasm.** The change is to `lineInput` - give TAB a
+  meaning and complete against the command directories. TAB being free
+  makes it additive: no existing key changes behaviour. Worth handing over
+  with the line numbers above.
+
+Not started, and not urgent.
+
+### If it is picked up, the pieces that already exist
+
+The completion RULES are written and tested in C
+(`flow_command_suggest`, `flow_command_ghost`, `examples/doorrepo-c/flow.c`):
+what the typed letters START comes before what merely contains them, and a
+line with a space in it is an argument rather than a verb. A TypeScript
+implementation should match those rules rather than invent its own, and the
+C tests are the specification.
+
+Open questions for whoever builds it:
+
+1. **Which commands.** express.e's own precedence: CONFCMD > NODECMD >
+   BBSCMD (`4630-4647`), plus internal commands, which are not files
+   (`4732`).
+2. **Access filtering.** Only offer what the user may run - `express.e:4703`
+   reads ACCESS=0 as DENIED. Offering a command that then refuses is worse
+   than not offering it.
+3. **What to show beside a name.** MENUNAME from the .info; DoorRepo's `T`
+   screen already edits it.
