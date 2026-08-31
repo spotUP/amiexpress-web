@@ -44,13 +44,12 @@ path records the archive a door came from and the files it wrote, so a delete
 removes exactly that; neither door lets a sysop type a command name.
 
 **The C startup failure is solved and the rebuilt door is committed**
-(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). There was never a C
-regression. The door's static caches had grown its BSS to 436 KB, which put
-its segments at 0x085d04 - past the 500 KB the emulator gives a door and on
-top of exec.library's LVO jump table at 0x7fcf4. HUNK_BSS is zeroed as it
-loads, so the door blanked 126 exec vectors before executing anything, then
-exited RETURN_FAIL. The emulator logged `VERIFICATION: 230 OK, 126 FAILED!`
-and carried on.
+(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
+caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
+500 KB the emulator gives a door and on top of exec.library's LVO table at
+0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
+executing anything and exited RETURN_FAIL. The emulator logged
+`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
 
 Two fixes, two levels:
 
@@ -91,15 +90,25 @@ An unchecked recursive delete of `PROJECT_ROOT/<install_dir>` resolved to
 
 ## DOORREPO is not a DOORMAN replacement yet
 
-Phase A shipped the groundwork only. DOORREPO still cannot enable/disable a
-door, upload an archive, edit `.info` tooltypes, browse an installed door's
-files, delete with the live log, or show a metadata/DIZ panel. Those are
-phases B-E of `docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`
-and none are built.
+DOORREPO still has no screen for any of it: enable/disable, upload, `.info`
+editing, file browsing, delete-with-log, metadata panel. Phases B-E of
+`docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`.
 
-The C blocker is gone: a binary built from current source runs under the probe
-again, so phase D is buildable. Phases B and C still come first - the screens
-need the BBS-side API.
+**A and B are built. C is next, then D's screens.** The C blocker is gone too,
+so D is buildable once C lands.
+
+Phase B (`4d2e92927`, `1d6693f15`, local - NOT pushed) is the four read APIs,
+token-gated and sysop-gated: `GET /api/door-admin/installed`, and
+`installed/:cmd/` + `files` / `file?p=` / `info`. Nested under `/installed/`
+because `:cmd` matches the literal string `installed`. Formats in
+`docs/DOOR-REPO-API.md` section 11; as-built in
+`thoughts/shared/plans/2026-08-31-doorrepo-phase-b.md`.
+
+Two things phase C needs. `file`'s containment checks the path twice, resolved
+and after `realpath`, because a symlink inside a door defeats a string
+comparison - the writes need that guard, not a lighter one. And a plain-text
+`.info` marks a tooltype disabled with `!KEY` only, while the board's binary
+DiskObject files honour `(KEY)` too; the writer must know which it is editing.
 
 ## The doors and the door repo
 
@@ -114,13 +123,12 @@ overlay does nothing locally. Start with it to test that path:
 `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
 
 **The 370 doors already installed get no metadata improvement** - deliberate
-scope call. They have no install record, so the name column keeps echoing the
-command. Real names need the archive-matching backfill in
-`thoughts/shared/todos/2026-08-30_queue-round-2.md`.
+scope call. No install record, so the name column echoes the command and the
+API's `archive` field is empty for them. Real names need the archive-matching
+backfill in `thoughts/shared/todos/2026-08-30_queue-round-2.md`.
 
-The board's own management API is `/api/door-admin/*` (NOT `/api/doors`, which
-belongs to the existing door-asset router). It is token-gated: DOORREPO only,
-sysop only, token written 0600 per launch.
+The board's own management API is `/api/door-admin/*`, NOT `/api/doors` (the
+existing door-asset router).
 
 ## Next
 
