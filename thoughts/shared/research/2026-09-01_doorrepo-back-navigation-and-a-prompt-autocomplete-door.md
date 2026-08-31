@@ -75,6 +75,28 @@ Three related facts from the same read:
 sysop: the point is the PROMPT completing as you type, not a second screen
 to go to.
 
+**The shape, in the sysop's words:** "just a discreet auto fill/complete
+with dark grey that you can tab to complete words in the prompt."
+
+So, concretely:
+
+- The rest of the best match appears **inline, after the cursor, in dark
+  grey** - it must read as an offer, not as text that has been typed. The
+  prompt otherwise looks exactly as it does now.
+- **TAB accepts it**, completing the word. TAB is the right key on both
+  targets: it is unused in `lineInput` today (see above), so on the Amiga
+  side it is purely additive.
+- Nothing pops up. No list, no box, no second screen, and nothing moves
+  when there is no match - the grey tail simply is not there.
+- Typing continues normally; the ghost follows what has been typed and
+  disappears the moment it stops matching.
+
+This is the LIVECHAT/DoorRepo ghost text without the dropdown that
+accompanies it there - `flow_command_ghost` already computes exactly this
+string, and deliberately returns nothing when the typed letters only appear
+in the MIDDLE of a command, because completing there would put a word on
+the line that was never asked for.
+
 - **Web port: build it in TypeScript, inline at the prompt.** The web BBS
   owns its own input handling, so completion belongs there - the same shape
   a shell has, with the command list coming from the same command cache
