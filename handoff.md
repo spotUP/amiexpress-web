@@ -159,31 +159,17 @@ Nothing queued by the user. Open work, in the order worth doing.
 Archive: `thoughts/shared/handoffs/2026-08-31_conferences-doors-and-the-docker-outage.md`.
 Everything here is deployed and verified on the live board.
 
-**Conferences work end to end** - name field, row-click edit, structural
-tooltype parse (mixed-prefix icons heal on save), change-bus refresh with
-in-place arrays, removal from any position with users/mirror/Conf.DB shifted
-together, files switch in the dialog, mirror prunes, create pinned to
-NCONFS+1 with directory Conf<id>-or-refuse. Detail: the archive handoff.
-
-**J lists the board's real conferences.** `Doors:emp_tools/joincnf` prefers a
-`CNF_NAME.n` line in its cfg over the icon's `NAME.n`; the 36 hand-typed lines
-are gone from `Doors/emp_tools/joincnf.cfg`, binary and emulator untouched.
-
-**INCIDENT: dockerd crashed on every build** (`panic: page N already freed`,
-buildkit's bbolt cache db), six times, each stopping every container on the
-host. Trigger, unproven but only new variable: the per-deploy
-`docker builder prune` I had added. Removed (`9af19730f`). Repair: stop
-`docker.socket` AND `docker`, move `/var/lib/docker/buildkit/{cache.db,
-history_c8d.db}` aside, start, `docker start` the eight containers -
-`unless-stopped` did NOT bring them back. **Never restart dockerd while a
-`docker compose` process runs.** Live-restore was being enabled at the end of
-the session; check `docker info | grep -i "live restore"`.
-
-**Gotchas from today:** `SKIP_DB_INIT=1` breaks every DB suite in a full run;
-run `npm run typecheck:tests` (I broke CI without it); never import
-`server/initialization` from a service (it boots a second BBS in the worker);
-import module-level singletons inside the write path, not at file top; a test
-that mocks the half the bug lives in passes while the bug is live.
+**Conferences, the J door, dockerd - detail in
+`thoughts/shared/handoffs/2026-08-31_conferences-doors-and-the-docker-outage.md`.**
+Conferences work end to end (create pinned to NCONFS+1, dir Conf<id>-or-refuse;
+removal shifts users/mirror/Conf.DB together; change-bus refresh). J reads
+ConfConfig.info via icon.library - joincnf.cfg must carry NO CNF_NAME lines.
+dockerd panicked on every build after a builder prune corrupted buildkit's db;
+repaired, prune step removed, live-restore ON. **Never restart dockerd while a
+`docker compose` process runs.** Gotchas: SKIP_DB_INIT=1 breaks DB suites in a
+full run; run `npm run typecheck:tests`; never import server/initialization
+from a service; a test that mocks the half the bug lives in passes while the
+bug is live.
 
 **Review + slot-1 incident (evening).** Three adversarial agents reviewed
 conference create/edit/delete; findings and fixes are in `e42f6602e` (worst:
