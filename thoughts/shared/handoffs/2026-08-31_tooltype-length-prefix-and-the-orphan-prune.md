@@ -93,3 +93,37 @@ are on disk; they were only ever lost to the parser.
   them says what they pointed at.
 - The `!19106!` files and the 169 older `.orphaned` files could be deleted once
   the sysop is sure. Nothing reads them.
+
+## Postscript: the admin list was audited, not implemented
+
+With the prune finished, `handoff.md`'s "Admin, what is left" was worked
+through item by item. Two of the six had already been done and one was
+misdescribed:
+
+- **Six pages still render their own tables** - no. Protocols, Computers, File
+  Checkers, Conferences and Drives all import `components/ui/DataTable` on
+  `main`. The sixth, Security, is a permission-flag editor - level chips and a
+  grouped toggle grid - and has no table to migrate.
+- **`VITE_BYPASS_AUTH` should go** - it went, in `6bb0ec9ba`. `App.tsx` has no
+  reference to it, and `web/config-app/src/test/auth-guard.test.ts` exists to
+  stop it drifting back.
+- **Configuration Files is four tabs** - it is two, "All .info files" and
+  "Batch scripts", and the first is the single list over every icon on the
+  board that the plan asked for.
+
+Still true, and now measured rather than remembered:
+
+- `writeInfoFile` refuses `bbsConfig.info` with "tooltype array structure not
+  recognised". Verified against a copy of the live file: the array's first
+  entry declares `0x19` bytes and holds 14, so the structure does not describe
+  its own contents. Today's strict reader is in `amiga-command-parser.util.ts`;
+  the writer is `info-file.util.ts`, and porting the self-validating walk there
+  would still not make this file writable, because it is malformed rather than
+  merely unusual. Workbench or IconEdit remains the answer.
+- `info-file.util.ts` does not see tooltypes appended past the array's end, so
+  `WHAT.info`'s `OVERCLOCK=100` is invisible to the admin editor. An admin save
+  does NOT destroy it - probed on a copy in the running container, the file
+  came back the same 806 bytes with the appended bytes intact and only ACCESS
+  changed. Invisible, not lost.
+- Node Configuration stays on `DataGrid` deliberately, and the realtime layer
+  has still never met a busy board.

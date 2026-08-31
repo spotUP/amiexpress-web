@@ -100,26 +100,28 @@ Nothing queued by the user. Open work, in the order worth doing.
 
 ### Admin, what is left
 
-1. **Configuration Files is four tabs, not the plan's single tree** with scope
-   filters over every `.info` file. Tabs preserved each editor exactly; the
-   tree is still the better end state.
-2. **Six pages still render their own tables**: Protocols, Computers, File
-   Checkers, Conferences, Drives and the Security flag editor. They are on the
-   design tokens, so they look right, but they sort by hand and do not get the
-   sticky header, keyboard-reachable row actions or the empty and loading
-   states. `components/ui/DataTable` is what they move to; Users, Doors,
-   Languages and Screen Types are already there.
-3. **Node Configuration deliberately stays on the old `DataGrid`** - a row
+Audited 31 August, item by item. Two entries that stood here were already
+done - do not take this list on trust, it has been wrong before.
+
+1. **Node Configuration deliberately stays on the old `DataGrid`** - a row
    being edited turns into input fields and must not move. Both files say so.
-4. **`VITE_BYPASS_AUTH` in `App.tsx`** bypasses the frontend auth guard
-   entirely. It should go now that a sysop account exists. It has no influence
-   over the socket handshake, which reads `secLevel` server-side.
-5. **The realtime layer has never met a busy board** - coalescing, Reconnecting
+2. **The realtime layer has never met a busy board** - coalescing, Reconnecting
    and the pages-waiting badge were exercised by tests and by hand only.
-6. **`bbsConfig.info` has a non-standard tooltype array**, so the writer will
-   not rewrite it. System configuration saves land in `bbsConfig.info.txt`,
-   which this BBS reads, and the admin now says so - but the icon drifts until
-   it is re-created in Workbench or IconEdit. Needs an Amiga, not a commit.
+3. **`bbsConfig.info` cannot be written back.** `writeInfoFile` refuses it:
+   "tooltype array structure not recognised". Its first entry declares 0x19
+   bytes and holds 14, so the array does not describe its own contents and a
+   rewrite would be a guess. Saves land in `bbsConfig.info.txt`, which this BBS
+   reads; the icon drifts until Workbench or IconEdit re-creates it. The strict
+   reader in `amiga-command-parser.util.ts` does not help - the writer is
+   `info-file.util.ts`.
+4. **The admin never sees a tooltype appended past the array's end**
+   (`WHAT.info`'s `OVERCLOCK=100`). A save does NOT destroy it - verified on a
+   copy, the bytes survive - it is invisible, not lost.
+
+Checked on `main`, not assumed: the six own-table pages are on
+`components/ui/DataTable` (Security is a flag editor, not a table);
+`VITE_BYPASS_AUTH` is gone, `src/test/auth-guard.test.ts` keeps it gone;
+Configuration Files is two tabs, "All .info files" being the single list.
 
 ### Elsewhere
 
