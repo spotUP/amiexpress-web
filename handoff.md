@@ -22,9 +22,8 @@ Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
 constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
 confirm ancestry before pushing AND before deleting the branch.
 
-**A deploy still disconnects /chat - but everyone gets a 60-second countdown
-first**, and /chat reconnects itself. Documentation changes do not deploy
-(`paths-ignore`).
+**A deploy disconnects /chat after a 60-second countdown**, and /chat
+reconnects itself. Documentation changes do not deploy (`paths-ignore`).
 
 **Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
 `kill-servers.sh`. Zombie-verify after every stop. If a change "does not
@@ -45,13 +44,12 @@ path records the archive a door came from and the files it wrote, so a delete
 removes exactly that; neither door lets a sysop type a command name.
 
 **The C startup failure is solved and the rebuilt door is committed**
-(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). There was never a C
-regression. The door's static caches had grown its BSS to 436 KB, which put
-its segments at 0x085d04 - past the 500 KB the emulator gives a door and on
-top of exec.library's LVO jump table at 0x7fcf4. HUNK_BSS is zeroed as it
-loads, so the door blanked 126 exec vectors before executing anything, then
-exited RETURN_FAIL. The emulator logged `VERIFICATION: 230 OK, 126 FAILED!`
-and carried on.
+(`c0f510dd9`, `e3c1c6e16`, local - NOT pushed). No C regression: the door's
+caches had grown its BSS to 436 KB, putting its segments at 0x085d04, past the
+500 KB the emulator gives a door and on top of exec.library's LVO table at
+0x7fcf4. HUNK_BSS is zeroed at load, so it blanked 126 exec vectors before
+executing anything and exited RETURN_FAIL. The emulator logged
+`VERIFICATION: 230 OK, 126 FAILED!` and carried on.
 
 Two fixes, two levels:
 
@@ -83,24 +81,10 @@ The dirty tree is BBS runtime state plus another session's uncommitted work
 (`web/config-app`, `Doors/super-qix` - untracked, one `git clean -fd` from
 gone).
 
-## The DOORMAN incident - closed
+## Closed, and in the archive
 
-An unchecked recursive delete of `PROJECT_ROOT/<install_dir>` resolved to
-`Doors/` and removed every door. Guarded in
-`Doors/door-manager/safe-install-dir.ts`; write-up in
-`thoughts/shared/todos/2026-08-30_queue.md`.
-
-## DOORREPO is not a DOORMAN replacement yet
-
-Phase A shipped the groundwork only. DOORREPO still cannot enable/disable a
-door, upload an archive, edit `.info` tooltypes, browse an installed door's
-files, delete with the live log, or show a metadata/DIZ panel. Those are
-phases B-E of `docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`
-and none are built.
-
-The C blocker is gone: a binary built from current source runs under the probe
-again, so phase D is buildable. Phases B and C still come first - the screens
-need the BBS-side API.
+The DOORMAN incident and where DOORREPO stands are both settled; see
+`thoughts/shared/handoffs/`.
 
 ## The doors and the door repo
 
@@ -115,13 +99,12 @@ overlay does nothing locally. Start with it to test that path:
 `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
 
 **The 370 doors already installed get no metadata improvement** - deliberate
-scope call. They have no install record, so the name column keeps echoing the
-command. Real names need the archive-matching backfill in
-`thoughts/shared/todos/2026-08-30_queue-round-2.md`.
+scope call. No install record, so the name column echoes the command and the
+API's `archive` field is empty for them. Real names need the archive-matching
+backfill in `thoughts/shared/todos/2026-08-30_queue-round-2.md`.
 
-The board's own management API is `/api/door-admin/*` (NOT `/api/doors`, which
-belongs to the existing door-asset router). It is token-gated: DOORREPO only,
-sysop only, token written 0600 per launch.
+The board's own management API is `/api/door-admin/*`, NOT `/api/doors` (the
+existing door-asset router).
 
 ## Next
 
@@ -158,15 +141,6 @@ Nothing queued by the user. Open work, in the order worth doing.
    (`[Audio][stutter]` says whether the sender's thread or the network is
    late), never confirmed by the user.
 
-## The admin, as of 2026-08-31
-
-Redesign phases 0-5 shipped, then sixteen correctness fixes, then a
-six-agent audit. All of it - what is done, what is left, and the express.e
-citations - is in `thoughts/shared/handoffs/2026-08-31_admin-audit-and-fixes.md`
-and the plan it references. The admin app is disk-first: the BBS reads
-`.info` files, SQLite is a downstream mirror, and `getBoardConfig()` in
-`web/backend/src/services/bbs-config-file.service.ts` is the one accessor.
-
 ## Waiting on the user
 
 - **DOORMAN could not see the wall door.** Probably the incident: the whole
@@ -176,22 +150,45 @@ and the plan it references. The admin app is disk-first: the BBS reads
 
 ## Gotchas
 
-- **Read the mutation path; do not count.** Three false-positive rounds.
+- **Read the mutation path; do not count.** Three false positives.
 - **A recursive delete needs a resolved-path guard, not a trusted string.**
-- **A door archive already names its own command** in
-  `Commands/BBSCmd/<COMMAND>.info`, with the tooltypes it was built with.
-- **Python rewrites line endings.** Much of this repo is CRLF; open with
-  `newline=''` on both ends or a four-line change becomes a whole-file diff.
-- **`screen.focused` is a boolean about the Screen itself.** The focused
+- **Frogger and Super Qix are FAQ-complete**; see each `CHECKLIST.md`.
+- **A door archive names its own command** in `Commands/BBSCmd/<CMD>.info`,
+  with the tooltypes it was built with.
+- **Much of this repo is CRLF.** Open files with `newline=''` at both ends,
+  or a four-line change becomes a whole-file diff.
+- **`screen.focused` is a boolean about the Screen itself**; the focused
   element is `screen.getFocused()`.
 - **SDK tests import the built `sdk/dist`.** A source edit is invisible until
-  `npm run build:cjs`, and `packages/terminal` compiles the SDK under a
-  stricter tsconfig that gates the Docker build.
-- **A TypeScript door's `dist/` is what runs**, and the pre-commit hook
-  rebuilds it. Two agents touching the same door will pull each other's
-  half-finished work into a commit; use separate worktrees.
-- **The live log is not the current log** - every deploy replaces the
-  container. `head` truncates evidence; redirect to a file instead.
+  `npm run build:cjs`; `packages/terminal` compiles it under a stricter
+  tsconfig that gates the Docker build.
+- **A TypeScript door's `dist/` is what runs** and the pre-commit hook
+  rebuilds it. Two agents on one door pull each other's half-finished work
+  into a commit; use separate worktrees.
+- **The live log is not the current log**: every deploy replaces the
+  container. `head` truncates evidence; redirect to a file.
 - **A merged admin screen must keep a redirect.** `src/routes/legacy-routes.ts`
-  and its test are what stop a merge from silently removing the only route to
-  a piece of configuration.
+  and its test stop a merge silently removing the only route to a setting.
+
+## Admin remediation, executed (2026-08-31)
+
+`fix/admin-audit-remediation` in `/private/tmp/admin-remediation-wt`, twelve
+commits, **not pushed**. 28 of the plan's 29 items.
+
+- Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (now
+  `implemented`, with a "What was done" section holding the commit table and
+  the corrections to its own claims)
+- Handoff: `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`
+
+Backend 6374 passing / 0 failing; config-app 99 passing; both typechecks
+clean. The seven suites that fail to RUN are `Doors/*` module resolution in a
+fresh worktree, which CI installs.
+
+**Open decision for the sysop:** 64 of the 155 icons in `Commands/BBSCmd`
+carry `ACCESS=0`. express.e:4703 reads that as "nobody may run this door";
+`door.handler.ts:1091` reads it as "everybody". All 64 work here and would be
+dead on a real Amiga. Not the admin's doing - no `DRACCESS` exists anywhere -
+and not a change to make without you.
+
+**Before deploying:** phases 1-3 change what is written to a live board's
+configuration files. Take a copy of `/app/data/bbs` first.
