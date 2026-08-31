@@ -76,6 +76,16 @@ against `eol=lf`, so `git checkout --` re-dirties them instantly and
 `git checkout stash@{0} -- <explicit paths>`. Costed twenty minutes; recorded
 in memory.
 
+**Verifying with the same parser that made the change proves nothing.** The
+door migration's first run compared PARSED tooltypes before and after, agreed
+with itself, and had silently truncated 19 DESCRIPTION values - because the
+parser had already dropped the bytes, so both sides read the same damage. The
+byte-level check that replaced it found four separate defects in the writer
+the admin uses on every door edit: non-ASCII values truncated, UTF-8 written
+over Latin-1, trimmed values re-rendered lossily, and the WORD "FORM" treated
+as an IFF chunk (which would have written one file out twice over). Compare
+bytes, not your own representation of them.
+
 **I guessed at a tool twice in a row, in both directions.** The backup uses
 `find | tar -T -`. I wrote it without checking whether busybox tar accepts
 `-` for stdin, then mid-deploy talked myself into "fixing" it to a temp file
@@ -92,12 +102,12 @@ that passes here whatever the code does. It only means something in CI.
    in the deploy's `paths-ignore`, so pushing one recreates the container and
    drops every connected session. `4fa07bfc2` (a comment) waits for the next
    real deploy.
-1. **The 64 doors.** `Commands/BBSCmd` holds 155 command icons and 64 carry
-   `ACCESS=0`, with no `DRACCESS` anywhere - so this is the board's own
-   state, not the admin's doing. express.e:4703 reads `ACCESS=0` as "nobody",
-   `door.handler.ts:1091` reads it as "everybody". All 64 work here and would
-   be dead on a real Amiga. Stripping the tooltype is what "open to everyone"
-   is actually spelled as. **A decision for the sysop, not a fix.**
+1. **The doors are done.** 62 of the 63 icons that carried `ACCESS=0` no
+   longer do. `GLC.info` is the exception: a real DiskObject whose tooltypes
+   are stored without length prefixes, so the array cannot be located and the
+   file cannot be re-serialised without guessing at its layout. The admin's
+   editor refuses it for the same reason, correctly. Re-make that icon in
+   Workbench/IconEdit if it matters; it is one door.
 2. Done - see above. The backup is no longer a thing to remember: the deploy
    takes it.
 3. After deploying, ask the sysop to walk: save a computer type, a protocol,
@@ -113,3 +123,53 @@ that passes here whatever the code does. It only means something in CI.
   exist.
 - `npm test` writes to the repo's real `Conf.DB`, `Node1/CallersLog` and
   `web/backend/debug-display-flow.log`. Never `git add -A` after a run.
+
+---
+
+## Open, and waiting on a decision: the volume reverts what the admin saves
+
+Found 2026-08-31 while confirming the door-icon migration had landed. Read
+from `docker-entrypoint.sh`, not observed on the board - but the code is
+unambiguous.
+
+The entrypoint classifies files. IMAGE-OWNED means "always overwrite the
+volume", justified in its own comment as:
+
+> There is no sysop/admin path that legitimately modifies these.
+
+That is false for four of them, and for a whole directory:
+
+| File | Written by | Class |
+|---|---|---|
+| `ComputerList.info` | Computers page | IMAGE-OWNED - overwritten |
+| `Drives.info` | Drives page | IMAGE-OWNED - overwritten |
+| `ScreenTypes.info` | Screen Types page | IMAGE-OWNED - overwritten |
+| `ConfConfig.info` | conference name / location | IMAGE-OWNED - overwritten |
+| `Commands/BBSCmd/*.info` | every door edit | blanket dir sync - overwritten |
+
+`sync_image_owned` md5s both copies and overwrites on mismatch, logging it as
+"hash drift". A sysop's edit IS the drift. `Node*.info` and `Conf*.info` are
+correctly VOLUME-OWNED, which is why those survive.
+
+So five of the domains this remediation fixed save correctly and are reverted
+on the next container restart. That fits "we never could get it working
+properly" better than anything else found today.
+
+**Two ways to fix it.**
+
+A. Move the four to VOLUME_OWNED_INFO and seed `Commands/` only when a file
+   is missing. Small, and matches the file's own rule ("when in doubt,
+   default to VOLUME-OWNED"). Costs the other direction: a repo-side fix to a
+   door icon then never reaches an existing board, silently.
+
+B. Write a manifest of what each deploy put on the volume, and next time
+   overwrite only files whose volume copy still matches that hash. Untouched
+   and changed in the image -> update. Edited by the sysop -> keep. New in the
+   image -> create. No silent loss either way; more work in the deploy path.
+
+**Recommended: B.** A trades a silent revert for a silent staleness, and this
+entrypoint's comments record having been burned by exactly that already.
+
+Note on sequencing: the 62-icon migration RELIED on the current overwrite to
+reach the board, and did (deploy 33377282376). Whichever option is taken
+should land after it, which it now can.

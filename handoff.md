@@ -196,11 +196,26 @@ Backend 6374 passing / 0 failing; config-app 99 passing; both typechecks
 clean. The seven suites that fail to RUN are `Doors/*` module resolution in a
 fresh worktree, which CI installs.
 
-**Open decision for the sysop:** 64 of the 155 icons in `Commands/BBSCmd`
-carry `ACCESS=0`. express.e:4703 reads that as "nobody may run this door";
-`door.handler.ts:1091` reads it as "everybody". All 64 work here and would be
-dead on a real Amiga. Not the admin's doing - no `DRACCESS` exists anywhere -
-and not a change to make without you.
+**Open, and waiting on you:** the volume reverts what the admin saves.
+`ComputerList.info`, `Drives.info`, `ScreenTypes.info`, `ConfConfig.info` and
+every `Commands/BBSCmd/*.info` are IMAGE-OWNED in `docker-entrypoint.sh`, so a
+restart overwrites them from the image - logging the sysop's own edit as "hash
+drift". Five of the domains this remediation fixed therefore save correctly
+and are reverted on the next restart. Two fixes and a recommendation are in
+`thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`.
+
+**The doors are done.** 62 of the 63 icons carrying `ACCESS=0` no longer do -
+express.e:4703 read that as "nobody may run this door" while this port reads
+it as "everybody", so they all worked here and were dead on a real Amiga.
+Behaviour here is unchanged. `GLC.info` is left: its tooltypes have no length
+prefixes, so the array cannot be located and the admin's editor refuses it
+too. Re-make that icon in IconEdit if it matters.
+
+Preparing that migration turned up four defects in the writer the admin uses
+on EVERY door edit - a non-ASCII description was truncated, UTF-8 was written
+over Latin-1, trimmed values were re-rendered lossily, and a file whose first
+line is the word FORM would have been written out twice over. All fixed, with
+byte-level regressions.
 
 **Before deploying:** phases 1-3 change what is written to a live board's
 configuration files. Take a copy of `/app/data/bbs` first.
