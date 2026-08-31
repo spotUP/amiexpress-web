@@ -159,17 +159,11 @@ Nothing queued by the user. Open work, in the order worth doing.
 Archive: `thoughts/shared/handoffs/2026-08-31_conferences-doors-and-the-docker-outage.md`.
 Everything here is deployed and verified on the live board.
 
-**Conferences work end to end now.** Name field on the form; row click edits;
-every `Conf<N>.info` / `Node<N>.info` saves (the parser walks the DiskObject
-to the tooltype array instead of guessing, and heals the mixed-prefix layout on
-first save); a rename/create/delete reaches the running board through
-`services/conference-change-bus.ts` with the arrays replaced IN PLACE; a
-conference can be removed from ANY position - `ConferenceRemovalService`
-renumbers ConfConfig.info, the icons, every account's `conferenceAccess`, six
-SQLite tables and Conf.DB together, after a copy to `_conf-backups/`; the
-delete-files switch is in the confirm dialog; the mirror prunes stale rows
-(`{ complete: true }` only); create writes disk -> mirror row -> config row;
-new conferences are numbered `NCONFS+1`, read-only.
+**Conferences work end to end** - name field, row-click edit, structural
+tooltype parse (mixed-prefix icons heal on save), change-bus refresh with
+in-place arrays, removal from any position with users/mirror/Conf.DB shifted
+together, files switch in the dialog, mirror prunes, create pinned to
+NCONFS+1 with directory Conf<id>-or-refuse. Detail: the archive handoff.
 
 **J lists the board's real conferences.** `Doors:emp_tools/joincnf` prefers a
 `CNF_NAME.n` line in its cfg over the icon's `NAME.n`; the 36 hand-typed lines
