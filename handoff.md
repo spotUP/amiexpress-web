@@ -18,19 +18,12 @@ Both LIVE. Push to `main` auto-deploys; after pushing, CHECK IT
 Live host: `root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, **port 22**.
 `BBS_DATA_DIR=/app/data/bbs` - not `/app`, which holds a bare skeleton.
 
-**`main` moves under you.** Cut a deploy worktree from a fresh `origin/main`,
-cherry-pick, and confirm ancestry before pushing and before deleting a branch.
-
 **`main` moves under you.** Other sessions push door and arcade work
 constantly. Cut a deploy worktree from a fresh `origin/main`, cherry-pick, and
 confirm ancestry before pushing AND before deleting the branch.
 
 **A deploy disconnects /chat after a 60-second countdown**, and /chat
 reconnects itself. Documentation changes do not deploy (`paths-ignore`).
-
-**A deploy still disconnects /chat - but everyone gets a 60-second countdown
-first**, and /chat reconnects itself. Documentation changes do not deploy
-(`paths-ignore`).
 
 **Dev environment**: `./dev/scripts/start-servers.sh --bbs-only` /
 `kill-servers.sh`. Zombie-verify after every stop. If a change "does not
