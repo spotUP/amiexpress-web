@@ -1,5 +1,5 @@
 /**
- * Minimal test runner for the Joust door.
+ * Minimal test runner for the puzzle-bobble door.
  *
  * Same pattern as the other arcade doors: dependency-free plain async
  * functions plus node assert, run via tsx. A test fails by throwing.
@@ -9,7 +9,6 @@
 
 const TEST_MODULES = [
   './layout.test',
-  './sprites.test',
 ];
 
 (async () => {

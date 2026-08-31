@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Minimal test runner for the Pipe Dream door.
+ * Minimal test runner for the puzzle-bobble door.
  *
  * Same pattern as the other arcade doors: dependency-free plain async
  * functions plus node assert, run via tsx. A test fails by throwing.
@@ -8,7 +8,6 @@
 /* eslint-disable no-console */
 const TEST_MODULES = [
     './layout.test',
-    './sprites.test',
 ];
 (async () => {
     let passed = 0;
