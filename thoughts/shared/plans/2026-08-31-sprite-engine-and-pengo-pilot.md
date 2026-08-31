@@ -1690,8 +1690,8 @@ import { join } from "path";
   `"build": "tsc && npm run bundle:client && npm run copy-sprites"`, plus
   `"copy-sprites": "mkdir -p dist/sprites && cp sprites/*.sprite.json dist/sprites/"`.
   (Same pattern as the SDK's own copy-assets step.)
-- Both `new PengoGame(gameData, callback)` call sites gain the third
-  argument `spriteSheet`.
+- The single `new PengoGame(gameData, ...)` call site (index.ts:240) gains
+  the third argument `spriteSheet`.
 
 Delete `Doors/pengo/game/sprites.ts` and `Doors/pengo/tests/sprites.test.ts`:
 
@@ -1786,7 +1786,7 @@ committed locally on top of `<current origin/main>`, cherry-pick-ready.
   Phases 3-6 are plans 2 and 3, per the scope rule.
 - Types: `Record<string, Sprite>` is the sheet everywhere; `blitSprite`
   takes grid coordinates in both Task 2's definition and Task 6's use;
-  constructor arity change is applied at both call sites (index.ts holds
-  the only two `new PengoGame(` sites — verified against source).
+  constructor arity change is applied at the one call site (index.ts:240
+  is the only `new PengoGame(` in the door — verified against source).
 - Known intentional roughness: the starter art is starter art. The studio
   door (plan 2) is the fix for that, not more JSON polishing here.
