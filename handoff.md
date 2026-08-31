@@ -34,16 +34,17 @@ gotchas, and the ordered next steps.
 path records the archive a door came from and the files it wrote, so a delete
 removes exactly that; neither door lets a sysop type a command name.
 
-**UNFINISHED, do this first:** the rebuilt DoorRepo Amiga binary is on main as
-`0a98cb414` and deploying. A deploy does NOT sync the live `Doors/` volume, so
-after it lands the board still runs the 23 Aug binary until you copy it in:
+**The rebuilt DoorRepo binary is live and verified** (`0a98cb414`). The board's
+`/app/data/bbs/Doors/DoorRepo/doorrepo.amiga` is 107008 bytes and contains
+`/api/door-admin/installed`, `BbsHost` and the new confirmation strings; the
+previous binary contained none of them. `DoorRepo.cfg` has no `BbsHost` key, so
+the localhost default applies - which is the intended behaviour for an existing
+config.
 
-    ssh -i ~/.ssh/hetzner_deploy -p 22 root@89.167.21.154 \
-      'docker exec amiexpress-bbs sh -lc "cp /app/Doors/DoorRepo/doorrepo.amiga /app/data/bbs/Doors/DoorRepo/doorrepo.amiga && strings /app/data/bbs/Doors/DoorRepo/doorrepo.amiga | grep -c door-admin"'
-
-Expect `1` and 107008 bytes. Until then the C work - archive-named commands,
-the whole-path listing parse, install reporting, the BbsHost security fix -
-does not run on the board.
+The deploy DID sync the `Doors/` volume this time, so the older note that it
+never does is not reliable either way: after any deploy that changes a door
+binary, read the volume copy and confirm, rather than assuming in either
+direction.
 
 **Verify deploys by reading the container, and grep the right tree**: it runs
 `tsx src/index.ts` from `/app/web/backend`, NOT `/app/dist`. Greping
