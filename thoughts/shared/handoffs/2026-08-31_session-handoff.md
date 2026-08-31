@@ -1,274 +1,235 @@
 ---
 date: 2026-08-31
-topic: Full session handoff - installed-door link, DOORREPO parity groundwork, live deploy state
-tags: [handoff, doors, doorman, doorrepo-c, door-install, api, security, deploy]
+topic: The admin remediation, the sysop's reports, the door icons, and the conference audit
+tags: [handoff, admin, config-app, express-e-parity, info-files, deploy, conferences]
 status: final
 ---
 
-# Session handoff, 2026-08-30 into 2026-08-31
+# Session handoff - 2026-08-31
 
-Read this with `handoff.md` at the repo root (short current state) and
-`thoughts/shared/handoffs/2026-08-31_installed-door-link.md` (the feature's own
-account). This file is the whole session, including what is half-done.
+## Start here, in one paragraph
 
-## Tasks
+The admin audit remediation plan was executed (28 of 29 items) and deployed.
+Then the sysop reported three faults, all fixed and deployed. Underneath them
+was the reason the admin has never felt like it worked: **the board reverted
+what the admin saved on every restart**, which is now fixed. Finally, the
+sysop asked for an audit of conference management before testing it; that
+found two mirror-image bugs, both fixed - **and those three commits are NOT
+pushed**.
 
-1. **Done and live**: the installed-door link. Every install path records what
-   a door is (its catalog archive) and what it wrote (its files), so a delete
-   removes exactly that. Neither door lets a sysop type a command name.
-2. **Done and verified live**: the DoorRepo Amiga binary rebuilt and shipped,
-   so this session's C work actually runs on the board.
-3. **Specced, not built**: DOORREPO reaching 1:1 parity with DOORMAN, phases
-   B-E.
-4. **Raised, not built**: SDK dialog buttons; catalog names for the 370
-   existing doors; BROADCAST's missing door.
+Read `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md` for
+the phase-by-phase detail of the plan, and
+`thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (status:
+implemented) for the findings and the corrections made to its own claims.
 
-## RESOLVED 2026-08-31 (later session): it was never a C regression
+## Where things stand
 
-Everything below about "bisect the startup regression" is superseded. There was
-no bad commit. The door's static caches had grown its BSS to 436 KB, which put
-its segments at 0x085d04 - past the 500 KB of CODE+DATA+BSS the emulator gives
-a door, and on top of exec.library's LVO jump table at 0x7fcf4. HUNK_BSS is
-zeroed at load, so the door blanked 126 exec vectors before executing anything
-and exited RETURN_FAIL. Both builds ran the identical vbcc startup to PC 0x214c;
-the old one went on to AllocVec + StackSwap into main, the new one read the
-blanked memory and quit.
+- Worktree: `/private/tmp/admin-remediation-wt`, branch
+  `fix/admin-audit-remediation`. It has its own `node_modules` (root, sdk,
+  backend, config-app); the sdk install needs `SKIP_SDK_PREPARE=1`.
+- Live: `7c58f32ad`, verified through `/health`. Everything below except the
+  three unpushed commits is on the board.
+- Backend 6502+ passing, config-app 99 passing, both typechecks clean.
+- **Three commits unpushed**, deliberately - the sysop was about to test and a
+  push recreates the container:
 
-The evidence that settles it, same emulator, back to back:
+  | commit | what |
+  |---|---|
+  | `c0fe4b8dc` | a failed tracked copy is loud, and not recorded as written |
+  | `a96d00176` | conference delete finishes the job, or refuses to start it |
+  | `eed4c402c` | a created conference exists to the BBS, and keeps its name |
 
-    20 Aug build   BSS 0x599f4  segments end 0x06e8fc  VERIFICATION: all 356 OK
-    current build  BSS 0x6a7fc  segments end 0x085d04  VERIFICATION: 126 FAILED
+## What was done
 
-and current source with three cache constants trimmed runs the full browser,
-`L=Installed` footer included.
+### The plan (phases 1-6), deployed
 
-Fixed at both levels:
+Ten `.info` writers stopped destroying the files they wrote; the database
+mirror stopped being a source for them; the tooltype editor stopped deleting
+what it could not display; six settings the schema silently stripped; six
+domains editing by a row id they were never given; the express.e parity work
+(PASSWORD_SECURITY, node TELNET, ACS `=NO`, eighteen dead ACS flags, five
+wrong tooltype names, the ranges); the dead controls; the error states and
+thirteen dialogs onto Radix. The guards were widened FIRST so the rest was
+checked by something - and caught a real bug on their first run.
 
-- `c0f510dd9` - `web/backend/src/amiga-emulation/memory-map.ts` owns the fixed
-  addresses; `assertDoorSegmentsFit` refuses the load before
-  `HunkLoader.load` writes a byte and names the segment and the damage. Test:
-  `web/backend/tests/amiga-emulation/door-segment-limit.test.ts`.
-- `e3c1c6e16` - `examples/doorrepo-c/doorrepo.c` DIZ cache 32->8, FILES 4->2,
-  DOC 2->1. BSS 327 KB, segments end 0x06b47c, 80 KB of headroom. Rebuilt
-  binary shipped to `Doors/DoorRepo/doorrepo.amiga`.
+### The sysop's three reports, deployed
 
-Both commits are LOCAL on `feat/installed-door-link`, not pushed.
+**SMTP.** Two faults, one symptom. `SMTP_USERNAME` was in SENSITIVE_FIELDS, so
+a save encrypted it into the database and stripped it from the icon, while the
+badge said `bbsConfig.info : SMTP_USERNAME` and the field read back empty.
+express.e:31810 reads it from that file; it goes there now. Its PASSWORD stays
+encrypted - express.e:31811 wants that on disk too, so **a real Amiga cannot
+SMTP-auth**: a parity gap taken on purpose, because unlike AUTOVAL_PASSWORD it
+is the sysop's own credential and the Configuration Files page would show it.
+Open question for the sysop if they want parity instead.
 
-Two things learned that cost time here:
+The "test just spins" was port 465 - SMTPS, TLS from the first byte, no
+plaintext greeting - so connecting without `secure` WAITED against nodemailer
+defaults of a 30s greeting and 10-minute socket timeout. 465 is now always
+implicit TLS, both transports carry 10s/10s/20s timeouts, and 587-with-SSL is
+refused up front.
 
-- **The emulator detects this corruption and continues.** `VERIFICATION: 230
-  OK, 126 FAILED!` and `CRITICAL: 126 library trap(s) missing ILLEGAL
-  instruction!` were in the log the whole time and nothing acted on them.
-- **Give the door probe 20 s.** `--timeout 6000` or `12000` kills the harness
-  before it finishes booting and reports zero LVOs, zero output and no errors -
-  which reads exactly like a door that died instantly.
+**Security levels looked invented.** The page listed the FILES in `Access/`
+(10, 20, 50, 255) on a board whose new users are level 30. express.e:3025-3034
+rounds a level down to a multiple of five and walks down, so a level-30 caller
+is served by `ACS.20.info`. The page now also shows the levels users HOLD, the
+count, and which file serves each.
 
-## Deploy state - the TypeScript is live, the C door is NOT
+**Usernames could not be renamed.** The field was disabled; the write path had
+always supported it (`userToStruct` puts `user.username` in the record). Only
+validation was missing: non-empty, <= 31 chars, not already taken. A rename
+does NOT rewrite history and the form says so.
 
-Live is `4a261f5fb`. The TypeScript half of this work is running on the board
-and was verified by reading `/app/web/backend/src` in the container.
+### The 62 door icons, deployed
 
-**The C half is not.** I rebuilt `doorrepo.amiga` from current source, shipped
-it (`adb2356b8`), and it does not run - 42 bytes of output, no XIM ops, exits
-FAIL before the AEDoor handshake. The previous binary produces 3477 bytes and
-completes the handshake. Rolled back in `baefa28ff` / `4a261f5fb`; the board is
-on the 20 August binary (79652 bytes).
+63 of 155 command icons carried `ACCESS=0`, which express.e:4703 reads as
+"nobody may run this door" while this port reads as "everybody". All 62 that
+could be written safely no longer carry it. `GLC.info` is left: a real
+DiskObject whose tooltypes have no length prefixes, so the array cannot be
+located; the admin's editor refuses it too, correctly.
 
-So these remain merged source that has never run on a board: the archive-named
-command, the whole-path listing parse, install reporting, and the BbsHost
-security fix.
+Preparing that migration found **four defects in the writer the admin uses on
+every door edit** - non-ASCII values truncated, UTF-8 written over Latin-1,
+trimmed values re-rendered lossily, and the WORD "FORM" treated as an IFF
+chunk (which would have written one file out twice over) - plus two fidelity
+fixes (line endings, trailing newline). All in `644a7fcfa`.
 
-**Do not assume the break is recent work.** The working binary was built on
-20 August; the source has eleven days of changes from several sessions. The
-rebuild is simply the first build of all of it. Bisect with the probe:
+### The deploy, and the volume - the big one
 
-    cd examples/doorrepo-c && make amiga        # builds ./doorrepo.amiga
-    npx tsx dev/scripts/door-probe/probe.ts examples/doorrepo-c/doorrepo.amiga \
-      --command DOORREPO --timeout 20000
+Six root `.info` files and every `Commands/BBSCmd/*.info` were IMAGE-OWNED in
+`docker-entrypoint.sh`, so a restart overwrote them from the image and logged
+the sysop's own edit as "hash drift". **Five of the domains this remediation
+fixed saved correctly and were reverted on the next restart.** That is the best
+explanation found for "we never could get it working properly".
 
-A working door shows XIM ops and thousands of bytes of stdout; the broken one
-shows 42 bytes and none. Under the harness the last thing it does is open
-dos.library and one 31-byte AllocMem, then exit.
+The sysop chose option B: the entrypoint now records what each deploy WROTE,
+in `/app/data/bbs/.deployed-manifest`, and
 
-**The door probe itself was broken for every door** until `baefa28ff` - it
-spawned the harness with `cwd=REPO_ROOT`, which has no tsconfig.json, so tsx
-compiled the backend with decorators disabled and every probe died on
-chat.handler.ts's parameter decorators. Control check: AquaScan should probe
-exit 0 with ~1124 bytes.
+| state | what happens |
+|---|---|
+| missing on the volume | copied |
+| matches what we last wrote | untouched, so the image may update it |
+| differs from what we wrote | the sysop edited it; theirs is kept |
+| no baseline yet | record the IMAGE's hash, change nothing |
+| agrees with the image again | divergence over, tracking resumes |
+
+**Verified on the board**: deploy 33380048679 printed
+`manifest: 258 files tracked` and `Tracked: 0 created, 0 updated, 0 kept, 0
+adopted` - which is the correct steady state when nothing changed.
+
+Each deploy also snapshots the board's `.info` files first, to
+`/root/bbs-backups/bbs-config-<stamp>.tar.gz` (328K, 1816 files), last 20
+kept.
+
+### The conference audit (unpushed)
+
+The sysop asked for this BEFORE testing, and it was worth it.
+
+The old delete **could not destroy anything, because it deleted too little**:
+it removed the `conference_config` row and unlinked `Conf<N>.info`, leaving
+`ConfConfig.info` untouched. NCONFS unchanged, `NAME.<N>` and `LOCATION.<N>`
+still there - so express.e:31849 went on building the conference into its
+list, users could still join it, and what they joined had no icon behind it.
+
+The constraint that shapes it: **a conference is a POSITION.**
+express.e:8506 is `user.conferenceAccess[confNum-1]="X"`, and NCONFS is a
+COUNT. Renumbering to close a gap would silently change which conference every
+account can reach. So only the LAST conference can be removed, and the refusal
+says why.
+
+Creation was the mirror image: `setupConference` built the icon, directories,
+DIR files and counters and **never registered the conference in
+ConfConfig.info**, so it was invisible to the BBS. Registered now, and
+registered LAST so a failed setup leaves a harmless unregistered directory
+rather than a ghost. The name the sysop typed was also being discarded.
+
+Neither delete touches the conference's DIRECTORY - every message and upload
+stays, and the path is reported so the sysop removes it deliberately.
+
+## Learnings worth keeping
+
+**Verify bytes, not your own parse.** The door migration's first run compared
+PARSED tooltypes before and after, agreed with itself, and had silently
+truncated 19 DESCRIPTION values - the parser had already lost the bytes, so
+both sides read the same damage. Recorded in memory as
+`verify-bytes-not-your-own-parse`.
+
+**Test the shell, do not reason about it.** The manifest's first version had
+two bugs a test of the real function caught: recording the VOLUME's hash on
+first run made the next deploy read a sysop edit as untouched and overwrite it
+(the exact bug being fixed), and without a convergence rule a file stayed
+sysop-owned for ever. `tests/services/deploy-manifest-sync.test.ts` drives the
+real `sync_tracked` out of the real entrypoint.
+
+**A plausible mechanical improvement can be worse than what it replaces.** 5.3
+asked for `useMemo` on nine pages' columns; keying DataTable's model on the
+column IDS looked strictly better until its own test failed - accessors then
+keep the `value` function they were built with and stop re-sorting. Reverted,
+left open with the reason.
+
+**I guessed at a tool twice in a row, in both directions.** `find | tar -T -`
+was written unchecked, then "fixed" to a temp file on as little evidence. The
+deploy settled it: 1816 files into 328K. Check the tool.
+
+**`git stash` is unusable here.** Six files are committed CRLF against
+`eol=lf`, so `git checkout --` re-dirties them and `stash pop` fails for ever.
+Recover with `git checkout stash@{0} -- <explicit paths>`. In memory as
+`never-git-stash-here`.
+
+**A cancelled deploy is usually not a failure.** The concurrency group keeps
+only the newest QUEUED run, so another agent pushing a minute later displaces
+yours - and their commit normally has yours as its parent. Check ancestry
+before treating it as broken.
+
+**Tests in this tree have asserted misreadings of express.e as correct** -
+`LVL_CAPITOLS_in_FILE` was asserted to be a real tooltype on the strength of
+its odd spelling. It is an array index (axcommon.e:53). Revert-check every new
+test.
 
 ## Critical references
 
-- Spec: `docs/superpowers/specs/2026-08-30-doorrepo-parity-design.md`
-- Plan (phase A, executed): `docs/superpowers/plans/2026-08-30-installed-door-link.md`
-- Feature account: `thoughts/shared/handoffs/2026-08-31_installed-door-link.md`
-- Open queue: `thoughts/shared/todos/2026-08-30_queue-round-2.md`
-- The recorder: `web/backend/src/doors/door-install-record.ts`
-- The token: `web/backend/src/doors/door-launch-token.ts`
-- The route: `web/backend/src/server/door-admin.routes.ts` (mounted `/api/door-admin`)
-- Name precedence: `web/backend/src/doors/door-name-plausibility.ts` +
-  `door-repo-metadata.ts`
-- C door: `examples/doorrepo-c/{doorrepo.c,flow.c,config.c,json_lite.c}`
+- Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md`
+- Detail: `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`
+- Authority for anything the BBS reads: `AmiExpress-Sources/express.e`, plus
+  `axcommon.e`, `ACP.e`, `tooltypes.e`, `axenums.e`, `axobjects.e`
+- The one disk-first accessor: `getBoardConfig()` in
+  `web/backend/src/services/bbs-config-file.service.ts`
+- The one `.info` reader/writer: `web/backend/src/utils/info-file.util.ts`
+  (`parseInfoFile`, `readTooltypeMap`, `applyTooltypes`, `writeInfoFile`)
+- Volume ownership: `docker-entrypoint.sh` - `TRACKED_INFO`, `sync_tracked`
+- Guards: `tests/services/config-read-source.test.ts`,
+  `config-round-trip-contract.test.ts`,
+  `system-config-schema-covers-tooltype-map.test.ts`,
+  `system-config-field-coverage.test.ts`, `deploy-manifest-sync.test.ts`
 
-## Recent changes
+## Next steps, in order
 
-Merged to main as `178d8a74f` (21 plan commits + 12 fix-wave commits), then
-`0a98cb414` for the binary.
-
-- One recorder writes `door_installs` AND `door_installed_files`, walked from
-  disk, stored relative to the BBS root, and total: no failure inside it
-  reaches the caller, because a bookkeeping error must not fail a good install.
-- Five install paths call it - DOORMAN owner, DOORMAN consumer,
-  `amigaDoorManager.installDoor`, `amigaDoorManager.installTypeScriptDoor`,
-  and `DoorInstaller.install` (DOORMAN's `[U]pload`). The spec said three.
-- `POST /api/door-admin/installed`, token-gated: DOORREPO only, `secLevel >=
-  250`, token 0600 at `<dataDir>/Doors/DoorRepo/DoorRepo.token`, minted per
-  launch, revoked on every exit path including a throw, fails closed.
-- Command names come from the archive's own `Commands/BBSCmd/<CMD>.info` in
-  both doors; no free-text field anywhere.
-- `.LZH` archives install again (81 in the catalog). `.lha` and `.lzh` now
-  share the pure-JS `LhaExtractor`; the broken parallel implementation is gone.
-- `make syntax` in `examples/doorrepo-c` and `npm run typecheck:tests` in
-  `web/backend` close two blind spots (below).
-
-## Learnings - the ones that will save a session
-
-- **The live container runs `tsx src/index.ts` from `/app/web/backend`, NOT
-  `/app/dist`.** Greping `/app/dist` for your change returns nothing and looks
-  exactly like a failed deploy. Grep `/app/web/backend/src`.
-- **Do not assume either way about the live `Doors/` volume.** An older note
-  said deploys never sync it; this deploy DID sync it. After any deploy that
-  changes a door binary, read the volume copy (`ls -la` for the size, `strings`
-  for a symbol you added) instead of trusting either rule.
-- **The NDK under `Documentation/7-Reference Sources/NDK3.2R4` is UNTRACKED.**
-  A fresh git worktree therefore cannot build the Amiga target at all - the
-  netinclude symlink dangles and you get `sys/errno.h not found`. That is not a
-  broken build; build in a real checkout. I got this wrong once in this session
-  and reported a working build as broken.
-- **`web/backend/tsconfig.json` excludes `tests/**` and `@swc/jest` does not
-  type-check.** Test files were unchecked until this session; a signature change
-  left five call sites passing the old argument list with a clean `tsc`. Gate is
-  now `npm run typecheck:tests` (also in `.github/workflows/backend-tests.yml`).
-- **`make test` never compiled `doorrepo.c`.** The door failed to compile for
-  hours while every test run stayed green. `make syntax` runs first now.
-- **This checkout is shared with another Claude session.** It commits AND
-  stages into the same index. During this session: a subagent committed 59
-  unrelated files with a blanket add; another found two foreign files already
-  staged before it started; an aborted merge left an autostash holding a third
-  party's uncommitted work. Always `git add` by full path, always check
-  `git diff --cached --name-only` before committing, and check `git stash list`
-  after any failed merge.
-- **Do merges in a scratch worktree** when the shared tree is dirty, then push
-  from there. Symlink `node_modules` (root, `web/backend`, `Doors/door-manager`,
-  `sdk`) into the worktree or the pre-commit door build fails.
-
-## Artifacts
-
-- 33 commits on `feat/installed-door-link`, merged to main.
-- Branch still exists and holds duplicates of two peer commits that were pushed
-  to main separately - it can be deleted once nothing else is wanted from it.
-- The SDD ledger for this plan was deleted with its workspace after the final
-  review; a copy is in this session's scratchpad only, so treat git history and
-  these documents as the record.
-
-## What the C door actually targets - read this before judging any test
-
-DoorRepo is a C89 door for REAL AmiExpress boards on real Amigas. That is the
-whole point of it: other sysops run it against this repo's catalog. This
-project's 68K emulator is a convenient proxy, NOT the arbiter of correctness.
-
-Two consequences:
-
-- **The startup regression matters MORE, not less.** A door that will not start
-  under the emulator may well fail on real hardware too, and a sysop on an
-  Amiga has no probe, no logs worth the name, and no way to tell us why. Do not
-  ship a binary that fails here on the theory that a real board differs.
-- **Install reporting is amiexpress-web-only, by design.** A real AmiExpress
-  board has no `/api/door-admin` and no token file, so `config_read_token`
-  finds nothing and `report_install_to_bbs` never runs. That silence is
-  correct; the door must keep working exactly as before on such a board. Any
-  change to that path has to preserve it - the door must never require the BBS
-  API to function.
-
-Validation on a real board (or WinUAE/vAmiga with a real AmiExpress) is the
-only genuine proof. The probe is a fast first filter, not the last word.
-
-## The parity gap - DOORREPO is NOT a DOORMAN replacement yet
-
-Phase A (this session) built the groundwork only: the recorder, the link, the
-report route, and the naming rule. Parity is phases B-E of the spec and none of
-it exists. What DOORREPO still cannot do that DOORMAN can:
-
-- enable / disable a door
-- upload an archive (`[U]`)
-- edit a door's `.info` tooltypes
-- browse an installed door's files, with the AmigaGuide viewer
-- delete with the live step-by-step log
-- show a metadata / FILE_ID.DIZ panel for an installed door
-
-Every one of those needs something a C89 door cannot do locally - enumerate a
-directory, read the sqlite, walk an installed door's tree - which is why the
-spec puts a BBS-side API (phases B and C) in front of the screens (phase D),
-and only retires DOORMAN in phase E.
-
-## Next steps, in the order worth doing
-
-1. **Bisect the DOORREPO startup regression. Everything C-side is stacked
-   behind this.** A binary built from current source exits FAIL before the
-   AEDoor handshake; the board runs the 20 August build. Writing phase-D
-   screens against a source tree whose builds do not start would be a lot of C
-   nobody can execute. Method:
-
-       cd examples/doorrepo-c && make amiga
-       npx tsx dev/scripts/door-probe/probe.ts examples/doorrepo-c/doorrepo.amiga \
-         --command DOORREPO --timeout 20000
-
-   Working = XIM ops observed and thousands of bytes of stdout. Broken = 42
-   bytes, no XIM ops. Walk back through the commits touching
-   `examples/doorrepo-c/` since 20 August - several sessions contributed, so do
-   not assume it was the install-reporting work.
-
-2. **Verify the recorder end to end on live.** The TypeScript half IS live.
-   Install a door through DOORMAN, check `door_installs` and
-   `door_installed_files`, delete it, confirm the panel logs each path as it
-   goes and the door leaves the list immediately. Only doors installed from now
-   on have records; the 370 already there do not, so install something first.
-
-3. **Phase B (read APIs) and C (write APIs)** from the spec: installed list,
-   files, file, info, then enabled / info-write / delete-with-streaming-log.
-   Server-side and testable, and DOORMAN can use them too in the meantime. Each
-   needs its own plan.
-
-4. **Phase D - the DOORREPO screens** against a door that demonstrably runs,
-   and phase E - retire DOORMAN once you have actually used the replacement on
-   the board.
-
-5. **SDK dialog buttons** - frame only the active button, white text on both.
-   Item 1 in `2026-08-30_queue-round-2.md`. Lives in `sdk/engines/ui/blessed`,
-   so it changes every door's dialogs at once.
-
-6. **Decide on the 370 existing doors.** They get no catalog names, by the
-   scope decision you made. Real names need archive matching - fingerprint
-   installed doors against the catalog's per-archive file lists, which the door
-   server already serves. Until then the doors menu shows `5DPAGER  5DPAGER`.
-
-7. **BROADCAST** points at `DOORS:ANNOUNCE/ANNOUNCE.REXX` and `Doors/ANNOUNCE/`
-   has never existed. Decide whether the door is in the repo or the
-   registration should go, and consider warning at startup when a
-   registration's LOCATION does not resolve.
+1. **Push the three commits and deploy.** They are conference-management fixes
+   plus entrypoint hardening. `git push origin HEAD:main` from the worktree
+   after confirming ancestry; main moves constantly, so expect to merge first.
+2. **Have the sysop test**, in this order:
+   - settings survive a restart (a computer type, drive, screen type,
+     conference name; save, wait for a deploy, confirm they are still there)
+   - SMTP username persists and shows in `bbsConfig.info`; the test answers in
+     ~10s on port 465
+   - Security page shows Level 30 -> ACS.20.info with a user count
+   - rename a user, then LOG IN as the new name
+   - conference create, then delete the LAST one; confirm a middle one is
+     refused with a reason
+3. **The SMTP password parity gap** is a decision for the sysop: encrypted
+   (safe here, no auth on a real Amiga) or plaintext on disk (full parity).
+4. **5.3** stays open with its reason. **GLC.info** needs re-making in
+   Workbench/IconEdit if it matters.
 
 ## Other notes
 
-- `DOOR_SERVER_URL` is not set in the dev environment, so the repo-metadata
-  overlay does nothing locally. Start with
-  `DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
-  to exercise it.
-- Untracked work belonging to another session sits in `Doors/super-qix/`
-  (backgrounds, `game/background.ts`, five test files) and `web/config-app/`.
-  It is one `git clean -fd` away from gone. Not mine to commit, but worth
-  telling whoever owns it.
-- The door watcher used to orphan a backend per restart; fixed this session
-  (`dev/scripts/lib/managed-process.ts`). If backends pile up again, that is
-  where to look.
-- Two suites fail for environmental reasons and are not regressions:
-  `tests/conftop-y2k-binary-patch.test.ts` needs live-only board data, and
-  `tests/log-retention.test.ts` passes in isolation but fails in the full run.
+- `npm test` writes to the repo's real `Conf.DB`, `Node1/CallersLog` and
+  `web/backend/debug-display-flow.log`. Never `git add -A` after a run.
+- Seven backend suites FAIL TO RUN in a fresh worktree - `Doors/*` module
+  resolution, because per-door `node_modules` are absent. CI installs them.
+  0 individual test failures.
+- The admin's door editing writes to `Commands/BBSCmd/`, which is now tracked;
+  a repo-side change to an existing icon will NOT overwrite a sysop's edit,
+  by design.
+- macOS cannot reproduce the case-sensitivity class of bug; that verification
+  lives in CI.
