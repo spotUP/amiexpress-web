@@ -178,3 +178,44 @@ the admin's reader and writer - and one more corner of the door parser:
 
 `typecheck:tests` earned its keep here: jest's swc stripped an `updateTooltype`
 arity error that the typecheck caught.
+
+## Third pass: bbsConfig.info was readable all along
+
+The handoff said this one needed an Amiga. It did not - the file was being read
+wrong, three ways, any one of which lost the whole array (`ae40c17df`):
+
+1. The first entry declares 0x19 bytes and holds 14. A length field leads with
+   NULs, so the bare-string branch read an empty string there and the parse
+   returned null. A field that describes nothing is stepped over now.
+2. The count says 84 - twenty entries - and the file holds SIXTY-TWO. Tooltypes
+   were appended without the count being grown, so 42 were read as icon data
+   and a rewrite would have written them back as image bytes. Reading continues
+   past the count while the bytes are still tooltypes, and stops at the image.
+   A bare `FORM` or `ICONFACE` past the count is that boundary, which
+   `info-file-mixed-tooltype-array` insisted on: `Conf1.info` ends its array
+   with exactly those two markers before eight bytes of image, and absorbing
+   them would have moved the marker into the array on the next save.
+3. Entries are MIXED - some length-prefixed, most bare. One reader now tries
+   the standard form first and accepts it only when the declared length lands
+   exactly on the string's own NUL. That same test is what tells a real prefix
+   from a length byte glued to a key, which is where `6FTPDATAPORT` and
+   `SOPTIONS` came from.
+
+`saveBBSConfig` now reports `infoFileWritten: true`, and the 62 tooltypes come
+back as a standard array whose every entry validates. Keys with a length byte
+baked in are healed on the way out, the way the text companion has always
+healed them, so the icon and `bbsConfig.info.txt` agree.
+
+**A repeated key resolves to the FIRST now**, which is what `FindToolType`
+answers (tooltypes.e:215-218) and what `tooltypeMap` has always done - the door
+parser was the outlier. It matters here: `bbsConfig.info` holds `FTPDATAPORT`
+twice, once carrying the port list and once as a bare flag, and last-wins
+turned the list into `YES`.
+
+**The live icon still holds the old bytes.** Nothing rewrites it until a sysop
+saves anything in System Configuration; that save heals it, and `saveBBSConfig`
+copies the file to `bbsConfig.info.backup` first.
+
+The test fixture is the real file with the sysop's address, board name and port
+numbers replaced by same-length filler - every length field, the count word and
+the layout are byte-for-byte what the board has, because those are the subject.
