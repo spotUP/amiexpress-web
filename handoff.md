@@ -74,43 +74,10 @@ regressed.
 The dirty tree is BBS runtime state plus another session's untracked work
 (`web/config-app`, `Doors/super-qix`) - one `git clean -fd` from gone.
 
-## DOORREPO: A, B and C are built; D and E are not
+## DOORREPO and the door repo
 
-The door-admin API is complete, reads and writes. Formats in
-`docs/DOOR-REPO-API.md` s.11+; as-built in
-`thoughts/shared/plans/2026-08-31-doorrepo-phase-{b,c}.md`.
-
-**D (screens) and E (retire DOORMAN) do not exist.** Three things D must not
-get wrong: paths are contained by checking twice, resolved AND after
-`realpath` (a symlink inside a door defeats a string comparison); a text
-`.info` disables with `!KEY` only, binary DiskObjects honour `(KEY)`; and
-streaming `DELETE` puts success in `DONE`, not the HTTP status.
-
-**Do not add a server-side `enabled`.** Enable/disable lives in the C door
-(`ACCESS=255` + `DRACCESS`, `flow.h:618`, "do not redesign") because a real
-board has no API. The server offers `rescan` only.
-
-The DOORMAN incident is closed; see `thoughts/shared/handoffs/`.
-
-## The doors and the door repo
-
-The catalog is a separate project, **`/Users/spot/Code/amiexpress-doorserver`**,
-live at **doors.uprough.net**. This BBS proxies `/api/door-repo/*` to it
-(`DOOR_SERVER_URL`, live `http://doorserver:3010`) and keeps answering at its own
-hostname, because DoorRepo ships `RepoHost=bbs.uprough.net` baked into config on
-other people's machines.
-
-`DOOR_SERVER_URL` is NOT set in dev, so the repo-metadata overlay does nothing
-locally. To exercise it:
-`DOOR_SERVER_URL=https://doors.uprough.net ./dev/scripts/start-servers.sh --bbs-only`
-
-**The 370 doors already installed get no metadata improvement** - deliberate
-scope call. No install record, so the name column echoes the command and the
-API's `archive` field is empty for them. Real names need the archive-matching
-backfill in `thoughts/shared/todos/2026-08-30_queue-round-2.md`.
-
-The board's own management API is `/api/door-admin/*`, NOT `/api/doors` (the
-existing door-asset router).
+Where DOORREPO stands (A, B and C built; D and E not) and how the door repo is
+laid out are settled; see `thoughts/shared/handoffs/`.
 
 ## Next
 
@@ -178,44 +145,31 @@ Nothing queued by the user. Open work, in the order worth doing.
 
 ## Admin remediation, executed (2026-08-31)
 
-**Deployed 2026-08-31 08:50 UTC.** `main` is `7d7de02b4`; `/health` reports
-it. 28 of the plan's 29 items.
-
-Every deploy now snapshots the board's `.info` files first, to
-`/root/bbs-backups/bbs-config-<stamp>.tar.gz` (last 20 kept). The one taken
-before this deploy is `bbs-config-20260831-084639.tar.gz` - 1816 files, 328K.
-That is the rollback point for everything phases 1-3 changed about what gets
-written to disk.
-
-- Plan: `thoughts/shared/plans/2026-08-31-admin-audit-remediation.md` (now
-  `implemented`, with a "What was done" section holding the commit table and
-  the corrections to its own claims)
-- Handoff: `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`
-
-Backend 6374 passing / 0 failing; config-app 99 passing; both typechecks
-clean. The seven suites that fail to RUN are `Doors/*` module resolution in a
-fresh worktree, which CI installs.
-
-**Open, and waiting on you:** the volume reverts what the admin saves.
-`ComputerList.info`, `Drives.info`, `ScreenTypes.info`, `ConfConfig.info` and
-every `Commands/BBSCmd/*.info` are IMAGE-OWNED in `docker-entrypoint.sh`, so a
-restart overwrites them from the image - logging the sysop's own edit as "hash
-drift". Five of the domains this remediation fixed therefore save correctly
-and are reverted on the next restart. Two fixes and a recommendation are in
+Deployed. 28 of the plan's 29 items, plus the sysop's three reports and the
+volume-ownership fix. Full detail, the corrections to the plan's own claims,
+and what is still open:
 `thoughts/shared/handoffs/2026-08-31_admin-remediation-executed.md`.
 
-**The doors are done.** 62 of the 63 icons carrying `ACCESS=0` no longer do -
-express.e:4703 read that as "nobody may run this door" while this port reads
-it as "everybody", so they all worked here and were dead on a real Amiga.
-Behaviour here is unchanged. `GLC.info` is left: its tooltypes have no length
-prefixes, so the array cannot be located and the admin's editor refuses it
-too. Re-make that icon in IconEdit if it matters.
+**Fixed:** the board no longer reverts what the admin saves. Six root `.info`
+files and every door icon were IMAGE-OWNED, so a restart overwrote them and
+logged the sysop's own edit as "hash drift". The entrypoint now tracks what
+each deploy wrote. **The first deploy after this adopts a baseline and changes
+nothing** - the protection starts from the second, which matters when testing
+it.
 
-Preparing that migration turned up four defects in the writer the admin uses
-on EVERY door edit - a non-ASCII description was truncated, UTF-8 was written
-over Latin-1, trimmed values were re-rendered lossily, and a file whose first
-line is the word FORM would have been written out twice over. All fixed, with
-byte-level regressions.
+**Also fixed, from the sysop's report:** SMTP username reaches disk
+(express.e:31810); the SMTP test answers instead of spinning on port 465 (that
+is SMTPS - no plaintext greeting, so it waited); the Security page shows the
+levels users actually hold and which ACS file serves each (express.e:3025
+rounds down and walks down, so level 30 is served by ACS.20); usernames can be
+renamed.
 
-**Before deploying:** phases 1-3 change what is written to a live board's
-configuration files. Take a copy of `/app/data/bbs` first.
+**62 door icons** no longer carry `ACCESS=0`, which express.e:4703 reads as
+"nobody". `GLC.info` is left - its tooltypes have no length prefixes, so the
+array cannot be located and the admin's editor refuses it too.
+
+**Still open:** 5.3 (per-page `columns` memo - the cheap version introduced a
+staleness bug its own test caught) and `GLC.info`.
+
+**Each deploy snapshots the board's `.info` files first**, to
+`/root/bbs-backups/bbs-config-<stamp>.tar.gz`, last 20 kept.
