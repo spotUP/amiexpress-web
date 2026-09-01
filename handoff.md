@@ -123,9 +123,8 @@ unreported: which message base, which file area. Additive now.
 files at all today. 891 files, 85 distinct contents: express.e resolves each
 screen type from ONE directory with NO fallback, so the duplicates are
 correct, and `SCREENS` (a per-node/per-conference tooltype) is its own answer
-to sharing. **1:1 in the read path, better in the write path.** Also logs a
-live DEVIATION - this port invents a `Screens (Fallback)` express.e does not
-have. Scoping, read off the E sources:
+to sharing. **1:1 in the read path, better in the write path.** Scoping, read
+off the E sources:
 `thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
 **`feat/door-themes` is superseded**, verified with git rather than memory
@@ -134,11 +133,10 @@ theme lines are the draft that today's theme work replaced. Deleting it
 is the sysop's call - git still counts it unmerged.
 
 **DONE: the invented screen fallback is gone**, measured by driving the loader
-itself over every screen x every node and conference x five security levels,
-before and after: 4,215 lookups, zero resolution changes. Two commits on
-`land/screens-fallback-2026-09-01` (worktree `/private/tmp/screens-fallback-wt`),
-**not pushed**, and ten files copied onto the live volume that the fallback had
-been covering. Full record, including the method and the traps:
+over every screen x every node and conference x five security levels, before
+and after: 4,215 lookups, zero resolution changes. On
+`land/screens-fallback-2026-09-01`, **not pushed**, plus ten files copied onto
+the live volume that the fallback had been covering. Method and traps:
 `thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
 
 **BEFORE THAT DEPLOYS: `MAX_NODES`.** The board runs `MAX_NODES=255` with 41
@@ -161,16 +159,17 @@ Nothing queued by the user. Open:
    `Doors/emp_tools` holds two doors and is the interesting case.
 2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
    never happened is a drive against the LIVE board.
-3. `Doors/door-manager/app.ts` is 1971 lines against the 2000 ceiling. The
-   extraction is blocked, not forgotten: 82 claims that door and its commits
-   are unpushed.
-4. Admin tables: on `main` every page is on `DataTable` except Node
-   Configuration, which keeps the old `DataGrid` on purpose. The one raw
-   `<table>` left is in `GlobalWallPage.tsx`, which exists only on
-   `feat/installed-door-link`.
-5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
+3. Admin tables: DONE on `main`. Every page is on `DataTable` except Node
+   Configuration, which keeps `DataGrid` on purpose. The raw `<table>` that
+   used to be listed here is in the config-app's GlobalWall page, which was
+   REMOVED - page, route and backend all gone, only the redirect in
+   `legacy-routes.ts` is left. It survives on `feat/installed-door-link`
+   because that branch predates the removal. Nothing to migrate.
+4. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort and its own test caught it, and
    there is no measured render problem.
+5. `Doors/door-manager/app.ts` is 1480 lines now (was 1971): DoormanLayout,
+   DocView/StripView and the require.cache service getters moved out.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
