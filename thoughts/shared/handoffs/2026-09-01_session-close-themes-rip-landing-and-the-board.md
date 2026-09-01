@@ -63,14 +63,21 @@ work in this tree; coordination is on `thoughts/BOARD.md`.
 3. **Optional:** faint panel rules under the phosphor themes if they still
    read too plain - `styles.ts`, `t.dim` instead of `t.ground` for
    `panel`.
-4. **DoorRepo "can't back out of subpages"** - blocked on the sysop saying
-   which key. ESC is deliberately unbound (`doorrepo.c:2502`, cost DOORMAN
-   six rounds); `Q` is the way out. If ESC was pressed, the fix is a footer
-   hint, not a keybinding.
+4. ~~**DoorRepo "can't back out of subpages"**~~ DONE 20:0x as
+   `870419cd1`: ESC is "back" on every sub-screen and "quit" on the list.
+   Root cause was not Q's scope - the key reader had no ESC binding and
+   blocked on the byte after an ESC, so ESC swallowed the next key and
+   delivered it instead. `flow_decode_escape()` + a real native
+   `ae_input_pending()`; proven under the harness with L, ESC, ESC; main's
+   binary times out on the same script. Not pushed.
 5. **RIP upstream gaps** (RIPtermJS README): filled ovals/pies and button
    label position slightly off. `1P/1C/1I` icon commands now draw.
-6. **Remaining CRLF phantoms**: the web/ five. `git add` + commit each
-   normalises it for good (memory `project_crlf_phantom_dirt`).
+6. ~~**Remaining CRLF phantoms**~~ DONE 19:4x as `8bd9b0a5c` (the last 29,
+   all `*.json` under `eol=lf`; the "web/ five" were already gone). Also on
+   the branch, not pushed: `c009fd3f4`/`e380dca50`/`554f4b525` (35 backend
+   files that were dirty here but already on main take main's version) and
+   `77172d1fb` (the `displayMenuPrompt` ESC[0m reset, with tests - it had
+   never been committed). Memory `project_crlf_phantom_dirt` is current.
 7. From a9's handoff (not mine): the invented fallback in
    `screen.handler.ts` is safe to remove; logon screen variants were
    changed on the live VOLUME by hand and are not in the repo.
