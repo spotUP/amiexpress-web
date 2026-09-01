@@ -24,8 +24,19 @@ captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
 is written down in that handoff, including the log-parsing trap that
 manufactures a convincing fake reproduction.
 
-**Door settings, and doors that asked the wrong directory (2026-09-01):**
-`thoughts/shared/handoffs/2026-09-01_door-settings-phase4-and-the-working-directory-class.md`.
+**Start here for 2026-09-01:**
+`thoughts/shared/handoffs/2026-09-01_door-settings-admin-and-the-two-store-class.md`
+is the full record - door settings, the admin, seven doors reading paths that
+never existed, eight live reports from the sysop, and two outages. The earlier
+`..._door-settings-phase4-and-the-working-directory-class.md` is the first half
+of the same day.
+
+**THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
+type, a door's settings and a password each exist in SQLite AND on disk, and
+the BBS and the admin do not always read the same one. Eight reports in one
+day were all this. Before believing any config change works, check the store
+the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
+the signup prompt read the .info files.
 Doors declare their own settings (`Doors/<door>/door.settings.json`) and the
 admin renders them in the Edit Door modal. **A door must never resolve its own
 files from `process.cwd()` or bare `__dirname`** - the backend's cwd on the
