@@ -118,6 +118,27 @@ live DEVIATION - this port invents a `Screens (Fallback)` express.e does not
 have. Scoping, read off the E sources:
 `thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
+**UNMERGED AND WORTH RESCUING: `feat/door-themes`**, 8 commits that never
+landed - the theme mechanism, four themes, a picker so a theme is chosen
+without SQL, hex colour tags in blessed, eight glitch kinds, an animated
+masthead. Its worktree had uncommitted changes when this was written, so it
+belongs to whoever was in it; do not merge it out from under them. Every other
+merged branch was deleted on 2026-09-01, local and remote, so what is left on
+the remote is `main`, this, and `feat/installed-door-link`.
+
+**Screen parity, half done.** AWAITSCREEN now resolves where express.e reads
+it on all 41 nodes (repo AND volume). NODE_BULL still resolves on 0 of 41:
+express.e wants `Node<N>/BULL.TXT`, the board holds
+`Node<N>/Screens/NODE_BULL.TXT`, a name it never looks for. The invented
+`Screens (Fallback)` STAYS until that is closed - removing it now would break
+the one screen still leaning on it.
+
+**The entrypoint syncs almost nothing.** `sync_tracked` covers six board
+`.info` files and `Commands/**` and nothing else, so committing a file under
+`Node<N>/` or `Conf<N>/` does NOT put it on the live board. The awaitscreen
+fix deployed green and landed nothing until it was copied onto the volume by
+hand. Check the volume, not the workflow.
+
 Also open:
 
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
@@ -132,52 +153,20 @@ Also open:
 5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
-## Sysop's open list (2026-09-01) - DONE, all six live
+## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
 
-Worked through and LIVE, each verified by container sha. Full record:
-`thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
+Full record: `thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
+SMTP, the web-terminal switch, REGKEY, the Global Wall page, Configuration
+Files, file checkers. Two limits that outlive the tasks:
 
-- SMTP sends (`361a49517`). 587 is STARTTLS whatever the SSL box says; the
-  sysop confirmed the test email.
-- The HTTP checkbox switches the web terminal (`042b33c7f`), and nothing
-  else - /admin, /api and /socket.io pass through even when off.
-- REGKEY removed (`e42f6d980`).
-- The Global Wall page removed (`e2d435499`); GWWALL's crossed registration
-  fixed (`bfd396841`).
-- Configuration Files finds one node out of forty (`6d48c4dcb`).
-
-- A configured file checker is found, read whole and RUNS (`bc6cd94b5`).
-  Every check was confirmed by hand on the board except the Configuration
-  Files node search.
-
-**This board's checkers still do not run** - they name Amiga binaries
-(`DOORS:multi-check/...`) that Linux cannot execute, so uploads fall back to
-the built-in JavaScript checkers. One configured through the admin with a real
-command now works. **Nothing "runs" a transfer protocol here** either:
-`Protocols/*.info` is read only by the admin, and transfers use the user's
-protocol string and the WebSocket path. No XPR library to load.
+**This board's file checkers still do not run** - they name Amiga binaries
+Linux cannot execute, so uploads use the built-in JavaScript checkers. One
+configured through the admin with a real command now works. **Nothing "runs" a
+transfer protocol here** either: Protocols/*.info is admin-only config.
 
 **A case bug cannot be caught by behaviour on a Mac.** HFS+ is
 case-insensitive, so a wrong-case join passes locally and fails only on Linux,
-where the board and CI run. Pin the spelling at the SOURCE too -
-`file-checker-actually-runs.test.ts` does both.
-
-**A tooltype boolean cannot default to TRUE.** Presence is the whole
-encoding, and switching off REMOVES the key, so absent cannot mean "on" and
-"this file predates the field" at once. Store the NEGATIVE - `HTTP_DISABLED`,
-in `INVERTED_BOOLEAN_TOOLTYPES` - or every existing board reads the flag as
-off on upgrade. A startup migration cannot fix it; it re-adds the key every
-boot after the sysop switches it off.
-
-**A door showing another door's settings is a crossed LOCATION**, not a
-rendering bug: the admin draws the form from the directory the registration
-names. Read `LOCATION` before reading any code. A command name differing from
-the door's own `bbsCommand` is NOT wrong by itself - TC and TCONNECT both
-open the telnet door.
-
-**Removing a registration from the repo does not clear it from a running
-board.** The entrypoint deliberately leaves anything the image stops shipping
-on the volume, so the live board needs its own delete.
+where the board and CI run. Pin the spelling at the SOURCE too.
 
 ## Gotchas
 
