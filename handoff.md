@@ -1,21 +1,28 @@
 # Handoff
 
-## SPRITED and the arcade doors (2026-09-01) - LANDED
+## Alt+Enter works now, everywhere (2026-09-02)
 
-`thoughts/shared/handoffs/2026-09-01_sprite-studio-fork-and-the-responsive-switch.md`
-and `..._arcade-doors-ansi-editor-and-the-camera.md` are the records.
+`thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
+is the record, including the ANSI editor audit and grandmaster's rebuilt
+battle royale (99 players, a grid of playfields, standings under your own
+board; 98 bots cost 0.16 ms/frame, measured).
 
-SPRITED is a FORK of `Doors/ansi-editor/index.ts`, not a host of it: one
-full-screen editor, Deluxe Paint shaped, with Frame/Sprite/Zoom/Animation
-contributed into the editor's own bar via the SDK's `extraMenus`. It opens
-with the requester. Hotkeys are all non-printable, because the editor types
-printables onto the canvas.
+**Responsive is FOUR things.** Ask the terminal to widen, follow the resize,
+put 80 columns back (`sdk/utils/terminal-mode.ts` does those three) - and be
+able to RECEIVE the key that asks, which was broken in three places at once:
+the browser never sent Alt+Enter (xterm does not ESC-prefix Option on macOS),
+the SDK parser could not name ESC+CR as `M-enter`, and game mode dropped
+modifiers. Alt+LETTER always worked, which is why none of it was noticed.
 
-**Responsive is THREE things** and shipping one does nothing: ask the terminal
-to widen (`bbs.enableWideMode()`), follow the resize, restore 80 columns on
-exit. `sdk/utils/terminal-mode.ts` does all three.
+Doors with the switch, all starting FIXED: grandmaster (also Settings >
+DISPLAY), sprite-editor, ansi-editor, livechat (wide only on /chat),
+bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars. card-lobby
+cannot have it until someone extracts from its 2826-line index.ts.
 
-WAITING ON THE USER: SPRITED's manual checklist, which has never been run.
+**A source pin proves a call exists, not that it runs.** The ANSI editor door
+threw on start for every caller while a test asserted its source mentions
+`createTerminalModeSwitch`. Doors that got the switch later have tests that
+START them.
 
 ## READ THIS FIRST
 
@@ -159,16 +166,18 @@ Also open:
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort and its own test caught it.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-
-## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
-
-All six live and verified by sha. Full record:
-`thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
-Two limits outlive the tasks: this board's file checkers name Amiga
-binaries Linux cannot execute (uploads use the JavaScript checkers), and
-nothing here 'runs' a transfer protocol - Protocols/*.info is admin-only
-config. And a case bug cannot be caught on a Mac: HFS+ is
-case-insensitive, so pin the spelling at the source.
+7. **Alt+Enter should also toggle BROWSER fullscreen.** The door half is
+   done; the frontend half is `packages/terminal/.../BBSTerminal.tsx`.
+8. **The Doors volume never deletes** - the entrypoint syncs with
+   `tar | tar`, so a file dropped from the image lives on the volume for
+   ever (eight orphans removed by hand 2026-09-02). Prune
+   `Doors/<door>/dist/` for doors the IMAGE ships, never for DOORREPO's.
+9. **BBSTerminal registers two custom key handlers** and xterm keeps only
+   the last, so Shift+Arrow sequences, the copy/select-all path and the
+   Ctrl+Shift+M block have never run. Merging them makes three features
+   appear at once.
+10. **card-lobby needs an extraction** (2826 lines) before it can take the
+   size switch.
 
 ## Gotchas
 
