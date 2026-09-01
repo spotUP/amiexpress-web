@@ -133,23 +133,26 @@ theme lines are the draft that today's theme work replaced. Deleting it
 is the sysop's call - git still counts it unmerged.
 
 **DONE: the invented screen fallback is gone**, measured by driving the loader
-over every screen x every node and conference x five security levels, before
-and after: 4,215 lookups, zero resolution changes. On
-`land/screens-fallback-2026-09-01`, **not pushed**, plus ten files copied onto
-the live volume that the fallback had been covering. Method and traps:
+over every screen x node x conference x five security levels: 4,215 lookups,
+zero resolution changes. On `land/screens-fallback-2026-09-01`, **not
+pushed**, plus ten files copied onto the live volume it had been covering:
 `thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
 
-**BEFORE THAT DEPLOYS: `MAX_NODES`.** The board runs `MAX_NODES=255` with 41
-node directories, so a caller above node 40 now has no screens. Backup is on
-the host; the classifier refuses the write, so it needs a hand:
+**MAX_NODES stays 255**, so nodes above 40 got express.e's own mechanism
+instead of a cap: the node's `SCREENS` tooltype (ACP.e:2666-2673), which this
+port ignored, letting many nodes share one screen directory. Node
+Configuration has a Screens Directory field now. **Provision before deploy:**
 
-    ssh -i ~/.ssh/hetzner_deploy root@89.167.21.154 'docker exec amiexpress-bbs sed -i "s/^MAX_NODES=255$/MAX_NODES=40/" /app/data/bbs/bbsConfig.info.txt'
+    npx tsx dev/scripts/provision-node-screens.ts --data-dir /app/data/bbs --apply
+
+Dry by default; seeds `Screens/Node/` and points the 215 nodes with no set of
+their own at it.
 
 **Measure screens with the board's own log** - `docker logs amiexpress-bbs |
-grep loadScreenFile` prints the locations tried and the file it settled on. A
-glob, a `head -6` and a case-sensitive `[ -e ]` each lied about this. `.SEQ` is
-this project's C64 PETSCII - it does not render right yet (known, deferred),
-and resolution is not the cause.
+grep loadScreenFile` prints the locations tried and the file chosen. A glob, a
+`head -6` and a case-sensitive `[ -e ]` each lied about this. `.SEQ` is C64
+PETSCII - it does not render right yet (known, deferred), and resolution is
+not the cause.
 
 Also open:
 Nothing queued by the user. Open:

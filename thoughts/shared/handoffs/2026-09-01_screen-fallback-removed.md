@@ -63,27 +63,45 @@ those conferences were reading through the fallback), `uploadmsg.txt` and
 `downloadmsg.txt` into Conf1, Conf13 and Conf14, and `Conf14/Menu.txt` +
 `Conf14/MENU250.TXT`. Verified by `ls` on the container.
 
-## STILL OPEN: MAX_NODES
+## MAX_NODES stays 255 - the SCREENS tooltype instead
 
-The board runs `MAX_NODES=255` - `[NodeManager] Initializing 255 nodes` - with
-41 node directories. Nodes 1-40 have full screen sets on the volume; above
-that, the global fallback was the only thing answering, and it is gone. The
-volume holds `Node90`-`Node156`, each with a single `BBSTITLE.txt`, so
-something has written up there.
+The board runs `MAX_NODES=255` with 41 node directories. My first answer was
+to cap it at 40; the sysop's answer is that 255 is the board, which makes the
+gap a missing FEATURE rather than a wrong setting.
 
-Backup is already taken on the host. The harness classifier refuses the write
-(`sed -i` on a config file, and `scp` of a replacement), so it needs a hand:
+AmiExpress has the mechanism: `ACP.e:2666-2673` fills `sopt.nodeScreens` from
+the node's `SCREENS` tooltype, and only falls back to `<bbsLoc>/Node<N>/` when
+the icon declares none. `express.e:96` and `:31995` carry it into
+`nodeScreenDir`, which every NODE screen is read from. This port implemented
+the fallback half and ignored the tooltype, so nodes could not share a
+directory - which is why 255 nodes looked like they needed 255 copies of the
+same eight files.
 
-    ssh -i ~/.ssh/hetzner_deploy root@89.167.21.154 'docker exec amiexpress-bbs sed -i "s/^MAX_NODES=255$/MAX_NODES=40/" /app/data/bbs/bbsConfig.info.txt'
+Implemented in `b6a0c8b98`: `resolveNodeScreenDir()` in the loader (Amiga path
+or board-relative, cached against the icon's mtime, corrupt icon falls back to
+the node's own directory), a Screens Directory field on Node Configuration
+with SCREENS among the owned keys so clearing it removes the tooltype, and
+`dev/scripts/provision-node-screens.ts`.
 
-`loadBBSConfig` takes the NEWER of `bbsConfig.info` and `bbsConfig.info.txt` as
-a COMPLETE snapshot, so editing the text companion is enough and safe; the
-icon stays at 255 until the admin next writes both.
+**The live board still needs provisioning** - dry by default:
 
-For the record, AmiExpress itself caps at 32: `axconsts.e:43` `MAXNODES=32`,
-`axcommon.e:28` `MAX_NODES=32`. This port defaults to 255 deliberately
-(`database.ts` migrates 8 -> 255, `config.schemas.ts` allows up to 255), so 40
-is a board-config answer, not a code change.
+    npx tsx dev/scripts/provision-node-screens.ts --data-dir /app/data/bbs --apply
+
+It seeds `Screens/Node/` from Node1 and points every node with no complete
+screen set of its own at it: 41 nodes keep their own, 215 get the tooltype. A
+node holding a stray `BBSTITLE.txt` and nothing else counts as unprovisioned -
+the volume has 39 of those, and calling them complete would leave a caller
+with a title screen and no logon or logoff.
+
+Proved against a mirror of the live volume with the script applied: nodes 1
+and 40 keep their own directories, 41/90/100/200/255 resolve through the
+shared set, and all seven node screens at three security levels resolve for
+every one of them.
+
+For the record, AmiExpress itself caps at 32 (`axconsts.e:43`,
+`axcommon.e:28`); this port allows 255 deliberately (`database.ts` migrates
+8 -> 255, `config.schemas.ts` permits it), and the tooltype is what makes that
+work rather than a smaller number.
 
 ## Traps this session
 
@@ -101,8 +119,9 @@ is a board-config answer, not a code change.
 
 ## Next
 
-1. Set `MAX_NODES` (above), then push the branch and deploy, then confirm with
-   the board's own log: `docker logs amiexpress-bbs | grep loadScreenFile`.
+1. Run the provisioning script on the live volume (above), then push the
+   branch and deploy, then confirm with the board's own log:
+   `docker logs amiexpress-bbs | grep loadScreenFile`.
 2. The `AWAITSCREEN` not-found path still substitutes Node1's title screen -
    this port's invention, and cross-node. Not touched here.
 3. `Node90`-`Node156` on the volume are junk: one `BBSTITLE.txt` each, no
