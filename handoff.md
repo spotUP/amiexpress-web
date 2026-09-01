@@ -37,17 +37,12 @@ the BBS and the admin do not always read the same one. Eight reports in one
 day were all this. Before believing any config change works, check the store
 the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
 the signup prompt read the .info files.
-Doors declare their own settings (`Doors/<door>/door.settings.json`) and the
-admin renders them in the Edit Door modal. **A door must never resolve its own
-files from `process.cwd()` or bare `__dirname`** - the backend's cwd on the
-board is `/app/web/backend` and `__dirname` is `dist/` in production. Use the
-SDK's `resolveDoorRoot(__dirname)` for the door's own directory and
-`resolveBbsRoot(__dirname)` for the board. Two tests fail on the pattern:
-`tests/doors/doors-do-not-use-cwd.test.ts` and
-`tests/no-hardcoded-home-paths.test.ts`. Seven doors were broken by it -
-a chess database headed for a filesystem every deploy replaces, and a RIP
-browser that told every user "Directory not found" while 98 files sat on the
-volume.
+**A door must never resolve its own files from `process.cwd()` or bare
+`__dirname`** - cwd on the board is `/app/web/backend` and `__dirname` is
+`dist/` in production. Use `resolveDoorRoot(__dirname)` for the door's own
+directory and `resolveBbsRoot(__dirname)` for the board. Two tests fail on the
+pattern: `tests/doors/doors-do-not-use-cwd.test.ts` and
+`tests/no-hardcoded-home-paths.test.ts`.
 
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
@@ -163,12 +158,9 @@ Nothing queued by the user. Open:
 5. **Configuration Files lists everything at once** - every node's files in the
    same view as the board's own. It needs grouping (board / nodes / conferences)
    or a filter before it is usable on a board with 40 nodes.
-6. **Nothing tests that a transfer protocol or a file checker actually runs.**
-   The admin round-trips their .info files (`Protocols/XprTypes.info`,
-   `FCheck/*.info`) and that is all that is verified. A protocol is a program
-   the board hands a file to, and a file checker is a program it runs over an
-   upload; both are reachable from the corpus harness the doors use
-   (`npm run corpus:integration`), which is the shape a real test would take.
+6. **Nothing tests that a transfer protocol or a file checker RUNS.** The
+   admin round-trips their .info files and that is all. The corpus harness
+   (`npm run corpus:integration`) is the shape a real test would take.
 
 ## Gotchas
 
