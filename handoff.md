@@ -24,12 +24,10 @@ captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
 is written down in that handoff, including the log-parsing trap that
 manufactures a convincing fake reproduction.
 
-**Start here for 2026-09-01:**
-`thoughts/shared/handoffs/2026-09-01_door-settings-admin-and-the-two-store-class.md`
-is the full record - door settings, the admin, seven doors reading paths that
-never existed, eight live reports from the sysop, and two outages. The earlier
-`..._door-settings-phase4-and-the-working-directory-class.md` is the first half
-of the same day.
+**Start here for 2026-09-01:** the three handoffs of that date -
+`..._door-settings-admin-and-the-two-store-class.md`,
+`..._sysop-list-smtp-to-config-files.md`, and
+`..._activity-feed-screen-parity-and-the-live-board.md` (latest).
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
 type, a door's settings and a password each exist in SQLite AND on disk, and
@@ -105,9 +103,9 @@ the 2026-09-01 sprite-studio-2c handoff. Queue: memory
 
 ## Next
 
-**Activity overview: largely built.** Still unreported: messages read/posted,
-file-area browsing. Scoping:
-`thoughts/shared/research/2026-09-01_activity-overview-what-users-are-doing.md`.
+**Activity overview: built** - commands, sentences, door categories, live node
+state in words, and an On-the-board-now panel with idle time. Still
+unreported: which message base, which file area. Additive now.
 
 **QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
 files at all today. 891 files, 85 distinct contents: express.e resolves each
@@ -126,25 +124,24 @@ belongs to whoever was in it; do not merge it out from under them. Every other
 merged branch was deleted on 2026-09-01, local and remote, so what is left on
 the remote is `main`, this, and `feat/installed-door-link`.
 
-**Screen parity: three of four closed.** AWAITSCREEN, BBSTITLE and
-SCREEN_BULL now resolve where express.e reads them; a GLOBAL screen is read
-from the board ROOT, not `Screens/` (express.e:6549 - seven screens ride on
-that). Left: NODE_BULL, 0 of 41 - express.e wants `nodeScreenDir + 'BULL'`
-and 39 nodes hold `Screens/NODE_BULL.TXT`, a name NOTHING reads, so those
-nodes have no node bulletin anywhere today. Moving them ENABLES a second
-logon bulletin - new behaviour, the sysop's call. The invented
-`Screens (Fallback)` STAYS until that is settled.
+**NEXT JOB, everything is in place for it: remove the invented screen
+fallback.** `screen.handler.ts` searches `Screens (Fallback)`,
+`Node<N> (Fallback)` and `Node<N>/Screens/` - none of which express.e has.
+Every screen that leaned on them has been moved to where express.e reads it
+(AWAITSCREEN, BBSTITLE, SCREEN_BULL, and the logon100/logon variants), so the
+removal is now safe. What is left under `Node<N>/Screens/` and nowhere else is
+`node_bull.txt` (placeholder, nothing reads the name), `callers.txt` (not a
+screen) and `reqtools`. Remove it, redeploy, then RE-RUN the measurement.
+Full record and the method:
+`thoughts/shared/handoffs/2026-09-01_activity-feed-screen-parity-and-the-live-board.md`.
 
-**Measure with the extensions the loader accepts.** Two measurements were
-wrong today the same way; `docker logs | grep loadScreenFile` prints the
-search locations and the file it settled on, and is what caught it. `.SEQ`
-is this project's C64 PETSCII, not Amiga data - it does not render right yet
-(known, deferred).
-
-**The entrypoint syncs almost nothing** - six board `.info` files and
-`Commands/**`. Committing anything under `Node<N>/` or `Conf<N>/` does NOT
-reach the live board; today's screen fixes deployed green and landed nothing
-until copied onto the volume by hand. Check the volume, not the workflow.
+**Measure screens with the extensions the loader accepts, case-insensitively,
+and confirm with the board's own log** - `docker logs amiexpress-bbs | grep
+loadScreenFile` prints the locations tried and the file it settled on. Three
+of my measurements were wrong today: a truncating `head -6`, a glob that
+counted `BBSTITLE.SEQ`, and a case-sensitive `[ -e ]` on an Amiga volume.
+`.SEQ` is this project's C64 PETSCII - it does not render right yet (known,
+deferred), and resolution is not the problem.
 
 Also open:
 
