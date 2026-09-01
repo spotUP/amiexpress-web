@@ -1,48 +1,45 @@
 # Handoff
 
-## SPRITED is a fork of the ANSI editor door (2026-09-01)
+## Alt+Enter works now, everywhere (2026-09-02)
 
 Full record:
-`thoughts/shared/handoffs/2026-09-01_sprite-studio-fork-and-the-responsive-switch.md`
+`thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
 
-It was built twice the wrong way first - a studio that hosted the editor as
-a widget, which read as two applications bolted together - before becoming
-what the design doc always asked for: a fork of
-`Doors/ansi-editor/index.ts`. ONE full-screen editor, Deluxe Paint shaped:
-its own menu bar, its own sidebar, its own status line, requesters for
-everything else. Frame / Sprite / Zoom / Animation are contributed into the
-EDITOR's bar via the SDK's `extraMenus`. **It opens with the requester, not
-a browser screen.**
+**Responsive is FOUR things.** Ask the terminal to widen, follow the resize,
+put 80 columns back (`sdk/utils/terminal-mode.ts` does those three) - and be
+able to RECEIVE the key that asks, which was broken in three places at once:
+the browser never sent Alt+Enter (xterm does not ESC-prefix Option on macOS
+unless macOptionIsMeta is set), the SDK parser could not name ESC+CR as
+`M-enter`, and game mode dropped modifiers entirely. Alt+LETTER always
+worked, which is why none of it was noticed.
 
-Hotkeys are all non-printable, because the editor types printables onto the
-canvas: `C-f`/`C-b` frame, `C-e` animation, `C-p` play, `C-o` onion skin,
-`C-g` guide, `C-c`/`C-v` frame clipboard, `Alt+Enter` size, wheel zooms.
+Doors with the switch, all starting FIXED - a door looks like the board it
+opened from until the caller asks: grandmaster (also in Settings > DISPLAY),
+sprite-editor, ansi-editor, livechat (wide only on /chat), bug-tracker,
+bbs-dashboard, doors-menu, theme-picker, scrollwars. **card-lobby cannot
+have it** until someone extracts from its 2826-line index.ts - the hook
+refuses.
 
-**Responsive is THREE things**, and shipping one of them does nothing: ask
-the terminal to widen (`bbs.enableWideMode()` - BBSTerminal starts fixed at
-80x25 and says so in its own source), follow the resize, restore 80 columns
-on exit. `sdk/utils/terminal-mode.ts` does all three; doors supply what
-re-layout means for them.
+**A source pin proves a call exists, not that it runs.** The ANSI editor
+door threw on start for every caller while a test asserted its source
+mentions `createTerminalModeSwitch`. Doors that got the switch after that
+have tests that START them.
 
-**8 commits are NOT on main**, two of them other sessions' - check the
-`Claude-Session` trailer before landing. Next work, in order: wire
-grandmaster's width-aware versus layout into its render path (the decision
-is done and tested, the render path is not); floating toolbars in SPRITED
-when wide; roll the size switch out to the other doors (six are 82's);
-Alt+Enter to also toggle browser fullscreen; clean eight stale files off the
-live volume; land and verify.
+The ANSI editor audit is done: the cursor shows the cell under it reversed
+(half-blocks stay visible), the caret hides during playback, the sidebar
+toggle re-centres instead of pinning left, every modal takes a focus trap
+(that is what "SAUCE does nothing" was), layers actually composite, the File
+menu offers only what a host wired, and both the canvas and a sprite can be
+resized after they are open.
 
-## Arcade doors and the camera (2026-09-01, earlier) - ALL LANDED
+GRANDMASTER's battle royale is 99 players and a grid of playfields with the
+standings under your own board - no minimaps. 98 bots cost 0.16 ms/frame,
+measured.
 
-`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
-is the record. Frogger's sprite pass, Pengo on the arcade's real grid with
-the cell-art camera, sprite flipping, and the first ANSI editor convergence
-are all on main and live as of `bd3ff7317`.
-
-Pengo's two later fixes are live too: the wall ring stopped eating 3-15 ice
-blocks a level (it sits OUTSIDE the arcade's 13x15 now), and a block in
-flight is solid, so the penguin no longer rides the block he pushed into a
-Sno-Bee.
+Next: Alt+Enter should also toggle BROWSER fullscreen; the Doors volume sync
+never deletes (orphans removed by hand, root fix pending); BBSTerminal
+registers two custom key handlers and xterm keeps only the last, so
+Shift+Arrows and the copy path have never run.
 
 ## READ THIS FIRST
 
@@ -123,19 +120,34 @@ fine.
 
 ## Next
 
-Nothing queued by the user. Open:
+1. **Alt+Enter should also toggle BROWSER fullscreen.** The door half is
+   done; the frontend half is `packages/terminal/.../BBSTerminal.tsx`.
+2. **The Doors volume never deletes** - `docker-entrypoint.sh` syncs with
+   `tar | tar`, so a file dropped from the image lives on the volume for
+   ever. Eight orphans removed by hand 2026-09-02. The fix is to prune
+   `Doors/<door>/dist/` for doors the IMAGE ships, never for doors DOORREPO
+   installed at runtime. Not written: that file carries another session's
+   uncommitted work.
+3. **BBSTerminal registers two custom key handlers** and xterm keeps only
+   the last, so Shift+Arrow sequences, the copy/select-all path and the
+   Ctrl+Shift+M block have never run. Merging them makes three features
+   appear at once.
+4. **card-lobby needs an extraction** (2826 lines) before it can take the
+   size switch.
 
-1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
+Older, still open:
+
+5. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
-3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
+6. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
+7. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
    next feature there needs an extraction first.
-4. Six admin pages still render their own tables instead of
+8. Six admin pages still render their own tables instead of
    `components/ui/DataTable`. Node Configuration deliberately stays on the
    old `DataGrid`.
-5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
-6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
+9. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
+10. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Gotchas
 
