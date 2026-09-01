@@ -50,9 +50,11 @@ work in this tree; coordination is on `thoughts/BOARD.md`.
 
 ## Open, in order
 
-1. **Land `9cdf8d6ba`** (RIP play() fix). c2 has the floor; asked on the
-   board to cherry-pick it on top of their batch, else take a one-commit
-   slot after them. Then verify live: `RIP` -> `amigasp.RIP` must paint.
+1. ~~**Land `9cdf8d6ba`** (RIP play() fix).~~ DONE 19:2x: on main as
+   `e3c6656b3` + regression test `3f8c66cb0`
+   (`web/frontend/src/components/__tests__/RIPRenderer.test.tsx`, fails on
+   the old renderer); container verified. c2's 60 followed as `bd3ff7317`.
+   Still worth a look by eye: `RIP` -> `amigasp.RIP` must paint.
 2. **Manual theme pass on live** (P4.3): `THEME` -> Quiet Phosphor ->
    `DASHBOARD`, `DOORS`, `BUGS` (open a confirm dialog - must read as a
    separate surface), `DOORMAN`; then everything under Classic must look
