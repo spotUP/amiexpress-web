@@ -1,5 +1,64 @@
 # Handoff
 
+## SPRITED now hosts the ANSI editor (2026-09-01, later)
+
+Plan: `thoughts/shared/plans/2026-09-01-sprite-editor-on-the-ansi-editor.md`
+(status implemented; its execution record lists every deviation).
+
+The sprite studio was never wired to the ANSI editor. Plan 3 made the
+widget sprite-capable and merged; the door-side half was deferred to a plan
+nobody wrote, so `edit-screen.ts` kept its own painter and 2c built a
+toolbar and four tools on top of it - a second copy of the sidebar the
+widget already ships. That is closed now.
+
+**On the branch, five commits** (`0f101e133`, `88c5b59e2`, `c2f3a5cd8`,
+`7329c1eb0`, sweep): the widget gained an integer canvas zoom
+(`cellScaleX/Y`) because a 5x2 sprite at one character per cell is a
+smudge; `frameToCanvas`/`canvasToFrame` bridge cell-art's `null` holes to
+the editor's `transparent` cells; and the door now hosts the widget,
+`toolbar.ts` is gone, `edit-doc` lost `setPixel`/`floodFill`/`setCell` and
+gained one whole-frame `setFrame`. SDK 765 -> 776, door 146 -> 152.
+
+**The keyboard changed**, unavoidably: the widget types every printable
+character onto the canvas, so the studio's letter hotkeys could not
+survive. Frame/animation ops are menu-driven with `C-p`/`C-f`/`C-e`/`C-q`;
+a test pins that the studio claims no printable key and none of the
+widget's control keys.
+
+**Measured, not assumed:** the widget's half-block strokes decompile to
+sprite pixels (`ansi-editor-halfblock-sprite-compat.test.ts`). Found while
+proving it: **half-block painting is mouse-only** - `handleDrawKey` has no
+half-block stroke, so a keyboard-only artist gets full blocks. Pre-existing.
+
+WAITING ON THE USER: drive SPRITED (`http://localhost:3001`, sysop, the
+stack is running) and the manual checklist in the plan's Task 7. Nothing
+here is deployed.
+
+## Arcade doors, the ANSIEditor convergence, and a camera (2026-09-01)
+
+`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
+is the state.
+
+**On main:** `a2aa1af0d` — the nine ANSIEditor commits only. The SDK had two
+ANSI editors; the blessed widget forked the library, which is why Ctrl+Z did
+nothing while drawing. Now converged: one implementation of each tool, one
+undo, an arbitrary canvas size and a real transparent cell. 706 → 744 tests,
+and the widget shrank. **The live container was never verified** (SSH is
+blocked for the assistant) — do that first, the command is in the archive.
+
+**Branch-only, unpushed:** Frogger's sprite pass (139 tests), Pengo rebuilt
+on the real 13x15 grid with the sixteen arcade mazes (82 tests), the
+cell-art camera, sprite flipping, and plans 2b + 2c.
+
+**The camera** (`sdk/engines/graphics/cell-art/camera.ts`) is the queue's
+item 1, shared: a window onto a world bigger than the terminal, plus
+off-screen markers so it cannot hide the thing about to kill you.
+
+WAITING ON THE USER: verify the live container; the SPRITED manual
+checklist, which has still never been run; deploying everything above; and
+one line added to `.git/hooks/pre-commit`'s exemption list for
+`sdk/engines/ui/blessed/widgets/ansi-editor.ts`.
+
 ## READ THIS FIRST
 
 **Door rendering, the deploy that lies, the disk:**
@@ -23,26 +82,6 @@ conclusions in one session ended the moment the door's real traffic was
 captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
 is written down in that handoff, including the log-parsing trap that
 manufactures a convincing fake reproduction.
-
-**Start here for 2026-09-01:**
-`thoughts/shared/handoffs/2026-09-01_door-settings-admin-and-the-two-store-class.md`
-is the full record - door settings, the admin, seven doors reading paths that
-never existed, eight live reports from the sysop, and two outages. The earlier
-`..._door-settings-phase4-and-the-working-directory-class.md` is the first half
-of the same day.
-
-**THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
-type, a door's settings and a password each exist in SQLite AND on disk, and
-the BBS and the admin do not always read the same one. Eight reports in one
-day were all this. Before believing any config change works, check the store
-the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
-the signup prompt read the .info files.
-**A door must never resolve its own files from `process.cwd()` or bare
-`__dirname`** - cwd on the board is `/app/web/backend` and `__dirname` is
-`dist/` in production. Use `resolveDoorRoot(__dirname)` for the door's own
-directory and `resolveBbsRoot(__dirname)` for the board. Two tests fail on the
-pattern: `tests/doors/doors-do-not-use-cwd.test.ts` and
-`tests/no-hardcoded-home-paths.test.ts`.
 
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
@@ -97,56 +136,21 @@ skill. A crunched door needs MORE emulator memory, not less: crunched
 DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
 fine.
 
-## Sprite work
+## Sprite work (session of 2026-08-31 evening) - READ ON RESUME
 
-`thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`, and
-the 2026-09-01 sprite-studio-2c handoff. Queue: memory
-`project_arcade_sprite_queue`.
+**Full handoff: `thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`.**
+Live (verified, container d8a0b20dc): cell-art sprite engine, Pengo
+rebuilt full-screen with arcade sprites + sfx + music, sprite studio 2a
+(SPRITED, sysop), watcher port-guard. LOCAL ONLY: plan 2b (studio editing)
+tasks 1-5 of 6 - resume from the SDD ledger at
+`.superpowers/sdd/2026-08-31-sprite-studio-2b-editing/progress.md`
+(Task 5 review pending, then sweep, final review, user checklist, deploy).
+User queue after that: shared 8-way scroller, Frogger sprites, pengo
+levelComplete one-liner - memory `project_arcade_sprite_queue`.
 
 ## Next
 
-**Activity overview: largely built.** Still unreported: messages read/posted,
-file-area browsing. Scoping:
-`thoughts/shared/research/2026-09-01_activity-overview-what-users-are-doing.md`.
-
-**QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
-files at all today. 891 files, 85 distinct contents: express.e resolves each
-screen type from ONE directory with NO fallback, so the duplicates are
-correct, and `SCREENS` (a per-node/per-conference tooltype) is its own answer
-to sharing. **1:1 in the read path, better in the write path.** Also logs a
-live DEVIATION - this port invents a `Screens (Fallback)` express.e does not
-have. Scoping, read off the E sources:
-`thoughts/shared/research/2026-09-01_screen-file-manager.md`.
-
-**UNMERGED AND WORTH RESCUING: `feat/door-themes`**, 8 commits that never
-landed - the theme mechanism, four themes, a picker so a theme is chosen
-without SQL, hex colour tags in blessed, eight glitch kinds, an animated
-masthead. Its worktree had uncommitted changes when this was written, so it
-belongs to whoever was in it; do not merge it out from under them. Every other
-merged branch was deleted on 2026-09-01, local and remote, so what is left on
-the remote is `main`, this, and `feat/installed-door-link`.
-
-**Screen parity: three of four closed.** AWAITSCREEN, BBSTITLE and
-SCREEN_BULL now resolve where express.e reads them; a GLOBAL screen is read
-from the board ROOT, not `Screens/` (express.e:6549 - seven screens ride on
-that). Left: NODE_BULL, 0 of 41 - express.e wants `nodeScreenDir + 'BULL'`
-and 39 nodes hold `Screens/NODE_BULL.TXT`, a name NOTHING reads, so those
-nodes have no node bulletin anywhere today. Moving them ENABLES a second
-logon bulletin - new behaviour, the sysop's call. The invented
-`Screens (Fallback)` STAYS until that is settled.
-
-**Measure with the extensions the loader accepts.** Two measurements were
-wrong today the same way; `docker logs | grep loadScreenFile` prints the
-search locations and the file it settled on, and is what caught it. `.SEQ`
-is this project's C64 PETSCII, not Amiga data - it does not render right yet
-(known, deferred).
-
-**The entrypoint syncs almost nothing** - six board `.info` files and
-`Commands/**`. Committing anything under `Node<N>/` or `Conf<N>/` does NOT
-reach the live board; today's screen fixes deployed green and landed nothing
-until copied onto the volume by hand. Check the volume, not the workflow.
-
-Also open:
+Nothing queued by the user. Open:
 
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
