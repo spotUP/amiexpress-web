@@ -1,5 +1,39 @@
 # Handoff
 
+## SPRITED now hosts the ANSI editor (2026-09-01, later)
+
+Plan: `thoughts/shared/plans/2026-09-01-sprite-editor-on-the-ansi-editor.md`
+(status implemented; its execution record lists every deviation).
+
+The sprite studio was never wired to the ANSI editor. Plan 3 made the
+widget sprite-capable and merged; the door-side half was deferred to a plan
+nobody wrote, so `edit-screen.ts` kept its own painter and 2c built a
+toolbar and four tools on top of it - a second copy of the sidebar the
+widget already ships. That is closed now.
+
+**On the branch, five commits** (`0f101e133`, `88c5b59e2`, `c2f3a5cd8`,
+`7329c1eb0`, sweep): the widget gained an integer canvas zoom
+(`cellScaleX/Y`) because a 5x2 sprite at one character per cell is a
+smudge; `frameToCanvas`/`canvasToFrame` bridge cell-art's `null` holes to
+the editor's `transparent` cells; and the door now hosts the widget,
+`toolbar.ts` is gone, `edit-doc` lost `setPixel`/`floodFill`/`setCell` and
+gained one whole-frame `setFrame`. SDK 765 -> 776, door 146 -> 152.
+
+**The keyboard changed**, unavoidably: the widget types every printable
+character onto the canvas, so the studio's letter hotkeys could not
+survive. Frame/animation ops are menu-driven with `C-p`/`C-f`/`C-e`/`C-q`;
+a test pins that the studio claims no printable key and none of the
+widget's control keys.
+
+**Measured, not assumed:** the widget's half-block strokes decompile to
+sprite pixels (`ansi-editor-halfblock-sprite-compat.test.ts`). Found while
+proving it: **half-block painting is mouse-only** - `handleDrawKey` has no
+half-block stroke, so a keyboard-only artist gets full blocks. Pre-existing.
+
+WAITING ON THE USER: drive SPRITED (`http://localhost:3001`, sysop, the
+stack is running) and the manual checklist in the plan's Task 7. Nothing
+here is deployed.
+
 ## Arcade doors, the ANSIEditor convergence, and a camera (2026-09-01)
 
 `thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
