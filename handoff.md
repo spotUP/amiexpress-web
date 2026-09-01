@@ -1,48 +1,21 @@
 # Handoff
 
-## SPRITED is a fork of the ANSI editor door (2026-09-01)
+## SPRITED and the arcade doors (2026-09-01) - LANDED
 
-Full record:
 `thoughts/shared/handoffs/2026-09-01_sprite-studio-fork-and-the-responsive-switch.md`
+and `..._arcade-doors-ansi-editor-and-the-camera.md` are the records.
 
-It was built twice the wrong way first - a studio that hosted the editor as
-a widget, which read as two applications bolted together - before becoming
-what the design doc always asked for: a fork of
-`Doors/ansi-editor/index.ts`. ONE full-screen editor, Deluxe Paint shaped:
-its own menu bar, its own sidebar, its own status line, requesters for
-everything else. Frame / Sprite / Zoom / Animation are contributed into the
-EDITOR's bar via the SDK's `extraMenus`. **It opens with the requester, not
-a browser screen.**
+SPRITED is a FORK of `Doors/ansi-editor/index.ts`, not a host of it: one
+full-screen editor, Deluxe Paint shaped, with Frame/Sprite/Zoom/Animation
+contributed into the editor's own bar via the SDK's `extraMenus`. It opens
+with the requester. Hotkeys are all non-printable, because the editor types
+printables onto the canvas.
 
-Hotkeys are all non-printable, because the editor types printables onto the
-canvas: `C-f`/`C-b` frame, `C-e` animation, `C-p` play, `C-o` onion skin,
-`C-g` guide, `C-c`/`C-v` frame clipboard, `Alt+Enter` size, wheel zooms.
+**Responsive is THREE things** and shipping one does nothing: ask the terminal
+to widen (`bbs.enableWideMode()`), follow the resize, restore 80 columns on
+exit. `sdk/utils/terminal-mode.ts` does all three.
 
-**Responsive is THREE things**, and shipping one of them does nothing: ask
-the terminal to widen (`bbs.enableWideMode()` - BBSTerminal starts fixed at
-80x25 and says so in its own source), follow the resize, restore 80 columns
-on exit. `sdk/utils/terminal-mode.ts` does all three; doors supply what
-re-layout means for them.
-
-**8 commits are NOT on main**, two of them other sessions' - check the
-`Claude-Session` trailer before landing. Next work, in order: wire
-grandmaster's width-aware versus layout into its render path (the decision
-is done and tested, the render path is not); floating toolbars in SPRITED
-when wide; roll the size switch out to the other doors (six are 82's);
-Alt+Enter to also toggle browser fullscreen; clean eight stale files off the
-live volume; land and verify.
-
-## Arcade doors and the camera (2026-09-01, earlier) - ALL LANDED
-
-`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
-is the record. Frogger's sprite pass, Pengo on the arcade's real grid with
-the cell-art camera, sprite flipping, and the first ANSI editor convergence
-are all on main and live as of `bd3ff7317`.
-
-Pengo's two later fixes are live too: the wall ring stopped eating 3-15 ice
-blocks a level (it sits OUTSIDE the arcade's 13x15 now), and a block in
-flight is solid, so the penguin no longer rides the block he pushed into a
-Sno-Bee.
+WAITING ON THE USER: SPRITED's manual checklist, which has never been run.
 
 ## READ THIS FIRST
 
@@ -139,56 +112,52 @@ fine.
 
 ## Next
 
-**Activity overview: built** - commands, sentences, door categories, live node
-state in words, and an On-the-board-now panel with idle time. Still
-unreported: which message base, which file area. Additive now.
+**START HERE:** `thoughts/shared/handoffs/2026-09-02_screen-manager-conference-paths-and-the-editor.md`
+is the state - the screen file manager, conference directories, and phase 2 of
+the editor, with what each cost.
 
-**QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
-files today. 891 files, 85 distinct: express.e reads each screen type from ONE
-directory, so the duplicates are correct. Sharing is the `SCREENS` tooltype -
-the node half works now, the conference half (express.e:5053) does not.
-Scoping:
-`thoughts/shared/research/2026-09-01_screen-file-manager.md`.
+**A directory is never derivable from a number on this board.** A node's screen
+directory is its `SCREENS` tooltype (ACP.e:2666-2673); a conference's is
+`LOCATION.n` in ConfConfig.info (express.e:31849). Renumbering moves the
+entries and leaves the directories alone, so `Conf<n>` built from a number
+reads the DELETED conference. Two live outages this session were that mistake.
+Use `web/backend/src/conferences/conference-paths.ts` and
+`web/backend/src/screens/screen-resolution.ts`.
 
-**`feat/door-themes` is superseded** (verified with git, 2026-09-01): its
-non-theme changes are byte-identical to main, its theme lines are the draft
-today's theme work replaced. Deleting it is the sysop's call.
+**LIVE and verified through the loader inside the container:** the invented
+screen fallback is gone; 41 nodes keep their own screens and 215 read
+`Screens/Node/` by tooltype; every conference path reads LOCATION.n, doors
+included (BB_CONFLOCAL, MSGBASE_LOC); the admin has a Screen Files page and
+conference file-area paths that follow the conference.
 
-**LIVE, container `7f42fe3cc`: the invented screen fallback is gone and the
-`SCREENS` tooltype works.** A NODE screen comes from nodeScreenDir alone, and
-nodeScreenDir is the node's `SCREENS` tooltype (ACP.e:2666-2673) before it is
-`Node<N>/`. MAX_NODES stays 255: the live volume is provisioned - 41 nodes
-keep their own screens, 215 point at `Screens/Node/`, seeded once. Node
-Configuration has a Screens Directory field. Verified by driving the loader
-inside the container: nodes 1/40 on their own directories, 41/90/100/200/255
-on the shared set, every node screen at every level, no nulls. Record and
-method: `thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
+**Measure resolution by driving the loader, never by eye** -
+`dev/scripts/probe-screen-resolution.ts` before and after, then diff. 5,865
+lookups here. `dev/scripts/provision-node-screens.ts` gives a node screens; it
+is NOT in the deployed image (`dev/` is not copied), so it has to be put into
+the container to run there.
 
-`dev/scripts/provision-node-screens.ts` is how a node gets screens later (dry
-by default). It is NOT in the deployed image - `dev/` is not copied - so it
-has to be put into the container to run there.
+**Phase 2, the ANSI editor in the browser, is 2 of 6 tasks in.** Plan:
+`docs/superpowers/plans/2026-09-02-screen-manager-phase-2-browser-ansi-editor.md`.
+The SDK core is aliased into the admin bundle from SOURCE, and the base64/CP437
+bridge is done. Colour there is SGR minus 30 - red is 1, not the palette's 4.
 
-**Measure screens with the board's own log** - `docker logs amiexpress-bbs |
-grep loadScreenFile` prints the locations tried and the file chosen. A glob, a
-`head -6` and a case-sensitive `[ -e ]` each lied about this.
+**HOLD OFF on `web/backend/src/handlers/screen.handler.ts`** until session 82
+posts done: their PETSCII Task 9 edits the .seq branches.
 
 Also open:
 
-1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
-   `ENTER` (run) or an uninstall in a shared directory by hand.
-   `Doors/emp_tools` holds two doors and is the interesting case.
+1. **Yours:** nobody has driven the screen manager, or DOORREPO's `T`/`H`/
+   `ENTER`/uninstall, by hand. `Doors/emp_tools` is the interesting case.
 2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
    never happened is a drive against the LIVE board.
-3. Admin tables: DONE. Every page is on `DataTable` except Node
-   Configuration, which keeps `DataGrid` on purpose. The raw `<table>` this
-   used to list was the config-app's GlobalWall page, REMOVED with its route
-   and backend - only the redirect in `legacy-routes.ts` is left, and the
-   merge of `feat/installed-door-link` did not bring it back.
-4. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
-   PURPOSE: the cheap version broke re-sort and its own test caught it, and
-   there is no measured render problem.
-5. `Doors/door-manager/app.ts` is 1480 lines now (was 1971): DoormanLayout,
-   DocView/StripView and the require.cache service getters moved out.
+3. **The release ships THIS board.** `Dockerfile:262-300` copies our `Screens`,
+   `Conf1`-`Conf14` and `Node0`-`Node40` into `/app/default-data`. Needs its
+   own spec.
+4. `Conf<N>.Stats` is still keyed by NUMBER, deliberately - a position, like
+   conferenceAccess. First place to look if conference stats read wrong after
+   the sysop's deletes.
+5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
+   PURPOSE: the cheap version broke re-sort and its own test caught it.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
