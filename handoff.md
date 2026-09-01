@@ -97,21 +97,24 @@ skill. A crunched door needs MORE emulator memory, not less: crunched
 DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
 fine.
 
-## Sprite work (session of 2026-08-31 evening) - READ ON RESUME
+## Sprite work
 
-**Full handoff: `thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`.**
-Live (verified, container d8a0b20dc): cell-art sprite engine, Pengo
-rebuilt full-screen with arcade sprites + sfx + music, sprite studio 2a
-(SPRITED, sysop), watcher port-guard. LOCAL ONLY: plan 2b (studio editing)
-tasks 1-5 of 6 - resume from the SDD ledger at
-`.superpowers/sdd/2026-08-31-sprite-studio-2b-editing/progress.md`
-(Task 5 review pending, then sweep, final review, user checklist, deploy).
-User queue after that: shared 8-way scroller, Frogger sprites, pengo
-levelComplete one-liner - memory `project_arcade_sprite_queue`.
+`thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md` and
+`..._2026-09-01_sprite-studio-2c-and-ansi-editor-investment.md`. Cell-art
+engine, Pengo, sprite studio (SPRITED, sysop). User queue:
+memory `project_arcade_sprite_queue`.
 
 ## Next
 
-Nothing queued by the user. Open:
+**QUEUED BY THE SYSOP: expand the Activity overview** - "it only knows if a
+door is running, I want to see what the users are doing". Six event types
+emitted from seven places; nothing reports the conference, the command, the
+message read or the file area, and `command.handler.ts` sees all of it and
+emits nothing. Widen `BBSEventType` first - the page's three lookup tables are
+keyed by it, so tsc names every site. Scoping, with the emit sites counted:
+`thoughts/shared/research/2026-09-01_activity-overview-what-users-are-doing.md`.
+
+Also open:
 
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
