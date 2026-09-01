@@ -19,7 +19,19 @@ export {
   buildTerminalBuffer,
   XTERM_CONFIG,
 } from './utils/terminal-utils';
-export { keyOverride, type KeyLike } from './utils/key-overrides';
+export {
+  keyOverride,
+  classifyKey,
+  type KeyLike,
+  type TerminalKeyState,
+  type TerminalKeyAction,
+} from './utils/key-overrides';
+export {
+  toggleFullscreen,
+  isFullscreen,
+  type FullscreenDocument,
+  type FullscreenTarget,
+} from './utils/fullscreen';
 
 // Export true-PETSCII (C64 screen-editor emulation) components and utilities
 export { PetsciiMachine, type PetsciiMachineState } from './petscii/petscii-machine';
