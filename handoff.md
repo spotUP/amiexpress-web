@@ -1,63 +1,48 @@
 # Handoff
 
-## SPRITED now hosts the ANSI editor (2026-09-01, later)
+## SPRITED is a fork of the ANSI editor door (2026-09-01)
 
-Plan: `thoughts/shared/plans/2026-09-01-sprite-editor-on-the-ansi-editor.md`
-(status implemented; its execution record lists every deviation).
+Full record:
+`thoughts/shared/handoffs/2026-09-01_sprite-studio-fork-and-the-responsive-switch.md`
 
-The sprite studio was never wired to the ANSI editor. Plan 3 made the
-widget sprite-capable and merged; the door-side half was deferred to a plan
-nobody wrote, so `edit-screen.ts` kept its own painter and 2c built a
-toolbar and four tools on top of it - a second copy of the sidebar the
-widget already ships. That is closed now.
+It was built twice the wrong way first - a studio that hosted the editor as
+a widget, which read as two applications bolted together - before becoming
+what the design doc always asked for: a fork of
+`Doors/ansi-editor/index.ts`. ONE full-screen editor, Deluxe Paint shaped:
+its own menu bar, its own sidebar, its own status line, requesters for
+everything else. Frame / Sprite / Zoom / Animation are contributed into the
+EDITOR's bar via the SDK's `extraMenus`. **It opens with the requester, not
+a browser screen.**
 
-**On the branch, five commits** (`0f101e133`, `88c5b59e2`, `c2f3a5cd8`,
-`7329c1eb0`, sweep): the widget gained an integer canvas zoom
-(`cellScaleX/Y`) because a 5x2 sprite at one character per cell is a
-smudge; `frameToCanvas`/`canvasToFrame` bridge cell-art's `null` holes to
-the editor's `transparent` cells; and the door now hosts the widget,
-`toolbar.ts` is gone, `edit-doc` lost `setPixel`/`floodFill`/`setCell` and
-gained one whole-frame `setFrame`. SDK 765 -> 776, door 146 -> 152.
+Hotkeys are all non-printable, because the editor types printables onto the
+canvas: `C-f`/`C-b` frame, `C-e` animation, `C-p` play, `C-o` onion skin,
+`C-g` guide, `C-c`/`C-v` frame clipboard, `Alt+Enter` size, wheel zooms.
 
-**The keyboard changed**, unavoidably: the widget types every printable
-character onto the canvas, so the studio's letter hotkeys could not
-survive. Frame/animation ops are menu-driven with `C-p`/`C-f`/`C-e`/`C-q`;
-a test pins that the studio claims no printable key and none of the
-widget's control keys.
+**Responsive is THREE things**, and shipping one of them does nothing: ask
+the terminal to widen (`bbs.enableWideMode()` - BBSTerminal starts fixed at
+80x25 and says so in its own source), follow the resize, restore 80 columns
+on exit. `sdk/utils/terminal-mode.ts` does all three; doors supply what
+re-layout means for them.
 
-**Measured, not assumed:** the widget's half-block strokes decompile to
-sprite pixels (`ansi-editor-halfblock-sprite-compat.test.ts`). Found while
-proving it: **half-block painting is mouse-only** - `handleDrawKey` has no
-half-block stroke, so a keyboard-only artist gets full blocks. Pre-existing.
+**8 commits are NOT on main**, two of them other sessions' - check the
+`Claude-Session` trailer before landing. Next work, in order: wire
+grandmaster's width-aware versus layout into its render path (the decision
+is done and tested, the render path is not); floating toolbars in SPRITED
+when wide; roll the size switch out to the other doors (six are 82's);
+Alt+Enter to also toggle browser fullscreen; clean eight stale files off the
+live volume; land and verify.
 
-WAITING ON THE USER: drive SPRITED (`http://localhost:3001`, sysop, the
-stack is running) and the manual checklist in the plan's Task 7. Nothing
-here is deployed.
-
-## Arcade doors, the ANSIEditor convergence, and a camera (2026-09-01)
+## Arcade doors and the camera (2026-09-01, earlier) - ALL LANDED
 
 `thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
-is the state.
+is the record. Frogger's sprite pass, Pengo on the arcade's real grid with
+the cell-art camera, sprite flipping, and the first ANSI editor convergence
+are all on main and live as of `bd3ff7317`.
 
-**On main:** `a2aa1af0d` — the nine ANSIEditor commits only. The SDK had two
-ANSI editors; the blessed widget forked the library, which is why Ctrl+Z did
-nothing while drawing. Now converged: one implementation of each tool, one
-undo, an arbitrary canvas size and a real transparent cell. 706 → 744 tests,
-and the widget shrank. **The live container was never verified** (SSH is
-blocked for the assistant) — do that first, the command is in the archive.
-
-**Branch-only, unpushed:** Frogger's sprite pass (139 tests), Pengo rebuilt
-on the real 13x15 grid with the sixteen arcade mazes (82 tests), the
-cell-art camera, sprite flipping, and plans 2b + 2c.
-
-**The camera** (`sdk/engines/graphics/cell-art/camera.ts`) is the queue's
-item 1, shared: a window onto a world bigger than the terminal, plus
-off-screen markers so it cannot hide the thing about to kill you.
-
-WAITING ON THE USER: verify the live container; the SPRITED manual
-checklist, which has still never been run; deploying everything above; and
-one line added to `.git/hooks/pre-commit`'s exemption list for
-`sdk/engines/ui/blessed/widgets/ansi-editor.ts`.
+Pengo's two later fixes are live too: the wall ring stopped eating 3-15 ice
+blocks a level (it sits OUTSIDE the arcade's 13x15 now), and a block in
+flight is solid, so the penguin no longer rides the block he pushed into a
+Sno-Bee.
 
 ## READ THIS FIRST
 
@@ -135,18 +120,6 @@ Use separate worktrees.
 skill. A crunched door needs MORE emulator memory, not less: crunched
 DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
 fine.
-
-## Sprite work (session of 2026-08-31 evening) - READ ON RESUME
-
-**Full handoff: `thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`.**
-Live (verified, container d8a0b20dc): cell-art sprite engine, Pengo
-rebuilt full-screen with arcade sprites + sfx + music, sprite studio 2a
-(SPRITED, sysop), watcher port-guard. LOCAL ONLY: plan 2b (studio editing)
-tasks 1-5 of 6 - resume from the SDD ledger at
-`.superpowers/sdd/2026-08-31-sprite-studio-2b-editing/progress.md`
-(Task 5 review pending, then sweep, final review, user checklist, deploy).
-User queue after that: shared 8-way scroller, Frogger sprites, pengo
-levelComplete one-liner - memory `project_arcade_sprite_queue`.
 
 ## Next
 
