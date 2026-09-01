@@ -123,6 +123,22 @@ fine.
 is the state - the screen file manager, conference directories, and phase 2 of
 the editor, with what each cost.
 
+**Phase 2 is DONE - the SDK's ANSI editor runs in the admin.** Record:
+`thoughts/shared/handoffs/2026-09-02_browser-ansi-editor-phase-2-complete.md`.
+Nothing about a drawing tool was written twice: the canvas, the ten tools, undo
+and the CP437/SAUCE codec are the DOOR'S, imported from
+`sdk/engines/ui/ansi-editor` SOURCE; the browser adds a renderer and input and
+nothing else. Colour there is SGR minus 30 - red is 1, not the EGA palette's 4.
+Nobody has driven it by hand yet.
+
+**A deleted conference used to come back on every deploy.** The entrypoint
+re-copied any "missing" `Conf<n>` directory and re-seeded any absent
+`Conf<n>.info` from a template shipping Conf1-Conf14, so the live board carried
+fourteen directories and fourteen icons for five conferences - and the screen
+manager listed all fourteen. Seeding now asks ConfConfig.info. Conferences shows
+the directories nothing points at, with a Remove. The nine on the volume were
+backed up to `/root/bbs-backups/dead-conferences-2026-09-02.tgz` before removal.
+
 **A directory is never derivable from a number on this board.** A node's screen
 directory is its `SCREENS` tooltype (ACP.e:2666-2673); a conference's is
 `LOCATION.n` in ConfConfig.info (express.e:31849). Renumbering moves the
