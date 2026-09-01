@@ -125,42 +125,41 @@ Nothing queued by the user. Open:
 5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
-## Sysop's open list (2026-09-01)
+## Sysop's open list (2026-09-01) - five of six done
 
-1. **The HTTP server checkbox does nothing.** `http_enabled` is in the schema
-   (`config.schemas.ts:130`), in the database (DEFAULT 0, which is why it shows
-   unchecked while the server runs) and on the System Configuration page - and
-   NOTHING reads it. The listener at `index.ts:1806` starts regardless.
-   Either gate the listen on it or take the field out; a switch that moves
-   nothing is the same defect class as a door setting nothing reads.
-2. **SMTP still does not send.** It is wired, so this is a diagnosis, not a
-   missing part: `mail-notification.service.ts:137-145` reads `smtp_server`,
-   `smtp_port` and `smtp_username` from the system config and refuses to build
-   a transport when `smtp_server` is empty. Check what the live board has
-   stored, then what the send actually reports - the service merges secrets
-   from a second source (lines 116-117), so the page and the transport can
-   disagree about the password.
-3. **The registration key can go.** AmiExpress is freeware and this port is
-   free, so REGKEY earns nothing. It is a `system_config` column
-   (`database.ts:1575`), a field on the System Configuration page
-   (`SystemConfigPage.tsx:1728`), and it feeds exactly one line -
-   `index.ts:1659`, "Registered to X", which already falls back to the sysop's
-   name. Taking it out means dropping the field and the schema entry and
-   printing the sysop's name; a board that still carries REGKEY in
-   bbsConfig.info keeps working either way, since that is where express.e
-   reads it.
-4. **The Global Wall page can go.** GWALL was uninstalled on 2026-08-31 (its
-   registration named a 68K binary that is not on the board), and
-   `GlobalWallPage.tsx` is the only per-door page in the admin - the thing
-   `door.settings.json` exists to replace. Removing it means dropping the page,
-   its route and its nav entry, and keeping the redirect the merged-screen rule
-   requires (`src/routes/legacy-routes.ts`).
-5. **Configuration Files lists everything at once** - every node's files in the
-   same view as the board's own. It needs grouping (board / nodes / conferences)
-   or a filter before it is usable on a board with 40 nodes.
-6. **Nothing tests that a transfer protocol or a file checker RUNS.** The
-   admin round-trips their .info files and that is all. The corpus harness
-   (`npm run corpus:integration`) is the shape a real test would take.
+Worked through and LIVE, each verified by container sha. Full record:
+`thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
+
+- SMTP sends (`361a49517`). 587 is STARTTLS whatever the SSL box says; the
+  sysop confirmed the test email.
+- The HTTP checkbox switches the web terminal (`042b33c7f`), and nothing
+  else - /admin, /api and /socket.io pass through even when off.
+- REGKEY removed (`e42f6d980`).
+- The Global Wall page removed (`e2d435499`); GWWALL's crossed registration
+  fixed (`bfd396841`).
+- Configuration Files finds one node out of forty (`6d48c4dcb`).
+
+**Still open - the last one:** nothing tests that a transfer protocol or a
+file checker RUNS. The admin round-trips their .info files and that is all.
+The corpus harness (`npm run corpus:integration`) is the shape a real test
+would take.
+
+**A tooltype boolean cannot default to TRUE.** Presence is the whole
+encoding, and switching off REMOVES the key, so absent cannot mean "on" and
+"this file predates the field" at once. Store the NEGATIVE - `HTTP_DISABLED`,
+in `INVERTED_BOOLEAN_TOOLTYPES` - or every existing board reads the flag as
+off on upgrade. A startup migration cannot fix it; it re-adds the key every
+boot after the sysop switches it off.
+
+**A door showing another door's settings is a crossed LOCATION**, not a
+rendering bug: the admin draws the form from the directory the registration
+names. Read `LOCATION` before reading any code. A command name differing from
+the door's own `bbsCommand` is NOT wrong by itself - TC and TCONNECT both
+open the telnet door.
+
+**Removing a registration from the repo does not clear it from a running
+board.** The entrypoint deliberately leaves anything the image stops shipping
+on the volume, so the live board needs its own delete.
 
 ## Gotchas
 
