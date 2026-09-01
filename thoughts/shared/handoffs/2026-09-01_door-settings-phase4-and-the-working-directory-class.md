@@ -89,12 +89,56 @@ production. Both were used as "my own directory":
 | GRANDMASTER | its SQLite database, on the container's ephemeral layer | every deploy would have erased every game |
 | DOORMAN | the file explorer's root, and the backend's AmigaGuide parser | explorer on nothing; every .guide as plain text |
 | GWall (uninstalled) | `BBS_ROOT`, empty in the container | - |
+| RIP browser | `/Users/spot/Code/amiexpress-web/RIPgraphics` | "Directory not found" for every user, 98 files on the volume |
 
 Arkanoid and Super Qix had each already been bitten and grown a private copy of
 the walk, with comments describing this exact loss. Both call the SDK now.
 
 **Nothing was lost.** No `grandmaster.db` existed on the board, so the door had
 never written one there to lose.
+
+**The backend had three of the same, as fallbacks.** The `BBS:` assign and the
+two emulator debug logs resolved to `/Users/spot/Code/amiexpress-web` whenever
+`BBS_DATA_DIR` was absent. They never fired on the board, where it is set - but
+a fallback naming a directory that cannot exist on the machine running it is
+not a fallback. All three resolve from their own location now, and two of the
+three relative depths were wrong when first written, corrected by computing
+them rather than reading them.
+
+**The SDK answers both questions now.** `resolveDoorRoot(__dirname)` for a
+door's own directory, and `resolveBbsRoot(__dirname)` for the board -
+`BBS_DATA_DIR` first, else walking up to the directory holding
+`Commands/BBSCmd`, which is what identifies a board since no door has one.
+
+## Guards left standing
+
+Four, each red-checked by reintroducing the defect:
+
+- `tests/doors/registration-matches-the-door.test.ts` - no TypeScript door
+  registered as 68K.
+- `tests/doors/doors-do-not-use-cwd.test.ts` - no door resolves its own files
+  from `process.cwd()`. Three allowed uses, a sentence each.
+- `tests/no-hardcoded-home-paths.test.ts` - no backend source names anyone's
+  home directory. Two allowed, a sentence each.
+- `web/config-app/src/test/security-endpoints.test.ts` - the admin client stays
+  on the endpoints that read `Access/ACS.<level>.info`, not the database
+  mirror. The four dead client methods on the mirror are gone.
+
+## Coverage that was missing
+
+Three places where the suite was green through a live defect:
+
+- `tests/services/user-database-writes-where-the-board-reads.test.ts` -
+  BBS_DATA_DIR wins over BBS_ROOT, and an appended user grows all three files
+  by their express.e record sizes. Reverting the 2026-08-31 fix fails three of
+  four.
+- `tests/api/user-create-writes-to-disk.test.ts` - the same through the admin
+  API, reading the bytes rather than a mock. It builds its own BBS root AND its
+  own database: the shared one from `tests/setup.ts` is constructed while that
+  file's own imports are still being hoisted, so its manager has already fixed
+  its paths. The same trap as the doors, one layer up in the harness.
+- `sdk/test/door-settings.test.ts` - the door root from a compiled `dist/`, and
+  the BBS root from a door inside it.
 
 ## Registrations
 
@@ -137,7 +181,8 @@ never written one there to lose.
 
 ## Next steps
 
-1. **Sysop test on the board.** BBSLINK -> Door settings, set the codes, run it.
+1. **Sysop test on the board.** Also worth opening the RIP browser, which has
+   never once listed a file here. BBSLINK -> Door settings, set the codes, run it.
    LIVECHAT -> change the default channel, relaunch. Neither has been driven by
    hand.
 2. **The rest of the doors, one per PR.** A door without a manifest is

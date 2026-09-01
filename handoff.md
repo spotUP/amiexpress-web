@@ -30,9 +30,13 @@ Doors declare their own settings (`Doors/<door>/door.settings.json`) and the
 admin renders them in the Edit Door modal. **A door must never resolve its own
 files from `process.cwd()` or bare `__dirname`** - the backend's cwd on the
 board is `/app/web/backend` and `__dirname` is `dist/` in production. Use the
-SDK's `resolveDoorRoot(__dirname)`; a test fails on the pattern
-(`tests/doors/doors-do-not-use-cwd.test.ts`). Six doors were broken by it,
-including a chess database headed for a filesystem every deploy replaces.
+SDK's `resolveDoorRoot(__dirname)` for the door's own directory and
+`resolveBbsRoot(__dirname)` for the board. Two tests fail on the pattern:
+`tests/doors/doors-do-not-use-cwd.test.ts` and
+`tests/no-hardcoded-home-paths.test.ts`. Seven doors were broken by it -
+a chess database headed for a filesystem every deploy replaces, and a RIP
+browser that told every user "Directory not found" while 98 files sat on the
+volume.
 
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
