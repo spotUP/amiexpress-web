@@ -120,31 +120,29 @@ state in words, and an On-the-board-now panel with idle time. Still
 unreported: which message base, which file area. Additive now.
 
 **QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
-files today. 891 files, 85 distinct contents: express.e resolves each screen
-type from ONE directory with NO fallback, so the duplicates are correct.
-Sharing is the `SCREENS` tooltype, which the node half of now works (below);
-the conference half (express.e:5053) does not. Scoping:
+files today. 891 files, 85 distinct: express.e reads each screen type from ONE
+directory, so the duplicates are correct. Sharing is the `SCREENS` tooltype -
+the node half works now, the conference half (express.e:5053) does not.
+Scoping:
 `thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
 **`feat/door-themes` is superseded** (verified with git, 2026-09-01): its
 non-theme changes are byte-identical to main, its theme lines are the draft
 today's theme work replaced. Deleting it is the sysop's call.
 
-**DONE: the invented screen fallback is gone**, measured by driving the loader
-over every screen x node x conference x five security levels: 4,215 lookups,
-zero resolution changes. On `land/screens-fallback-2026-09-01`, **not
-pushed**, plus ten files copied onto the live volume it had been covering:
-`thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
+**LIVE, container `7f42fe3cc`: the invented screen fallback is gone and the
+`SCREENS` tooltype works.** A NODE screen comes from nodeScreenDir alone, and
+nodeScreenDir is the node's `SCREENS` tooltype (ACP.e:2666-2673) before it is
+`Node<N>/`. MAX_NODES stays 255: the live volume is provisioned - 41 nodes
+keep their own screens, 215 point at `Screens/Node/`, seeded once. Node
+Configuration has a Screens Directory field. Verified by driving the loader
+inside the container: nodes 1/40 on their own directories, 41/90/100/200/255
+on the shared set, every node screen at every level, no nulls. Record and
+method: `thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
 
-**MAX_NODES stays 255**, so nodes above 40 got express.e's own mechanism
-instead of a cap: the node's `SCREENS` tooltype (ACP.e:2666-2673), which this
-port ignored, letting many nodes share one screen directory. Node
-Configuration has a Screens Directory field now. **Provision before deploy:**
-
-    npx tsx dev/scripts/provision-node-screens.ts --data-dir /app/data/bbs --apply
-
-Dry by default; seeds `Screens/Node/` and points the 215 nodes with no set of
-their own at it.
+`dev/scripts/provision-node-screens.ts` is how a node gets screens later (dry
+by default). It is NOT in the deployed image - `dev/` is not copied - so it
+has to be put into the container to run there.
 
 **Measure screens with the board's own log** - `docker logs amiexpress-bbs |
 grep loadScreenFile` prints the locations tried and the file chosen. A glob, a
