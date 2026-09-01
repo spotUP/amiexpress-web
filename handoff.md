@@ -99,23 +99,23 @@ fine.
 
 ## Sprite work
 
-`thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md` and
-`..._2026-09-01_sprite-studio-2c-and-ansi-editor-investment.md`. Cell-art
-engine, Pengo, sprite studio (SPRITED, sysop). User queue:
-memory `project_arcade_sprite_queue`.
+`thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`, and
+the 2026-09-01 sprite-studio-2c handoff. Queue: memory
+`project_arcade_sprite_queue`.
 
 ## Next
 
-**Activity overview: largely built** (commands, phrasing, door categories,
-live node state in words, per-user panel). Still unreported as events:
-messages read/posted and file-area browsing. Scoping:
+**Activity overview: largely built.** Still unreported: messages read/posted,
+file-area browsing. Scoping:
 `thoughts/shared/research/2026-09-01_activity-overview-what-users-are-doing.md`.
 
 **QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
-files at all today (ScreenTypesPage is ScreenTypes.info, not the files). 790
-files, 59 Screens dirs, board/node/conference. Do not normalise a filename:
-the security-level variant (MENU250.TXT) and type extension ARE the routing -
-screen-security.util.ts. Scoping:
+files at all today. 891 files, 85 distinct contents: express.e resolves each
+screen type from ONE directory with NO fallback, so the duplicates are
+correct, and `SCREENS` (a per-node/per-conference tooltype) is its own answer
+to sharing. **1:1 in the read path, better in the write path.** Also logs a
+live DEVIATION - this port invents a `Screens (Fallback)` express.e does not
+have. Scoping, read off the E sources:
 `thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
 Also open:
