@@ -18,6 +18,7 @@ Every one deployed and checked against `docker exec amiexpress-bbs cat
 | `e2d435499` | the Global Wall page removed |
 | `bfd396841` | GWWALL was a second registration for the BBSLink wall |
 | `6d48c4dcb` | Configuration Files can find one node out of forty |
+| `bc6cd94b5` | a configured file checker is found, read whole, and runs |
 
 ## 1 - SMTP, and why it never sent
 
@@ -161,9 +162,35 @@ has never read it. Dead code, not the cause.
   Twice this forced a better answer than the one being attempted - the
   `HTTP_DISABLED` inversion exists because the live write was blocked.
 
+## 7 - file checkers, which had never run
+
+Two faults at once in `file-test.util.ts`, the code that runs at upload time.
+It joined express.e's `Fcheck` raw against a volume holding `FCheck`, so on
+Linux it read ENOENT and logged "using built-in checkers only" - resolveDirectory
+exists for exactly this and its docstring names the bug, but only the ADMIN's
+service had been fixed with it. And it read the file with InfoFileParser, which
+splits on NUL bytes: a plain-text .info has none, so the whole file returns as
+ONE entry and the first `=` swallows every tooltype after it. A one-tooltype
+checker survives that by accident, which is why it hid - the board's checkers
+carry `&CHECKER` AND `SOPTIONS`, and the options were eaten.
+
+**Two claims of mine died on contact with a test.** "InfoFileParser cannot read
+a plain-text .info at all" is the codebase's own comment and is too strong; and
+my behavioural test for the case fault PASSES on the broken code, because HFS+
+is case-insensitive - it only bites on Linux. The spelling is pinned at the
+source as well.
+
+**This board's checkers still do not run**: they name Amiga binaries the runner
+correctly refuses on Linux, so uploads fall back to the built-in checkers.
+
+**Nothing "runs" a transfer protocol in this port.** `Protocols/*.info` is read
+only by the admin config service; transfers use the user's protocol string and
+the WebSocket path. That half of the old item has no referent, and inventing a
+test for it would have been theatre.
+
 ## Next
 
-`handoff.md` carries the rest. The last item on the sysop's list is untouched:
-**nothing tests that a transfer protocol or a file checker RUNS** - the admin
-round-trips their `.info` files and that is all. `npm run corpus:integration`
-is the shape a real test would take.
+Nothing left on the sysop's list. Open elsewhere: field-level disk writes so a
+database-side user edit reaches `user.data`; the telnet front end timing out on
+`active-users`; `neo-blessed-showcase/app.ts` at 3702 lines blocking its own
+one-line cwd fix.

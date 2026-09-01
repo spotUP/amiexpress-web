@@ -125,7 +125,7 @@ Nothing queued by the user. Open:
 5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
-## Sysop's open list (2026-09-01) - five of six done
+## Sysop's open list (2026-09-01) - DONE, all six live
 
 Worked through and LIVE, each verified by container sha. Full record:
 `thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
@@ -139,10 +139,21 @@ Worked through and LIVE, each verified by container sha. Full record:
   fixed (`bfd396841`).
 - Configuration Files finds one node out of forty (`6d48c4dcb`).
 
-**Still open - the last one:** nothing tests that a transfer protocol or a
-file checker RUNS. The admin round-trips their .info files and that is all.
-The corpus harness (`npm run corpus:integration`) is the shape a real test
-would take.
+- A configured file checker is found, read whole and RUNS (`bc6cd94b5`).
+  Every check was confirmed by hand on the board except the Configuration
+  Files node search.
+
+**This board's checkers still do not run** - they name Amiga binaries
+(`DOORS:multi-check/...`) that Linux cannot execute, so uploads fall back to
+the built-in JavaScript checkers. One configured through the admin with a real
+command now works. **Nothing "runs" a transfer protocol here** either:
+`Protocols/*.info` is read only by the admin, and transfers use the user's
+protocol string and the WebSocket path. No XPR library to load.
+
+**A case bug cannot be caught by behaviour on a Mac.** HFS+ is
+case-insensitive, so a wrong-case join passes locally and fails only on Linux,
+where the board and CI run. Pin the spelling at the SOURCE too -
+`file-checker-actually-runs.test.ts` does both.
 
 **A tooltype boolean cannot default to TRUE.** Presence is the whole
 encoding, and switching off REMOVES the key, so absent cannot mean "on" and
