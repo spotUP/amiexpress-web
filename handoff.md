@@ -106,13 +106,17 @@ memory `project_arcade_sprite_queue`.
 
 ## Next
 
-**QUEUED BY THE SYSOP: expand the Activity overview** - "it only knows if a
-door is running, I want to see what the users are doing". Six event types
-emitted from seven places; nothing reports the conference, the command, the
-message read or the file area, and `command.handler.ts` sees all of it and
-emits nothing. Widen `BBSEventType` first - the page's three lookup tables are
-keyed by it, so tsc names every site. Scoping, with the emit sites counted:
+**Activity overview: largely built** (commands, phrasing, door categories,
+live node state in words, per-user panel). Still unreported as events:
+messages read/posted and file-area browsing. Scoping:
 `thoughts/shared/research/2026-09-01_activity-overview-what-users-are-doing.md`.
+
+**QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
+files at all today (ScreenTypesPage is ScreenTypes.info, not the files). 790
+files, 59 Screens dirs, board/node/conference. Do not normalise a filename:
+the security-level variant (MENU250.TXT) and type extension ARE the routing -
+screen-security.util.ts. Scoping:
+`thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
 Also open:
 
