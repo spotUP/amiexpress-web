@@ -83,6 +83,46 @@ The rule that keeps both promises:
 - The admin may offer to collapse identical copies onto a shared `SCREENS`
   tooltype, which is express.e's own answer to this problem.
 
+## What the live board actually resolved - measured 2026-09-01
+
+Three screens were reaching callers ONLY through the invented fallback, which
+means a real Amiga would have shown none of them:
+
+| screen | before | after |
+|---|---|---|
+| AWAITSCREEN | 0 of 41 nodes | 41 of 41 - file moved to `Node<N>/` |
+| BBSTITLE | 0 of 41 | 71 of 71 - file copied to `Node<N>/` |
+| SCREEN_BULL | absent at board root | at the root, and the resolver now looks there |
+| NODE_BULL | 0 of 41 | still 0 - see below |
+| LOGON, LOGOFF, JOIN, JOINED, JOINCONF, GUESTLOGON | 41 of 41 | unchanged |
+
+**Two of these measurements were wrong on the first pass, both in the same
+way: matching what was convenient instead of what the loader accepts.**
+
+- `head -6` truncated a directory listing and LOGON looked absent everywhere.
+  The scripted count corrected it.
+- The extension glob matched ANY extension, so `Node<N>/BBSTITLE.SEQ` counted
+  as BBSTITLE being present. It is not: `ScreenTypes.info` on this board
+  declares only `TXT.GR` and `IBM`, so `.SEQ` satisfies nothing for an ANSI
+  caller. What caught it was the board's own screen log -
+  `Found security screen for BBSTITLE at: /app/data/bbs/Screens/BBSTITLE.txt`,
+  the fallback - not the measurement.
+
+Measure with the extensions the loader accepts, and confirm against
+`docker logs ... | grep loadScreenFile`, which prints the search locations and
+the file it settled on.
+
+**`.SEQ` is this project's own addition, for C64 PETSCII, not stray Amiga
+data.** `addPetsciiVariants` tries `.seq`/`.SEQ` BEFORE `.txt`, so adding a
+`.txt` beside it does not shadow it. PETSCII does not render correctly yet -
+known, deferred, and the resolution half is not the problem: petsciiMode is
+set in six places including C64 detection at connect and the telnet server.
+
+**None of these fixes are in the repo.** `sync_tracked` covers six board
+`.info` files and `Commands/**`, so nothing under `Node<N>/` or `Conf<N>/`
+reaches the volume from a commit. They were applied to the volume directly
+and a rebuilt board would need them again. Worth solving properly.
+
 ## DEVIATION: this port invents a fallback
 
 `screen.handler.ts` adds search locations it labels `Screens (Fallback)` and
@@ -90,11 +130,15 @@ The rule that keeps both promises:
 `Screens/` displays on this board and would be MISSING on a real Amiga.
 
 Introduced incidentally in `939530f5d` (a XIM pause/output refactor), not as a
-considered decision. It may already be masking absent per-node files on the
-live board - which would mean removing it breaks screens that currently work,
-so measure before touching it: for each screen the board actually displays,
-check whether it resolves from its express.e directory or only from the
-fallback.
+considered decision. It WAS masking absent per-node files, and three of them are now fixed. The
+one left is NODE_BULL: 39 nodes hold `Node<N>/Screens/NODE_BULL.TXT`, a
+filename NOTHING reads - not express.e, which wants `nodeScreenDir + 'BULL'`,
+and not this port, which maps NODE_BULL -> BULL. Those nodes have no node
+bulletin today, anywhere. Moving those files would ENABLE a second bulletin at
+logon on 39 nodes, which is new behaviour rather than restored parity, so it
+is the sysop's decision and not a mechanical fix.
+
+The fallback can go once that is settled, and not before.
 
 ## Care
 

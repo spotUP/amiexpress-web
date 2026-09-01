@@ -126,18 +126,25 @@ belongs to whoever was in it; do not merge it out from under them. Every other
 merged branch was deleted on 2026-09-01, local and remote, so what is left on
 the remote is `main`, this, and `feat/installed-door-link`.
 
-**Screen parity, half done.** AWAITSCREEN now resolves where express.e reads
-it on all 41 nodes (repo AND volume). NODE_BULL still resolves on 0 of 41:
-express.e wants `Node<N>/BULL.TXT`, the board holds
-`Node<N>/Screens/NODE_BULL.TXT`, a name it never looks for. The invented
-`Screens (Fallback)` STAYS until that is closed - removing it now would break
-the one screen still leaning on it.
+**Screen parity: three of four closed.** AWAITSCREEN, BBSTITLE and
+SCREEN_BULL now resolve where express.e reads them; a GLOBAL screen is read
+from the board ROOT, not `Screens/` (express.e:6549 - seven screens ride on
+that). Left: NODE_BULL, 0 of 41 - express.e wants `nodeScreenDir + 'BULL'`
+and 39 nodes hold `Screens/NODE_BULL.TXT`, a name NOTHING reads, so those
+nodes have no node bulletin anywhere today. Moving them ENABLES a second
+logon bulletin - new behaviour, the sysop's call. The invented
+`Screens (Fallback)` STAYS until that is settled.
 
-**The entrypoint syncs almost nothing.** `sync_tracked` covers six board
-`.info` files and `Commands/**` and nothing else, so committing a file under
-`Node<N>/` or `Conf<N>/` does NOT put it on the live board. The awaitscreen
-fix deployed green and landed nothing until it was copied onto the volume by
-hand. Check the volume, not the workflow.
+**Measure with the extensions the loader accepts.** Two measurements were
+wrong today the same way; `docker logs | grep loadScreenFile` prints the
+search locations and the file it settled on, and is what caught it. `.SEQ`
+is this project's C64 PETSCII, not Amiga data - it does not render right yet
+(known, deferred).
+
+**The entrypoint syncs almost nothing** - six board `.info` files and
+`Commands/**`. Committing anything under `Node<N>/` or `Conf<N>/` does NOT
+reach the live board; today's screen fixes deployed green and landed nothing
+until copied onto the volume by hand. Check the volume, not the workflow.
 
 Also open:
 
