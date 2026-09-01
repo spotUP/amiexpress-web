@@ -70,8 +70,12 @@ work in this tree; coordination is on `thoughts/BOARD.md`.
    delivered it instead. `flow_decode_escape()` + a real native
    `ae_input_pending()`; proven under the harness with L, ESC, ESC; main's
    binary times out on the same script. Not pushed.
-5. **RIP upstream gaps** (RIPtermJS README): filled ovals/pies and button
-   label position slightly off. `1P/1C/1I` icon commands now draw.
+5. ~~**RIP upstream gaps**~~ CLOSED 21:xx, measured not fixed: none of the
+   README's gaps manifest on this board (pixel harness 8/8; all 276
+   button styles are center-oriented; aspect is set). The real residue is
+   RIPscrip 2.0 material in a few `RIPgraphics/` gallery files, guarded
+   by `rip-corpus-coverage.test.ts` (59,524 instructions swept). See
+   `research/2026-09-01_rip-fill-gaps-measured.md`. No vendor change.
 6. ~~**Remaining CRLF phantoms**~~ DONE 19:4x as `8bd9b0a5c` (the last 29,
    all `*.json` under `eol=lf`; the "web/ five" were already gone). Also on
    the branch, not pushed: `c009fd3f4`/`e380dca50`/`554f4b525` (35 backend
