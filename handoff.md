@@ -28,6 +28,25 @@ managers extracted; 1944 lines, tsc clean, size switch in; the door has a
 test runner (`npm test` in `Doors/card-lobby`). **Only the tests have driven
 those paths - none of it has been played.**
 
+## PETSCII overhaul shipped (2026-09-02)
+
+True C64 support, not xterm-with-a-C64-font: `PetsciiMachine` +
+`PetsciiCanvas` (`packages/terminal/src/petscii/`), a KERNAL-accurate 40x25
+screen-code/color-RAM emulator fed raw bytes over the new `petscii-bytes`
+socket event; xterm hides (not destroyed) while it's active. Backend:
+screen-code conversion, reverse video, VIC-II truecolor palettes
+(`c64-palette.ts`), a real-C64 output path (`petscii.util.ts`). Detection
+ladder, strongest first: `TELNET_PETSCII_PORT` dedicated port (C64 from byte
+one) > TTYPE > DEL-probe on first keypress (`$14`/`$C1`-`$DA` vs ASCII, at
+connect and at the graphics prompt) > NAWS 40x25 (hint only). Docs:
+`ARCHITECTURE.md`, `CONFIGURATION.md` section 5, closure table in
+`thoughts/shared/research/2026-09-01_petscii-audit.md`.
+**Not done - sysop follow-up:** `TELNET_PETSCII_PORT` has no compose port
+mapping or `ufw` rule yet, unreachable from outside the container. **Known
+gaps, by design:** `writePetsciiLine(Buffer)` still uses the old PUA/xterm
+path; real-C64 cursor/F-keys are dropped by the input converter; canvas
+needs a click to focus; PETSCII screens bypass MCI/`~SP`.
+
 ## The size switch and the editors (2026-09-02)
 
 `thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
@@ -184,6 +203,9 @@ Also open:
    like, offered as a place a board's files can live.
 8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
    game, and deleting a table have never worked at all.
+
+The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
+2026-09-02 - no more hold-off needed there.
 
 ## Gotchas
 
