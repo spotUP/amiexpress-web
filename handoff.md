@@ -24,6 +24,16 @@ captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
 is written down in that handoff, including the log-parsing trap that
 manufactures a convincing fake reproduction.
 
+**Door settings, and doors that asked the wrong directory (2026-09-01):**
+`thoughts/shared/handoffs/2026-09-01_door-settings-phase4-and-the-working-directory-class.md`.
+Doors declare their own settings (`Doors/<door>/door.settings.json`) and the
+admin renders them in the Edit Door modal. **A door must never resolve its own
+files from `process.cwd()` or bare `__dirname`** - the backend's cwd on the
+board is `/app/web/backend` and `__dirname` is `dist/` in production. Use the
+SDK's `resolveDoorRoot(__dirname)`; a test fails on the pattern
+(`tests/doors/doors-do-not-use-cwd.test.ts`). Six doors were broken by it,
+including a chess database headed for a filesystem every deploy replaces.
+
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
 is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
