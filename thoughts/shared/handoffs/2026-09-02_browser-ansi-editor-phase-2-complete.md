@@ -159,9 +159,12 @@ was checked against the running container. `docker exec amiexpress-bbs cat
 ## Landing note
 
 `handoff.md` at the root was rewritten wholesale by another session after this
-branch edited it, so the root file WILL conflict on a cherry-pick. Take main's
-version and re-apply these two paragraphs (phase 2 done, and the security-level
-work) rather than resolving it hunk by hunk.
+branch edited it, so the root file WILL conflict on a cherry-pick. **Never take
+this branch's copy.** Whatever `handoff.md` is on disk when you land - session
+82's PETSCII section is going into it, and others may follow - keep it as it
+stands and re-apply just two paragraphs on top: phase 2 is done, and the
+security-level work. Then check the 10 KB cap, because everyone is adding to
+the same file.
 
 ## Other sessions
 
