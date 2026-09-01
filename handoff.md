@@ -1,63 +1,24 @@
 # Handoff
 
-## SPRITED now hosts the ANSI editor (2026-09-01, later)
+## SPRITED now hosts the ANSI editor (2026-09-01)
 
-Plan: `thoughts/shared/plans/2026-09-01-sprite-editor-on-the-ansi-editor.md`
-(status implemented; its execution record lists every deviation).
-
-The sprite studio was never wired to the ANSI editor. Plan 3 made the
-widget sprite-capable and merged; the door-side half was deferred to a plan
-nobody wrote, so `edit-screen.ts` kept its own painter and 2c built a
-toolbar and four tools on top of it - a second copy of the sidebar the
-widget already ships. That is closed now.
-
-**On the branch, five commits** (`0f101e133`, `88c5b59e2`, `c2f3a5cd8`,
-`7329c1eb0`, sweep): the widget gained an integer canvas zoom
-(`cellScaleX/Y`) because a 5x2 sprite at one character per cell is a
-smudge; `frameToCanvas`/`canvasToFrame` bridge cell-art's `null` holes to
-the editor's `transparent` cells; and the door now hosts the widget,
-`toolbar.ts` is gone, `edit-doc` lost `setPixel`/`floodFill`/`setCell` and
-gained one whole-frame `setFrame`. SDK 765 -> 776, door 146 -> 152.
-
-**The keyboard changed**, unavoidably: the widget types every printable
-character onto the canvas, so the studio's letter hotkeys could not
-survive. Frame/animation ops are menu-driven with `C-p`/`C-f`/`C-e`/`C-q`;
-a test pins that the studio claims no printable key and none of the
-widget's control keys.
-
-**Measured, not assumed:** the widget's half-block strokes decompile to
-sprite pixels (`ansi-editor-halfblock-sprite-compat.test.ts`). Found while
-proving it: **half-block painting is mouse-only** - `handleDrawKey` has no
-half-block stroke, so a keyboard-only artist gets full blocks. Pre-existing.
-
-WAITING ON THE USER: drive SPRITED (`http://localhost:3001`, sysop, the
-stack is running) and the manual checklist in the plan's Task 7. Nothing
-here is deployed.
+Plan and full execution record:
+`thoughts/shared/plans/2026-09-01-sprite-editor-on-the-ansi-editor.md`.
+The studio's own painter, its toolbar and its pixel ops are gone; the SDK
+widget owns the canvas, full-screen, and the door keeps frames, animations
+and saving. **Open `e` from the browser, not Enter.** The widget types every
+printable character onto the canvas, so the studio's hotkeys are Ctrl-only
+(C-p/C-f frame, C-e animation, C-q close) and everything else is menu-driven.
+**Never had a human pass:** the manual checklist in that plan's Task 7, and
+half-block painting is mouse-only (handleDrawKey has no half-block stroke -
+pre-existing, out of scope, measured).
 
 ## Arcade doors, the ANSIEditor convergence, and a camera (2026-09-01)
 
-`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
-is the state.
-
-**On main:** `a2aa1af0d` — the nine ANSIEditor commits only. The SDK had two
-ANSI editors; the blessed widget forked the library, which is why Ctrl+Z did
-nothing while drawing. Now converged: one implementation of each tool, one
-undo, an arbitrary canvas size and a real transparent cell. 706 → 744 tests,
-and the widget shrank. **The live container was never verified** (SSH is
-blocked for the assistant) — do that first, the command is in the archive.
-
-**Branch-only, unpushed:** Frogger's sprite pass (139 tests), Pengo rebuilt
-on the real 13x15 grid with the sixteen arcade mazes (82 tests), the
-cell-art camera, sprite flipping, and plans 2b + 2c.
-
-**The camera** (`sdk/engines/graphics/cell-art/camera.ts`) is the queue's
-item 1, shared: a window onto a world bigger than the terminal, plus
-off-screen markers so it cannot hide the thing about to kill you.
-
-WAITING ON THE USER: verify the live container; the SPRITED manual
-checklist, which has still never been run; deploying everything above; and
-one line added to `.git/hooks/pre-commit`'s exemption list for
-`sdk/engines/ui/blessed/widgets/ansi-editor.ts`.
+Landed on main in the merge below; the full record is
+`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`.
+Frogger's sprite pass, Pengo on the arcade grid with the camera, sprite
+flipping, and studio plans 2b + 2c.
 
 ## READ THIS FIRST
 
@@ -83,6 +44,23 @@ captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
 is written down in that handoff, including the log-parsing trap that
 manufactures a convincing fake reproduction.
 
+**Start here for 2026-09-01:** the three handoffs of that date -
+`..._door-settings-admin-and-the-two-store-class.md`,
+`..._sysop-list-smtp-to-config-files.md`, and
+`..._activity-feed-screen-parity-and-the-live-board.md` (latest).
+
+**THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
+type, a door's settings and a password each exist in SQLite AND on disk, and
+the BBS and the admin do not always read the same one. Eight reports in one
+day were all this. Before believing any config change works, check the store
+the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
+the signup prompt read the .info files.
+**A door must never resolve its own files from `process.cwd()` or bare
+`__dirname`** - cwd on the board is `/app/web/backend` and `__dirname` is
+`dist/` in production. Use `resolveDoorRoot(__dirname)` for the door's own
+directory and `resolveBbsRoot(__dirname)` for the board. Two tests fail on the
+pattern: `tests/doors/doors-do-not-use-cwd.test.ts` and
+`tests/no-hardcoded-home-paths.test.ts`.
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
 is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
@@ -103,9 +81,8 @@ reference implementation. Do not delete `Doors/door-manager`.
 ## Live
 
 `https://bbs.uprough.net`, door server `https://doors.uprough.net` (SEPARATE
-repo and deploy: `/Users/spot/Code/amiexpress-doorserver`). Host
-`root@89.167.21.154`, key `~/.ssh/hetzner_deploy`, port 22.
-`BBS_DATA_DIR=/app/data/bbs` - not `/app`, a bare skeleton. Backend on 3001.
+repo: `/Users/spot/Code/amiexpress-doorserver`). Host `root@89.167.21.154`,
+key `~/.ssh/hetzner_deploy`. `BBS_DATA_DIR=/app/data/bbs`. Backend on 3001.
 
 Push to `main` auto-deploys; **then check it** -
 `docker exec amiexpress-bbs cat /app/.git-sha`. Green CI has lied. A deploy
@@ -136,20 +113,46 @@ skill. A crunched door needs MORE emulator memory, not less: crunched
 DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
 fine.
 
-## Sprite work (session of 2026-08-31 evening) - READ ON RESUME
-
-**Full handoff: `thoughts/shared/handoffs/2026-08-31_sprite-engine-studio-and-pengo.md`.**
-Live (verified, container d8a0b20dc): cell-art sprite engine, Pengo
-rebuilt full-screen with arcade sprites + sfx + music, sprite studio 2a
-(SPRITED, sysop), watcher port-guard. LOCAL ONLY: plan 2b (studio editing)
-tasks 1-5 of 6 - resume from the SDD ledger at
-`.superpowers/sdd/2026-08-31-sprite-studio-2b-editing/progress.md`
-(Task 5 review pending, then sweep, final review, user checklist, deploy).
-User queue after that: shared 8-way scroller, Frogger sprites, pengo
-levelComplete one-liner - memory `project_arcade_sprite_queue`.
-
 ## Next
 
+**Activity overview: built** - commands, sentences, door categories, live node
+state in words, and an On-the-board-now panel with idle time. Still
+unreported: which message base, which file area. Additive now.
+
+**QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
+files at all today. 891 files, 85 distinct contents: express.e resolves each
+screen type from ONE directory with NO fallback, so the duplicates are
+correct, and `SCREENS` (a per-node/per-conference tooltype) is its own answer
+to sharing. **1:1 in the read path, better in the write path.** Also logs a
+live DEVIATION - this port invents a `Screens (Fallback)` express.e does not
+have. Scoping, read off the E sources:
+`thoughts/shared/research/2026-09-01_screen-file-manager.md`.
+
+**`feat/door-themes` is superseded**, verified with git rather than memory
+on 2026-09-01: its non-theme changes are byte-identical to main and its
+theme lines are the draft that today's theme work replaced. Deleting it
+is the sysop's call - git still counts it unmerged.
+
+**NEXT JOB, everything is in place for it: remove the invented screen
+fallback.** `screen.handler.ts` searches `Screens (Fallback)`,
+`Node<N> (Fallback)` and `Node<N>/Screens/` - none of which express.e has.
+Every screen that leaned on them has been moved to where express.e reads it
+(AWAITSCREEN, BBSTITLE, SCREEN_BULL, and the logon100/logon variants), so the
+removal is now safe. What is left under `Node<N>/Screens/` and nowhere else is
+`node_bull.txt` (placeholder, nothing reads the name), `callers.txt` (not a
+screen) and `reqtools`. Remove it, redeploy, then RE-RUN the measurement.
+Full record and the method:
+`thoughts/shared/handoffs/2026-09-01_activity-feed-screen-parity-and-the-live-board.md`.
+
+**Measure screens with the extensions the loader accepts, case-insensitively,
+and confirm with the board's own log** - `docker logs amiexpress-bbs | grep
+loadScreenFile` prints the locations tried and the file it settled on. Three
+of my measurements were wrong today: a truncating `head -6`, a glob that
+counted `BBSTITLE.SEQ`, and a case-sensitive `[ -e ]` on an Amiga volume.
+`.SEQ` is this project's C64 PETSCII - it does not render right yet (known,
+deferred), and resolution is not the problem.
+
+Also open:
 Nothing queued by the user. Open:
 
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
@@ -166,18 +169,13 @@ Nothing queued by the user. Open:
 
 ## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
 
-Full record: `thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
-SMTP, the web-terminal switch, REGKEY, the Global Wall page, Configuration
-Files, file checkers. Two limits that outlive the tasks:
-
-**This board's file checkers still do not run** - they name Amiga binaries
-Linux cannot execute, so uploads use the built-in JavaScript checkers. One
-configured through the admin with a real command now works. **Nothing "runs" a
-transfer protocol here** either: Protocols/*.info is admin-only config.
-
-**A case bug cannot be caught by behaviour on a Mac.** HFS+ is
-case-insensitive, so a wrong-case join passes locally and fails only on Linux,
-where the board and CI run. Pin the spelling at the SOURCE too.
+All six live and verified by sha. Full record:
+`thoughts/shared/handoffs/2026-09-01_sysop-list-smtp-to-config-files.md`.
+Two limits outlive the tasks: this board's file checkers name Amiga
+binaries Linux cannot execute (uploads use the JavaScript checkers), and
+nothing here 'runs' a transfer protocol - Protocols/*.info is admin-only
+config. And a case bug cannot be caught on a Mac: HFS+ is
+case-insensitive, so pin the spelling at the source.
 
 ## Gotchas
 
