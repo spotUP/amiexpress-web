@@ -1,10 +1,51 @@
 # Handoff
 
+## SPRITED: menu-driven studio + the ANSIEditor investment (2026-09-01)
+
+`thoughts/shared/handoffs/2026-09-01_sprite-studio-2c-and-ansi-editor-investment.md`
+is the state. Plans 2b and 2c are complete and running in the dev backend,
+unpushed: SPRITED is now menu-driven and mouse-driven, with dockable
+panels, a paint toolbar and modal dialogs. Three SDK fixes went with it —
+hidden containers are now mouse-inert, DockablePanel stopped leaking
+`mousemove` listeners, and a dialog no longer eats the keystroke that
+opened it. Pengo's "game ends after level 1" is fixed.
+
+IN FLIGHT: plan 3 makes the ANSIEditor widget sprite-capable and converges
+it onto the shared library it forked (`thoughts/shared/plans/2026-09-01-ansi-editor-sprite-capable.md`,
+ledger in `.superpowers/sdd/2026-09-01-ansi-editor-sprite-capable/`).
+Task 1 done, Task 2 running.
+
+WAITING ON THE USER: the 2b+2c manual checklist, the deploy (nothing is
+pushed), and one line added to `.git/hooks/pre-commit`'s exemption list for
+`sdk/engines/ui/blessed/widgets/ansi-editor.ts`.
+
 ## READ THIS FIRST
+
+**Door rendering, the deploy that lies, the disk:**
+`thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`
+is the current state.
+
+**The backend used to line-wrap screen paints.** Every door that paints at
+absolute cursor positions was being corrupted whenever one 198-byte XIM
+message ran past the wrap column - a newline pushed into the middle of a
+paint, so the rest of the row started the row below. Fixed by
+`positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`):
+a door that moves the cursor is PAINTING and has no lines to wrap. If a
+door still looks subtly wrong, check it against that.
+
+**Bytes are milliseconds in a 68K door.** ~45ms of emulation per 198-byte
+XIM message, measured. A screen paint's cost is its byte count. Do not send
+a colour already set, and do not pad rows on a screen that was just cleared.
+
+**Debugging a door's rendering: capture, do not guess.** Three wrong
+conclusions in one session ended the moment the door's real traffic was
+captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
+is written down in that handoff, including the log-parsing trap that
+manufactures a convincing fake reproduction.
 
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
-is the current state. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
+is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
 (the morning), `..._session-handoff.md` (admin, finished and deployed).
 
 **A door is its REGISTRATION.** Five live reports in one day were the same
