@@ -113,11 +113,55 @@ lost with the output. If it reappears, capture the whole log, not a grep.
    it is the sysop's, and nothing here has been driven by hand in a browser.
 2. **Land it.** Cherry-pick these five onto a fresh worktree of `origin/main`;
    the branch is already rebased on `2164c4056` and clean.
-3. **The sysop's TODO (2026-09-02):** some security levels still read 20 where
-   they should read 30 at `https://bbs.uprough.net/admin/security`. Not looked
-   at. The ACS files on disk are the truth, not the SQL mirror.
+3. **The sysop's TODO (2026-09-02) is DONE in code, and needs one click on the
+   live board:** see "The security levels" below. Level 30 still has no
+   ACS.30.info on the volume; the page now offers to create it.
 4. Phase 3 owns RIP - a `.rip` screen offers no editor today and says so.
 5. `Conf<N>.Stats` is still keyed by number, deliberately.
+
+## The security levels that read 20 instead of 30
+
+Investigated with `superpowers:systematic-debugging`, and the mapping turned
+out to be correct: this board's users are level 30, `Access/` holds 10, 20, 50
+and 255, and express.e serves a level-30 user out of ACS.20.info - round the
+level down to a multiple of five, then walk down (`findAcsLevel`,
+`AmiExpress-Sources/express.e:3025-3035`). The backend already mirrors that
+exactly, and the in-use counts come from `user.data`, not the SQL mirror.
+
+Three real defects sat on top of a correct mapping, and the sysop named all
+three:
+
+- **The page titled the screen with the FILE.** Clicking "Level 30" opened
+  ACS.20.info and the heading said "Level 20". It now says
+  "Level 30 - edited through ACS.20.info", warns that saving also changes level
+  20 and every other level that file serves, and offers
+  "Create ACS.30.info from ACS.20.info" right there. The create endpoint
+  already existed; nothing pointed at it from where the problem is met.
+- **No level 30 to pick**, because the button row lists files. That is what the
+  create action fixes - and it is one click the sysop has to make on the live
+  board, since a `.info` is a binary Amiga icon copied from the nearest lower
+  level.
+- **Two other pages carried invented level tables.** System Configuration said
+  "20 - New User" and Operator Chat offered 70 and 150. Both now build their
+  lists from the levels API - the files that exist plus the levels users hold -
+  through `security-level-options.ts`, labelled with the truth
+  ("30 - no ACS file, served by ACS.20.info, 30 users"). A value already
+  configured stays selectable so a saved setting cannot vanish.
+
+`acsLevelServing` moved into `acs-level-serving.ts` (no disk in it) so the
+admin can apply express.e's rule in a browser without a second copy of the
+walk.
+
+**SSH to the live host is refused by the harness classifier**, so nothing here
+was checked against the running container. `docker exec amiexpress-bbs cat
+/app/.git-sha` and a look at `Access/` on the volume are the sysop's to run.
+
+## Landing note
+
+`handoff.md` at the root was rewritten wholesale by another session after this
+branch edited it, so the root file WILL conflict on a cherry-pick. Take main's
+version and re-apply these two paragraphs (phase 2 done, and the security-level
+work) rather than resolving it hunk by hunk.
 
 ## Other sessions
 
