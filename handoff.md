@@ -143,6 +143,21 @@ Nothing queued by the user. Open:
    printing the sysop's name; a board that still carries REGKEY in
    bbsConfig.info keeps working either way, since that is where express.e
    reads it.
+4. **The Global Wall page can go.** GWALL was uninstalled on 2026-08-31 (its
+   registration named a 68K binary that is not on the board), and
+   `GlobalWallPage.tsx` is the only per-door page in the admin - the thing
+   `door.settings.json` exists to replace. Removing it means dropping the page,
+   its route and its nav entry, and keeping the redirect the merged-screen rule
+   requires (`src/routes/legacy-routes.ts`).
+5. **Configuration Files lists everything at once** - every node's files in the
+   same view as the board's own. It needs grouping (board / nodes / conferences)
+   or a filter before it is usable on a board with 40 nodes.
+6. **Nothing tests that a transfer protocol or a file checker actually runs.**
+   The admin round-trips their .info files (`Protocols/XprTypes.info`,
+   `FCheck/*.info`) and that is all that is verified. A protocol is a program
+   the board hands a file to, and a file checker is a program it runs over an
+   upload; both are reachable from the corpus harness the doors use
+   (`npm run corpus:integration`), which is the shape a real test would take.
 
 ## Gotchas
 
