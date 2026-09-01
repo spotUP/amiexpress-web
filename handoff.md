@@ -133,24 +133,25 @@ on 2026-09-01: its non-theme changes are byte-identical to main and its
 theme lines are the draft that today's theme work replaced. Deleting it
 is the sysop's call - git still counts it unmerged.
 
-**NEXT JOB, everything is in place for it: remove the invented screen
-fallback.** `screen.handler.ts` searches `Screens (Fallback)`,
-`Node<N> (Fallback)` and `Node<N>/Screens/` - none of which express.e has.
-Every screen that leaned on them has been moved to where express.e reads it
-(AWAITSCREEN, BBSTITLE, SCREEN_BULL, and the logon100/logon variants), so the
-removal is now safe. What is left under `Node<N>/Screens/` and nowhere else is
-`node_bull.txt` (placeholder, nothing reads the name), `callers.txt` (not a
-screen) and `reqtools`. Remove it, redeploy, then RE-RUN the measurement.
-Full record and the method:
-`thoughts/shared/handoffs/2026-09-01_activity-feed-screen-parity-and-the-live-board.md`.
+**DONE: the invented screen fallback is gone**, measured by driving the loader
+itself over every screen x every node and conference x five security levels,
+before and after: 4,215 lookups, zero resolution changes. Two commits on
+`land/screens-fallback-2026-09-01` (worktree `/private/tmp/screens-fallback-wt`),
+**not pushed**, and ten files copied onto the live volume that the fallback had
+been covering. Full record, including the method and the traps:
+`thoughts/shared/handoffs/2026-09-01_screen-fallback-removed.md`.
 
-**Measure screens with the extensions the loader accepts, case-insensitively,
-and confirm with the board's own log** - `docker logs amiexpress-bbs | grep
-loadScreenFile` prints the locations tried and the file it settled on. Three
-of my measurements were wrong today: a truncating `head -6`, a glob that
-counted `BBSTITLE.SEQ`, and a case-sensitive `[ -e ]` on an Amiga volume.
-`.SEQ` is this project's C64 PETSCII - it does not render right yet (known,
-deferred), and resolution is not the problem.
+**BEFORE THAT DEPLOYS: `MAX_NODES`.** The board runs `MAX_NODES=255` with 41
+node directories, so a caller above node 40 now has no screens. Backup is on
+the host; the classifier refuses the write, so it needs a hand:
+
+    ssh -i ~/.ssh/hetzner_deploy root@89.167.21.154 'docker exec amiexpress-bbs sed -i "s/^MAX_NODES=255$/MAX_NODES=40/" /app/data/bbs/bbsConfig.info.txt'
+
+**Measure screens with the board's own log** - `docker logs amiexpress-bbs |
+grep loadScreenFile` prints the locations tried and the file it settled on. A
+glob, a `head -6` and a case-sensitive `[ -e ]` each lied about this. `.SEQ` is
+this project's C64 PETSCII - it does not render right yet (known, deferred),
+and resolution is not the cause.
 
 Also open:
 Nothing queued by the user. Open:
@@ -158,13 +159,18 @@ Nothing queued by the user. Open:
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` are untested live.
-3. `Doors/door-manager/app.ts` is ~1940 lines against the 2000 ceiling; the
-   next feature there needs an extraction first.
-4. Six admin pages still render their own tables instead of
-   `components/ui/DataTable`. Node Configuration deliberately stays on the
-   old `DataGrid`.
-5. `VITE_BYPASS_AUTH` in `App.tsx` should go now that a sysop account exists.
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
+   never happened is a drive against the LIVE board.
+3. `Doors/door-manager/app.ts` is 1971 lines against the 2000 ceiling. The
+   extraction is blocked, not forgotten: 82 claims that door and its commits
+   are unpushed.
+4. Admin tables: on `main` every page is on `DataTable` except Node
+   Configuration, which keeps the old `DataGrid` on purpose. The one raw
+   `<table>` left is in `GlobalWallPage.tsx`, which exists only on
+   `feat/installed-door-link`.
+5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
+   PURPOSE: the cheap version broke re-sort and its own test caught it, and
+   there is no measured render problem.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
 
 ## Sysop's list (2026-09-01) - DONE, all six live and verified by sha
