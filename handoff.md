@@ -120,17 +120,15 @@ state in words, and an On-the-board-now panel with idle time. Still
 unreported: which message base, which file area. Additive now.
 
 **QUEUED BY THE SYSOP: a screen file manager** - the admin cannot touch screen
-files at all today. 891 files, 85 distinct contents: express.e resolves each
-screen type from ONE directory with NO fallback, so the duplicates are
-correct, and `SCREENS` (a per-node/per-conference tooltype) is its own answer
-to sharing. **1:1 in the read path, better in the write path.** Scoping, read
-off the E sources:
+files today. 891 files, 85 distinct contents: express.e resolves each screen
+type from ONE directory with NO fallback, so the duplicates are correct.
+Sharing is the `SCREENS` tooltype, which the node half of now works (below);
+the conference half (express.e:5053) does not. Scoping:
 `thoughts/shared/research/2026-09-01_screen-file-manager.md`.
 
-**`feat/door-themes` is superseded**, verified with git rather than memory
-on 2026-09-01: its non-theme changes are byte-identical to main and its
-theme lines are the draft that today's theme work replaced. Deleting it
-is the sysop's call - git still counts it unmerged.
+**`feat/door-themes` is superseded** (verified with git, 2026-09-01): its
+non-theme changes are byte-identical to main, its theme lines are the draft
+today's theme work replaced. Deleting it is the sysop's call.
 
 **DONE: the invented screen fallback is gone**, measured by driving the loader
 over every screen x node x conference x five security levels: 4,215 lookups,
@@ -150,24 +148,20 @@ their own at it.
 
 **Measure screens with the board's own log** - `docker logs amiexpress-bbs |
 grep loadScreenFile` prints the locations tried and the file chosen. A glob, a
-`head -6` and a case-sensitive `[ -e ]` each lied about this. `.SEQ` is C64
-PETSCII - it does not render right yet (known, deferred), and resolution is
-not the cause.
+`head -6` and a case-sensitive `[ -e ]` each lied about this.
 
 Also open:
-Nothing queued by the user. Open:
 
 1. **Yours:** nobody has driven DOORREPO's `T` (config), `H` (history),
    `ENTER` (run) or an uninstall in a shared directory by hand.
    `Doors/emp_tools` holds two doors and is the interesting case.
 2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
    never happened is a drive against the LIVE board.
-3. Admin tables: DONE on `main`. Every page is on `DataTable` except Node
-   Configuration, which keeps `DataGrid` on purpose. The raw `<table>` that
-   used to be listed here is in the config-app's GlobalWall page, which was
-   REMOVED - page, route and backend all gone, only the redirect in
-   `legacy-routes.ts` is left. It survives on `feat/installed-door-link`
-   because that branch predates the removal. Nothing to migrate.
+3. Admin tables: DONE. Every page is on `DataTable` except Node
+   Configuration, which keeps `DataGrid` on purpose. The raw `<table>` this
+   used to list was the config-app's GlobalWall page, REMOVED with its route
+   and backend - only the redirect in `legacy-routes.ts` is left, and the
+   merge of `feat/installed-door-link` did not bring it back.
 4. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort and its own test caught it, and
    there is no measured render problem.
