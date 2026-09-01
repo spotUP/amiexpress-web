@@ -1,22 +1,28 @@
 # Handoff
 
-## SPRITED: menu-driven studio + the ANSIEditor investment (2026-09-01)
+## Arcade doors, the ANSIEditor convergence, and a camera (2026-09-01)
 
-`thoughts/shared/handoffs/2026-09-01_sprite-studio-2c-and-ansi-editor-investment.md`
-is the state. Plans 2b and 2c are complete and running in the dev backend,
-unpushed: SPRITED is now menu-driven and mouse-driven, with dockable
-panels, a paint toolbar and modal dialogs. Three SDK fixes went with it —
-hidden containers are now mouse-inert, DockablePanel stopped leaking
-`mousemove` listeners, and a dialog no longer eats the keystroke that
-opened it. Pengo's "game ends after level 1" is fixed.
+`thoughts/shared/handoffs/2026-09-01_arcade-doors-ansi-editor-and-the-camera.md`
+is the state.
 
-IN FLIGHT: plan 3 makes the ANSIEditor widget sprite-capable and converges
-it onto the shared library it forked (`thoughts/shared/plans/2026-09-01-ansi-editor-sprite-capable.md`,
-ledger in `.superpowers/sdd/2026-09-01-ansi-editor-sprite-capable/`).
-Task 1 done, Task 2 running.
+**On main:** `a2aa1af0d` — the nine ANSIEditor commits only. The SDK had two
+ANSI editors; the blessed widget forked the library, which is why Ctrl+Z did
+nothing while drawing. Now converged: one implementation of each tool, one
+undo, an arbitrary canvas size and a real transparent cell. 706 → 744 tests,
+and the widget shrank. **The live container was never verified** (SSH is
+blocked for the assistant) — do that first, the command is in the archive.
 
-WAITING ON THE USER: the 2b+2c manual checklist, the deploy (nothing is
-pushed), and one line added to `.git/hooks/pre-commit`'s exemption list for
+**Branch-only, unpushed:** Frogger's sprite pass (139 tests), Pengo rebuilt
+on the real 13x15 grid with the sixteen arcade mazes (82 tests), the
+cell-art camera, sprite flipping, and plans 2b + 2c.
+
+**The camera** (`sdk/engines/graphics/cell-art/camera.ts`) is the queue's
+item 1, shared: a window onto a world bigger than the terminal, plus
+off-screen markers so it cannot hide the thing about to kill you.
+
+WAITING ON THE USER: verify the live container; the SPRITED manual
+checklist, which has still never been run; deploying everything above; and
+one line added to `.git/hooks/pre-commit`'s exemption list for
 `sdk/engines/ui/blessed/widgets/ansi-editor.ts`.
 
 ## READ THIS FIRST
