@@ -49,7 +49,9 @@ resolve `BBSTITLE.SEQ` at all.
 - `sdk/petscii/petscii-input.ts` - `petsciiInputToAscii`, one table for canvas keys and real
   C64 keyboards.
 - `web/backend/src/server/connection-emitter.ts` - one transducer per telnet/SSH session
-  (`petsciiTransducerFor`), plus `flushPendingPetscii` called from `connection.on('data')` in
+  (`petsciiTransducerFor` - deleted 2026-09-02 in `68caab151`; the session's ONE model now
+  comes from `petsciiTerminalModelFor` in `web/backend/src/utils/petscii-session-model.ts`),
+  plus `flushPendingPetscii` called from `connection.on('data')` in
   `web/backend/src/index.ts` (the correct flush boundary - see Learnings).
 - `packages/terminal/src/components/BBSTerminal.tsx` - `ensurePetsciiSession()`, `writeTerm()`
   (the single seam every write must pass through), `startPetsciiDrain()` (baud pacing,
