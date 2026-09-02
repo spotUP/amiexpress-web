@@ -188,6 +188,19 @@ Also open:
 8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
    game, and deleting a table have never worked at all.
 
+**GRANDMASTER, THREE open from the sysop (2026-09-02).** The menu's outer
+border is broken too - its bottom edge floats below the three panels, sides
+not meeting it. The leaderboard is
+laid out for 80 columns inside a wide terminal - the same "lays out once,
+never follows the resize" class CARD LOBBY had. And the match history is
+empty: `gm_matches` has 0 rows while `gm_users`, `gm_leaderboards` and
+`gm_user_stats` have 2 each and the board still shows both players' scores,
+so the LEADERBOARD survived and the HISTORY did not. `data/grandmaster.db`
+is a 4 KB header dated Sep 1 22:10 with a 540 KB uncheckpointed WAL; not
+FORCE_REINIT_DOORS (0), not the dist prune (no prune lines for grandmaster),
+not a second database. Start at what ran at 22:10 and at
+`leaderboard-manager.ts:334`.
+
 ## Gotchas
 
 - **A green API is not a green disk**, and a symbol-free binary is not one
