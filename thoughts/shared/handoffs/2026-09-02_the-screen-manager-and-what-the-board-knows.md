@@ -186,7 +186,19 @@ a new import escapes.
    path, but never silently - show what would be lost and let the sysop place
    it): `thoughts/shared/research/2026-09-02_mci-codes-and-the-upload-that-wipes-them.md`.
 
-8. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
+8. **An index of every MCI code, and a builder that inserts them.** The sysop's
+   ask, planned in
+   `thoughts/shared/plans/2026-09-02-mci-code-catalog-and-inserter.md`.
+   express.e dispatches 98 codes (`processMciCmd`, express.e:5258-5768); this
+   port implements all of them plus `~XC_` and `~XI`; the board uses SIX. The
+   plan is a metadata catalog proved against the running dispatch, an endpoint
+   per argument kind so `~CC_` gets a real door picker, a reference view, and an
+   inserter modelled on the existing SmileyPicker. Two traps it exists to
+   avoid: MCI runs only when the file's first line starts with `~`
+   (screen.handler.ts:1943), and inserting into the middle of art shifts every
+   column right of it.
+
+9. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
    and Node0-40 into `/app/default-data`, so a sysop installing the release is
    seeded with uprough's screens. Still needs its own spec.
 
