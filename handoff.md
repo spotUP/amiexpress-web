@@ -176,7 +176,16 @@ Also open:
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort and its own test caught it.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-7. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
+7. **Survey every TypeScript door for hand-rolled widgets.** CARD LOBBY used
+   SDK widgets but hand-rolled what the SDK already provides - it computed
+   panel geometry instead of using the layout widget, built an opaque black
+   box instead of `Overlay`, and made bars from plain boxes. EVERY defect
+   reported on 2026-09-02 lived in a hand-rolled part: panels that never
+   moved, dialogs that could not be closed, modals on a black screen, stray
+   white borders. The SDK ships `overlay`, `layout`, `status-bar`,
+   `menu-bar`, `confirm-modal`, `doc-modal`, `prompt`, `search-modal`,
+   `panel`, `fkey-bar`. Check each door against that list.
+8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
    game, and deleting a table have never worked at all.
 
 ## Gotchas
