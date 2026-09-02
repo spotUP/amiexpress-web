@@ -81,11 +81,26 @@ Reuse, do not re-implement: `locateMciReferences()`
 (`web/backend/src/screens/mci-references.ts`) is the single parser and its
 header already warns that a second copy is the drift to avoid.
 
-## Open questions for the sysop
+## Decided by the sysop, 2026-09-02
 
-- When the uploaded file DOES contain codes of its own, is that authoritative
-  (drop the old ones) or additive?
-- Should a fan-out upload to many targets carry each target's OWN codes, or one
-  set? Different nodes' copies of a screen carry different `~SS_BBS:Node<n>/...`
-  targets, so per-target is the only correct answer if the codes are
-  scope-specific - `scopeSpecific` on each reference already says which.
+**The upload wins.** If the uploaded file carries ANY MCI code of its own, it is
+the whole truth and none of the replaced file's codes are carried. Nothing is
+merged, nothing is de-duplicated, and a sysop who retypes the codes has exact
+control over the result. The carry happens only when the upload has no codes at
+all - which is the case the ANSI editors actually produce.
+
+**Per target.** A fan-out writes one art file to many paths, and each path keeps
+the codes that were in ITS own old copy: `Node1/LOGON.TXT` keeps
+`~SS_BBS:Node1/BBSTITLE.txt`, `Node7/LOGON.TXT` keeps `Node7`. One set taken
+from the first target would give every node node 1's screen. The old file is
+therefore read once PER TARGET, not once for the upload.
+
+Both decisions are about the same thing: the tool never invents a code and never
+moves one between scopes.
+
+## Still open
+
+- What the dialog shows for the 78 middle-of-file codes. They cannot be placed,
+  so they are lost whatever the rule is; the question is whether the upload
+  refuses outright, or writes and lists them for the sysop to restore in the
+  editor.
