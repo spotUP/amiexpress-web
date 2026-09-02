@@ -99,6 +99,66 @@ Earlier the same day: `0595d0507` (leaderboard measures from the screen),
 only boards that changed: 14.04 ms -> 1.63 ms per frame at 200x60 with 32
 opponents).
 
+## GRANDMASTER over telnet: it draws, it does not play
+
+Reported by the sysop at the end of the session, connecting over telnet
+rather than the web terminal: **the door degrades beautifully - and no input
+reaches it.**
+
+Diagnosed, not guessed. The chain:
+
+1. Arcade doors and GRANDMASTER drive movement from HELD keys, because
+   blessed delivers characters and a held key arrives as the client's own
+   auto-repeat - one character, a ~450 ms gap, then a burst. The door opts in
+   through `DoorInputManager`, which requires `bbs.onKeyDown` and
+   `bbs.onKeyUp` (`sdk/utils/door-input-manager.ts:258`).
+2. Those are fed by socket.io events the BROWSER sends:
+   `socket.on('key-down', ...)` and `socket.on('key-up', ...)`
+   (`web/backend/src/server/socket-handlers.ts:499-536`). A telnet terminal
+   cannot send them - it sends characters, and has no concept of key-up at
+   all.
+3. And the character path is switched OFF while a door is in game mode:
+
+   ```
+   // If game mode is active, skip command handler - key-down events handle input
+   if (session.gameModeEnabled) {
+     return;
+   }
+   ```
+   (`web/backend/src/server/socket-handlers.ts:722-725`)
+
+So a door that calls `enableGameMode()` suppresses the one input path telnet
+HAS, in exchange for one telnet can never provide. Rendering is unaffected,
+which is exactly what the sysop saw.
+
+The telnet/SSH bridge (`web/backend/src/server/connection-emitter.ts`) backs
+synthetic events with a real EventEmitter and routes transport I/O, but it
+has no key-down/key-up source to bridge - there is nothing on the wire to
+build them from except the characters themselves.
+
+**Two ways out, and they are not equivalent:**
+
+- **Minimal and honest:** only suppress the character path when the client
+  actually supplies key events. The suppression is unconditional today;
+  gating it on the session's connection type would restore telnet input to
+  whatever the character stream can express (movement with auto-repeat
+  stutter, which is what these doors did before held keys).
+- **Proper:** synthesise key-down/key-up on the telnet side from the
+  character stream - a key is "down" on the character and "up" after a
+  timeout slightly longer than the terminal's auto-repeat interval. That
+  gives telnet real held-key movement and needs no door changes, since
+  `DoorInputManager` only asks for `bbs.onKeyDown/onKeyUp`. It is a guess at
+  release timing by construction, so it wants a measured repeat interval
+  rather than a hardcoded one.
+
+Neither is written yet. Whoever takes it: verify the premise first by
+connecting over telnet and checking whether `session.gameModeEnabled` is set
+and whether any `key-down` ever arrives - the citations above are read from
+the source, not from a live trace.
+
+This affects every door that calls `enableGameMode()`, not just GRANDMASTER:
+the arcade doors move on held keys too.
+
 ## Learnings
 
 - **A widget renders from its live properties.** Written down once already
@@ -162,9 +222,13 @@ Four agents built the GRANDMASTER features. What made it work:
    level 500. Either the manual or the curve is wrong.
 7. **The fifteen remaining one-row boxes** - bug-tracker, rip-browser,
    grandmaster. The test names the file and the count.
-8. **Never driven by hand:** CARD LOBBY's gamepad paths and end-of-UNO-game;
+8. **Telnet input is dead for every game-mode door** - see the section above.
+   The minimal fix is one condition; the proper one synthesises key-up from a
+   measured auto-repeat interval.
+9. **Never driven by hand:** CARD LOBBY's gamepad paths and end-of-UNO-game;
    the new GRANDMASTER items and rotation systems have tests but nobody has
-   played them.
+   played them. GRANDMASTER over telnet renders correctly - confirmed by the
+   sysop - so only input is in question there.
 
 ## Other notes
 
