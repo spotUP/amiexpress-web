@@ -179,6 +179,22 @@ Also open:
 The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
 2026-09-02 - no more hold-off needed there.
 
+**Survey every TypeScript door for hand-rolled widgets.** CARD LOBBY used SDK
+widgets but hand-rolled what the SDK already provides - it computed panel
+geometry instead of using a layout, built an opaque black Box instead of
+`Overlay`, made bars from plain boxes, and wrote its own text window whose
+escape keys never fired. EVERY defect reported on 2026-09-02 lived in a
+hand-rolled part. The SDK ships `overlay`, `layout`, `status-bar`,
+`menu-bar`, `confirm-modal`, `doc-modal`, `prompt`, `search-modal`, `panel`,
+`fkey-bar` - check each door against that list.
+
+**The Doors/GWall vs Doors/Gwall duplicate blocks rebases.** Git tracks two
+different blobs at `Doors/GWall/dist/index.js` and `Doors/Gwall/dist/index.js`
+- one file on a case-insensitive disk - so one of them always reads as
+modified and `git rebase` refuses to start in any worktree. Needs a decision
+on which name survives; `Commands/BBSCmd/GWALL.info` points at
+`DOORS:GWall/GWall`, and the lowercase path is the one with a package.json.
+
 ## Gotchas
 
 - **A green API is not a green disk**, and a symbol-free binary is not one
