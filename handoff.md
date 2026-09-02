@@ -143,34 +143,36 @@ lowercase path has the package.json.
 
 ## PETSCII + 40 columns
 
-A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and telnet emitter.
-Overlay retired; a C64 terminal is BLACK; only `$02 <colour>` moves background
-and border. `.../handoffs/2026-09-02_petscii-full-canvas.md`.
+A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one `sdk/petscii/`
+transducer, KERNAL oracle inside. Overlay retired; a C64 terminal is BLACK;
+only `$02 <colour>` moves background and border. Nothing below is pushed.
+`.../handoffs/2026-09-02_petscii-full-canvas.md`.
 
-**The board is adapted to 40 columns** (8 tasks, NOT pushed - ONE push;
-Task 1's gate is default-closed): MIN_COLUMNS gate with `[40]`/`[C64]`, SDK
-XXS=40 tier, sixteen narrow tables, screen reflow with an `[80-COLUMN ANSI SCREEN
-- SKIPPED]` token, six adapted doors, effects OFF (wipes, rail, glitch) on
-PETSCII. Two chokes - `wrapForSession` (BBS prose), `wrapDoorTextForSession`
-(`BBSApi.write`) - both identity for any ANSI caller at any width and for
-anything positioning the cursor. A row may use 40 columns, a prompt 39;
-`web/backend/tests/forty-col-sweep.test.ts` sweeps every surface.
-**Commits, limits, C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
+**That model lives at the CHOKE**: ONE transducer per SESSION, fed at both
+transports, so a `.seq` encodes against the cursor, bank and pen the caller
+REALLY has; the render's two taps are gone. Reset at the flip, disposed on
+reconnect. **Walks, cherry-pick order:**
+`.../handoffs/2026-09-03_petscii-oracle-at-the-choke.md`
 
-**FULL MCI runs inside a `.seq`** (16 commits, NOT pushed): first byte `~` gates
-a file into MCI - every `.TXT` code, structural ones included, in document order;
-ungated art stays byte-identical; in a gated file EVERY `0x7E` is a token (`~~`
-escapes). **Logoff on a C64 is DATA:** the 12 `Logoff.seq` say `~SR_` (1..99) but
-only three 80-column `Screens/logoff/00N.logoff.txt` exist; fix = `~3SR_` + a
-40-column `00N.logoff.seq`. **Collapses, semantics, minors, WALK:**
-`.../handoffs/2026-09-02_mci-in-petscii-seq.md`; sysops:
+**The board is adapted to 40 columns** (8 tasks; Task 1's gate is
+default-closed): MIN_COLUMNS gate with `[40]`/`[C64]`, SDK XXS=40 tier, narrow
+tables, screen reflow with an `[80-COLUMN ANSI SCREEN - SKIPPED]` token, six
+adapted doors, effects OFF on PETSCII. Two chokes - `wrapForSession` (BBS
+prose), `wrapDoorTextForSession` (`BBSApi.write`) - both identity for any ANSI
+caller at any width and anything positioning the cursor. A row may use 40
+columns, a prompt 39; `tests/forty-col-sweep.test.ts` sweeps every surface.
+**Limits, C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
+
+**FULL MCI runs inside a `.seq`**: first byte `~` gates a file into MCI - every
+`.TXT` code, structural included, in document order; ungated art stays
+byte-identical; in a gated file EVERY `0x7E` is a token (`~~` escapes).
+**Semantics, WALK:** `.../handoffs/2026-09-02_mci-in-petscii-seq.md`; sysops:
 `Documentation/2-Sysops/CONFIGURATION.md` section 5.
 
-**80-column 68K doors reach a C64 too** (Phase 3, NOT pushed): `WHO`, `S`, `WHAT`
-carry `C64_ADAPT=40`, show `[C64]`, each finished frame reduced to 40 columns
-(`>` marks a shortened column). ANSI bytes untouched. **Seam, limits, Phase 4,
-WALK:** `.../handoffs/2026-09-02_c64-door-adapter-phase3.md`
+**80-column 68K doors reach a C64** (Phase 3): `WHO`, `S`, `WHAT` carry
+`C64_ADAPT=40`, show `[C64]`, each finished frame reduced to 40 columns (`>`
+marks a shortened column); ANSI bytes untouched. **Seam, Phase 4, WALK:**
+`.../handoffs/2026-09-02_c64-door-adapter-phase3.md`
 
 ## Gotchas
 
