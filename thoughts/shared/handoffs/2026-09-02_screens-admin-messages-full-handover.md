@@ -106,9 +106,26 @@ topics above), not a name.
 - 16 screens the sysop deleted are RESTORED (the delete writes a `.backup`).
 - `~CC_ANNLOGON` and `~CC_V-AWAIT` stripped from 46 screens, backups beside
   each. Verified: of 53 backup/original pairs, 46 differ ONLY by those codes.
-- Logoff art CONFIRMED working by the sysop after the fix ("the logoff
-  works") - the `~SR_WORK:bbs/Screens/logoff/logoff` pool resolves and the
-  index now reports it read, 8 readers.
+### Verified on the live board by the sysop, not just by tests
+
+- **The gallery no longer freezes.** `/admin/screens?tab=gallery` opens and
+  scrolls. It took TWO fixes: thumbnails drawn at thumbnail size instead of a
+  full editor canvas shrunk by CSS (`ec3837ebd`), and truncation of the source
+  BYTES before the parser rather than the canvas after it (`87b67783c`) -
+  needed because a 992,732-line `68klog.txt` was indexed as drawable art.
+- **Thumbnails in every tab, art-only by default.** Node/Conference/Board tabs
+  each show the art beside the row, and the page opens on ~400 files of art
+  instead of 669, with the plumbing one checkbox away.
+- **The BBS and the admin now render the same file the same way.** Two
+  independent bugs: a SAUCE record was taken to MEAN CP437 while its font
+  field said `Amiga Topaz 1+` (Latin-1), and the paced writers cut UTF-8 at a
+  byte budget instead of a character boundary.
+- Logoff art CONFIRMED working after the fix ("the logoff works") - the
+  `~SR_WORK:bbs/Screens/logoff/logoff` pool resolves and the index now reports
+  it read, 8 readers.
+- NOT yet confirmed by the sysop: the health page (Auto-Fix repairing the
+  escape-byte screens, and the new "door is not installed" findings). Worth
+  asking first thing.
 - Dead MCI references: **1** - `~SS_R_WORK:bbs/Screens/logoff/logoff`, an
   obsolete Sanctuary-inherited typo the sysop said to leave.
 - `68klog.txt` (992,732 lines) removed from the board at the sysop's request,
