@@ -30,22 +30,12 @@ those paths - none of it has been played.**
 
 ## PETSCII overhaul shipped (2026-09-02)
 
-True C64 support, not xterm-with-a-C64-font: `PetsciiMachine` +
-`PetsciiCanvas` (`packages/terminal/src/petscii/`), a KERNAL-accurate 40x25
-screen-code/color-RAM emulator fed raw bytes over the new `petscii-bytes`
-socket event; xterm hides (not destroyed) while it's active. Backend:
-screen-code conversion, reverse video, VIC-II truecolor palettes
-(`c64-palette.ts`), a real-C64 output path (`petscii.util.ts`). Detection
-ladder, strongest first: `TELNET_PETSCII_PORT` dedicated port (C64 from byte
-one) > TTYPE > DEL-probe on first keypress (`$14`/`$C1`-`$DA` vs ASCII, at
-connect and at the graphics prompt) > NAWS 40x25 (hint only). Docs:
-`ARCHITECTURE.md`, `CONFIGURATION.md` section 5, closure table in
-`thoughts/shared/research/2026-09-01_petscii-audit.md`.
-**Not done - sysop follow-up:** `TELNET_PETSCII_PORT` has no compose port
-mapping or `ufw` rule yet, unreachable from outside the container. **Known
-gaps, by design:** `writePetsciiLine(Buffer)` still uses the old PUA/xterm
-path; real-C64 cursor/F-keys are dropped by the input converter; canvas
-needs a click to focus; PETSCII screens bypass MCI/`~SP`.
+True C64 support: `PetsciiMachine` + `PetsciiCanvas` (`packages/terminal/src/petscii/`)
+fed raw bytes over `petscii-bytes`; detection ladder = `TELNET_PETSCII_PORT` >
+TTYPE > DEL-probe > NAWS. Read `Documentation/2-Sysops/CONFIGURATION.md` s.5 and the
+closure table in `thoughts/shared/research/2026-09-01_petscii-audit.md`. **Open:**
+port has no compose/ufw exposure; login/menus still render on xterm (PetMe64 font)
+until the full-canvas plan `thoughts/shared/plans/2026-09-02-petscii-full-canvas.md`.
 
 ## The size switch and the editors (2026-09-02)
 
@@ -155,26 +145,8 @@ and the CP437/SAUCE codec are the DOOR'S, imported from
 `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a renderer and input and
 nothing else. Colour there is SGR minus 30 - red is 1, not the EGA palette's 4.
 
-**A deleted conference used to come back on every deploy.** The entrypoint
-re-copied any "missing" `Conf<n>` directory and re-seeded any absent
-`Conf<n>.info` from a template shipping Conf1-Conf14, so the live board carried
-fourteen directories and fourteen icons for five conferences - and the screen
-manager listed all fourteen. Seeding now asks ConfConfig.info. Conferences shows
-the directories nothing points at, with a Remove. The nine on the volume were
-backed up to `/root/bbs-backups/dead-conferences-2026-09-02.tgz` before removal.
-
-**A directory is never derivable from a number on this board.** A node's screen
-directory is its `SCREENS` tooltype (ACP.e:2666-2673); a conference's is
-`LOCATION.n` (express.e:31849). Renumbering moves the entries and leaves the
-directories alone, so `Conf<n>` from a number reads the DELETED conference -
-three live faults so far. Use `conferences/conference-paths.ts` (its
-`conferenceNumbers()` answers WHICH conferences exist) and
-`screens/screen-resolution.ts`.
-
-**LIVE and verified through the loader in the container:** the invented screen
-fallback is gone; 41 nodes keep their own screens, 215 read `Screens/Node/` by
-tooltype; every conference path reads LOCATION.n, doors included (BB_CONFLOCAL,
-MSGBASE_LOC).
+**Conferences + screen resolution (LOCATION.n / SCREENS tooltype, the deploy
+re-seeding bug, what is LIVE):** all in the START HERE handoff above.
 
 **Measure resolution by driving the loader, never by eye** -
 `dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
