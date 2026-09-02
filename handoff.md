@@ -159,27 +159,30 @@ path has the package.json).
 ## PETSCII + 40 columns
 
 A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds canvas and telnet. C64 terminal is
+(`sdk/petscii/`, KERNAL oracle) feeds canvas and telnet. C64 terminal is
 BLACK; `$02 <colour>` sets background and border.
 `.../handoffs/2026-09-02_petscii-full-canvas.md`.
 
-**The board is adapted to 40 columns** (8 tasks, Task 1's gate default-closed):
+**That model lives at the CHOKE**: ONE transducer per SESSION, fed at both
+transports, so a `.seq` encodes against the cursor, bank and pen the caller
+really has; the taps are gone. Reset at the flip, disposed on
+reconnect. **Walks:**
+`.../handoffs/2026-09-03_petscii-oracle-at-the-choke.md`
+
+**The board is adapted to 40 columns** (8 tasks, gate default-closed):
 MIN_COLUMNS gate with `[40]`/`[C64]`, SDK XXS=40 tier, sixteen narrow tables,
-screen reflow, six adapted doors, effects OFF. `wrapForSession` and
-`wrapDoorTextForSession` stay identity for ANSI and positioned output. Rows 40,
-prompts 39; `tests/forty-col-sweep.test.ts` sweeps all. **80-column 68K doors
-reach a C64 too** - `WHO`, `S`, `WHAT` carry `C64_ADAPT=40`, show `[C64]`, each
-frame reduced to 40 (`>` marks a shortened row), ANSI bytes untouched.
-**Commits, limits, SYSOP'S C64 WALK:** `.../handoffs/`
-`2026-09-02_c64-40col-adaptation.md`, `..._c64-door-adapter-phase3.md`.
+screen reflow, six adapted doors, effects OFF. `wrapForSession` /
+`wrapDoorTextForSession` are identity for ANSI and positioned output; rows 40,
+prompts 39; `forty-col-sweep.test.ts` sweeps all. **80-column 68K doors reach
+a C64** - `WHO`, `RTW`, `S`, `WHAT` carry `C64_ADAPT=40`, show `[C64]`, frames
+reduced to 40 (`>` marks a cut row), ANSI bytes untouched. **Limits, C64
+WALK:** `..._c64-40col-adaptation.md`, `..._c64-door-adapter-phase3.md`.
 
 **FULL MCI runs inside a gated `.seq`** (first byte `~`): same pre-passes,
-tokenizer, dispatch and sentinel walker as `.TXT`, rendered ONCE
-(`petscii-screen.render.ts`) before the transports split; values clip to the
-row. **Logoff on a C64 is DATA:** the 12 `Logoff.seq` say `~SR_` (1..99), only
-three 80-col `Screens/logoff/00N.logoff.txt` exist; fix = `~3SR_` + a 40-col
-`00N.logoff.seq`. WALK + minors: `.../handoffs/2026-09-02_mci-in-petscii-seq.md`;
-sysops: `Documentation/2-Sysops/CONFIGURATION.md` section 5.
+tokenizer, dispatch and walker as `.TXT`, rendered ONCE before the transports
+split; values clip to the row. Logoff: 40-col `Screens/logoff/00N.logoff.seq` shipped (23851e820).
+WALK + minors: `.../handoffs/2026-09-02_mci-in-petscii-seq.md`;
+sysops: `2-Sysops/CONFIGURATION.md` section 5.
 
 ## Gotchas
 
