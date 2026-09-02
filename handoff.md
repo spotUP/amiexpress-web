@@ -32,24 +32,22 @@ Listings and file facts are cached until an mtime moves.
 
 ## Doors and widgets (2026-09-02)
 
-`thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`
-is that session's full record.
+**A ONE-ROW BOX CANNOT HOLD TEXT.** createBox and blessed.box build a Panel,
+Panel borders when the caller names none, and a framed one-row box has no
+interior. Four reports today were this rule; 13 fixed, 15 pinned per file by
+`oneRowBoxesDoNotCarryAFrame` (`dev/tests/door-regressions.test.ts`) - fix
+yours, delete its entry.
 
-**GRANDMASTER's layout fixes LANDED** (`0595d0507`), from a worktree off
-`origin/main`; the shared tree still holds another session's loose grandmaster
-work, which is why a door's pre-commit rebuild may fail on a diff that is not
-yours - check the shared checkout first.
-
-**A deploy failing in under 20s is the host's `git fetch`**, not your
-commit - anonymous HTTPS ref listing breaks under a burst of pushes.
+**A deploy dying in under 20s is the host's `git fetch`**, not your commit.
 Retried since `c41c9aacf`.
 
 **Every defect that day lived in something a door built for itself while the
-SDK already shipped the widget** - what to convert next is in
+SDK already shipped the widget** - survey and what remains:
 `thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`. Two
-gates now stop a door shipping uncompiled (`docker/verify-door-entries.sh`,
-`tests/doors/door-dist-is-shipped.test.ts`), and the deploy backs up door data,
-WAL files included.
+gates stop a door shipping uncompiled (`docker/verify-door-entries.sh`,
+`tests/doors/door-dist-is-shipped.test.ts`); the deploy backs up door data,
+WAL included. Newest record:
+`thoughts/shared/handoffs/2026-09-02_the-one-row-box-that-could-not-hold-text.md`.
 
 ## Earlier on 2026-09-02
 
