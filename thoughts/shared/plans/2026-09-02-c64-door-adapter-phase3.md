@@ -118,7 +118,8 @@ commit before Task 5.
   `DOOR_NEEDS_80_NOTICE`), the gate at the top of `executeDoor` (`door.handler.ts:1638-1659`, before
   `session.currentDoorName`), the `[40]` marker in `formatDoorLine` (`:1300`), and `c8f8ce233`'s
   `initializeDoors` fold onto `Door.minColumns` so the marker and the gate read ONE number off ONE object.
-- Transport: `connection-emitter.ts` (`petsciiTransducerFor`, `flushPendingPetscii`),
+- Transport: `connection-emitter.ts` (`petsciiTransducerFor` - deleted 2026-09-02 in `68caab151`,
+  now `petsciiTerminalModelFor` in `utils/petscii-session-model.ts`; `flushPendingPetscii` keeps its name),
   `server/c64-detected-handler.ts:36` (a SECOND `buildConnectionEmitter` object for the same connection),
   `BBSTerminal.tsx` (`writeTerm`, `enqueuePetscii`, `petsciiDoorActiveRef`, `startPetsciiDrain`).
 - `ModemEmulator.install()` (`utils/modem-emulator.util.ts:263-305`) is the in-place `socket.emit` patch
