@@ -1,59 +1,53 @@
 # Handoff
 
-## The key handler, the volume, CARD LOBBY (2026-09-02, late)
+## START HERE: work finished but NOT committed (2026-09-02)
 
-`thoughts/shared/handoffs/2026-09-02_the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`.
-All verified in the live container.
+`thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`
+is the full record of that session.
 
-**xterm keeps ONE custom key handler** - `attachCustomKeyEventHandler`
-assigns, it does not append - and BBSTerminal registered two, so Shift+Arrow,
-copy/select-all and the Ctrl+Shift+M block had never run. One handler now;
-rules in `classifyKey()` (`packages/terminal/src/utils/key-overrides.ts`).
-**Alt+Enter also fullscreens the browser**, on the KEY because
-`requestFullscreen` needs a user gesture; game mode toggles the window and
-sends NO bytes, or the door toggles twice per press.
+**GRANDMASTER's two layout fixes are written and uncommittable**, saved as
+`thoughts/shared/patches/2026-09-02_grandmaster-layout.patch`: the menu's
+full-screen background stops outlining the whole terminal ("outer border
+broken"), and the leaderboard measures from the screen instead of an 80x24
+composition and re-renders on resize - it had NO resize handler, so Alt+Enter
+left it in the corner. Blocked because GRANDMASTER does not typecheck at HEAD
+(`endMatch`, `lockFlashChar`) and the hook rebuilds a door's dist. Land it
+when that door compiles.
+
+**Every defect reported that day lived in something a door built for itself
+while the SDK already shipped the widget.** Which doors still do it, and
+what to convert next:
+`thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`.
+
+Three doors could not start at all - whip, Gwall, prompt-complete - because
+only ONE door is compiled during the image build. Two gates stop it now:
+`docker/verify-door-entries.sh` (fails the image build) and
+`tests/doors/door-dist-is-shipped.test.ts`. The deploy also backs up door
+data, WAL files included, because a `.db` alone is an empty header.
+
+## Earlier on 2026-09-02
+
+`..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
+and `..._the-size-switch-the-editors-and-a-real-battle-royale.md` in
+`thoughts/shared/handoffs/`. The facts still worth carrying in the head:
+
+**xterm keeps ONE custom key handler** - it assigns, it does not append.
+Every rule lives in `classifyKey()`
+(`packages/terminal/src/utils/key-overrides.ts`); a test counts them.
+**Alt+Enter fullscreens the browser too**, on the KEY.
 
 **The Doors volume deletes** - `prune_image_door_dists()` in
-`docker-entrypoint.sh` mirrors image door `dist/`: image-shipped doors only,
-inside `dist/` only, compiled output whitelisted by extension, never against
-an empty image dist. **The whitelist exists because a dry run against the
-live volume found frogger's and super-qix's `highscores.json` in `dist/`.**
-Dry-run any delete path against the real volume before shipping it.
+`docker-entrypoint.sh`, whitelisted by extension because frogger and
+super-qix keep high scores inside `dist/`. Dry-run any delete path against
+the real volume first.
 
-**CARD LOBBY: `// @ts-nocheck` hid six crash paths** (gamepad X/Y/A/START at
-an UNO table, the R key, the end of every UNO game, deleting a table), and
-`run()` painted the lobby then RETURNED - which is the door's whole lifetime,
-so it exited onto the board menu. Both fixed; dead browser mode removed; four
-managers extracted; 1944 lines, tsc clean, size switch in; the door has a
-test runner (`npm test` in `Doors/card-lobby`). **Only the tests have driven
-those paths - none of it has been played.**
-
-## PETSCII overhaul shipped (2026-09-02)
-
-True C64 support: `PetsciiMachine` + `PetsciiCanvas` (`packages/terminal/src/petscii/`)
-fed raw bytes over `petscii-bytes`; detection ladder = `TELNET_PETSCII_PORT` >
-TTYPE > DEL-probe > NAWS. Read `Documentation/2-Sysops/CONFIGURATION.md` s.5 and the
-closure table in `thoughts/shared/research/2026-09-01_petscii-audit.md`. **Open:**
-port has no compose/ufw exposure; login/menus still render on xterm (PetMe64 font)
-until the full-canvas plan `thoughts/shared/plans/2026-09-02-petscii-full-canvas.md`.
-
-## The size switch and the editors (2026-09-02)
-
-`thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
-- the ANSI editor audit and grandmaster's 99-player battle royale.
-
-**Responsive is FOUR things**: ask the terminal to widen, follow the resize,
-put 80 columns back (`sdk/utils/terminal-mode.ts`), and be able to RECEIVE
-the key that asks. Doors with the switch, all starting FIXED: grandmaster
-(also Settings > DISPLAY), sprite-editor, ansi-editor, livechat (wide only on
-/chat), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
+**`// @ts-nocheck` is a bug report** - one line hid six calls to methods
+that do not exist in CARD LOBBY. Doors with the size switch, all starting
+FIXED: grandmaster, sprite-editor, ansi-editor, livechat (wide on /chat
+only), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
 card-lobby.
 
-**A source pin proves a call exists, not that it runs.** The ANSI editor door
-threw on start for every caller while a test asserted its source mentions
-`createTerminalModeSwitch`. Doors that got it later have tests that START
-them - and CARD LOBBY shows why: it passed every source check while exiting
-the moment it was drawn.
+**A source pin proves a call exists, not that it runs.**
 
 ## READ THIS FIRST
 
