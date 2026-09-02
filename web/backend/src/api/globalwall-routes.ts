@@ -169,7 +169,7 @@ console.error('[GlobalWall API] Error deleting comment:', error);
   router.get('/config', (req: Request, res: Response) => {
     try {
       const baseDir = config.getConfig().dataDir;
-      const configPath = path.join(baseDir, 'doors', 'gwall', 'GWall.cfg');
+      const configPath = path.join(baseDir, 'Doors', 'GWall', 'gwall.cfg');
 
       if (!fs.existsSync(configPath)) {
         // Return defaults
@@ -229,7 +229,7 @@ console.error('[GlobalWall API] Error reading config:', error);
       }
 
       const baseDir = config.getConfig().dataDir;
-      const configDir = path.join(baseDir, 'doors', 'gwall');
+      const configDir = path.join(baseDir, 'Doors', 'GWall');
       const configPath = path.join(configDir, 'GWall.cfg');
 
       // Ensure directory exists

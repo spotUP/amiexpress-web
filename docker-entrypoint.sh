@@ -645,12 +645,23 @@ EOF
         "$BBS_DATA_DIR/Commands/BBSCmd/U.info"
     )
 
-    # GWall was tracked under TWO casings - Doors/GWall and Doors/Gwall - which
-    # are one directory on a case-insensitive disk and two in the image. The
-    # board launches DOORS:GWall/GWall (Commands/BBSCmd/GWALL.info), so the
-    # repo now keeps that one; the lowercase copy on the volume is left over
-    # from the deploys in between and nothing reads it.
-    if [ -d "$BBS_DATA_DIR/Doors/Gwall" ] && [ -d "$BBS_DATA_DIR/Doors/GWall" ]; then
+    # GWALL is the 68K door again.
+    #
+    # It was ported to TypeScript, the port did not work out, and the port's
+    # files were left in Doors/GWall - the directory Commands/BBSCmd/GWALL.info
+    # names for the ORIGINAL door (TYPE=XIM, LOCATION=DOORS:GWall/GWall). The
+    # image now ships the AmigaOS binary there; these are the port's remains,
+    # and the volume sync only ever adds, so they would sit beside it for ever.
+    #
+    # Doors/Gwall is the same story with the other casing: two paths on a
+    # case-sensitive volume, one directory on the Mac the repo is edited on.
+    for leftover in package.json package-lock.json tsconfig.json index.ts dist node_modules; do
+        if [ -e "$BBS_DATA_DIR/Doors/GWall/$leftover" ]; then
+            rm -rf "$BBS_DATA_DIR/Doors/GWall/$leftover"
+            echo "[Entrypoint]   Removed the TypeScript port's $leftover from Doors/GWall"
+        fi
+    done
+    if [ -d "$BBS_DATA_DIR/Doors/Gwall" ]; then
         rm -rf "$BBS_DATA_DIR/Doors/Gwall"
         echo "[Entrypoint]   Removed the duplicate Doors/Gwall (the board runs Doors/GWall)"
     fi
