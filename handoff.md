@@ -1,22 +1,22 @@
 # Handoff
 
-## START HERE: work finished but NOT committed (2026-09-02)
+## START HERE (2026-09-02)
 
 `thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`
-is the full record of that session.
+is that session's full record.
 
-**GRANDMASTER's two layout fixes are written and uncommittable**, saved as
-`thoughts/shared/patches/2026-09-02_grandmaster-layout.patch`: the menu's
-full-screen background stops outlining the whole terminal ("outer border
-broken"), and the leaderboard measures from the screen instead of an 80x24
-composition and re-renders on resize - it had NO resize handler, so Alt+Enter
-left it in the corner. Blocked because GRANDMASTER does not typecheck at HEAD
-(`endMatch`, `lockFlashChar`) and the hook rebuilds a door's dist. Land it
-when that door compiles.
+**GRANDMASTER's layout fixes LANDED** (`0595d0507`), from a worktree off
+`origin/main`; the shared tree still holds another session's loose
+grandmaster work. Backgrounds no longer outline the terminal, and the
+leaderboard measures from the screen and re-renders on resize. Two
+regression tests, each proven to fail on the old code.
+
+**A deploy failing in under 20s is the host's `git fetch`**, not your
+commit - anonymous HTTPS ref listing breaks under a burst of pushes.
+Retried since `c41c9aacf`.
 
 **Every defect reported that day lived in something a door built for itself
-while the SDK already shipped the widget.** Which doors still do it, and
-what to convert next:
+while the SDK already shipped the widget.** What to convert next:
 `thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`.
 
 Three doors could not start at all - whip, Gwall, prompt-complete - because
@@ -33,19 +33,16 @@ and `..._the-size-switch-the-editors-and-a-real-battle-royale.md` in
 
 **xterm keeps ONE custom key handler** - it assigns, it does not append.
 Every rule lives in `classifyKey()`
-(`packages/terminal/src/utils/key-overrides.ts`); a test counts them.
-**Alt+Enter fullscreens the browser too**, on the KEY.
+(`packages/terminal/src/utils/key-overrides.ts`). **Alt+Enter fullscreens
+the browser too**, on the KEY.
 
 **The Doors volume deletes** - `prune_image_door_dists()` in
 `docker-entrypoint.sh`, whitelisted by extension because frogger and
-super-qix keep high scores inside `dist/`. Dry-run any delete path against
-the real volume first.
+super-qix keep high scores inside `dist/`. Dry-run any delete path first.
 
 **`// @ts-nocheck` is a bug report** - one line hid six calls to methods
-that do not exist in CARD LOBBY. Doors with the size switch, all starting
-FIXED: grandmaster, sprite-editor, ansi-editor, livechat (wide on /chat
-only), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
-card-lobby.
+that do not exist in CARD LOBBY. Ten doors carry the size switch, all
+starting FIXED; the archive lists them.
 
 **A source pin proves a call exists, not that it runs.**
 
@@ -95,7 +92,7 @@ reference implementation. Do not delete `Doors/door-manager`.
 
 `https://bbs.uprough.net`, door server `https://doors.uprough.net` (SEPARATE
 repo: `/Users/spot/Code/amiexpress-doorserver`). Host `root@89.167.21.154`,
-key `~/.ssh/hetzner_deploy`. `BBS_DATA_DIR=/app/data/bbs`. Backend on 3001.
+key `~/.ssh/hetzner_deploy`. `BBS_DATA_DIR=/app/data/bbs`, backend on 3001.
 
 Push to `main` auto-deploys; **then check it** -
 `docker exec amiexpress-bbs cat /app/.git-sha`. Green CI has lied. A deploy
@@ -123,8 +120,8 @@ worktrees. A worktree also needs each door's `node_modules` symlinked, or a
 suite importing that door fails to RUN and reports 0 failures.
 
 **Door releases are Shrinkler-packed** (`shrinkler-door-releases` skill). A
-crunched door needs MORE emulator memory: crunched DoorRepo (513 KB) is
-refused by the 500 KB door region.
+crunched door needs MORE emulator memory, and the 500 KB door region refuses
+some of them.
 
 ## Next
 
