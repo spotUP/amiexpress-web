@@ -1,6 +1,6 @@
 ---
 date: 2026-09-03
-topic: Pooled object storage - a board's file areas live across several free-tier buckets
+topic: Pooled object storage - a board's file areas live across several buckets, free tier or paid
 tags: [storage, s3, file-areas, drives, doors, admin, architecture]
 status: draft
 ---
@@ -17,8 +17,10 @@ ceiling and a smaller budget.
 
 There is free object storage worth roughly 130-145 GB spread across providers
 that all speak the S3 API. No single one of them is large enough to matter;
-together they are more storage than most boards will ever need. The board
-should be able to use them as one pool.
+together they are more storage than most boards will ever need. A sysop who
+outgrows that, or who wants a volume that will not vanish with a closed free
+account, buys one - from the same list of providers, through the same API. The
+board should be able to use all of them as one pool.
 
 The admin has a Drive Setup page that would seem to be about exactly this. It
 reaches nothing.
@@ -59,6 +61,8 @@ Settled with the sysop before this document:
    S3 API and treats any one provider as a row in a table.
 7. **Durability:** one copy per file. The sysop carries that risk knowingly,
    and the admin has to make the exposure visible rather than pretend it away.
+   A paid volume is the sane home for anything the board itself produced,
+   which is what the per-area volume-class preference is for.
 
 ## Why not a FUSE mount
 
@@ -93,9 +97,11 @@ A new subsystem, `web/backend/src/storage/`:
   sysop-declared quota, an egress posture, and measured usage, request count
   and egress for the month.
 - **`Placement`** - chooses the volume for a new object. Requires room, skips a
-  volume at its request ceiling, and breaks ties towards free egress. It does
-  not track how often a file is read; nothing moves between volumes after it
-  is written.
+  volume at its request ceiling, fills free volumes before paid ones, and
+  breaks ties towards free egress. A file area may name a preferred volume
+  class, so a sysop who pays for one volume can keep the board's own files
+  there and leave re-downloadable archives on the free tiers. It does not track
+  how often a file is read; nothing moves between volumes after it is written.
 - **`FileCache`** - owns one local directory and decides what is resident. Two
   entry points, deliberately: `ensureLocal(path): Promise<string>` for the
   BBS's async handlers, and `ensureLocalSync(path): string` for the emulator,
@@ -197,8 +203,20 @@ DRIVE.2.ENDPOINT=https://s3.eu-central-003.backblazeb2.com
 DRIVE.2.REGION=eu-central-003
 DRIVE.2.QUOTA=10G
 DRIVE.2.EGRESS=3X
+DRIVE.2.CLASS=FREE
 DRIVE.2.KEYID=00512...
+
+DRIVE.3=s3://uprough-paid
+DRIVE.3.ENDPOINT=https://s3.eu-central-1.wasabisys.com
+DRIVE.3.QUOTA=2T
+DRIVE.3.EGRESS=METERED
+DRIVE.3.CLASS=PAID
+DRIVE.3.RETENTION=90D
+DRIVE.3.KEYID=WAS...
 ```
+
+`CLASS` drives the fill order (free first, then paid) and `RETENTION` is what
+lets the admin warn before a delete that will still be billed.
 
 A local path stays a local path, so a board that configures no bucket is
 unchanged.
@@ -213,9 +231,10 @@ a sysop can keep secrets out of the data dir entirely.
 **Flags store their negative** (`DRIVE.n.NOCACHE`, never `DRIVE.n.CACHE`): a
 tooltype absent on every existing board must read as the safe default.
 
-**Drive Setup, rebuilt.** Each row is a volume - type, used against quota,
-request and egress budget for the month, a degraded badge, a test-connection
-button, and what lives on this volume, which single-copy makes mandatory. The
+**Drive Setup, rebuilt.** Each row is a volume - type, free or paid, used
+against quota, request and egress budget for the month, any minimum-retention
+period, a degraded badge, a test-connection button, and what lives on this
+volume, which single-copy makes mandatory. The
 API never returns a secret: write-only field, masked display, sysop-only routes
 on the existing auth. Design-system components only.
 
@@ -250,9 +269,12 @@ put keeps the local copy and a restart re-uploads it.
 A MinIO-in-docker suite covers real S3 semantics, opt-in behind an env var the
 way the corpus tests are. Everything else runs in the normal glob.
 
-## Free tiers, as of 2026-09-03
+## Volumes a sysop can use, as of 2026-09-03
 
-Sysop-declared in configuration, never hardcoded - these move.
+All sysop-declared in configuration, never hardcoded - these numbers move. The
+adapter is the same for every row: they all speak the S3 API.
+
+### Free tiers
 
 | Provider | Free storage | Egress | Notes |
 |---|---|---|---|
@@ -263,6 +285,33 @@ Sysop-declared in configuration, never hardcoded - these move.
 | Oracle Always Free | 10 GB | 10 GB/mo | never expires, 50k requests/mo |
 | Filebase | 5 GB | free | IPFS/Sia backed |
 | IDrive e2 | 10 GB | - | consumer-leaning |
+
+### Paid volumes
+
+A sysop who outgrows the free tiers, or who wants a volume that will not
+disappear with a closed account, adds a paid one to the same pool. For a BBS
+the deciding number is egress, not storage: a board exists to serve downloads,
+and the storage rate is a rounding error next to a per-GB egress bill.
+
+| Provider | Storage | Egress | Minimum retention | Notes |
+|---|---|---|---|---|
+| Backblaze B2 | ~$6.95/TB/mo | free to 3x stored, then $0.01/GB | none | cheapest with real free egress |
+| Wasabi | ~$7.99/TB/mo | included, capped at stored volume | **90 days** | early delete still bills |
+| Hetzner | ~EUR 5.94/TB/mo | included allowance | none | same datacentre as this board |
+| Cloudflare R2 | ~$15/TB/mo | **zero** | none | best when downloads dominate |
+| Amazon S3 | ~$23/TB/mo | $0.09/GB | 30 days on IA classes | the expensive default |
+| Google Cloud | ~$20/TB/mo | $0.12/GB | class-dependent | |
+
+Two traps worth carrying into the admin UI:
+
+- **Minimum retention is a bill, not a policy.** Deleting a file from Wasabi
+  before 90 days still costs its 90 days. A sysop pruning an old file area on a
+  retention-bound volume should be told so before the delete, not after the
+  invoice.
+- **"Free egress" usually has a fair-use ceiling.** B2's is three times stored
+  volume; Wasabi's is the stored volume itself. The per-volume egress counter
+  from the failure section is what makes that visible before a provider raises
+  it.
 
 Consumer drives (Google Drive, MEGA, pCloud) add capacity but each needs its
 own adapter and OAuth, and their terms are hostile to this use. A later volume
