@@ -121,3 +121,66 @@ Deploys were failing for everyone on the host's anonymous git fetch - five
 retries in 75 seconds, three deploys in a row. The repo is public, so it fits
 rate-limiting of unauthenticated traffic rather than a credential problem; the
 fetch authenticates now, with anonymous kept as the fallback.
+
+---
+
+## Later the same day: the index was lying about readership
+
+The sysop rejected three of this document's own findings, and was right every
+time. Four bugs, all in `screen-index.service.ts`, all making the manager
+answer a different question from the board.
+
+1. **Case.** `findCaseInsensitive` matches the last path component and takes
+   the DIRECTORY as written, so `~SS_BBS:screens/flt.txt` went looking for a
+   `screens/` this board spells `Screens/`. A developer's Mac hides it; the
+   Linux container does not. Six live codes reported dead while the board drew
+   that art perfectly well. Now `amigafs.resolvePath`, which the loader walks.
+2. **Search directory.** A screen is looked for in several places, and the
+   variants feeding `readBy` were listed from the FIRST one. `LOGON24`
+   resolves to `Screens/Logon24hrs.txt` and its readers were counted in the
+   board root, so it came back read by nobody: "Logon24hrs.txt is flagged as
+   not used but it's used when a user runs out of time".
+3. **A redundant `bbs/`.** This board's screens say
+   `~3SR_WORK:bbs/Screens/logoff/logoff`. `WORK:` is the board root, so read
+   literally that is `<root>/bbs/...` and there is no such directory - but the
+   RUNTIME strips that segment twice, in the `~SR_` sentinel
+   (screen.handler:558-562) and again on the `~SS_` path (:1031). A hundred
+   live references called dead: "the logoff ansi logos are also flagged as not
+   in use i doubt that".
+4. **Pool extension.** `numberedPool` demanded an extension after the stem and
+   this board's flt pool is `001.flt`, `002.flt` with none.
+
+Dead MCI references on the live board: four kinds down to two, and both
+survivors are genuinely uninstalled doors (`~CC_ANNLOGON`, `~CC_V-AWAIT`).
+
+**The sysop had deleted 16 live screens on the strength of the flag.** All
+recovered: the delete writes a `.backup` beside the file first, and they were
+in git besides. The earlier node-screen quarantine (fb8f4788d) was untouched
+by any of this and was correct - verified against the board's own icons rather
+than the flag: 53 nodes carry `SCREENS=BBS:Screens/Node/`, 7 have no tooltype
+so read `Node<n>/`, and nothing reads `Node<n>/Screens/` (ACP.e:2666-2673).
+Its 415 entries are R100 renames, not deletions.
+
+### The lesson worth keeping
+
+**Three different resolvers existed for one kind of path** - `~SR_` had its
+own, `~SS_` another, the index a third - in a file whose header promises it
+"resolves through the same two the loader uses, so the index and the board
+cannot drift". The promise was written; the code had drifted anyway.
+
+And twice in one day I put a finding to the user that came from measuring the
+LOCAL tree rather than their board: first the message-header migration (496
+records that existed only in a dev copy; the live answer was zero), then "this
+art never displays". Measure the board the user is looking at.
+
+## Also shipped
+
+- Screen thumbnails cost a thumbnail's worth of pixels (4,096,000 bytes ->
+  320,768), released when scrolled away, and a preview truncates at the BYTES
+  before the parser - this board keeps a 992,732-line `68klog.txt` under its
+  screen directories, since removed at the sysop's request.
+- A SAUCE record names a FONT and does not mean CP437; TFlags is at +105, not
+  the comment count at +104.
+- Paced writers cut UTF-8 on character boundaries, not byte budgets.
+- The screens page shows art by default: 400 files instead of 669, with
+  codes-only, board-written and empty files one checkbox away.
