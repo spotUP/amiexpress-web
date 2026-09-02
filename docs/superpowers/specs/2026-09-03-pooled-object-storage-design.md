@@ -185,8 +185,10 @@ states, and neither may be confused with "no such file".
   the local copy and leaves the entry pending. The cache is never allowed to
   delete the only copy of anything, and a pending journal survives restart so a
   crash mid-upload resumes.
-- **Partial uploads.** Multipart above a threshold, aborted on failure, so a
-  truncated archive never appears complete.
+- **Partial uploads.** A put either completes or leaves no object, so a
+  truncated archive never appears complete. A single put carries up to 5 GB,
+  which is above anything a file area holds; past that the put refuses by name
+  rather than truncating, and multipart is a later addition.
 - **Two nodes on one file.** Last close wins - the semantics the local disk
   gives today. S3 offers no locking to improve on it.
 
