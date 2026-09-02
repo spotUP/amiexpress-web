@@ -136,8 +136,7 @@ come from `sdk/engines/ui/ansi-editor` SOURCE. Colour is SGR minus 30 (red is
 
 Also open:
 
-1. **Yours, and the biggest one:** LOOK at a repaired screen on the board (the
-   sysop has run the ESC-byte repair, nobody has checked the result); then the
+1. **Yours, and the biggest one:** LOOK at a repaired screen (above); then the
    editor round-trip (draw, Save, "this file only"). Also DOORREPO's
    `T`/`H`/`ENTER`/uninstall (`Doors/emp_tools` is the interesting case).
    **GRANDMASTER's whole new backlog is undriven too** - items outside versus,
@@ -157,8 +156,6 @@ Also open:
    the like) for a board's files.
 8. **Drive CARD LOBBY by hand** - four gamepad paths, the end of an UNO game
    and deleting a table have never worked.
-9. **MISSION mode** is the one GRANDMASTER item left, and it is data-driven
-   (`loadMissionData`, 42 objective types) - it needs a plan, not an afternoon.
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk; land by cherry-pick onto an origin/main worktree until
@@ -168,22 +165,24 @@ path has the package.json).
 ## PETSCII + 40 columns (2026-09-02)
 
 A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and telnet emitter.
-Overlay retired; a C64 terminal is BLACK; `$02 <colour>` sets background and
-border. Detail: `.../handoffs/2026-09-02_petscii-full-canvas.md`.
+(`sdk/petscii/`, KERNAL oracle inside) feeds canvas and telnet emitter. Overlay
+retired; a C64 terminal is BLACK; `$02 <colour>` sets background and border.
+`.../handoffs/2026-09-02_petscii-full-canvas.md`.
 
-**The board is adapted to 40 columns** (8 tasks; Task 1's gate is
-default-closed): MIN_COLUMNS gate with `[40]`/`[C64]`, SDK XXS=40 tier,
-sixteen narrow tables, screen reflow, six adapted doors, effects OFF on
-PETSCII. The two chokes `wrapForSession` and `wrapDoorTextForSession` are
-identity for every ANSI caller and for positioned output. Rows use 40 columns,
-prompts 39; `tests/forty-col-sweep.test.ts` sweeps all. **Commits, limits,
-SYSOP'S C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
+**The board is adapted to 40 columns** (8 tasks, Task 1's gate default-closed):
+MIN_COLUMNS gate with `[40]`/`[C64]`, SDK XXS=40 tier, sixteen narrow tables,
+screen reflow, six adapted doors, effects OFF. `wrapForSession` and
+`wrapDoorTextForSession` stay identity for ANSI and positioned output. Rows 40,
+prompts 39; `tests/forty-col-sweep.test.ts` sweeps all. **80-column 68K doors
+reach a C64 too** - `WHO`, `S`, `WHAT` carry `C64_ADAPT=40`, show `[C64]`, each
+frame reduced to 40 (`>` marks a shortened row), ANSI bytes untouched.
+**Commits, limits, SYSOP'S C64 WALK:** `.../handoffs/`
+`2026-09-02_c64-40col-adaptation.md`, `..._c64-door-adapter-phase3.md`.
 
-**80-column 68K doors reach a C64 too** (Phase 3): `WHO`, `S`, `WHAT` carry
-`C64_ADAPT=40`, show `[C64]`, and each finished frame is reduced to 40 columns
-(`>` marks a shortened one). ANSI bytes untouched. **Seam, limits, Phase 4:**
-`.../handoffs/2026-09-02_c64-door-adapter-phase3.md`.
+**FULL MCI runs inside a gated `.seq`** (first byte `~`): same pre-passes,
+tokenizer, dispatch and sentinel walker as `.TXT`, rendered ONCE
+(`petscii-screen.render.ts`) before the transports split; values clip to the
+row. `.../plans/2026-09-02-mci-in-petscii-seq.md`.
 
 ## Gotchas
 
@@ -196,3 +195,5 @@ SYSOP'S C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
 - **A door archive names its command** in `Commands/BBSCmd/<CMD>.info`.
 - **SDK tests import the built `sdk/dist`** - build first.
 - **A merged admin screen keeps a redirect** (`src/routes/legacy-routes.ts`).
+- **Logoff on a C64 is a DATA bug** - 12 `Conf*/Screens/Logoff.seq` ask `~SR_`
+  1..99; only three 80-column `00N.logoff.txt` exist. Fix = `~3SR_` + `.seq`.
