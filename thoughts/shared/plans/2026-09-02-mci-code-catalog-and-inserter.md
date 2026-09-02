@@ -2,7 +2,7 @@
 date: 2026-09-02
 topic: An index of every MCI code, and a builder that inserts them correctly
 tags: [screens, admin, mci, express-e, ansi-editor]
-status: draft
+status: implemented
 ---
 
 # The ask
@@ -238,3 +238,38 @@ Success: the code that comes out of the picker is the code the board runs.
   exporting its key list.
 - It does not solve the middle-of-file placement problem from the upload note.
   The inserter warns; it does not reflow art.
+
+
+# Implemented, 2026-09-02
+
+All four phases are on `land/callers-art`. What the plan did not know when it
+was written, all of it found by a test rather than by reading:
+
+- **Seven codes had the wrong terminator in the first catalog.** `~CL` `~CD`
+  `~ML` `~MD` are recognised only with a PERIOD and `~SM_` `~SX_` `~XC_` only
+  with a DOUBLE pipe. `MciCode.terminator` exists because of that, and
+  `buildMciToken` is the one place that knows it.
+- **"The tilde is gone" proves nothing.** express.e's scanner eats the tilde
+  whether or not the code matched, so the first drift test passed on codes the
+  parser has never heard of. It compares against the fall-through now.
+- **The editor already had an insert bar** - four hardcoded templates in
+  `MCI_INSERTS`, typing `~CC_command|` for a sysop to correct by hand. The
+  picker REPLACED it rather than sitting beside it.
+- **The editor is a fixed grid that overwrites**, so the plan's text-level
+  `insertMciToken`/`withEnablingTilde` helpers had no caller. They were
+  replaced with canvas-level ones the editor actually calls; the text-level
+  versions belong to the upload-carry work, not here.
+- **`express.e:5292` cannot appear in the UI** -
+  `no-source-citations-in-ui.test.ts` forbids it, and the first draft of the
+  "Defined in" column would have failed. It says "AmiExpress" or "This board
+  only" now.
+- The status token is `status-warn`, not `status-warning`.
+
+Verification as run: 109 catalog tests, 9 route tests, 19 view tests, 10 editor
+tests (three of them new and driving the picker through the page), the whole
+config-app suite at 363, the backend screens suites at 283, and both
+typechecks - the backend's four errors are the pre-existing baseline
+(`tone`, `c64-detected-handler`).
+
+Not done, and deliberately: the middle-of-file codes still cannot be placed
+automatically, and nobody has driven the picker by hand on the live board.
