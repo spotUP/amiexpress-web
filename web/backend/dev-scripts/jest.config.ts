@@ -27,5 +27,9 @@ module.exports = {
   // Strip them so jest's resolver finds the underlying `.ts` source.
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    // The PETSCII core is imported by backend source through the package
+    // exports map (sdk/dist). Tests resolve it to the SDK SOURCE instead so a
+    // RED/GREEN cycle never depends on a stale sdk/dist build.
+    '^@amiexpress/bbs-door-sdk/petscii$': '<rootDir>/../../sdk/petscii/index.ts',
   },
 };
