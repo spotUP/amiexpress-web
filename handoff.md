@@ -30,23 +30,20 @@ START them.
 `thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`
 is the current state.
 
-**The backend used to line-wrap screen paints.** Every door that paints at
-absolute cursor positions was being corrupted whenever one 198-byte XIM
-message ran past the wrap column - a newline pushed into the middle of a
-paint, so the rest of the row started the row below. Fixed by
-`positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`):
-a door that moves the cursor is PAINTING and has no lines to wrap. If a
-door still looks subtly wrong, check it against that.
+**The backend used to line-wrap screen paints**, corrupting every door that
+paints at absolute cursor positions. Fixed by `positionsCursorAbsolutely()`
+(`web/backend/src/utils/ascii-art.util.ts`): a door that moves the cursor is
+PAINTING and has no lines to wrap. Check any door that still looks subtly
+wrong against that.
 
 **Bytes are milliseconds in a 68K door.** ~45ms of emulation per 198-byte
 XIM message, measured. A screen paint's cost is its byte count. Do not send
 a colour already set, and do not pad rows on a screen that was just cleared.
 
-**Debugging a door's rendering: capture, do not guess.** Three wrong
-conclusions in one session ended the moment the door's real traffic was
-captured with `XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. The method
-is written down in that handoff, including the log-parsing trap that
-manufactures a convincing fake reproduction.
+**Debugging a door's rendering: capture, do not guess** -
+`XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. Three wrong conclusions in
+one session ended there. The handoff carries the method and the log-parsing
+trap that fakes a convincing reproduction.
 
 **Start here for 2026-09-01:** the three handoffs of that date -
 `..._door-settings-admin-and-the-two-store-class.md`,
@@ -59,25 +56,21 @@ the BBS and the admin do not always read the same one. Eight reports in one
 day were all this. Before believing any config change works, check the store
 the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
 the signup prompt read the .info files.
-**A door must never resolve its own files from `process.cwd()` or bare
-`__dirname`** - cwd on the board is `/app/web/backend` and `__dirname` is
-`dist/` in production. Use `resolveDoorRoot(__dirname)` for the door's own
-directory and `resolveBbsRoot(__dirname)` for the board. Two tests fail on the
-pattern: `tests/doors/doors-do-not-use-cwd.test.ts` and
-`tests/no-hardcoded-home-paths.test.ts`.
+**A door must never resolve its files from `process.cwd()` or bare
+`__dirname`** - use `resolveDoorRoot(__dirname)` and `resolveBbsRoot(__dirname)`.
+Two tests fail on the pattern (`tests/doors/doors-do-not-use-cwd.test.ts`,
+`tests/no-hardcoded-home-paths.test.ts`).
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
 is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
 (the morning), `..._session-handoff.md` (admin, finished and deployed).
 
-**A door is its REGISTRATION.** Five live reports in one day were the same
-defect: the `.info` left behind, or another door's `.info` taken away.
-Before touching any delete/install/list path read
-`web/backend/src/doors/door-registration-paths.ts` and the case table it is
-pinned to, `examples/doorrepo-c/tests/delete-rule-cases.txt`. The same rules
-exist in C (`examples/doorrepo-c/flow.c`) because DOORREPO runs on real
-Amiga boards with no server to ask. **Fix one side, fix the other** - the
-shared table fails until you do.
+**A door is its REGISTRATION** - five live reports in one day were the `.info`
+left behind or another door's taken away. Before any delete/install/list path,
+read `web/backend/src/doors/door-registration-paths.ts` and its case table,
+`examples/doorrepo-c/tests/delete-rule-cases.txt`. The same rules exist in C
+(`examples/doorrepo-c/flow.c`) for real Amiga boards. **Fix one side, fix the
+other** - the shared table fails until you do.
 
 **DOORMAN is kept.** The parity spec's phase E is withdrawn; it is the
 reference implementation. Do not delete `Doors/door-manager`.
@@ -129,7 +122,6 @@ Nothing about a drawing tool was written twice: the canvas, the ten tools, undo
 and the CP437/SAUCE codec are the DOOR'S, imported from
 `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a renderer and input and
 nothing else. Colour there is SGR minus 30 - red is 1, not the EGA palette's 4.
-Nobody has driven it by hand yet.
 
 **A deleted conference used to come back on every deploy.** The entrypoint
 re-copied any "missing" `Conf<n>` directory and re-seeded any absent
@@ -141,38 +133,29 @@ backed up to `/root/bbs-backups/dead-conferences-2026-09-02.tgz` before removal.
 
 **A directory is never derivable from a number on this board.** A node's screen
 directory is its `SCREENS` tooltype (ACP.e:2666-2673); a conference's is
-`LOCATION.n` in ConfConfig.info (express.e:31849). Renumbering moves the
-entries and leaves the directories alone, so `Conf<n>` built from a number
-reads the DELETED conference. Two live outages this session were that mistake.
-Use `web/backend/src/conferences/conference-paths.ts` and
-`web/backend/src/screens/screen-resolution.ts`.
+`LOCATION.n` (express.e:31849). Renumbering moves the entries and leaves the
+directories alone, so `Conf<n>` from a number reads the DELETED conference -
+three live faults so far. Use `conferences/conference-paths.ts` (its
+`conferenceNumbers()` answers WHICH conferences exist) and
+`screens/screen-resolution.ts`.
 
-**LIVE and verified through the loader inside the container:** the invented
-screen fallback is gone; 41 nodes keep their own screens and 215 read
-`Screens/Node/` by tooltype; every conference path reads LOCATION.n, doors
-included (BB_CONFLOCAL, MSGBASE_LOC); the admin has a Screen Files page and
-conference file-area paths that follow the conference.
+**LIVE and verified through the loader in the container:** the invented screen
+fallback is gone; 41 nodes keep their own screens, 215 read `Screens/Node/` by
+tooltype; every conference path reads LOCATION.n, doors included (BB_CONFLOCAL,
+MSGBASE_LOC).
 
 **Measure resolution by driving the loader, never by eye** -
-`dev/scripts/probe-screen-resolution.ts` before and after, then diff. 5,865
-lookups here. `dev/scripts/provision-node-screens.ts` gives a node screens; it
-is NOT in the deployed image (`dev/` is not copied), so it has to be put into
-the container to run there.
-
-**Phase 2, the ANSI editor in the browser, is 2 of 6 tasks in.** Plan:
-`docs/superpowers/plans/2026-09-02-screen-manager-phase-2-browser-ansi-editor.md`.
-The SDK core is aliased into the admin bundle from SOURCE, and the base64/CP437
-bridge is done. Colour there is SGR minus 30 - red is 1, not the palette's 4.
-
-**HOLD OFF on `web/backend/src/handlers/screen.handler.ts`** until session 82
-posts done: their PETSCII Task 9 edits the .seq branches.
+`dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
+lookups here). `dev/scripts/provision-node-screens.ts` gives a node screens and
+is NOT in the image, so it must be copied into the container to run there.
 
 Also open:
 
-1. **Yours:** nobody has driven the screen manager, or DOORREPO's `T`/`H`/
-   `ENTER`/uninstall, by hand. `Doors/emp_tools` is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
-   never happened is a drive against the LIVE board.
+1. **Yours:** nobody has driven the screen manager, the browser ANSI editor,
+   or DOORREPO's `T`/`H`/`ENTER`/uninstall by hand. `Doors/emp_tools` is the
+   interesting DOORREPO case.
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests, never a
+   drive against the LIVE board.
 3. **The release ships THIS board.** `Dockerfile:262-300` copies our `Screens`,
    `Conf1`-`Conf14` and `Node0`-`Node40` into `/app/default-data`. Needs its
    own spec.
@@ -180,19 +163,17 @@ Also open:
    conferenceAccess. First place to look if conference stats read wrong after
    the sysop's deletes.
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
-   PURPOSE: the cheap version broke re-sort and its own test caught it.
-6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-7. **Alt+Enter should also toggle BROWSER fullscreen.** The door half is
-   done; the frontend half is `packages/terminal/.../BBSTerminal.tsx`.
-8. **The Doors volume never deletes** - the entrypoint syncs with
+   PURPOSE: the cheap version broke re-sort, and its test caught it.
+6. Audio stutter: one cause fixed, never confirmed.
+7. **The Doors volume never deletes** - the entrypoint syncs with
    `tar | tar`, so a file dropped from the image lives on the volume for
    ever (eight orphans removed by hand 2026-09-02). Prune
    `Doors/<door>/dist/` for doors the IMAGE ships, never for DOORREPO's.
-9. **BBSTerminal registers two custom key handlers** and xterm keeps only
-   the last, so Shift+Arrow sequences, the copy/select-all path and the
-   Ctrl+Shift+M block have never run. Merging them makes three features
-   appear at once.
-10. **card-lobby needs an extraction** (2826 lines) before it can take the
+8. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
+   suspected of doing very little - find out what `Drives.info` actually
+   reaches - and the wanted feature is online storage: S3 buckets and the
+   like, offered as a place a board's files can live.
+9. **card-lobby needs an extraction** (2826 lines) before it can take the
    size switch.
 
 ## Gotchas
