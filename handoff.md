@@ -6,60 +6,54 @@
 LIVE at `380f7b4af`.
 
 **The manager kept reporting untruths of one shape: a check answering a
-question nobody asked.** "Read by nothing" meant "not the ONE file the loader
-picks at level 255"; the health check read `/app` not `/app/data/bbs` and
-offered to FIX it; `xpr` vs `Xpr` (8 protocols read as 0), `doors/` vs
+question nobody asked** - "read by nothing" meant "not the level-255 pick";
+the health check read `/app` not `/app/data/bbs`; `xpr` vs `Xpr`, `doors/` vs
 `Doors/`, `Conf1/Screens` by NUMBER where conference 1 is Conf2. **Check a
 claim against the board before believing it.**
 
-`/admin/screens` opens on a GALLERY - every screen and bulletin drawn with the
-editor's renderer. A file says what it IS ("CONF_BULL in Amiga Demoscene
-(conference 1) - level 20-29"), and every fact comes from the board or from
-express.e via `dev/scripts/generate-screen-provenance.ts`.
+`/admin/screens` opens on a GALLERY of every screen and bulletin; a file says
+what it IS ("CONF_BULL in Amiga Demoscene - level 20-29"), every fact from the
+board or express.e via `dev/scripts/generate-screen-provenance.ts`.
 
-**The ESC-byte repair HAS been used** - the sysop put many of the 47 stripped
-`[0;1;31m` files back (41 were copies of one NODE_BULL.TXT). Nobody has looked
-at a repaired screen on the board yet.
+**The ESC-byte repair HAS been used** (many of the 47 stripped `[0;1;31m`
+files, 41 copies of one NODE_BULL.TXT); nobody has checked a repaired screen
+on the board yet.
 
 ## GRANDMASTER against HeborisCE (2026-09-02)
 
 `..._grandmaster-backlog-devil-items-and-the-settings-that-did-nothing.md` is
-the record (`..._grandmaster-against-heboris-...` is the one before). **The
-reference is HeborisCE**, NOT TetriNET. 369 tests; backlog clear but MISSION.
+the record. **The reference is HeborisCE**, NOT TetriNET. 369 tests; backlog
+clear but MISSION.
 
-**THE CLASS TO CHECK FIRST HERE: a setting nothing reads.** Three in one pass -
-`sonic_drop` was classified and handled by nothing (which is why ACE-ARS's
-up-key lock was filed as "blocked on inventing a key"), `softDropSpeed` had a
-row, a range and no consumer, and the ALL/FEW/DS item pools drew items the
-engine could not carry out. Ask who CONSUMES a knob.
+**THE CLASS TO CHECK FIRST HERE: a setting nothing reads.** Three in one pass:
+`sonic_drop` handled by nothing (hence ACE-ARS's up-key lock "blocked on
+inventing a key"), `softDropSpeed` with a row, a range and no consumer, item
+pools drawing items the engine could not carry out. Ask who CONSUMES a knob.
 
-Landed: Death is 20G from level 0, ends at 1300, and climbs its own dgname
-ladder to GOD; `itemMode` reaches every mode; DEATH BLOCK (BIG), ROLL ROLL,
+Landed: Death 20G from level 0, ends 1300, climbs its dgname ladder to GOD; `itemMode` reaches every mode; DEATH BLOCK (BIG), ROLL ROLL,
 ROTATE LOCK, HIDE NEXT, <->REV, BOOST; versus level/line goals; HIDDEN;
 PRACTICE goals. **CEMENT is not in HeborisCE at all.** **MISSION is
 data-driven** (`loadMissionData`, 42 objective types) - it needs a plan.
 
 **TELNET TAKES NO INPUT in any game-mode door.** `enableGameMode()` drops the
 character path (`socket-handlers.ts:722`) for browser-only `key-down`/`key-up`
-(`:499-536`); options are in that handoff. Telnet RENDERING is fixed
-(`86200b3e5`): solid blocks fill the cell in the door's colour via reverse
-video instead of degrading to `#`.
+(`:499-536`); options in that handoff. Telnet RENDERING fixed (`86200b3e5`):
+solid blocks via reverse video instead of `#`.
 
 ## Doors and widgets (2026-09-02)
 
-**A ONE-ROW BOX CANNOT HOLD TEXT.** createBox/blessed.box build a Panel, which
-borders when none is named; pass `border: undefined`. 16 fixed, 4 left in
-bug-tracker/rip-browser, pinned by `oneRowBoxesDoNotCarryAFrame`
-(`dev/tests/door-regressions.test.ts`).
+**A ONE-ROW BOX CANNOT HOLD TEXT.** createBox/blessed.box build a Panel that
+borders when none is named; pass `border: undefined`. 16 fixed, 4 left
+(bug-tracker, rip-browser), pinned by `oneRowBoxesDoNotCarryAFrame`.
 
-**A deploy dying in under 20s is the host's `git fetch`** (retried since
-`c41c9aacf`); one dying instantly is `concurrency: deploy-hetzner` cancelling
-it for a newer push. **Every defect that day was a door hand-rolling an SDK
-widget** - `..._doors-that-hand-roll-sdk-widgets.md`.
+**A deploy dying in under 20s is the host's `git fetch`**; one dying instantly
+is `concurrency: deploy-hetzner` cancelling it for a newer push. **Every defect
+that day was a door hand-rolling an SDK widget** -
+`..._doors-that-hand-roll-sdk-widgets.md`.
 
-xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume
-deletes via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; a
-source pin proves a call exists, not that it runs.
+xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume deletes
+via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; a source pin
+proves a call exists, not that it runs.
 
 ## READ THIS FIRST
 
@@ -73,8 +67,8 @@ a door that moves the cursor is PAINTING and has no lines to wrap.
 Never send a colour already set, or pad rows on a cleared screen.
 
 **Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1 XIM_DEBUG_JSON=1
-XIM_DEBUG_AMIGA=1`, never by guessing; that handoff carries the method and the
-log-parsing trap that fakes a reproduction.
+XIM_DEBUG_AMIGA=1`, never by guessing; that handoff has the method and the
+log-parsing trap that fakes a repro.
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
 type, a door's settings and a password each exist in SQLite AND on disk, and
@@ -91,8 +85,8 @@ read `web/backend/src/doors/door-registration-paths.ts` and its case table
 (`examples/doorrepo-c/tests/delete-rule-cases.txt`); the same rules exist in C
 (`examples/doorrepo-c/flow.c`). **Fix one side, fix the other.**
 
-**DOORMAN is kept.** The parity spec's phase E is withdrawn; it is the
-reference implementation. Do not delete `Doors/door-manager`.
+**DOORMAN is kept** - the parity spec's phase E is withdrawn; it is the
+reference implementation. Never delete `Doors/door-manager`.
 
 ## Live
 
@@ -101,8 +95,8 @@ repo `/Users/spot/Code/amiexpress-doorserver`). Host `root@89.167.21.154`, key
 `~/.ssh/hetzner_deploy`. `BBS_DATA_DIR=/app/data/bbs`, backend on 3001.
 
 Push to `main` auto-deploys; **then check it** - `docker exec amiexpress-bbs
-cat /app/.git-sha`. Green CI has lied. A deploy that cannot serve rolls back
-itself; deploys disconnect /chat after 60s; docs changes do not deploy.
+cat /app/.git-sha`. Green CI has lied. A deploy that cannot serve rolls back;
+deploys disconnect /chat after 60s; docs changes do not deploy.
 
 **`main` moves under you** - cut a worktree from fresh `origin/main`, rebase
 or cherry-pick, confirm ancestry before pushing and before deleting. Building
@@ -115,10 +109,10 @@ symlinked in.
 after every stop. A change that "does not apply": clear the tsx cache
 (`rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`).
 
-Run **`npm run typecheck:tests`**, not just `npm test` - jest strips types, so
-a file can be green under jest and fail the typecheck.
+Run **`npm run typecheck:tests`**, not just `npm test` - jest strips types; a
+file can be green under jest and fail the typecheck.
 
-A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it -
+A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it;
 two agents in one door pull each other's work into a commit: separate
 worktrees. A worktree needs each door's `node_modules` (and, for a door whose
 tests import the SDK, a BUILT `sdk/dist` and `dist-esm`), or the suite fails
@@ -162,11 +156,11 @@ a case-insensitive disk; land by cherry-pick onto an origin/main worktree until
 one name survives (`GWALL.info` points at `DOORS:GWall/GWall`; the lowercase
 path has the package.json).
 
-## PETSCII + 40 columns (2026-09-02)
+## PETSCII + 40 columns
 
 A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds canvas and telnet emitter. Overlay
-retired; a C64 terminal is BLACK; `$02 <colour>` sets background and border.
+(`sdk/petscii/`, KERNAL oracle inside) feeds canvas and telnet. C64 terminal is
+BLACK; `$02 <colour>` sets background and border.
 `.../handoffs/2026-09-02_petscii-full-canvas.md`.
 
 **The board is adapted to 40 columns** (8 tasks, Task 1's gate default-closed):
@@ -182,7 +176,10 @@ frame reduced to 40 (`>` marks a shortened row), ANSI bytes untouched.
 **FULL MCI runs inside a gated `.seq`** (first byte `~`): same pre-passes,
 tokenizer, dispatch and sentinel walker as `.TXT`, rendered ONCE
 (`petscii-screen.render.ts`) before the transports split; values clip to the
-row. `.../plans/2026-09-02-mci-in-petscii-seq.md`.
+row. **Logoff on a C64 is DATA:** the 12 `Logoff.seq` say `~SR_` (1..99), only
+three 80-col `Screens/logoff/00N.logoff.txt` exist; fix = `~3SR_` + a 40-col
+`00N.logoff.seq`. WALK + minors: `.../handoffs/2026-09-02_mci-in-petscii-seq.md`;
+sysops: `Documentation/2-Sysops/CONFIGURATION.md` section 5.
 
 ## Gotchas
 
@@ -195,5 +192,3 @@ row. `.../plans/2026-09-02-mci-in-petscii-seq.md`.
 - **A door archive names its command** in `Commands/BBSCmd/<CMD>.info`.
 - **SDK tests import the built `sdk/dist`** - build first.
 - **A merged admin screen keeps a redirect** (`src/routes/legacy-routes.ts`).
-- **Logoff on a C64 is a DATA bug** - 12 `Conf*/Screens/Logoff.seq` ask `~SR_`
-  1..99; only three 80-column `00N.logoff.txt` exist. Fix = `~3SR_` + `.seq`.
