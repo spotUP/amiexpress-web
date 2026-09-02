@@ -198,22 +198,38 @@ a new import escapes.
    (screen.handler.ts:1943), and inserting into the middle of art shifts every
    column right of it.
 
-9. **`~CC_CONFTOP - points at nothing`, reported from the editor, and it is
-   NOT true of this repo's data.** `Conf2/bull20.txt` carries `~CC_CONFTOP`
-   with no terminator; `Commands/BBSCmd/conftop.info` exists;
-   `amigafs.findCaseInsensitive` resolves `CONFTOP.info` to it; and
-   `screenFileFacts()` run against this checkout answers
-   `{"code":"CC","target":"CONFTOP","resolves":true}`. So the code and this
-   board's files agree, and the falsehood is somewhere between them and what
-   the sysop was looking at. Settle it on the container before touching any
-   code: `docker exec amiexpress-bbs ls /app/data/bbs/Commands/BBSCmd | grep
-   -i conftop`. If the icon is missing there, the question is what syncs
-   `Commands/` into the image - the entrypoint syncs `Doors/` and the deploy
-   verifies it, and nobody has asked the same question about `Commands/`.
-   Second candidate if the icon IS there: the editor gets its `mci` from
-   `GET /api/screens/file`, not from the index, and `findMciTokens` matches a
-   canvas token to a fact by exact `code`+`target` - a mismatch there shows as
-   "points at nothing" no matter what the board holds.
+9. **`~CC_CONFTOP - points at nothing` is TRUE on the live board, and the
+   entrypoint is doing what it was told.** The repo has
+   `Commands/BBSCmd/conftop.info`, `findCaseInsensitive` resolves it, and
+   `screenFileFacts()` answers `resolves: true` against this checkout. The
+   container is another matter: the image ships 152 command icons and the
+   volume holds 101, and `~CC_gwall` is dead there too.
+
+   The first diagnosis of this - "the directory pass copies Commands only when
+   the whole directory is absent" - was WRONG, and is recorded because the
+   mistake is the instructive part: the entrypoint's first-run and repair
+   passes DO gate on `[ ! -d ]`, but a second loop at
+   `docker-entrypoint.sh:630-640` already puts every file under `Commands/`
+   through `sync_tracked`. Grepping for `BBSCmd` would have found it in one
+   command; reading the first block that mentioned `Commands` and stopping did
+   not.
+
+   What is actually happening: the live manifest carries
+   `b868811ad1e5ad742895faff1e582fc5 Commands/BBSCmd/conftop.info`. A manifest
+   entry plus an absent file is `sync_tracked`'s definition of "the sysop
+   deleted this", added after DOORMAN door deletions kept reverting - so the
+   entrypoint keeps all 71 of them deleted, deliberately and for ever. The
+   open question is not code: it is whether those 71 were deleted on purpose.
+   The screens still reference them, which suggests not.
+
+   To put them back, no deploy needed and nothing existing overwritten:
+   `docker exec amiexpress-bbs sh -c 'cp -n
+   /app/default-data/Commands/BBSCmd/*.info /app/data/bbs/Commands/BBSCmd/'`.
+   The manifest already names them, so the next deploy tracks them normally.
+
+   Landed alongside: `sync_tracked_case_aware` (`docker-entrypoint.sh:282`),
+   because the volume holds `N.info`/`GL.info` where the image ships
+   `n.info`/`gl.info` and the sync would have written a second copy of each.
 
 10. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
    and Node0-40 into `/app/default-data`, so a sysop installing the release is
