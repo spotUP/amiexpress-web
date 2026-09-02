@@ -766,6 +766,8 @@ git commit -m "feat(sdk): XXS=40 breakpoint tier, compact profile, geometry-driv
 
 > SUPERSEDED: the wrap choke was executed as Task 10 of `thoughts/shared/plans/2026-09-02-petscii-full-canvas.md` (`web/backend/src/utils/wrap-for-session.util.ts` + the `emitText` choke, commits 279e41fd2 / cdbe824eb / 7fae01d55), gated on `session.petsciiMode` so non-C64 80-column output is untouched. 68K doors' `BB_SCRWIDTH` and launch-time `lineWrap` shipped separately as `amiga-emulation/xim/screen-width.util.ts` (58daaeb65). Only the view-file 79, AmigaGuide width param and AREXX `BB_SCRWIDTH` (`services/arexx.service.ts:1924`) sites below remain to do here.
 
+**Findings (execution, 2026-09-02):** AmigaGuideViewer is dead code (0 importers, 0 `new AmigaGuideViewer` sites in `web/backend/src`, and no `width` constructor parameter to begin with); width threading deferred until it has a caller. The file viewer's 79 and the main command prompt were done - see `.superpowers/sdd/2026-09-02-c64-40col/task-4-report.md`.
+
 One session-width wrap at the `emitText` seam covers the prose surfaces (help text, mail bodies, bulletins, oneliners, AREXX door output) in one move, with hard guards that keep 80-column output and positioned/art payloads byte-identical. Plus the specific literal-width sites the inventory flagged: the file viewer's 79, AmigaGuide's width param, and AREXX's `BB_SCRWIDTH`. Vertical pagination is already session-driven (`flagPause` clamp, `screenHeight=25` C64 sites — inventory section 4) and needs no change; the remaining `23/24` literals are new-user defaults, correct as constants.
 
 Session access at the seam: web sockets already carry the session (`(socket as any).session`, set at `index.ts:786,793,833`); telnet/SSH emitters get a one-line `session` getter.
@@ -1870,3 +1872,29 @@ WEB SIMULATION PATH (browser):
 **Placeholder scan:** no TBDs; the two "read the file then apply the mechanism" door steps (doors-menu, bug-tracker internals) carry the concrete mechanism, extraction names, test files, RED/GREEN definitions, and a fully worked sibling example (theme-picker, door-manager) — the remaining work is anchoring, not design. AmigaGuide/AREXX-test placement give exact grep + edit shape where line numbers move daily.
 
 **Type consistency:** `sessionColumns` defined once (Task 1) and consumed by Tasks 4, 5, 6; `MinColumnsDoorShape` matches both registries' actual field names (`toolTypes` per `door.handler.ts:4111-4146`, `doorInfo` per `:1152-1166`); `wrapLineToWidth`/`printableLength` shared by Tasks 4, 5, 8; `getCompactProfile` shared by Tasks 3, 6.
+
+## Sysop additions (2026-09-02)
+
+- **C64 prompt too long** - the main command prompt carries the BBS name; on a
+  PETSCII session (`petsciiMode === true` only) omit the BBS name so the prompt
+  fits 40 columns. The 80-column prompt is untouched. Lands with Task 4
+  (width parameterization) as 4b: locate the prompt builder (grep the prompt
+  text in web/backend/src/handlers, express.e parity for the prompt format),
+  add the petsciiMode branch, RED test asserting the 40-col prompt length and
+  the byte-identical 80-col prompt.
+- **DOORMAN on the canvas (screenshot 2026-09-02 13:06)** - it already runs on a
+  PETSCII session; the 80-column list folds (name column repeated near x=20,
+  size cells on the wrong row), stray glyphs from the glitch/typewriter
+  effects land mid-row, the header truncates. Task 3's XXS tier plus Task 6's
+  door-manager adaptation own it: at width 40 the list is one column, effects
+  are off, header fits. Capture the real byte stream first; do not patch the
+  symptoms one by one. The `////////` header animation is drawn 80 wide and
+  folds; it takes its width from the screen (40 at XXS), not a constant.
+- **MCI codes inside PETSCII `.seq` files** (sysop question 2026-09-02): `.SEQ`
+  screens go out raw over `petscii-bytes`, so an MCI token in one would print
+  literally on a C64. Design to settle before coding: substitute MCI on the
+  byte stream (tokens are ASCII inside PETSCII) and transduce each substituted
+  value into PETSCII in whatever charset bank is active at that point, leaving
+  the art bytes untouched; check what express.e does with MCI in `.seq`.
+  Acceptance: a `.seq` carrying `~CL.` and `%N` shows the user's name on a
+  PetsciiMachine in the right bank with the art unchanged byte for byte.
