@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DoormanLayout = void 0;
+exports.formatSize = formatSize;
 /**
  * DOORMAN's shared layout: one set of panels that every view updates in
  * place, and the width rules that decide their shape.
@@ -19,6 +20,17 @@ const blessed_1 = require("@amiexpress/bbs-door-sdk/engines/ui/blessed");
 const blessed_2 = require("@amiexpress/bbs-door-sdk/engines/ui/blessed");
 const theme_1 = require("@amiexpress/bbs-door-sdk/engines/ui/theme");
 const door_theme_1 = require("./door-theme");
+const type_badge_1 = require("./type-badge");
+/** Byte count as a door list shows it. Lives here with the row that uses it. */
+function formatSize(bytes) {
+    if (bytes === 0)
+        return '0 B';
+    if (bytes < 1024)
+        return `${bytes} B`;
+    if (bytes < 1048576)
+        return `${Math.round(bytes / 1024)} KB`;
+    return `${Math.round(bytes / 1048576)} MB`;
+}
 /**
  * Exported for the 40-column layout test: the geometry rules are the thing
  * under test, and constructing the real layout against a real Screen is the
@@ -150,6 +162,21 @@ class DoormanLayout {
         this.filterPanel.hide();
         this.listPanel.top = this.narrow ? 1 : 3;
         this.listPanel.height = this.narrow ? '50%-1' : '100%-6';
+    }
+    /**
+     * One installed-door row: badge, name, enabled flag, size.
+     *
+     * Here rather than inline in the view because `width` is a layout rule -
+     * the row has to be sized by whatever decided the list's text column, and
+     * a copy of this arithmetic anywhere else is a copy that can drift from it.
+     */
+    installedRow(d) {
+        const badge = `[${(0, type_badge_1.typeBadge)(d.type)}]`;
+        const sz = formatSize(d.size).padStart(6);
+        const nameW = Math.max(6, this.width - 14);
+        const name = d.name.length > nameW ? d.name.slice(0, nameW - 1) + '…' : d.name.padEnd(nameW);
+        const st = d.enabled ? `{${door_theme_1.T.ok}-fg}*{/${door_theme_1.T.ok}-fg}` : `{${door_theme_1.T.alert}-fg}-{/${door_theme_1.T.alert}-fg}`;
+        return `${badge} ${name} ${st} ${sz}`;
     }
     render() { this.screen.render(); }
 }

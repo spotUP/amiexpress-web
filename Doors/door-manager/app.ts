@@ -78,18 +78,6 @@ type CatalogEntry = RepoCatalogEntry;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function formatSize(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1048576) return `${Math.round(bytes / 1024)} KB`;
-  return `${Math.round(bytes / 1048576)} MB`;
-}
-
-function typeBadge(type: string): string {
-  return ({ TS:'TS', typescript:'TS', SDK:'TS', XIM:'68', SIM:'SI', TIM:'TI', FIM:'FI',
-            AMI:'68', amiga:'68', RX:'RX', AREXX:'RX', ARexx:'RX', RXD:'RX' } as any)[type] ?? '??';
-}
-
 
 /** Adapts the local catalog service's getCatalogEntryByArchive into the
  * LocalCatalogLookup shape repoDataSource's mapManifestDoorToEntry expects
@@ -176,7 +164,8 @@ export function resolveArchivePath(archivePath: string | null | undefined): stri
 // 2000-line ceiling - the same split install-core and repo-view-helpers took.
 // Re-exported so importers and tests are unaffected.
 export { DoormanLayout } from './doorman-layout';
-import { DoormanLayout } from './doorman-layout';
+// formatSize moved alongside the row builder that sizes with it.
+import { DoormanLayout, formatSize } from './doorman-layout';
 
 
 // ─── Views ────────────────────────────────────────────────────────────────────
@@ -211,15 +200,7 @@ class InstalledView extends BaseView {
   }
 
   private refresh(selectIdx = 0): void {
-    const w = this.layout.width;
-    const items = this.doors.map(d => {
-      const badge = `[${typeBadge(d.type)}]`;
-      const sz = formatSize(d.size).padStart(6);
-      const nameW = Math.max(6, w - 14);
-      const name = d.name.length > nameW ? d.name.slice(0, nameW-1)+'…' : d.name.padEnd(nameW);
-      const st = d.enabled ? `{${T.ok}-fg}*{/${T.ok}-fg}` : `{${T.alert}-fg}-{/${T.alert}-fg}`;
-      return `${badge} ${name} ${st} ${sz}`;
-    });
+    const items = this.doors.map(d => this.layout.installedRow(d));
     this.layout.setListLabel(' INSTALLED DOORS ');
     this.layout.setListItems(items);
     // Same clamp as the repo view: uninstalling or deleting the last door in

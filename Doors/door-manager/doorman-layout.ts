@@ -16,6 +16,23 @@ import { Panel, Box, List, ScrollableBox, Textbox } from '@amiexpress/bbs-door-s
 import { getCompactProfile, effectsAllowed } from '@amiexpress/bbs-door-sdk/engines/ui/blessed';
 import { attachMasthead } from '@amiexpress/bbs-door-sdk/engines/ui/theme';
 import { T, S, CURRENT } from './door-theme';
+import { typeBadge } from './type-badge';
+
+/** Byte count as a door list shows it. Lives here with the row that uses it. */
+export function formatSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1048576) return `${Math.round(bytes / 1024)} KB`;
+  return `${Math.round(bytes / 1048576)} MB`;
+}
+
+/** The shape an installed-door row needs. */
+export interface InstalledRowDoor {
+  type: string;
+  name: string;
+  size: number;
+  enabled?: boolean;
+}
 
 /**
  * Exported for the 40-column layout test: the geometry rules are the thing
@@ -171,6 +188,22 @@ export class DoormanLayout {
     (this.filterPanel as any).hide();
     (this.listPanel as any).top = this.narrow ? 1 : 3;
     (this.listPanel as any).height = this.narrow ? '50%-1' : '100%-6';
+  }
+
+  /**
+   * One installed-door row: badge, name, enabled flag, size.
+   *
+   * Here rather than inline in the view because `width` is a layout rule -
+   * the row has to be sized by whatever decided the list's text column, and
+   * a copy of this arithmetic anywhere else is a copy that can drift from it.
+   */
+  installedRow(d: InstalledRowDoor): string {
+    const badge = `[${typeBadge(d.type)}]`;
+    const sz = formatSize(d.size).padStart(6);
+    const nameW = Math.max(6, this.width - 14);
+    const name = d.name.length > nameW ? d.name.slice(0, nameW - 1) + '…' : d.name.padEnd(nameW);
+    const st = d.enabled ? `{${T.ok}-fg}*{/${T.ok}-fg}` : `{${T.alert}-fg}-{/${T.alert}-fg}`;
+    return `${badge} ${name} ${st} ${sz}`;
   }
 
   render(): void { this.screen.render(); }

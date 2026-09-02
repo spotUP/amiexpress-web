@@ -77,19 +77,6 @@ const repo_client_1 = require("./repo-client");
 // server, so no LHA_BIN path probing is needed here anymore.
 const PROJECT_ROOT = (0, ViewManager_1.resolveBbsRoot)(__dirname);
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-function formatSize(bytes) {
-    if (bytes === 0)
-        return '0 B';
-    if (bytes < 1024)
-        return `${bytes} B`;
-    if (bytes < 1048576)
-        return `${Math.round(bytes / 1024)} KB`;
-    return `${Math.round(bytes / 1048576)} MB`;
-}
-function typeBadge(type) {
-    return { TS: 'TS', typescript: 'TS', SDK: 'TS', XIM: '68', SIM: 'SI', TIM: 'TI', FIM: 'FI',
-        AMI: '68', amiga: '68', RX: 'RX', AREXX: 'RX', ARexx: 'RX', RXD: 'RX' }[type] ?? '??';
-}
 /** Adapts the local catalog service's getCatalogEntryByArchive into the
  * LocalCatalogLookup shape repoDataSource's mapManifestDoorToEntry expects
  * (consumer mode: resolving what's installed on THIS BBS is always a local
@@ -176,6 +163,7 @@ function resolveArchivePath(archivePath) {
 // Re-exported so importers and tests are unaffected.
 var doorman_layout_1 = require("./doorman-layout");
 Object.defineProperty(exports, "DoormanLayout", { enumerable: true, get: function () { return doorman_layout_1.DoormanLayout; } });
+// formatSize moved alongside the row builder that sizes with it.
 const doorman_layout_2 = require("./doorman-layout");
 // ─── Views ────────────────────────────────────────────────────────────────────
 // ── Installed Doors ──────────────────────────────────────────────────────────
@@ -200,15 +188,7 @@ class InstalledView extends ViewManager_1.BaseView {
         this.layout.setHeader(`{center}{${door_theme_1.T.accent}-fg}DOORMAN v2{/${door_theme_1.T.accent}-fg}  {${door_theme_1.T.ink}-fg}${this.doors.length} doors, ${ec} enabled{/${door_theme_1.T.ink}-fg}{/center}`);
     }
     refresh(selectIdx = 0) {
-        const w = this.layout.width;
-        const items = this.doors.map(d => {
-            const badge = `[${typeBadge(d.type)}]`;
-            const sz = formatSize(d.size).padStart(6);
-            const nameW = Math.max(6, w - 14);
-            const name = d.name.length > nameW ? d.name.slice(0, nameW - 1) + '…' : d.name.padEnd(nameW);
-            const st = d.enabled ? `{${door_theme_1.T.ok}-fg}*{/${door_theme_1.T.ok}-fg}` : `{${door_theme_1.T.alert}-fg}-{/${door_theme_1.T.alert}-fg}`;
-            return `${badge} ${name} ${st} ${sz}`;
-        });
+        const items = this.doors.map(d => this.layout.installedRow(d));
         this.layout.setListLabel(' INSTALLED DOORS ');
         this.layout.setListItems(items);
         // Same clamp as the repo view: uninstalling or deleting the last door in
@@ -241,7 +221,7 @@ class InstalledView extends ViewManager_1.BaseView {
             `{${door_theme_1.T.warn}-fg}Name:{/${door_theme_1.T.warn}-fg}    ${d.name}`,
             `{${door_theme_1.T.warn}-fg}Command:{/${door_theme_1.T.warn}-fg} ${d.command}`,
             `{${door_theme_1.T.warn}-fg}Type:{/${door_theme_1.T.warn}-fg}    ${d.type}`,
-            `{${door_theme_1.T.warn}-fg}Size:{/${door_theme_1.T.warn}-fg}    ${formatSize(d.size)}`,
+            `{${door_theme_1.T.warn}-fg}Size:{/${door_theme_1.T.warn}-fg}    ${(0, doorman_layout_2.formatSize)(d.size)}`,
             `{${door_theme_1.T.warn}-fg}Status:{/${door_theme_1.T.warn}-fg}  ${st}`,
             body,
         ].join('\n'));

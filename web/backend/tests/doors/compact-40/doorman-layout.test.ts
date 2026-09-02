@@ -20,10 +20,17 @@
  * Screen and asserts the resolved coordinates - not a source pin.
  */
 const { Screen } = require('../../../../../sdk/engines/ui/blessed');
+// The compiled module the door actually loads (its package exports map points
+// at sdk/dist), so a spy here is the spy the door sees through the barrel.
+const chrome = require('../../../../../sdk/dist/engines/ui/theme/chrome');
 const { createScreen } = require('../../../../../sdk/utils/blessed-helpers');
 const { DoormanLayout } = require('../../../../../Doors/door-manager/app');
 
 type Coords = { xi: number; xl: number; yi: number; yl: number };
+
+/** Printable width of a row, blessed tags and ANSI escapes removed. */
+const printable = (s: string): number =>
+  s.replace(/\x1b\[[0-9;]*[A-Za-z]/g, '').replace(/\{[^}]*\}/g, '').length;
 
 function coords(el: any): Coords {
   const c = el._getCoords(true) || el._getCoords();
@@ -78,9 +85,59 @@ describe('DOORMAN layout on a 40x25 screen', () => {
     layout = new DoormanLayout(screen, 1);
     expect(layout.narrow).toBe(true);
     expect(layout.width).toBe(34);
-    // A row built to that width fits: badge(4) + name + flag + size.
-    const nameW = Math.max(6, layout.width - 14);
-    expect(`[TS] ${'x'.repeat(nameW)} * 240 KB`.length).toBeLessThanOrEqual(40);
+  });
+
+  // Through the layout's OWN row builder, not a re-implementation of its
+  // arithmetic here: if the two ever disagree, this test stops meaning
+  // anything, so there is only one of them.
+  it('a real installed-door row fits 40 columns, long name and all', () => {
+    screen = new Screen({ width: 40, height: 25, responsive: true } as any);
+    layout = new DoormanLayout(screen, 1);
+    const row = layout.installedRow({
+      type: 'TS', name: 'DOORMAN Door Manager And Then Some More Name', size: 245760, enabled: true,
+    });
+    expect(printable(row)).toBeLessThanOrEqual(40);
+    expect(row).toContain('[TS]');
+    expect(row).toContain('240 KB');
+  });
+
+  // The effect gate. On the PETSCII canvas the sysop saw stray glyphs from
+  // the masthead's moving rail; at XXS no timer is started at all and the
+  // row carries the static title instead.
+  it('40 columns: the masthead does not animate and the row shows the title', () => {
+    screen = new Screen({ width: 40, height: 25, responsive: true } as any);
+    layout = new DoormanLayout(screen, 1);
+    // attachMasthead returns a real stop function; the no-op form is what the
+    // gate substitutes. Calling it must be safe and must stop nothing.
+    expect(typeof layout.stopMasthead).toBe('function');
+    expect(layout.stopMasthead!()).toBeUndefined();
+    const mastheadRow = layout.header.children[0];
+    expect(mastheadRow.getContent()).toContain('DOORMAN');
+    // A rail would have put its run of slashes on the row.
+    expect(mastheadRow.getContent()).not.toContain('/');
+  });
+
+  // The gate, at the call itself. Content alone cannot tell the two apart on
+  // a rail-less theme (attachMasthead writes ' DOORMAN ' too), so this spies
+  // on the SDK function the door would have to call to start a timer.
+  it('40 columns: the SDK masthead is never attached; 80 columns: it is', () => {
+    const spy = jest.spyOn(chrome, 'attachMasthead');
+    try {
+      screen = new Screen({ width: 40, height: 25, responsive: true } as any);
+      layout = new DoormanLayout(screen, 1);
+      expect(spy).not.toHaveBeenCalled();
+      layout.stopMasthead?.();
+      screen.destroy();
+
+      spy.mockClear();
+      screen = new Screen({ width: 80, height: 24, responsive: false } as any);
+      layout = new DoormanLayout(screen, 1);
+      expect(spy).toHaveBeenCalledTimes(1);
+      // ...and drawn to the SCREEN's width, not to a constant.
+      expect(spy.mock.calls[0][2].width).toBe(77);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   // The root of the sysop's report: the door used to build its Screen with
