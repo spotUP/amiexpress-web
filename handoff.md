@@ -31,14 +31,16 @@ moves.
 ## GRANDMASTER against HeborisCE (2026-09-02)
 
 `..._grandmaster-against-heboris-and-the-doors-that-hid-their-text.md` is the
-record; it names the audit.
+record. **The reference is HeborisCE**
+(`Documentation/7-Reference Sources/HeborisCE-1.1.0`), NOT TetriNET. Landed:
+the Master timing curve (it opened on level-500 values), torikan (`足切り` in
+the source), six rotation systems, the item system (items ride the locking
+piece, `gamestart.c:16230`). 249 -> 318 tests. Next: DEVIL/DOOM/GOD, MISSION,
+PRACTICE, CEMENT/HIDDEN/WIN TYPE, 6 items.
 
-**The reference is HeborisCE** (`Documentation/7-Reference Sources/HeborisCE-1.1.0`),
-NOT TetriNET - a different lineage in the same door. Landed: the Master
-timing curve (it opened on level-500 values), torikan (`足切り` in the
-source, not "torikan"), six rotation systems, the item system (items ride the
-locking piece, `gamestart.c:16230`). 249 -> 318 tests. Next: DEVIL/DOOM/GOD,
-MISSION, PRACTICE, CEMENT/HIDDEN/WIN TYPE, 6 items.
+**TELNET TAKES NO INPUT in any game-mode door.** `enableGameMode()` switches
+off the character path (`socket-handlers.ts:722`) for browser-only
+`key-down`/`key-up` (`:499-536`). Renders fine. Options in the handoff.
 
 ## Doors and widgets (2026-09-02)
 
@@ -51,15 +53,13 @@ which borders when the caller names none. 13 fixed, 15 pinned by
 it for a newer push.
 
 **Every defect that day was a door hand-rolling a widget the SDK ships** -
-survey: `..._2026-09-02_doors-that-hand-roll-sdk-widgets.md`. Two gates stop a
-door shipping uncompiled.
+survey: `..._doors-that-hand-roll-sdk-widgets.md`.
 
 ## Earlier on 2026-09-02
 
 xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume
-deletes via `prune_image_door_dists()`, whitelisted by extension;
-`// @ts-nocheck` is a bug report; a source pin proves a call exists, not that
-it runs. Records: `..._the-key-handler-...md`, `..._the-size-switch-...md`.
+deletes via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; a
+source pin proves a call exists, not that it runs.
 
 ## READ THIS FIRST
 
