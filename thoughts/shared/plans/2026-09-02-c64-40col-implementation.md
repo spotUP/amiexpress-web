@@ -26,10 +26,9 @@
 
 ## Explicitly OUT of scope (per recorded decisions, 2026-09-02)
 
-- The ANSI->PETSCII door bridge (`AnsiToPetsciiStream` for blessed doors on real C64s) — its own later effort (decision 4).
+- Both the ANSI->PETSCII door bridge and C64 cursor-key/F-key input translation SHIPPED in `thoughts/shared/plans/2026-09-02-petscii-full-canvas.md` (transducer Tasks 2-5; input map Task 6) and are no longer out of scope here.
 - Per-door adaptation of 68K binaries — blanket-gated (revised Phase 4 ruling). No dropfile 40-col plumbing, no XIM output translation.
 - `.seq` art authoring — the sysop makes/commissions the native 40x25 screens (decision 2). Code only guarantees the already-shipped `.seq`-first resolution.
-- C64 cursor-key/F-key door input translation — lands with the bridge phase (decision 5).
 - Rewrite-track door ports (68K doors rewritten as TS) — each is its own plan.
 - Squeezing 80-col ANSI art to 40 (always wrong); C128 80-col mode.
 - Operator-chat page UI at 40 columns: it is a cursor-positioned full-screen UI (`operator-chat.handler.ts:788-794` writes `\x1b[23;1H` rows); the wrap choke deliberately passes positioned payloads through, and re-laying out that UI is bridge-phase work. Its `wordWrapMessage(message, 79, 79)` call stays.
@@ -764,6 +763,8 @@ git commit -m "feat(sdk): XXS=40 breakpoint tier, compact profile, geometry-driv
 ---
 
 ### Task 4: Core BBS word-wrap choke point + width parameterization
+
+> SUPERSEDED: the wrap choke was executed as Task 10 of `thoughts/shared/plans/2026-09-02-petscii-full-canvas.md` (`web/backend/src/utils/wrap-for-session.util.ts` + the `emitText` choke, commits 279e41fd2 / cdbe824eb / 7fae01d55), gated on `session.petsciiMode` so non-C64 80-column output is untouched. 68K doors' `BB_SCRWIDTH` and launch-time `lineWrap` shipped separately as `amiga-emulation/xim/screen-width.util.ts` (58daaeb65). Only the view-file 79, AmigaGuide width param and AREXX `BB_SCRWIDTH` (`services/arexx.service.ts:1924`) sites below remain to do here.
 
 One session-width wrap at the `emitText` seam covers the prose surfaces (help text, mail bodies, bulletins, oneliners, AREXX door output) in one move, with hard guards that keep 80-column output and positioned/art payloads byte-identical. Plus the specific literal-width sites the inventory flagged: the file viewer's 79, AmigaGuide's width param, and AREXX's `BB_SCRWIDTH`. Vertical pagination is already session-driven (`flagPause` clamp, `screenHeight=25` C64 sites — inventory section 4) and needs no change; the remaining `23/24` literals are new-user defaults, correct as constants.
 

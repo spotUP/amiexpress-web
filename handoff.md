@@ -15,15 +15,17 @@ left it in the corner. Blocked because GRANDMASTER does not typecheck at HEAD
 when that door compiles.
 
 **Every defect reported that day lived in something a door built for itself
-while the SDK already shipped the widget.** Which doors still do it, and
-what to convert next:
+while the SDK already shipped the widget** - CARD LOBBY computed panel
+geometry, built an opaque Box instead of `Overlay` and wrote its own text
+window whose escape keys never fired. The SDK ships `overlay`, `layout`,
+`status-bar`, `menu-bar`, `confirm-modal`, `doc-modal`, `prompt`,
+`search-modal`, `panel`, `fkey-bar` - check every door against that list:
 `thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`.
 
-Three doors could not start at all - whip, Gwall, prompt-complete - because
-only ONE door is compiled during the image build. Two gates stop it now:
-`docker/verify-door-entries.sh` (fails the image build) and
-`tests/doors/door-dist-is-shipped.test.ts`. The deploy also backs up door
-data, WAL files included, because a `.db` alone is an empty header.
+Only ONE door used to be compiled during the image build; two gates stop
+that now (`docker/verify-door-entries.sh`,
+`tests/doors/door-dist-is-shipped.test.ts`), and the deploy backs up door
+data, WAL files included.
 
 ## Earlier on 2026-09-02
 
@@ -42,10 +44,8 @@ super-qix keep high scores inside `dist/`. Dry-run any delete path against
 the real volume first.
 
 **`// @ts-nocheck` is a bug report** - one line hid six calls to methods
-that do not exist in CARD LOBBY. Doors with the size switch, all starting
-FIXED: grandmaster, sprite-editor, ansi-editor, livechat (wide on /chat
-only), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
-card-lobby.
+that do not exist in CARD LOBBY. Ten doors with the size switch are fixed
+(list in that handoff).
 
 **A source pin proves a call exists, not that it runs.**
 
@@ -170,24 +170,20 @@ Also open:
 8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
    game, and deleting a table have never worked at all.
 
-The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
-2026-09-02 - no more hold-off needed there.
-
-**Survey every TypeScript door for hand-rolled widgets.** CARD LOBBY used SDK
-widgets but hand-rolled what the SDK already provides - it computed panel
-geometry instead of using a layout, built an opaque black Box instead of
-`Overlay`, made bars from plain boxes, and wrote its own text window whose
-escape keys never fired. EVERY defect reported on 2026-09-02 lived in a
-hand-rolled part. The SDK ships `overlay`, `layout`, `status-bar`,
-`menu-bar`, `confirm-modal`, `doc-modal`, `prompt`, `search-modal`, `panel`,
-`fkey-bar` - check each door against that list.
-
 **The Doors/GWall vs Doors/Gwall duplicate blocks rebases.** Git tracks two
 different blobs at `Doors/GWall/dist/index.js` and `Doors/Gwall/dist/index.js`
 - one file on a case-insensitive disk - so one of them always reads as
 modified and `git rebase` refuses to start in any worktree. Needs a decision
 on which name survives; `Commands/BBSCmd/GWALL.info` points at
 `DOORS:GWall/GWall`, and the lowercase path is the one with a package.json.
+
+## PETSCII (2026-09-02)
+
+A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
+(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and the telnet
+emitter. Overlay retired; a C64 terminal is BLACK, and only `$02 <colour>`
+moves background/border. Walk script, detail, what is open:
+`thoughts/shared/handoffs/2026-09-02_petscii-full-canvas.md`.
 
 ## Gotchas
 
