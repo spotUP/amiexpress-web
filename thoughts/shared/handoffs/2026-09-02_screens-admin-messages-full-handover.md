@@ -106,6 +106,9 @@ topics above), not a name.
 - 16 screens the sysop deleted are RESTORED (the delete writes a `.backup`).
 - `~CC_ANNLOGON` and `~CC_V-AWAIT` stripped from 46 screens, backups beside
   each. Verified: of 53 backup/original pairs, 46 differ ONLY by those codes.
+- Logoff art CONFIRMED working by the sysop after the fix ("the logoff
+  works") - the `~SR_WORK:bbs/Screens/logoff/logoff` pool resolves and the
+  index now reports it read, 8 readers.
 - Dead MCI references: **1** - `~SS_R_WORK:bbs/Screens/logoff/logoff`, an
   obsolete Sanctuary-inherited typo the sysop said to leave.
 - `68klog.txt` (992,732 lines) removed from the board at the sysop's request,
