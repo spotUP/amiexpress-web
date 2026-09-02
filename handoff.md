@@ -19,43 +19,62 @@ gaps, by design:** `writePetsciiLine(Buffer)` still uses the old PUA/xterm
 path; real-C64 cursor/F-keys are dropped by the input converter; canvas
 needs a click to focus; PETSCII screens bypass MCI/`~SP`.
 
-## Alt+Enter works now, everywhere (2026-09-02)
+## Alt+Enter, the volume that deletes, CARD LOBBY (2026-09-02, late)
+
+`thoughts/shared/handoffs/2026-09-02_the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
+is the record; all three are verified in the live container.
+
+**xterm keeps ONE custom key handler** - `attachCustomKeyEventHandler`
+assigns, it does not append - and BBSTerminal registered two, so Shift+Arrow,
+copy/select-all with mouse reporting off and the Ctrl+Shift+M block had never
+run. One handler now, rules in `classifyKey()`
+(`packages/terminal/src/utils/key-overrides.ts`). **Alt+Enter also fullscreens
+the browser**, on the KEY because `requestFullscreen` needs a user gesture;
+in game mode it toggles the window and sends NO bytes, or the door toggles
+twice per press.
+
+**The Doors volume deletes** - `prune_image_door_dists()` in
+`docker-entrypoint.sh` mirrors image door `dist/`: only doors the IMAGE ships
+(a DOORREPO door exists on the volume alone), only inside `dist/`, only
+compiled output whitelisted by extension, never against an empty image dist.
+**That whitelist exists because a dry run against the live volume found
+frogger's and super-qix's `highscores.json` inside `dist/`.** Dry-run any
+delete path against the real volume before shipping it.
+
+**CARD LOBBY's `// @ts-nocheck` hid six crash paths** - gamepad X/Y/A/START at
+an UNO table, the R key, the end of every UNO game, deleting a table. Fixed;
+dead SDK browser mode (192 lines, reachable only from itself) removed; four
+managers extracted; 1923 lines, tsc clean, size switch in.
+`tests/doors/card-lobby-typechecks.test.ts` fails if the suppression returns.
+**NOBODY HAS DRIVEN THOSE SIX PATHS.**
+
+## The size switch, the editors, the battle royale (2026-09-02)
 
 `thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
-is the record, including the ANSI editor audit and grandmaster's rebuilt
-battle royale (99 players, a grid of playfields, standings under your own
-board; 98 bots cost 0.16 ms/frame, measured).
+- the ANSI editor audit and grandmaster's 99-player battle royale.
 
-**Responsive is FOUR things.** Ask the terminal to widen, follow the resize,
-put 80 columns back (`sdk/utils/terminal-mode.ts` does those three) - and be
-able to RECEIVE the key that asks, which was broken in three places at once:
-the browser never sent Alt+Enter (xterm does not ESC-prefix Option on macOS),
-the SDK parser could not name ESC+CR as `M-enter`, and game mode dropped
-modifiers. Alt+LETTER always worked, which is why none of it was noticed.
-
-Doors with the switch, all starting FIXED: grandmaster (also Settings >
-DISPLAY), sprite-editor, ansi-editor, livechat (wide only on /chat),
-bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars. card-lobby
-cannot have it until someone extracts from its 2826-line index.ts.
+**Responsive is FOUR things**: ask the terminal to widen, follow the resize,
+put 80 columns back (`sdk/utils/terminal-mode.ts`), and be able to RECEIVE
+the key that asks. Doors with the switch, all starting FIXED: grandmaster
+(also Settings > DISPLAY), sprite-editor, ansi-editor, livechat (wide only on
+/chat), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
+card-lobby.
 
 **A source pin proves a call exists, not that it runs.** The ANSI editor door
 threw on start for every caller while a test asserted its source mentions
-`createTerminalModeSwitch`. Doors that got the switch later have tests that
-START them.
+`createTerminalModeSwitch`. Doors that got it later have tests that START
+them.
 
 ## READ THIS FIRST
 
-**Door rendering, the deploy that lies, the disk:**
+**Door rendering:**
 `thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`.
-A door painting at absolute cursor positions was corrupted by backend
-line-wrapping; fixed by `positionsCursorAbsolutely()`
-(`web/backend/src/utils/ascii-art.util.ts`) - a door that moves the cursor is
-PAINTING and has no lines to wrap. Debug door rendering by capturing real
-traffic (`XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`), never by
-guessing - three wrong conclusions in one session ended with one capture.
-Earlier 2026-09-01 handoffs (settings admin/two-store class, sysop
-list/SMTP, activity feed) and 2026-08-31 (door delete rules/DOORREPO parity)
-are behind it if more history is needed.
+Backend line-wrapping corrupted doors painting at absolute cursor positions;
+fixed by `positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`).
+Debug rendering by CAPTURING real traffic (`XIM_DEBUG=1 XIM_DEBUG_JSON=1
+XIM_DEBUG_AMIGA=1`), never by guessing. Earlier 09-01 handoffs (settings
+admin, sysop list/SMTP, activity feed) and 08-31 (delete rules/DOORREPO) sit
+behind it.
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
 type, a door's settings and a password each exist in SQLite AND on disk;
@@ -101,14 +120,14 @@ cache, `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 Run **`npm run typecheck:tests`**, not just `npm test` - jest uses swc and
 strips types, so a file can be green under jest and fail the typecheck.
 
-A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it;
-two agents in one door pull each other's half-finished work into a commit.
-Use separate worktrees.
+A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it -
+two agents in one door pull each other's half-finished work into a commit, so
+use separate worktrees. A worktree also needs each door's `node_modules`
+symlinked, or a suite importing that door fails to RUN and reports 0 failures.
 
-**Door releases are Shrinkler-packed** - see the `shrinkler-door-releases`
-skill. A crunched door needs MORE emulator memory, not less: crunched
-DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
-fine.
+**Door releases are Shrinkler-packed** (`shrinkler-door-releases` skill). A
+crunched door needs MORE emulator memory: crunched DoorRepo (513 KB) is
+refused by the 500 KB door region.
 
 ## Next
 
@@ -124,22 +143,20 @@ reads the DELETED conference. Two live outages this session were that mistake.
 Use `web/backend/src/conferences/conference-paths.ts` and
 `web/backend/src/screens/screen-resolution.ts`.
 
-**LIVE and verified through the loader inside the container:** the invented
-screen fallback is gone; 41 nodes keep their own screens and 215 read
-`Screens/Node/` by tooltype; every conference path reads LOCATION.n, doors
-included (BB_CONFLOCAL, MSGBASE_LOC); the admin has a Screen Files page and
-conference file-area paths that follow the conference.
+**LIVE, verified through the loader in the container:** no invented screen
+fallback; 41 nodes keep their own screens and 215 read `Screens/Node/` by
+tooltype; every conference path reads LOCATION.n, doors included
+(BB_CONFLOCAL, MSGBASE_LOC).
 
 **Measure resolution by driving the loader, never by eye** -
-`dev/scripts/probe-screen-resolution.ts` before and after, then diff. 5,865
-lookups here. `dev/scripts/provision-node-screens.ts` gives a node screens; it
-is NOT in the deployed image (`dev/` is not copied), so it has to be put into
-the container to run there.
+`dev/scripts/probe-screen-resolution.ts` before and after, then diff.
+`dev/scripts/provision-node-screens.ts` gives a node screens and is NOT in the
+deployed image (`dev/` is not copied).
 
 **Phase 2, the ANSI editor in the browser, is 2 of 6 tasks in.** Plan:
 `docs/superpowers/plans/2026-09-02-screen-manager-phase-2-browser-ansi-editor.md`.
-The SDK core is aliased into the admin bundle from SOURCE, and the base64/CP437
-bridge is done. Colour there is SGR minus 30 - red is 1, not the palette's 4.
+SDK core aliased into the admin bundle from SOURCE, base64/CP437 bridge done.
+Colour there is SGR minus 30 - red is 1, not the palette's 4.
 
 The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
 2026-09-02 - no more hold-off needed there.
@@ -159,27 +176,15 @@ Also open:
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort and its own test caught it.
 6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-7. **Alt+Enter should also toggle BROWSER fullscreen.** The door half is
-   done; the frontend half is `packages/terminal/.../BBSTerminal.tsx`.
-8. **The Doors volume never deletes** - the entrypoint syncs with
-   `tar | tar`, so a file dropped from the image lives on the volume for
-   ever (eight orphans removed by hand 2026-09-02). Prune
-   `Doors/<door>/dist/` for doors the IMAGE ships, never for DOORREPO's.
-9. **BBSTerminal registers two custom key handlers** and xterm keeps only
-   the last, so Shift+Arrow sequences, the copy/select-all path and the
-   Ctrl+Shift+M block have never run. Merging them makes three features
-   appear at once.
-10. **card-lobby needs an extraction** (2826 lines) before it can take the
-   size switch.
+7. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
+   game, and deleting a table have never worked at all.
 
 ## Gotchas
 
-- **Read the mutation path; do not count.** Three false positives.
 - **A green API is not a green disk**, and a symbol-free binary is not one
   that was checked. Look at the bytes.
 - **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`
-  and `CRITICAL: n library trap(s) missing` are real failures shown as noise.
-- **Give the door probe 20 s.** Less kills the harness before it boots.
+  and `CRITICAL: n trap(s) missing` are real failures shown as noise.
 - **Never `git stash` here** - the CRLF phantom files block `stash pop`
   permanently. Use `git checkout <ref> -- <paths>`.
 - **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
