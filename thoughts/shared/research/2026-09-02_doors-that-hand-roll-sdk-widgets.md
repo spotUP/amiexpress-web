@@ -104,3 +104,23 @@ express a proportional two-column, two-row split with an action row.
 A door may draw its own thing when the SDK has nothing for it. It may not
 draw its own thing because the SDK's was not looked for - that is how five
 separate bugs reach a sysop in one evening.
+
+## Checked since (2026-09-02, session c7)
+
+**whip and scrollwars are done** (`fc074c883`). whip's two confirms were one
+`blessed.question` box copied into both screens; they are now one shared
+`ConfirmModal`. scrollwars' status bar was worse than "hand-rolled": a one-row
+`createBox` with no border key takes Panel's default line, and a one-row box
+with a frame has no interior, so the bar painted a rule and no text at all. A
+driven test proves the old bar painted neither the user count nor a key name.
+
+**The four remaining "own column list" entries are false positives** -
+livechat, ami-stripper, telnet-front and ansi-editor. Checked one by one:
+ami-stripper and telnet-front are ANSI-STREAM doors, writing escape sequences
+straight to `output.write` with no blessed screen for a `ListTable` to live
+in; livechat's is its help command, in the same stream; ansi-editor's two are
+item strings for a blessed `List`, which is what List items are. This is the
+weakest signal doing what the note above says it does - matching `padEnd(`.
+
+That leaves door-manager's one document view and bug-tracker, doors-menu and
+theme-picker's bars, all of which are session 82's.
