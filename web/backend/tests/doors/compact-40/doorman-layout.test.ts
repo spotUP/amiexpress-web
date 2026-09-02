@@ -19,6 +19,12 @@
  * gets. This suite builds the REAL DoormanLayout against a real 40x25
  * Screen and asserts the resolved coordinates - not a source pin.
  */
+// Force per-file module scope: this file has no import/export of its own, so
+// without this tsc treats it as a global script and its top-level `const`s
+// (e.g. `chrome`, `printable`) collide with the same names in sibling
+// compact-40 test files that are also plain scripts (TS2451).
+export {};
+
 const { Screen } = require('../../../../../sdk/engines/ui/blessed');
 // The compiled module the door actually loads (its package exports map points
 // at sdk/dist), so a spy here is the spy the door sees through the barrel.
@@ -134,7 +140,12 @@ describe('DOORMAN layout on a 40x25 screen', () => {
       layout = new DoormanLayout(screen, 1);
       expect(spy).toHaveBeenCalledTimes(1);
       // ...and drawn to the SCREEN's width, not to a constant.
-      expect(spy.mock.calls[0][2].width).toBe(77);
+      // jest's SpyInstance infers `unknown` for this call's args here (the
+      // spied module comes through a plain `require`, so @types/jest can't
+      // recover attachMasthead's real MastheadOptions parameter type) even
+      // though chrome.attachMasthead's third parameter is concretely typed;
+      // narrow back to the field this assertion actually reads.
+      expect((spy.mock.calls[0][2] as { width: number }).width).toBe(77);
     } finally {
       spy.mockRestore();
     }

@@ -14,6 +14,12 @@
  * width-driven builders, so these assertions run on the real strings the
  * door hands to its List. The 80-column branch is pinned literally.
  */
+// Force per-file module scope: this file has no import/export of its own, so
+// without this tsc treats it as a global script and its top-level `const`s
+// (e.g. `chrome`, `printable`) collide with the same names in sibling
+// compact-40 test files that are also plain scripts (TS2451).
+export {};
+
 const doorsMenu = require('../../../../../Doors/doors-menu/app');
 const { buildCategoryRow, buildDoorRow, buildFooterContent } = doorsMenu;
 // The compiled modules the door actually loads (its package exports map

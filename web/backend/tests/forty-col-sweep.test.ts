@@ -312,7 +312,9 @@ describe('40-column sweep: screens', () => {
     // The frames are composed 80 wide and bypass the choke; the surface's
     // answer is not to fit them but to not play them.
     expect(wipeEffectsEnabled(C64)).toBe(false);
-    expect(wipeEffectsEnabled({ screenWidth: 80 })).toBe(true);
+    // wipeEffectsEnabled only reads petsciiMode; screenWidth plays no part in
+    // its own signature, so a wide/ANSI stand-in session need not carry it.
+    expect(wipeEffectsEnabled({ petsciiMode: false })).toBe(true);
   });
 });
 

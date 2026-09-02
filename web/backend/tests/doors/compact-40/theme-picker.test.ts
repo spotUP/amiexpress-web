@@ -73,7 +73,11 @@ describe('theme-picker compact (40-column) layout', () => {
     expect(printable(buildNote(plainStyles, compact))).toBeLessThanOrEqual(40);
     const hints = buildFooterHints(compact);
     // ' ' + 'Key: Does' joined by two spaces is what the footer renders.
-    const rendered = ' ' + hints.map(h => `${h.key}: ${h.does}`).join('  ');
+    // buildFooterHints comes through a destructured `require`, which
+    // @types/node cannot recover a real return type for (unlike a plain
+    // `const x = require(...)`), so it types as `any` and the callback
+    // parameter needs its own annotation to avoid an implicit `any`.
+    const rendered = ' ' + hints.map((h: { key: string; does: string }) => `${h.key}: ${h.does}`).join('  ');
     expect(printable(rendered)).toBeLessThanOrEqual(40);
   });
 
@@ -101,7 +105,11 @@ describe('theme-picker compact (40-column) layout', () => {
         expect(spy).toHaveBeenCalledTimes(expected);
         if (expected === 1) {
           // ...and drawn to the SCREEN's width, not a constant.
-          expect(spy.mock.calls[0][2].width).toBe(79);
+          // jest's SpyInstance infers `unknown` for this call's args here
+          // (the spied module comes through a plain `require`, so
+          // @types/jest can't recover attachMasthead's real MastheadOptions
+          // parameter type); narrow back to the field this assertion reads.
+          expect((spy.mock.calls[0][2] as { width: number }).width).toBe(79);
         }
         void run;
       }

@@ -14,6 +14,12 @@
  * Every rule is now sized from the caller's real width, and the 80-column
  * strings are pinned literally below.
  */
+// Force per-file module scope: this file has no import/export of its own, so
+// without this tsc treats it as a global script and its top-level `const`s
+// (e.g. `printable`) collide with the same names in sibling compact-40 test
+// files that are also plain scripts (TS2451).
+export {};
+
 const {
   stripperHeader,
   stripperRule,
