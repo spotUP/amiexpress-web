@@ -65,6 +65,16 @@ RUN echo "[Build] Starting frontend vite build" && \
 # ============================================================================
 FROM node:20-alpine AS config-builder
 
+# The SDK's SOURCE, not just its dist.
+#
+# The admin imports SDK modules by subpath - the ANSI editor's core, for one -
+# and vite resolves those to files under /app/sdk. With no SDK in this stage
+# the build died with "Could not load
+# /app/sdk/engines/ui/ansi-editor/core/file-ops (imported by
+# src/pages/screen-bytes.ts)", which is the same shape as the backend's
+# missing petscii: a stage given dist when the consumer resolves source.
+COPY --from=sdk-builder /app/sdk /app/sdk
+
 WORKDIR /app/web/config-app
 
 COPY web/config-app/package*.json ./
