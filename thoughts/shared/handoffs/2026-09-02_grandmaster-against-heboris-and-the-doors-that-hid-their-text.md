@@ -103,7 +103,35 @@ opponents).
 
 Reported by the sysop at the end of the session, connecting over telnet
 rather than the web terminal: **the door degrades beautifully - and no input
-reaches it.**
+reaches it.** Two separate problems came out of that session. The rendering
+one is FIXED (`86200b3e5`, below); the input one is diagnosed and open.
+
+### Solid blocks degraded to "#" - FIXED
+
+"it degrades the bg blocks etc in gmaster to # - it can use ansi bg colors
+like the web client version". Two faults behind one character, both in
+`sdk/utils/blessed-helpers.ts`:
+
+1. `SPARKLINE_CHARS` ends in the full block and the sparkline branch ran
+   FIRST, so every solid block in every door - a playfield cell, a bar, a
+   filled panel - was read as the top bar of a sparkline and replaced with
+   "#". The block's own fallback entry was never reached.
+2. That fallback was wrong anyway: it hardcoded a white background (a red
+   piece would render white) and closed with `ESC[0m`, a full reset that
+   discarded the foreground colour and every attribute the door had set for
+   the rest of the line.
+
+Fixed with reverse video: `ESC[7m` + one space + `ESC[27m` fills the cell in
+whatever colour the door was ALREADY writing, which is what the block looks
+like on the web client. No colour table to keep in step with each door's
+palette, no SGR state to track. The shade fallbacks now close with `ESC[49m`
+(default background only). Four of the five tests fail on the old converter;
+the fifth pins that a real sparkline still renders as ASCII bars.
+
+This landed for EVERY door, not just GRANDMASTER - anything drawing solid
+blocks to a non-Unicode terminal keeps its colours now.
+
+### Input - still open
 
 Diagnosed, not guessed. The chain:
 
@@ -177,6 +205,15 @@ the arcade doors move on held keys too.
   that dies in 11-20 seconds is something else entirely: the host's anonymous
   HTTPS `git fetch` breaking and falling back to a credential prompt with no
   tty. `c41c9aacf` retries it.
+- **A glyph substitution throws colour away; reverse video does not.** When
+  a terminal cannot draw a solid block, `ESC[7m` + space fills the cell in
+  the colour already in force. It needs no palette table and no SGR
+  tracking, and it is what the block looked like on the web client anyway.
+  The same instinct fixed CARD LOBBY's progress bar earlier the same day -
+  spaces with a background beat glyphs on this board, every time.
+- **Check what runs FIRST.** The block never reached its own fallback because
+  a sparkline branch above it claimed the character. The fallback was also
+  wrong, and fixing only the fallback would have changed nothing visible.
 - **Local Docker was the disk problem**, not worktrees: 5.8 GB of build cache
   and 3.0 GB of images with zero active containers. The BBS runs on Hetzner,
   so local images here are always stale. `docker system df` shows it.
@@ -224,7 +261,8 @@ Four agents built the GRANDMASTER features. What made it work:
    grandmaster. The test names the file and the count.
 8. **Telnet input is dead for every game-mode door** - see the section above.
    The minimal fix is one condition; the proper one synthesises key-up from a
-   measured auto-repeat interval.
+   measured auto-repeat interval. (Telnet RENDERING is already fixed - solid
+   blocks keep their colour as of `86200b3e5`.)
 9. **Never driven by hand:** CARD LOBBY's gamepad paths and end-of-UNO-game;
    the new GRANDMASTER items and rotation systems have tests but nobody has
    played them. GRANDMASTER over telnet renders correctly - confirmed by the
