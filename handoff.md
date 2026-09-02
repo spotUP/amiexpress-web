@@ -1,54 +1,68 @@
 # Handoff
 
-## Alt+Enter works now, everywhere (2026-09-02)
+## The key handler, the volume, CARD LOBBY (2026-09-02, late)
+
+`thoughts/shared/handoffs/2026-09-02_the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`.
+All verified in the live container.
+
+**xterm keeps ONE custom key handler** - `attachCustomKeyEventHandler`
+assigns, it does not append - and BBSTerminal registered two, so Shift+Arrow,
+copy/select-all and the Ctrl+Shift+M block had never run. One handler now;
+rules in `classifyKey()` (`packages/terminal/src/utils/key-overrides.ts`).
+**Alt+Enter also fullscreens the browser**, on the KEY because
+`requestFullscreen` needs a user gesture; game mode toggles the window and
+sends NO bytes, or the door toggles twice per press.
+
+**The Doors volume deletes** - `prune_image_door_dists()` in
+`docker-entrypoint.sh` mirrors image door `dist/`: image-shipped doors only,
+inside `dist/` only, compiled output whitelisted by extension, never against
+an empty image dist. **The whitelist exists because a dry run against the
+live volume found frogger's and super-qix's `highscores.json` in `dist/`.**
+Dry-run any delete path against the real volume before shipping it.
+
+**CARD LOBBY: `// @ts-nocheck` hid six crash paths** (gamepad X/Y/A/START at
+an UNO table, the R key, the end of every UNO game, deleting a table), and
+`run()` painted the lobby then RETURNED - which is the door's whole lifetime,
+so it exited onto the board menu. Both fixed; dead browser mode removed; four
+managers extracted; 1944 lines, tsc clean, size switch in; the door has a
+test runner (`npm test` in `Doors/card-lobby`). **Only the tests have driven
+those paths - none of it has been played.**
+
+## The size switch and the editors (2026-09-02)
 
 `thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
-is the record, including the ANSI editor audit and grandmaster's rebuilt
-battle royale (99 players, a grid of playfields, standings under your own
-board; 98 bots cost 0.16 ms/frame, measured).
+- the ANSI editor audit and grandmaster's 99-player battle royale.
 
-**Responsive is FOUR things.** Ask the terminal to widen, follow the resize,
-put 80 columns back (`sdk/utils/terminal-mode.ts` does those three) - and be
-able to RECEIVE the key that asks, which was broken in three places at once:
-the browser never sent Alt+Enter (xterm does not ESC-prefix Option on macOS),
-the SDK parser could not name ESC+CR as `M-enter`, and game mode dropped
-modifiers. Alt+LETTER always worked, which is why none of it was noticed.
-
-Doors with the switch, all starting FIXED: grandmaster (also Settings >
-DISPLAY), sprite-editor, ansi-editor, livechat (wide only on /chat),
-bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars. card-lobby
-cannot have it until someone extracts from its 2826-line index.ts.
+**Responsive is FOUR things**: ask the terminal to widen, follow the resize,
+put 80 columns back (`sdk/utils/terminal-mode.ts`), and be able to RECEIVE
+the key that asks. Doors with the switch, all starting FIXED: grandmaster
+(also Settings > DISPLAY), sprite-editor, ansi-editor, livechat (wide only on
+/chat), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
+card-lobby.
 
 **A source pin proves a call exists, not that it runs.** The ANSI editor door
 threw on start for every caller while a test asserted its source mentions
-`createTerminalModeSwitch`. Doors that got the switch later have tests that
-START them.
+`createTerminalModeSwitch`. Doors that got it later have tests that START
+them - and CARD LOBBY shows why: it passed every source check while exiting
+the moment it was drawn.
 
 ## READ THIS FIRST
 
-**Door rendering, the deploy that lies, the disk:**
-`thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`
-is the current state.
+**Door rendering:**
+`thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`.
+Backend line-wrapping corrupted every door painting at absolute cursor
+positions; fixed by `positionsCursorAbsolutely()`
+(`web/backend/src/utils/ascii-art.util.ts`) - a door that moves the cursor is
+PAINTING and has no lines to wrap.
 
-**The backend used to line-wrap screen paints**, corrupting every door that
-paints at absolute cursor positions. Fixed by `positionsCursorAbsolutely()`
-(`web/backend/src/utils/ascii-art.util.ts`): a door that moves the cursor is
-PAINTING and has no lines to wrap. Check any door that still looks subtly
-wrong against that.
+**Bytes are milliseconds in a 68K door** - ~45ms per 198-byte XIM message,
+measured. Do not send a colour already set, or pad rows on a cleared screen.
 
-**Bytes are milliseconds in a 68K door.** ~45ms of emulation per 198-byte
-XIM message, measured. A screen paint's cost is its byte count. Do not send
-a colour already set, and do not pad rows on a screen that was just cleared.
-
-**Debugging a door's rendering: capture, do not guess** -
-`XIM_DEBUG=1 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`. Three wrong conclusions in
-one session ended there. The handoff carries the method and the log-parsing
-trap that fakes a convincing reproduction.
-
-**Start here for 2026-09-01:** the three handoffs of that date -
-`..._door-settings-admin-and-the-two-store-class.md`,
-`..._sysop-list-smtp-to-config-files.md`, and
-`..._activity-feed-screen-parity-and-the-live-board.md` (latest).
+**Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1
+XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`, never by guessing; the handoff carries
+the method and the log-parsing trap that fakes a reproduction. The other
+09-01 handoffs (settings admin, sysop list/SMTP, activity feed) sit beside
+it.
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
 type, a door's settings and a password each exist in SQLite AND on disk, and
@@ -62,8 +76,7 @@ Two tests fail on the pattern (`tests/doors/doors-do-not-use-cwd.test.ts`,
 `tests/no-hardcoded-home-paths.test.ts`).
 **Doors, deletes, DOORREPO:**
 `thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
-is the state behind it. Behind it: `..._doorrepo-doors-and-deploy-fixes.md`
-(the morning), `..._session-handoff.md` (admin, finished and deployed).
+and the two behind it.
 
 **A door is its REGISTRATION** - five live reports in one day were the `.info`
 left behind or another door's taken away. Before any delete/install/list path,
@@ -101,14 +114,14 @@ cache, `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 Run **`npm run typecheck:tests`**, not just `npm test` - jest uses swc and
 strips types, so a file can be green under jest and fail the typecheck.
 
-A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it;
-two agents in one door pull each other's half-finished work into a commit.
-Use separate worktrees.
+A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it -
+two agents in one door pull each other's work into a commit, so use separate
+worktrees. A worktree also needs each door's `node_modules` symlinked, or a
+suite importing that door fails to RUN and reports 0 failures.
 
-**Door releases are Shrinkler-packed** - see the `shrinkler-door-releases`
-skill. A crunched door needs MORE emulator memory, not less: crunched
-DoorRepo (513 KB) is refused by the 500 KB door region, a smaller door is
-fine.
+**Door releases are Shrinkler-packed** (`shrinkler-door-releases` skill). A
+crunched door needs MORE emulator memory: crunched DoorRepo (513 KB) is
+refused by the 500 KB door region.
 
 ## Next
 
@@ -165,25 +178,19 @@ Also open:
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
    PURPOSE: the cheap version broke re-sort, and its test caught it.
 6. Audio stutter: one cause fixed, never confirmed.
-7. **The Doors volume never deletes** - the entrypoint syncs with
-   `tar | tar`, so a file dropped from the image lives on the volume for
-   ever (eight orphans removed by hand 2026-09-02). Prune
-   `Doors/<door>/dist/` for doors the IMAGE ships, never for DOORREPO's.
-8. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
+7. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
    suspected of doing very little - find out what `Drives.info` actually
    reaches - and the wanted feature is online storage: S3 buckets and the
    like, offered as a place a board's files can live.
-9. **card-lobby needs an extraction** (2826 lines) before it can take the
-   size switch.
+8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
+   game, and deleting a table have never worked at all.
 
 ## Gotchas
 
-- **Read the mutation path; do not count.** Three false positives.
 - **A green API is not a green disk**, and a symbol-free binary is not one
   that was checked. Look at the bytes.
 - **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`
   and `CRITICAL: n library trap(s) missing` are real failures shown as noise.
-- **Give the door probe 20 s.** Less kills the harness before it boots.
 - **Never `git stash` here** - the CRLF phantom files block `stash pop`
   permanently. Use `git checkout <ref> -- <paths>`.
 - **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
