@@ -52,24 +52,21 @@ WAL included. Newest record:
 ## Earlier on 2026-09-02
 
 `..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
-and `..._the-size-switch-the-editors-and-a-real-battle-royale.md`. Worth
-carrying: **xterm keeps ONE custom key handler** (rules live in
-`classifyKey()`, `packages/terminal/src/utils/key-overrides.ts`); **the Doors
-volume deletes now** via `prune_image_door_dists()`, whitelisted by extension
-because frogger and super-qix keep scores in `dist/`; **`// @ts-nocheck` is a
-bug report**; **a source pin proves a call exists, not that it runs.**
+and `..._the-size-switch-the-editors-and-a-real-battle-royale.md`: xterm keeps
+ONE custom key handler (`classifyKey()`); the Doors volume deletes via
+`prune_image_door_dists()`, whitelisted by extension; `// @ts-nocheck` is a
+bug report; a source pin proves a call exists, not that it runs.
 
 ## READ THIS FIRST
 
 **Door rendering:**
-`thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`.
-Backend line-wrapping corrupted every door painting at absolute cursor
-positions; fixed by `positionsCursorAbsolutely()`
-(`web/backend/src/utils/ascii-art.util.ts`) - a door that moves the cursor is
-PAINTING and has no lines to wrap.
+`.../handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`. Backend
+line-wrapping corrupted every door painting at absolute cursor positions; fixed
+by `positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`) -
+a door that moves the cursor is PAINTING and has no lines to wrap.
 
 **Bytes are milliseconds in a 68K door** - ~45ms per 198-byte XIM message,
-measured. Do not send a colour already set, or pad rows on a cleared screen.
+measured. Never send a colour already set, or pad rows on a cleared screen.
 
 **Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1
 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`, never by guessing; the handoff carries
@@ -104,21 +101,20 @@ repo: `/Users/spot/Code/amiexpress-doorserver`). Host `root@89.167.21.154`,
 key `~/.ssh/hetzner_deploy`. `BBS_DATA_DIR=/app/data/bbs`, backend on 3001.
 
 Push to `main` auto-deploys; **then check it** -
-`docker exec amiexpress-bbs cat /app/.git-sha`. Green CI has lied. A deploy
-that builds but cannot serve now rolls back to the previous image by itself.
-Deploys disconnect /chat after a 60s countdown. Docs changes do not deploy.
+`docker exec amiexpress-bbs cat /app/.git-sha`. Green CI has lied. A deploy that
+builds but cannot serve rolls back by itself. Deploys disconnect /chat after a
+60s countdown. Docs changes do not deploy.
 
 **`main` moves under you** - other sessions push constantly. Cut a worktree
 from fresh `origin/main`, cherry-pick, confirm ancestry before pushing and
-before deleting anything. A worktree needs
-`Documentation/7-Reference Sources/NDK3.2R4` symlinked in before it can build
-the Amiga door.
+before deleting. A worktree needs `Documentation/7-Reference Sources/NDK3.2R4`
+symlinked in before it can build the Amiga door.
 
 ## Dev
 
-`./dev/scripts/start-servers.sh --bbs-only` / `kill-servers.sh`, and
-zombie-verify after every stop. A change that "does not apply": clear the tsx
-cache, `rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
+`./dev/scripts/start-servers.sh --bbs-only` / `kill-servers.sh`, zombie-verify
+after every stop. A change that "does not apply": clear the tsx cache,
+`rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
 
 Run **`npm run typecheck:tests`**, not just `npm test` - jest uses swc and
 strips types, so a file can be green under jest and fail the typecheck.
@@ -141,8 +137,8 @@ Earlier: `..._browser-ansi-editor-phase-2-complete.md`.
 
 **Measure resolution by driving the loader, never by eye** -
 `dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
-lookups here). `dev/scripts/provision-node-screens.ts` gives a node screens and
-is NOT in the image, so it must be copied into the container to run there.
+lookups). `dev/scripts/provision-node-screens.ts` gives a node screens; NOT in
+the image, so copy it in to run it there.
 
 Also open:
 
@@ -160,12 +156,11 @@ Also open:
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON PURPOSE:
    the cheap version broke re-sort, and its test caught it.
 6. Audio stutter: one cause fixed, never confirmed.
-7. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
-   suspected of doing very little - find out what `Drives.info` actually
-   reaches - and the wanted feature is online storage: S3 buckets and the
-   like, offered as a place a board's files can live.
+7. **Drive Setup (sysop, 2026-09-02):** the admin's drive section is suspected
+   of doing very little - find what `Drives.info` reaches. Wanted: online
+   storage (S3 and the like) as a place a board's files can live.
 8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
-   game, and deleting a table have never worked at all.
+   game and deleting a table have never worked at all.
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk, so one always reads as modified and `git rebase`
@@ -173,24 +168,37 @@ refuses to start. Land by cherry-picking onto a worktree of origin/main until
 somebody decides which name survives (`Commands/BBSCmd/GWALL.info` points at
 `DOORS:GWall/GWall`; the lowercase path has the package.json).
 
-## PETSCII (2026-09-02)
+## PETSCII + 40 columns (2026-09-02)
 
 A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and the telnet
-emitter. Overlay retired; a C64 terminal is BLACK, and only `$02 <colour>`
-moves background/border. Walk script, detail, what is open:
-`thoughts/shared/handoffs/2026-09-02_petscii-full-canvas.md`.
+(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and telnet emitter.
+Overlay retired; a C64 terminal is BLACK; only `$02 <colour>` moves
+background/border. Detail: `.../handoffs/2026-09-02_petscii-full-canvas.md`.
+
+**The board is adapted to 40 columns** (8 tasks; Task 1's gate is default-closed): MIN_COLUMNS gate with `[40]`/`[C64]`,
+SDK XXS=40 tier, sixteen narrow tables, screen reflow with an `[80-COLUMN ANSI
+SCREEN - SKIPPED]` token, six adapted doors, effects OFF (wipes, rail, glitch)
+on PETSCII. Two chokes - `wrapForSession` (BBS prose) and
+`wrapDoorTextForSession` (`BBSApi.write`) - both identity for any ANSI caller
+at any width and for anything positioning the cursor. A row may use 40 columns,
+a prompt 39; `web/backend/tests/forty-col-sweep.test.ts` sweeps every surface.
+**Commits, limits, SYSOP'S C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
+
+**80-column 68K doors reach a C64 too** (Phase 3): `WHO`, `S`,
+`WHAT` carry `C64_ADAPT=40`, show `[C64]`, and each finished frame is reduced
+to 40 columns (`>` marks a shortened column). ANSI bytes untouched. **Seam,
+limits, Phase 4, C64 WALK:** `.../handoffs/2026-09-02_c64-door-adapter-phase3.md`.
 
 ## Gotchas
 
-- **A green API is not a green disk**, and a symbol-free binary is not one
-  that was checked. Look at the bytes.
-- **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`
-  and `CRITICAL: n library trap(s) missing` are real failures shown as noise.
-- **Never `git stash` here** - the CRLF phantom files block `stash pop`
-  permanently. Use `git checkout <ref> -- <paths>`.
+- **A green API is not a green disk**; a symbol-free binary is not one that
+  was checked. Look at the bytes.
+- **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`,
+  `CRITICAL: n library trap(s) missing` are real failures shown as noise.
+- **Never `git stash` here** - CRLF phantom files block `stash pop` for ever.
+  Use `git checkout <ref> -- <paths>`.
 - **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
 - **A door archive names its own command** in `Commands/BBSCmd/<CMD>.info`.
-- **SDK tests import the built `sdk/dist`** - a source edit is invisible
-  until `npm run build:cjs`.
+- **SDK tests import the built `sdk/dist`** - a source edit is invisible until
+  `npm run build:cjs`.
 - **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
