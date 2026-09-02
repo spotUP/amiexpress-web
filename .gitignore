@@ -488,3 +488,9 @@ Doors/DoorRepo/DoorRepo.token
 # Python bytecode from dev/scripts helpers
 __pycache__/
 *.pyc
+
+# A 68K emulator trace capture, 42 MB / 992,731 lines, written at the repo root
+# by the XIM debug path. It was indexed as drawable art by the screen gallery
+# and removed from the live board at the sysop's request; tracking it meant a
+# deploy would put it back.
+68klog.txt
