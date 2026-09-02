@@ -83,12 +83,13 @@ still refused - the claim is per registration, not per executable.
 
 ## Known limitation: the tick cannot preempt a 68K batch
 
-The adapter flushes a frame on a 250 ms quiet gap, on a max-frame cap, and at
-every CPU stop boundary (`onPause`, which fires on all fourteen stop sites, not
-only input waits - whatever the door has painted at a stop is a complete frame).
-The cap is a `setTimeout`, and `executeUntilTrap` (`MoiraEmulator.ts:619`) is a
+The adapter flushes a frame on a quiet gap of `C64_ADAPT_TICK_MS` = **30 ms**,
+on a max-frame cap of `C64_ADAPT_MAX_FRAME_MS` = **250 ms**, and at every CPU
+stop boundary (`onPause`, which fires on all fourteen stop sites, not only
+input waits - whatever the door has painted at a stop is a complete frame).
+Both are `setTimeout`s, and `executeUntilTrap` (`MoiraEmulator.ts:619`) is a
 tight C++ loop that never yields to the JS loop, so **a door that paints inside
-one long batch shows its frame at the END of the batch rather than 250 ms in**.
+one long batch shows its frame at the END of the batch rather than 30 ms in**.
 The stop-boundary flush covers the case that matters (the door blocking for
 input); the fake-timer unit test does not cover the batch case and says so.
 
@@ -206,8 +207,9 @@ Local board, backend restarted at 15:51 (`./dev/scripts/start-servers.sh
    80-column screens, unchanged byte for byte.
 8. Inside `WHO`, hold RETURN. The prompt should appear without your having to
    type again (the stop-boundary flush). **A door that paints inside one long
-   CPU batch may show its frame at the END of the batch rather than 250 ms in -
-   report it if a screen feels like it arrives late, in one lump.** That is the
+   CPU batch may show its frame at the END of the batch rather than 30 ms in
+   (the quiet-gap tick; 250 ms is the hard cap) - report it if a screen feels
+   like it arrives late, in one lump.** That is the
    known `setTimeout`-vs-`executeUntilTrap` limit above, not a new bug.
 
 **B. A real C64 (or SyncTERM with `ScreenMode=C64`) over telnet.** Repeat 3-6.

@@ -10,6 +10,19 @@
 
 **Spec:** `thoughts/shared/plans/2026-09-02-c64-40col-adaptation.md` (strategy + final user decisions; Phase 4 REVISED to blanket-gate all 68K doors) + `thoughts/shared/research/2026-09-02_40col-inventory.md` (file:line inventory). Read both before starting.
 
+> **Checklist state (reconciled 2026-09-02, fix wave).** 58 of 59 boxes are
+> ticked, each against the ledger entry that records the task complete
+> (`.superpowers/sdd/2026-09-02-c64-40col/progress.md`, Tasks 1-8, plus the
+> whole-run review's fix wave). The ONE open box is Step 4 of Task 8, the
+> manual C64 walk - the sysop performs it and only the sysop may tick it.
+> Deviations recorded in the ledger and honoured here: Task 4's AmigaGuideViewer
+> width parameter was WITHDRAWN (zero call sites; the file is byte-identical to
+> pre-plan), and Task 4's wrap-choke half was already landed by the
+> petscii-full-canvas plan's Task 10, so its steps were verified rather than
+> re-implemented. Four items are open as recorded limits rather than steps: see
+> `thoughts/shared/handoffs/2026-09-02_c64-40col-adaptation.md` "Known limits"
+> 6, 10, 11 and 12.
+
 ## Global Constraints
 
 - **THE TWO NON-NEGOTIABLES (sysop, 2026-09-02):**
@@ -57,7 +70,7 @@ Both registries already deliver the raw tooltype map to the launch site, so the 
 - Produces: `DOOR_NEEDS_80_NOTICE = '\r\nTHIS DOOR NEEDS AN 80 COLUMN SCREEN\r\n'` (uppercase-only ASCII — legible on a power-on C64 in up/gfx charset, same rule as `ANSI_GRAPHICS_PROMPT`, `services/login-connect.service.ts:57-74`).
 - Consumes: `emitText` (`utils/ansi-buffer.util.ts:194`), `LoggedOnSubState`.
 
-- [ ] **Step 1: Write the failing resolver tests**
+- [x] **Step 1: Write the failing resolver tests**
 
 Create `web/backend/tests/doors/door-min-columns.test.ts`:
 
@@ -118,12 +131,12 @@ describe('DOOR_NEEDS_80_NOTICE', () => {
 });
 ```
 
-- [ ] **Step 2: Run, verify FAIL**
+- [x] **Step 2: Run, verify FAIL**
 
 Run: `cd web/backend && npx jest --config dev-scripts/jest.config.ts --rootDir . --testPathPattern=door-min-columns`
 Expected: module `../../src/utils/door-min-columns.util` not found — every test fails.
 
-- [ ] **Step 3: Implement the resolver util**
+- [x] **Step 3: Implement the resolver util**
 
 Create `web/backend/src/utils/door-min-columns.util.ts`:
 
@@ -185,9 +198,9 @@ export function sessionColumns(session: { screenWidth?: number; petsciiMode?: bo
 }
 ```
 
-- [ ] **Step 4: Run resolver tests to green** (same command as Step 2). Then `cd web/backend && npx tsc --noEmit`.
+- [x] **Step 4: Run resolver tests to green** (same command as Step 2). Then `cd web/backend && npx tsc --noEmit`.
 
-- [ ] **Step 5: Write the failing executeDoor gate tests**
+- [x] **Step 5: Write the failing executeDoor gate tests**
 
 Create `web/backend/tests/doors/door-min-columns-gate.test.ts` — same mocking pattern as `tests/doors/door-launch-token-wiring.test.ts`, which already pays the door.handler import-graph cost and proves the pattern works:
 
@@ -325,9 +338,9 @@ describe('executeDoor MIN_COLUMNS gate', () => {
 });
 ```
 
-- [ ] **Step 6: Run, verify FAIL** (`--testPathPattern=door-min-columns-gate`). Expected: the c64/web-P tests fail — no notice emitted, `createAllDropFiles` WAS called (no gate exists yet).
+- [x] **Step 6: Run, verify FAIL** (`--testPathPattern=door-min-columns-gate`). Expected: the c64/web-P tests fail — no notice emitted, `createAllDropFiles` WAS called (no gate exists yet).
 
-- [ ] **Step 7: Implement the gate in executeDoor**
+- [x] **Step 7: Implement the gate in executeDoor**
 
 In `web/backend/src/handlers/door.handler.ts`, add to the imports:
 
@@ -353,11 +366,11 @@ Then in `executeDoor` (line 1616), between `session.currentDoorName = door.comma
   }
 ```
 
-- [ ] **Step 8: Run the gate tests to green**, then the neighbors: `npx jest --config dev-scripts/jest.config.ts --rootDir . --testPathPattern='door-min-columns|door-launch-token'`. All green.
+- [x] **Step 8: Run the gate tests to green**, then the neighbors: `npx jest --config dev-scripts/jest.config.ts --rootDir . --testPathPattern='door-min-columns|door-launch-token'`. All green.
 
-- [ ] **Step 9: RED proof** — temporarily comment out the gate block, re-run `--testPathPattern=door-min-columns-gate`, confirm the c64/web-P tests fail, restore the gate, re-run to green.
+- [x] **Step 9: RED proof** — temporarily comment out the gate block, re-run `--testPathPattern=door-min-columns-gate`, confirm the c64/web-P tests fail, restore the gate, re-run to green.
 
-- [ ] **Step 10: 68K registry parses MIN_COLUMNS into a first-class field**
+- [x] **Step 10: 68K registry parses MIN_COLUMNS into a first-class field**
 
 In `web/backend/src/doors/amigaDoorManager.ts`, add to `DoorInfo` after `passParameters?: number;` (line 73):
 
@@ -399,7 +412,7 @@ describe('amigaDoorManager MIN_COLUMNS parsing', () => {
 
 Run RED (field missing) then GREEN.
 
-- [ ] **Step 11: Door-list marker for 40-ok doors**
+- [x] **Step 11: Door-list marker for 40-ok doors**
 
 `formatDoorLine` (`door.handler.ts:1294-1329`) marks 40-ok doors with an ASCII `[40]` token inside the existing 30-char name column, so the marker never widens a row. Replace line 1310:
 
@@ -435,7 +448,7 @@ describe('formatDoorLine 40-ok marker', () => {
 
 Run RED then GREEN.
 
-- [ ] **Step 12: Type-check + full backend suite + commit**
+- [x] **Step 12: Type-check + full backend suite + commit**
 
 ```bash
 cd web/backend && npx tsc --noEmit
@@ -459,7 +472,7 @@ Lands BEFORE any SDK layout change (non-negotiable b). Snapshots the painted 80-
 - Consumes: `Screen` (`sdk/engines/ui/blessed/core/screen.ts`), `Box`, `List`, `Panel` widgets, `createScreen` (`sdk/utils/blessed-helpers.ts:913`).
 - Produces: the committed snapshot file — the regression oracle for Tasks 3 and 6.
 
-- [ ] **Step 1: Write the baseline test**
+- [x] **Step 1: Write the baseline test**
 
 Create `sdk/tests/unit/eighty-col-baseline.test.ts`:
 
@@ -562,11 +575,11 @@ describe('80-column baseline: painted buffers', () => {
 });
 ```
 
-- [ ] **Step 2: Run** `cd sdk && npm test -- --testPathPattern=eighty-col-baseline`. Expected: PASS on first run and the `.snap` file is written (a baseline has no RED phase of its own — see Step 3 for its bite-proof).
+- [x] **Step 2: Run** `cd sdk && npm test -- --testPathPattern=eighty-col-baseline`. Expected: PASS on first run and the `.snap` file is written (a baseline has no RED phase of its own — see Step 3 for its bite-proof).
 
-- [ ] **Step 3: Prove the baseline bites** — temporarily change `sdk/engines/ui/blessed/core/screen.ts:107` from `const bbsWidth = options.responsive ? (options.width || 80) : 80;` to `... : 79;`, re-run the suite, confirm the geometry test AND at least one snapshot FAIL, revert the change, re-run to green. This is the task's RED proof: the harness detects an 80-column rendering change.
+- [x] **Step 3: Prove the baseline bites** — temporarily change `sdk/engines/ui/blessed/core/screen.ts:107` from `const bbsWidth = options.responsive ? (options.width || 80) : 80;` to `... : 79;`, re-run the suite, confirm the geometry test AND at least one snapshot FAIL, revert the change, re-run to green. This is the task's RED proof: the harness detects an 80-column rendering change.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd sdk && npm run build && npm test
@@ -592,7 +605,7 @@ Adds the missing 40-column breakpoint tier and makes `createScreen` honor sessio
 - Produces: `createScreen(bbs, opts)` yields a Screen whose dimensions equal `bbs.getTerminalSize()` whenever width is not 80.
 - Consumes: Task 2 snapshots (must not change).
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Create `sdk/tests/unit/xxs-breakpoint.test.ts`:
 
@@ -654,9 +667,9 @@ describe('createScreen honors non-80 session geometry', () => {
 });
 ```
 
-- [ ] **Step 2: Run, verify FAIL** (`cd sdk && npm test -- --testPathPattern=xxs-breakpoint`). Expected: `BREAKPOINT_XXS`/`getCompactProfile` do not exist; the 40x25 test gets `{ width: 80, height: 24 }` (responsive not triggered below 80 today, blessed-helpers.ts:926).
+- [x] **Step 2: Run, verify FAIL** (`cd sdk && npm test -- --testPathPattern=xxs-breakpoint`). Expected: `BREAKPOINT_XXS`/`getCompactProfile` do not exist; the 40x25 test gets `{ width: 80, height: 24 }` (responsive not triggered below 80 today, blessed-helpers.ts:926).
 
-- [ ] **Step 3: Implement responsive-constants.ts**
+- [x] **Step 3: Implement responsive-constants.ts**
 
 In `sdk/engines/ui/blessed/core/responsive-constants.ts`, above `BREAKPOINT_XS` (line 26):
 
@@ -719,7 +732,7 @@ export function getCompactProfile(width: number): CompactProfile {
 }
 ```
 
-- [ ] **Step 4: Implement the createScreen trigger**
+- [x] **Step 4: Implement the createScreen trigger**
 
 In `sdk/utils/blessed-helpers.ts`, replace lines 925-926:
 
@@ -741,16 +754,16 @@ with:
 
 (`?? (cond || undefined)` keeps an explicit `responsive: false` from a caller in force, because `false ?? x` is `false` — the second new test pins this.)
 
-- [ ] **Step 5: Run to green, then the FULL sdk suite including the Task 2 baseline**
+- [x] **Step 5: Run to green, then the FULL sdk suite including the Task 2 baseline**
 
 ```bash
 cd sdk && npm test -- --testPathPattern=xxs-breakpoint
 npm test    # eighty-col-baseline snapshots MUST be untouched
 ```
 
-- [ ] **Step 6: RED proof** — revert the blessed-helpers change only, confirm the 40x25 test fails again, restore, re-run green.
+- [x] **Step 6: RED proof** — revert the blessed-helpers change only, confirm the 40x25 test fails again, restore, re-run green.
 
-- [ ] **Step 7: Build + freshness + commit**
+- [x] **Step 7: Build + freshness + commit**
 
 ```bash
 cd sdk && npm run build && npx tsc --noEmit --project tsconfig.json
@@ -789,7 +802,7 @@ Session access at the seam: web sockets already carry the session (`(socket as a
 - Consumes: `sessionColumns` (Task 1), `doorOwnsTerminal` (`utils/door-owns-terminal.ts`).
 - `emitText(socket, text, immediate)` signature unchanged — every existing caller inherits the behavior.
 
-- [ ] **Step 1: Write failing wrap-unit tests**
+- [x] **Step 1: Write failing wrap-unit tests**
 
 Create `web/backend/tests/utils/wrap-for-session.util.test.ts`:
 
@@ -863,9 +876,9 @@ describe('wrapForSession', () => {
 });
 ```
 
-- [ ] **Step 2: Run, verify FAIL** (`--testPathPattern=wrap-for-session`; module missing).
+- [x] **Step 2: Run, verify FAIL** (`--testPathPattern=wrap-for-session`; module missing).
 
-- [ ] **Step 3: Implement the wrap util**
+- [x] **Step 3: Implement the wrap util**
 
 Create `web/backend/src/utils/wrap-for-session.util.ts`:
 
@@ -968,9 +981,9 @@ export function wrapForSession(
 }
 ```
 
-- [ ] **Step 4: Run wrap tests to green.**
+- [x] **Step 4: Run wrap tests to green.**
 
-- [ ] **Step 5: Write failing emitText choke tests**
+- [x] **Step 5: Write failing emitText choke tests**
 
 Create `web/backend/tests/utils/emit-text-wrap.test.ts`:
 
@@ -1018,9 +1031,9 @@ describe('emitText session-width choke', () => {
 });
 ```
 
-- [ ] **Step 6: Run, verify FAIL** (the 40-col test emits the unwrapped 100-char line today).
+- [x] **Step 6: Run, verify FAIL** (the 40-col test emits the unwrapped 100-char line today).
 
-- [ ] **Step 7: Implement the choke + emitter session getter**
+- [x] **Step 7: Implement the choke + emitter session getter**
 
 In `web/backend/src/utils/ansi-buffer.util.ts`, add the import at the top:
 
@@ -1057,9 +1070,9 @@ In `web/backend/src/server/connection-emitter.ts`, inside the `emitter` object l
     },
 ```
 
-- [ ] **Step 8: Run choke tests to green; run the FULL backend suite** — a full-suite pass here IS the 80-column no-change proof for every existing emitText caller (any output-pinning test that broke would mean the guards leak). Then RED proof: revert only the `emitText` body, confirm the 40-col choke test fails, restore.
+- [x] **Step 8: Run choke tests to green; run the FULL backend suite** — a full-suite pass here IS the 80-column no-change proof for every existing emitText caller (any output-pinning test that broke would mean the guards leak). Then RED proof: revert only the `emitText` body, confirm the 40-col choke test fails, restore.
 
-- [ ] **Step 9: File viewer + AREXX width sites**
+- [x] **Step 9: File viewer + AREXX width sites**
 
 `web/backend/src/handlers/content/view-file.handler.ts` — in `displayFile` (line ~197), compute the wrap width once and thread it:
 
@@ -1123,7 +1136,7 @@ with:
 
 AmigaGuide: `grep -rn "new AmigaGuideViewer" web/backend/src`, pass `sessionColumns(session)` for the width constructor argument at each site (the class already accepts it; default 80 keeps non-session callers unchanged).
 
-- [ ] **Step 10: Type-check + full suite + commit**
+- [x] **Step 10: Type-check + full suite + commit**
 
 ```bash
 cd web/backend && npx tsc --noEmit
@@ -1158,7 +1171,7 @@ Every batch follows the same cycle: RED tests on the builders (40-col: no line o
   - `narrowRule(): string` — `'-'.repeat(39)`.
 - Consumes: `sessionColumns` (Task 1), `wrapLineToWidth`/`printableLength` (Task 4).
 
-- [ ] **Step 1 (5a): failing tests for the helpers + file listings**
+- [x] **Step 1 (5a): failing tests for the helpers + file listings**
 
 Create `web/backend/tests/utils/table-format.util.test.ts`:
 
@@ -1231,9 +1244,9 @@ describe('file search listing', () => {
 });
 ```
 
-- [ ] **Step 2 (5a): run, verify FAIL** (`--testPathPattern='table-format|narrow-tables'`; module and builder missing).
+- [x] **Step 2 (5a): run, verify FAIL** (`--testPathPattern='table-format|narrow-tables'`; module and builder missing).
 
-- [ ] **Step 3 (5a): implement helpers + file listings**
+- [x] **Step 3 (5a): implement helpers + file listings**
 
 Create `web/backend/src/utils/table-format.util.ts`:
 
@@ -1324,7 +1337,7 @@ and replace the loop body at lines 432-440 with:
 
 Apply the same pattern to the new-files listing (`displayNewFilesFromDatabase`, lines 629-646): extract `buildNewFileLines(session, file): string[]` returning the current colorized 80-col strings verbatim (`\x1b[32m${file.filename.padEnd(20)}\x1b[0m \x1b[36m${String(sizeKB).padStart(6)}KB\x1b[0m \x1b[33m${uploadDate.padEnd(10)}\x1b[0m \x1b[37m${file.uploader}\x1b[0m` + optional `  \x1b[37m${desc}\x1b[0m`) in the wide branch and `narrowFileLines(...)` (with `\x1b[32m` on the name line, `\x1b[37m` on description lines) in the narrow branch; call it from the loop via the existing `emitLine(text, 1)` per line. Pin both branches in `narrow-tables.test.ts` the same way as the search builder.
 
-- [ ] **Step 4 (5a): green + commit**
+- [x] **Step 4 (5a): green + commit**
 
 ```bash
 cd web/backend && npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir . --testPathPattern='table-format|narrow-tables'
@@ -1333,7 +1346,7 @@ git diff --cached --stat
 git commit -m "feat(files): 40-col two-line file listings behind isNarrow, shared narrow-table helpers"
 ```
 
-- [ ] **Step 5 (5b): WHO / user list / room members**
+- [x] **Step 5 (5b): WHO / user list / room members**
 
 Same extract-and-branch pattern; add the builders and their tests to `narrow-tables.test.ts` FIRST (RED), asserting 40-col max width and the 80-col literal pins below, then implement:
 
@@ -1378,7 +1391,7 @@ git diff --cached --stat
 git commit -m "feat(who): 40-col WHO, user list and room member rows"
 ```
 
-- [ ] **Step 6 (5c): protocol menu + conference/message-base lists**
+- [x] **Step 6 (5c): protocol menu + conference/message-base lists**
 
 `info-commands.handler.ts:648-661` — extract `buildProtocolMenuLines(narrow: boolean): string[]`; wide branch returns the seven current literal lines byte-identically; narrow branch:
 
@@ -1413,7 +1426,7 @@ git diff --cached --stat
 git commit -m "feat(screens): 40-col protocol menu and ~CL/~CD/~ML/~MD conference lists"
 ```
 
-- [ ] **Step 7 (5d): message tables, node status, new-user picker, file status, doors-list chrome**
+- [x] **Step 7 (5d): message tables, node status, new-user picker, file status, doors-list chrome**
 
 Message scan rows (`message-scan.handler.ts:515-527` and `742-755` — two identical row loops) — extract ONE `buildMailScanRow(m: { isPrivate: boolean; from: string; subject: string; msgNum: number }, narrow: boolean): string[]`:
 
@@ -1467,7 +1480,7 @@ git diff --cached --stat
 git commit -m "feat(tables): 40-col message tables, node status, new-user picker, file status, doors list"
 ```
 
-- [ ] **Step 8: full backend suite + type-check** (`npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir .`) — all green, including Task 1 gate tests and Task 4 choke tests.
+- [x] **Step 8: full backend suite + type-check** (`npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir .`) — all green, including Task 1 gate tests and Task 4 choke tests.
 
 ---
 
@@ -1481,7 +1494,7 @@ Uniform mechanism for the blessed four (all rules come from Task 3's `getCompact
 3. Verified by a 40x25 buffer test (backend jest CAN import door modules — precedent `web/backend/tests/handlers/door-mode-cmd.test.ts` requires `Doors/livechat/...`): every painted row ≤ 40 cells wide with visible content, list items present.
 4. Only after its test is green is the door marked 40-ok with `MIN_COLUMNS=40`.
 
-- [ ] **Step 1: theme-picker (fully worked example)**
+- [x] **Step 1: theme-picker (fully worked example)**
 
 `Doors/theme-picker/app.ts` — the layout is already screen-relative (masthead width `screen.width - 1` at :82, list height from `screen.height` at :98/:116). Two compact changes in `createApp` (:31):
 
@@ -1556,15 +1569,15 @@ console.log('THEME.info marked MIN_COLUMNS=40');
 
 Commit: `Doors/theme-picker/app.ts`, `Doors/theme-picker/dist/*` (rebuilt), the sdk barrel export if added, `web/backend/tests/doors/compact-40/theme-picker.test.ts`, `Commands/BBSCmd/THEME.info` — subject `feat(theme-picker): 40-column compact layout, marked 40-ok`.
 
-- [ ] **Step 2: doors-menu**
+- [x] **Step 2: doors-menu**
 
 `Doors/doors-menu/app.ts` (createScreen at :211). Read the file, then apply the mechanism: `getCompactProfile(screen.width)`; masthead/footer to 1 row when `collapseChrome`; the door list rows drop description/size columns when `singleColumn` (command + name only, ≤ 38 printable); dialogs already size via `calculateDialogWidth` if they use SDK dialogs — otherwise clamp to `screen.width - 2`. Extract the row builder as `buildDoorRow(door, compact)` (exported), RED-test it in `web/backend/tests/doors/compact-40/doors-menu.test.ts` (40-col rows ≤ 40 printable; 80-col rows byte-identical to current output — pin one row before editing), implement, GREEN, rebuild dist, mark `Commands/BBSCmd/DOORS.info` with the same `applyTooltypes` one-liner, commit (`feat(doors-menu): 40-column compact rows, marked 40-ok`).
 
-- [ ] **Step 3: bug-tracker**
+- [x] **Step 3: bug-tracker**
 
 `Doors/bug-tracker/app.ts` (createScreen at :93 — already geometry-driven after Task 3). Read the layout; apply the mechanism to its masthead/panels/list exactly as Step 2 (extract row/label builders, `getCompactProfile`, borderless + stacked panels at xxs). RED/GREEN via `web/backend/tests/doors/compact-40/bug-tracker.test.ts` on the extracted builders. Rebuild dist, mark `Commands/BBSCmd/BUGS.info`, commit (`feat(bug-tracker): 40-column compact layout, marked 40-ok`).
 
-- [ ] **Step 4: door-manager (DOORMAN — kept forever, never delete)**
+- [x] **Step 4: door-manager (DOORMAN — kept forever, never delete)**
 
 `Doors/door-manager/app.ts:1934-1935` — replace the raw Screen with geometry-aware construction:
 
@@ -1578,7 +1591,7 @@ Commit: `Doors/theme-picker/app.ts`, `Doors/theme-picker/dist/*` (rebuilt), the 
 
 `DoormanLayout` (same file, :175-259): add `const compact = getCompactProfile((screen as any).width || 80);` in the constructor; when `compact.singleColumn`, the `35%`/`65%` side-by-side panels become stacked (`listPanel: top: 3, width: '100%', height: '50%-3'`; `infoPanel: top: '50%', left: 0, width: '100%', height: '50%-3'`), header/footer height 3 → 1 (`collapseChrome`), and panel `border` styles dropped when `!compact.borders`. Export `DoormanLayout` for test (precedent noted in Task 1 Step 11). RED/GREEN in `web/backend/tests/doors/compact-40/doorman-layout.test.ts`: construct a `Screen({ width: 40, height: 25, responsive: true })`, build `DoormanLayout`, assert `layout.listPanel.width`-resolved coords span ≤ 40 and the two panels do not overlap side-by-side (use `_getCoords()` as in `sdk/tests/unit/modal-centring.test.ts:33`). Rebuild dist, mark `Commands/BBSCmd/DOORMAN.info`, commit (`feat(doorman): geometry-aware screen, stacked 40-column layout, marked 40-ok`).
 
-- [ ] **Step 5: plain line-oriented doors**
+- [x] **Step 5: plain line-oriented doors**
 
 `Doors/ami-stripper/index.ts` — the only hardcoded widths are the header (line 66 `const pad = 80 - left.length - right.length;`) and the rule (line 116 `'─'.repeat(80)`). At the top of the `door.onStart` handler (line 20):
 
@@ -1605,7 +1618,7 @@ for (const cmd of ['STRIP','TCONNECT','Telnet-Front','bbslink','linkwall','PHREA
 
 (Command-file names verified against `Commands/BBSCmd/`: `STRIP.info`, `TCONNECT.info`, `Telnet-Front.info`, `bbslink.info`, `linkwall.info`, `PHREAKWARS.info`. `RIP.info` is NOT marked — rip-browser stays gated.) Commit per door group with dist rebuilds, files by name.
 
-- [ ] **Step 6: freshness + suites**
+- [x] **Step 6: freshness + suites**
 
 Run the door-sdk-freshness protocol (sdk and Doors were edited). Then `cd sdk && npm test` (Task 2 baseline still green) and `cd web/backend && npx jest --config dev-scripts/jest.config.ts --rootDir .`.
 
@@ -1627,7 +1640,7 @@ When a petsciiMode session displays a screen that has no `.seq` variant (only `.
   - `ANSI_ART_SKIPPED_NOTICE = '[80-COLUMN ANSI SCREEN - SKIPPED]\r\n'` (ASCII token per the strategy plan).
 - Consumes: `wrapForSession` (Task 4).
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Create `web/backend/tests/utils/ansi-art-detect.util.test.ts`:
 
@@ -1670,9 +1683,9 @@ describe('ANSI_ART_SKIPPED_NOTICE', () => {
 });
 ```
 
-- [ ] **Step 2: Run, verify FAIL** (module missing).
+- [x] **Step 2: Run, verify FAIL** (module missing).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 Create `web/backend/src/utils/ansi-art-detect.util.ts`:
 
@@ -1712,9 +1725,9 @@ export function petsciiTextScreenPlan(
 }
 ```
 
-- [ ] **Step 4: Run to green.**
+- [x] **Step 4: Run to green.**
 
-- [ ] **Step 5: Wire into displayScreen**
+- [x] **Step 5: Wire into displayScreen**
 
 In `web/backend/src/handlers/screen.handler.ts`, import `petsciiTextScreenPlan, ANSI_ART_SKIPPED_NOTICE` from `../utils/ansi-art-detect.util` and `wrapForSession` from `../utils/wrap-for-session.util`. Immediately after the RIP branch (after line 1954 `}`), insert:
 
@@ -1743,9 +1756,9 @@ and after the line-ending normalization (line 2206 `parsed = parsed.replace(/\r\
     }
 ```
 
-- [ ] **Step 6: Type-check, run screen suites + full backend suite** (`npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir .`). The pure-function tests are the behavioral proof; existing displayScreen/displayFlow tests prove non-petscii sessions unchanged (`petsciiTextScreenPlan` returns `'passthrough'` and both insertions are no-ops). RED proof: revert the two insertions, confirm nothing fails EXCEPT nothing — the pure tests still pass — so the RED proof for the wiring is: temporarily make `petsciiTextScreenPlan` return `'art-skip'` unconditionally and confirm the existing 80-col displayFlow tests FAIL (screens get skipped), then restore. That failure demonstrates the wiring is live on the real path.
+- [x] **Step 6: Type-check, run screen suites + full backend suite** (`npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir .`). The pure-function tests are the behavioral proof; existing displayScreen/displayFlow tests prove non-petscii sessions unchanged (`petsciiTextScreenPlan` returns `'passthrough'` and both insertions are no-ops). RED proof: revert the two insertions, confirm nothing fails EXCEPT nothing — the pure tests still pass — so the RED proof for the wiring is: temporarily make `petsciiTextScreenPlan` return `'art-skip'` unconditionally and confirm the existing 80-col displayFlow tests FAIL (screens get skipped), then restore. That failure demonstrates the wiring is live on the real path.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd web/backend
@@ -1758,7 +1771,7 @@ git commit -m "feat(screens): PETSCII text-screen reflow with ANSI-art skip toke
 
 ### Task 8: Verification — automated 40-column sweep + manual C64 walk
 
-- [ ] **Step 1: Automated sweep test**
+- [x] **Step 1: Automated sweep test**
 
 Create `web/backend/tests/forty-col-sweep.test.ts` — one suite that drives every narrow builder from Tasks 1/4/5/7 at width 40 with adversarial data (60-char usernames, 100-char descriptions, empty strings) and asserts the single invariant:
 
@@ -1797,7 +1810,7 @@ describe('40-column sweep: no narrow surface ever exceeds 40 printable columns',
 
 (Adjust each import/signature to what Tasks 5-6 actually exported — the invariant, the adversarial inputs, and one `it` per builder are the requirement; add every extracted builder to this list.) Run RED-by-construction check: feed width-80 output of one builder through `printableLength` and confirm the assertion WOULD catch it (temporarily assert the wide `buildFileSearchLines` output ≤ 40 and watch it fail, then remove that line).
 
-- [ ] **Step 2: Full automated pass, everything**
+- [x] **Step 2: Full automated pass, everything**
 
 ```bash
 cd web/backend && npx tsc --noEmit && npx jest --config dev-scripts/jest.config.ts --rootDir .
@@ -1805,7 +1818,7 @@ cd ../../sdk && npm run build && npm test          # Task 2 baseline green = non
 cd ../packages/terminal && npm run build            # untouched, but the stack must still build
 ```
 
-- [ ] **Step 3: Commit the sweep**
+- [x] **Step 3: Commit the sweep**
 
 ```bash
 cd web/backend
@@ -1849,7 +1862,7 @@ WEB SIMULATION PATH (browser):
     EXPECT: pixel-identical to before this plan landed.
 ```
 
-- [ ] **Step 5: Checklist report** — count every checkbox in this plan and report `N of M complete`; any open box is a FAILED plan until the sysop rules on it. Update this plan file's boxes as tasks land.
+- [x] **Step 5: Checklist report** — count every checkbox in this plan and report `N of M complete`; any open box is a FAILED plan until the sysop rules on it. Update this plan file's boxes as tasks land.
 
 ---
 
@@ -1898,3 +1911,18 @@ WEB SIMULATION PATH (browser):
   the art bytes untouched; check what express.e does with MCI in `.seq`.
   Acceptance: a `.seq` carrying `~CL.` and `%N` shows the user's name on a
   PetsciiMachine in the right bank with the art unchanged byte for byte.
+- **Frame the 80x25 terminal** (sysop 2026-09-02): centre the terminal in the
+  browser viewport in fixed 80x25 mode and lift the page body background a
+  shade above black (a design token, so the terminal's own black contrasts
+  with the page). Web frontend only; the PETSCII canvas already centres.
+- **SSH and telnet parity audit** (sysop 2026-09-02, LAST in the queue): the
+  SSH and telnet transports are not 1:1 with the web terminal. Research first:
+  capture the same scripted walk over web socket, telnet and SSH and byte-diff
+  them (login, geometry, PETSCII detection, doors and ZMODEM, modem emulation,
+  keepalive, disconnect and restore, screens and MCI, prompts, line editing,
+  echo, colour and charset); then a plan with a parity test per divergence.
+- **Animated ANSI logos crawl in PETSCII mode** (sysop 2026-09-02): the web
+  canvas drain paces screen bytes although a browser has no baud to emulate,
+  and cursor-heavy animations become long walk sequences plus a full repaint
+  per update. Measure the transducer alone versus the drain, then fix the
+  pacing and repaint granularity; never trim the animation.

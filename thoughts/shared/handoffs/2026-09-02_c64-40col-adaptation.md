@@ -107,13 +107,31 @@ first keystroke lands on the next row.
    it needs its own task (substitute on the byte stream, transduce the
    substituted VALUE in the active charset bank, leave the art bytes alone) and
    an express.e check first.
-7. **`reloadDoors` does not call `getAmigaDoorManager().refreshCache()`**, so a
-   MIN_COLUMNS edit on an installed door's `.info` needs a restart to be seen.
-   Task 1's follow-up minor, still open.
+7. ~~**`reloadDoors` does not call `getAmigaDoorManager().refreshCache()`**~~ -
+   CLOSED in the 2026-09-02 fix wave. `reloadDoors` refreshes the installed
+   cache before re-registering, so a tooltype edit takes effect without a
+   restart, as `CONFIGURATION.md` promises.
 8. **The AmigaGuide viewer width parameter was withdrawn** (Task 4 review): it
    had zero call sites. That file is byte-identical to pre-plan.
 9. **Operator chat keeps its 79-column positioned UI** - out of scope by
    decision, it paints rather than prints.
+10. **The Sysop addition "frame the 80x25 terminal" is not done.** Plan
+    `2026-09-02-c64-40col-implementation.md:1901-1904`: centre the terminal in
+    the viewport and lift the page background off black via a design token.
+    No commit in the run. Owner: the frontend/theme session (it is
+    `web/frontend` + design tokens, not backend width work).
+11. **The Sysop addition "SSH and telnet parity audit" is not done.** Plan
+    `:1905-1906`, explicitly queued last: confirm a PETSCII caller arriving
+    over SSH and over telnet gets the same 40-column treatment the web `P`
+    session gets. No commit in the run. Owner: unassigned.
+12. **`livechat` is auto-launched without being marked 40-ok.** `index.ts:1348`
+    (web chat SSO) and `:1402` (chat-only mode) enter the livechat door
+    directly, BEFORE the DOORS list and therefore before the `MIN_COLUMNS`
+    gate. A PETSCII caller reaching the board through either of those paths
+    gets an 80-column door. Neither path is how a C64 connects today, so this
+    is recorded rather than fixed; marking `livechat` would require adapting
+    it first (it branches on `breakpoint === 'small'` only,
+    `Doors/livechat/server.ts:1266`).
 
 ## Verification (2026-09-02, this tree)
 
@@ -228,6 +246,7 @@ session, so announce it).
    `thoughts/BOARD.md`: cherry-pick onto a fresh `origin/main` worktree, never
    merge this branch).
 2. The sysop's walk above, all three parts.
-3. The open items in "Known limits": MCI in `.seq` (6) and `reloadDoors`
-   cache refresh (7) are the two with real user impact.
+3. The open items in "Known limits": MCI in `.seq` (6) is the one with real
+   user impact left; (7) is closed. The two Sysop additions (10, 11) and the
+   livechat auto-launch (12) are the newly recorded ones.
 4. Phase 3's remaining `.info` marks for WHO/S/WHAT.
