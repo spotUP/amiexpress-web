@@ -192,7 +192,7 @@ SYSOP'S C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
   `CRITICAL: n library trap(s) missing` are real failures.
 - **Never `git stash` here** - CRLF phantom files block `stash pop` for ever.
   Use `git checkout <ref> -- <paths>`.
-- **Much of this repo is CRLF** - open files with `newline=''`.
+- **Much of this repo is CRLF** - open with `newline=''`.
 - **A door archive names its command** in `Commands/BBSCmd/<CMD>.info`.
-- **SDK tests import the built `sdk/dist`** - build before testing.
+- **SDK tests import the built `sdk/dist`** - build first.
 - **A merged admin screen keeps a redirect** (`src/routes/legacy-routes.ts`).
