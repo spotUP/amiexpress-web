@@ -186,3 +186,7 @@ limits, Phase 4, C64 WALK:** `.../handoffs/2026-09-02_c64-door-adapter-phase3.md
 - **SDK tests import the built `sdk/dist`** - a source edit is invisible until
   `npm run build:cjs`.
 - **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
+- **Logoff on a C64 shows a skip token, not art** (data, not code): the 12
+  `Conf*/Screens/Logoff.seq` say `~SR_` (1..99) while only
+  `Screens/logoff/00{1,2,3}.logoff.txt` exist, and those are 80-column ANSI.
+  Fix = `~3SR_` + a 40-column `00N.logoff.seq`.
