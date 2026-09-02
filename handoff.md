@@ -10,9 +10,8 @@ is the full record of that session.
 full-screen background stops outlining the whole terminal ("outer border
 broken"), and the leaderboard measures from the screen instead of an 80x24
 composition and re-renders on resize - it had NO resize handler, so Alt+Enter
-left it in the corner. Blocked because GRANDMASTER does not typecheck at HEAD
-(`endMatch`, `lockFlashChar`) and the hook rebuilds a door's dist. Land it
-when that door compiles.
+left it in the corner. Blocked: GRANDMASTER does not typecheck at HEAD (`endMatch`,
+`lockFlashChar`) and the hook rebuilds the dist. Land when it compiles.
 
 **Every defect reported that day lived in something a door built for itself
 while the SDK already shipped the widget** - CARD LOBBY computed panel
@@ -31,7 +30,7 @@ data, WAL files included.
 
 `..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
 and `..._the-size-switch-the-editors-and-a-real-battle-royale.md` in
-`thoughts/shared/handoffs/`. The facts still worth carrying in the head:
+`thoughts/shared/handoffs/`. Facts to carry:
 
 **xterm keeps ONE custom key handler** - it assigns, it does not append.
 Every rule lives in `classifyKey()`
@@ -47,8 +46,6 @@ the real volume first.
 that do not exist in CARD LOBBY. Ten doors with the size switch are fixed
 (list in that handoff).
 
-**A source pin proves a call exists, not that it runs.**
-
 ## READ THIS FIRST
 
 **Door rendering:**
@@ -63,14 +60,11 @@ measured. Do not send a colour already set, or pad rows on a cleared screen.
 
 **Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1
 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`, never by guessing; the handoff carries
-the method and the log-parsing trap that fakes a reproduction. The other
-09-01 handoffs (settings admin, sysop list/SMTP, activity feed) sit beside
-it.
+the method and the log-parsing trap that fakes a reproduction.
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
 type, a door's settings and a password each exist in SQLite AND on disk, and
-the BBS and the admin do not always read the same one. Eight reports in one
-day were all this. Before believing any config change works, check the store
+the BBS and the admin do not always read the same one. Eight reports in one day were this. Before believing any config change works, check the store
 the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
 the signup prompt read the .info files.
 **A door must never resolve its files from `process.cwd()` or bare
@@ -180,9 +174,8 @@ on which name survives; `Commands/BBSCmd/GWALL.info` points at
 ## PETSCII (2026-09-02)
 
 A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one transducer
-(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and the telnet
-emitter. Overlay retired; a C64 terminal is BLACK, and only `$02 <colour>`
-moves background/border. Walk script, detail, what is open:
+(`sdk/petscii/`, KERNAL oracle inside) feeds the canvas and telnet emitter. Overlay retired; a C64 terminal is BLACK; only `$02 <colour>`
+moves background/border. Walk script, detail, open items:
 `thoughts/shared/handoffs/2026-09-02_petscii-full-canvas.md`.
 
 ## Gotchas
