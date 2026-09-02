@@ -104,19 +104,19 @@ Push to `main` auto-deploys; **then check it** -
 that cannot serve rolls back itself; deploys disconnect /chat after a 60s
 countdown; docs changes do not deploy.
 
-**`main` moves under you** - other sessions push constantly. Cut a worktree
-from fresh `origin/main`, cherry-pick, confirm ancestry before pushing and
-before deleting. A worktree needs `Documentation/7-Reference Sources/NDK3.2R4`
-symlinked in before it can build the Amiga door.
+**`main` moves under you** - cut a worktree from fresh `origin/main`,
+cherry-pick, confirm ancestry before pushing and before deleting. A worktree
+needs `Documentation/7-Reference Sources/NDK3.2R4` symlinked to build the Amiga
+door.
 
 ## Dev
 
 `./dev/scripts/start-servers.sh --bbs-only` / `kill-servers.sh`, zombie-verify
-after every stop. A change that "does not apply": clear the tsx cache,
-`rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`.
+after every stop. A change that "does not apply": clear the tsx cache
+(`rm -rf "$(getconf DARWIN_USER_TEMP_DIR)"tsx-*`).
 
-Run **`npm run typecheck:tests`**, not just `npm test` - jest uses swc and
-strips types, so a file can be green under jest and fail the typecheck.
+Run **`npm run typecheck:tests`**, not just `npm test` - jest strips types, so
+a file can be green under jest and fail the typecheck.
 
 A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it -
 two agents in one door pull each other's work into a commit: separate
@@ -129,10 +129,10 @@ some of them.
 
 ## Next
 
-**The editor is the DOOR'S** - canvas, ten tools, undo and the CP437/SAUCE
-codec imported from `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a
-renderer and input. Colour is SGR minus 30 - red is 1, not the EGA palette's 4.
-Earlier: `..._browser-ansi-editor-phase-2-complete.md`.
+**The editor is the DOOR'S** - canvas, tools, undo and the CP437/SAUCE codec
+come from `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a renderer and
+input. Colour is SGR minus 30 (red is 1, not EGA 4). Earlier:
+`..._browser-ansi-editor-phase-2-complete.md`.
 
 **Measure resolution by driving the loader, never by eye** -
 `dev/scripts/probe-screen-resolution.ts` before and after, then diff.
@@ -152,14 +152,14 @@ Also open:
 4. `Conf<N>.Stats` is still keyed by NUMBER, deliberately - a position, like
    conferenceAccess. First place to look if conference stats read wrong after
    the sysop's deletes.
-5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON PURPOSE:
-   the cheap version broke re-sort, and its test caught it.
+5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON PURPOSE
+   - the cheap version broke re-sort.
 6. Audio stutter: one cause fixed, never confirmed.
-7. **Drive Setup (sysop, 2026-09-02):** the admin's drive section is suspected
-   of doing very little - find what `Drives.info` reaches. Wanted: online
-   storage (S3 and the like) as a place a board's files can live.
-8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
-   game and deleting a table have never worked at all.
+7. **Drive Setup (sysop, 2026-09-02):** the admin's drive section may do very
+   little - find what `Drives.info` reaches. Wanted: online storage (S3 and
+   the like) for a board's files.
+8. **Drive CARD LOBBY by hand** - four gamepad paths, the end of an UNO game
+   and deleting a table have never worked.
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk; land by cherry-pick onto an origin/main worktree until
@@ -188,14 +188,12 @@ limits, Phase 4, C64 WALK:** `.../handoffs/2026-09-02_c64-door-adapter-phase3.md
 
 ## Gotchas
 
-- **A green API is not a green disk**; a symbol-free binary is not one that
-  was checked. Look at the bytes.
-- **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`,
-  `CRITICAL: n library trap(s) missing` are real failures shown as noise.
+- **A green API is not a green disk**; look at the bytes.
+- **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`
+  and `CRITICAL: n library trap(s) missing` are real failures.
 - **Never `git stash` here** - CRLF phantom files block `stash pop` for ever.
   Use `git checkout <ref> -- <paths>`.
 - **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
 - **A door archive names its own command** in `Commands/BBSCmd/<CMD>.info`.
-- **SDK tests import the built `sdk/dist`** - a source edit is invisible until
-  `npm run build:cjs`.
+- **SDK tests import the built `sdk/dist`** - build before testing.
 - **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
