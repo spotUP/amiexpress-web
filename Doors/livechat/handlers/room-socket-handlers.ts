@@ -1,3 +1,4 @@
+import { T } from '../door-theme';
 export function setupRoomHandlers(sock: any, st: any, ou: Map<any, any>, uid: number, un: string, nid: number, ps: any, ucl: () => void, uut: () => void, usb: () => void, asm: (m: string) => void, aa: (a: string) => void, aud: any, hl: () => void, sc: (s: any, c: string) => void, setCrl: (value: string) => void, smd: (t: string, cb?: () => void) => void, ib: any, s: any) {
   sock.on('room:list', (d: any) => {
     const rs = Array.isArray(d?.rooms) ? d.rooms : [];
@@ -90,7 +91,7 @@ export function setupRoomHandlers(sock: any, st: any, ou: Map<any, any>, uid: nu
   });
 
   sock.on('room:kicked', (d: any) => {
-    smd(`{red-fg}You were kicked from ${d.roomName}{/red-fg}\n\nReason: ${d.reason || 'No reason given'}\nBy: ${d.kickedBy}`, () => { ib.focus(); });
+    smd(`{${T.alert}-fg}You were kicked from ${d.roomName}{/${T.alert}-fg}\n\nReason: ${d.reason || 'No reason given'}\nBy: ${d.kickedBy}`, () => { ib.focus(); });
     st.currentChannel = '';
     setCrl('');
     usb();
@@ -99,7 +100,7 @@ export function setupRoomHandlers(sock: any, st: any, ou: Map<any, any>, uid: nu
 
   sock.on('room:error', (d: any) => {
     const em = typeof d === 'string' ? d : (d.error || d.message || 'An error occurred');
-    smd(`{red-fg}Error{/red-fg}\n\n${em}`, () => { ib.focus(); s.render(); });
+    smd(`{${T.alert}-fg}Error{/${T.alert}-fg}\n\n${em}`, () => { ib.focus(); s.render(); });
     aud.onError();
   });
 }
