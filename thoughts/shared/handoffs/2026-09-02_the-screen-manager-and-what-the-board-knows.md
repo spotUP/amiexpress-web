@@ -156,10 +156,13 @@ a new import escapes.
    screen, draw, Save, choose "this file only", then look at it on the board.
    Colours and CP437 blocks must survive. Everything under it is tested; the
    whole path is not.
-3. **`Screens/Callers.txt` is classified as board-written on the sysop's word,
-   not on evidence** - neither express.e nor this port writes it (express.e
-   writes `Node<n>/CallersLog`, no extension). If it turns out to be art, take
-   it off the RUNTIME_NAME list in screen-index.service.ts.
+3. ~~`Screens/Callers.txt` classified as board-written on the sysop's word~~ -
+   SETTLED, it is art. express.e's only writer is `callersLog()`, building
+   `Node<n>/CallersLog` (express.e:9499) and never a `.txt`; all 62 copies on
+   this board are one of two hashes, the oldest stamped 2008, and not one is
+   dirty in git while every `CallersLog` is. Both spellings came off
+   RUNTIME_NAME with a test that fails on the old regex. `Bulletins/lastc.txt`
+   stays - Super-AmiLog signs it in the art.
 4. **`Conf<N>.Stats` is still keyed by NUMBER, deliberately** - it is a
    position, like conferenceAccess. First place to look if conference stats
    read wrong after the sysop's deletes.
@@ -173,7 +176,17 @@ a new import escapes.
    obvious next features of the manager. Today's classification is by name and
    by generator signature; a sysop who can mark a file himself beats any
    heuristic.
-7. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
+7. **An uploaded ANSI wipes the screen's MCI codes.** The sysop's report:
+   replacing a screen through `POST /api/screens/upload` writes the buffer
+   verbatim, so every `~SS_`/`~CC_`/`~SR_`/`~CL.` in the old file is gone and
+   the menu paints but the keys stop working. Measured over 377 files that
+   carry codes: 439 sit in the first three lines, 272 in the last three, 78 in
+   the middle - so a head/tail carry covers most of them and nothing can place
+   the middle ones. Design note, with the recommendation (merge on the write
+   path, but never silently - show what would be lost and let the sysop place
+   it): `thoughts/shared/research/2026-09-02_mci-codes-and-the-upload-that-wipes-them.md`.
+
+8. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
    and Node0-40 into `/app/default-data`, so a sysop installing the release is
    seeded with uprough's screens. Still needs its own spec.
 
