@@ -102,6 +102,42 @@ GRANDMASTER has no item system at all in its TGM modes - no item cell on the
 board, no selection, no effects. (Its TetriNET mode has TetriNET's own nine
 specials, which is a different game.)
 
+## 2b. Heboris has no battle royale, and its items know it
+
+**Verified.** Heboris is one or two players and nothing else: `maxPlay` is 0
+or 1, and the per-player state in `src/game/gamestart.h` is 308 arrays of
+`[2]`. `heboris.txt:120` describes VERSUS MODE as "a mode where two people
+compete". There is no field of eight, let alone ninety-nine.
+
+**Most items act on their holder.** Of the 94 references to the opponent
+(`1 - player`) in `gamestart.c`, not one is in an item or effect context -
+MIRROR, DARK, X-RAY, DELEVEN and the rest rewrite the field of whoever
+collected them. The opponent interaction in versus is the garbage/upline
+system (`gamestart.c:7960-7985`), which is separate from items.
+
+**The two that need a second field resolve it as a duel.** The field-exchange
+item, `gamestart.c:14358-14365`:
+
+```c
+enemy = 1 - player;      // decide the target
+if (gameMode[player] != 4)
+    enemy = player;      // outside versus, the target is yourself
+```
+
+`1 - player` is the whole targeting rule, and it only means anything with
+exactly two players. Outside versus the item still resolves - against
+yourself - so it is never left without a target.
+
+**What that means for GRANDMASTER's royale.** There is no reference for
+pickups in a field of 8-64; that mode is this door's own invention (its
+original spec, `Documentation/archive/2025-12/GRANDMASTER_TETRIS_PROMPT.md`,
+describes a battle royale Heboris never had). The reference settles the
+mechanic - collect on a line clear, effect applies to the holder - and leaves
+exactly one decision open: who the handful of two-field items point at. The
+door already answers that question for garbage attacks (the attack system
+targets random or the leader), so the consistent answer is to route those
+items through the same target selection rather than invent a second one.
+
 ## 3. What GRANDMASTER already has
 
 Checked in `Doors/grandmaster/core`, `ui` and `app.ts`:
