@@ -103,6 +103,21 @@ Phase 3 (package export, backend re-export, emitter wiring) is NOT started.
   The honest invariants are the whitespace-squeezed character stream (always)
   plus the word list joined with a space (only when no source word is wider than
   the screen, because `wrapLineToWidth` hard-splits those).
+- **A cursor invariant must not be computed from the thing it checks.** The
+  corpus's first cursor case compared the oracle's cursor with
+  `adaptFrame(last).cursor` - both sides came from `adaptFrame`, so mutating
+  adapt.ts's own cursor arithmetic (`clampCol(cols, adapted.cursor.x)` ->
+  `+ 1`) was caught on 0 of 8 fixtures while the render-side `cupTo` mutation
+  died on all 8. The fix is `cursorFromRules()` in `corpus.test.ts`: it walks
+  `chooseRule` + `applyRule` + `RuleResult.map` and the tail-paging offset
+  itself, so nothing in `adaptRows`/`adaptFrame` appears on both sides. The
+  same mutation now dies on 8 of 8.
+- **`isCroppable` is not an assertion about crop's OUTPUT.** The first draft's
+  wide-right branch asserted `isCroppable(src, 40) === true`, which
+  `chooseRule` had already guaranteed before it picked `crop` - ten corpus rows
+  therefore asserted nothing. What crop actually owes is: the left 40 columns
+  come through verbatim, and what fell off the right edge is at most ONE
+  repeated non-alphanumeric, non-reverse glyph.
 - **Fixtures are bytes.** The captures are UTF-8 re-encodings of Amiga Latin-1
   output (`©`, `ø`, `÷`, `ß`, 0x7F glyphs). They were written by shell
   redirection and `cp` only - an editor that round-trips UTF-8 destroys the
@@ -124,8 +139,16 @@ Phase 3 (package export, backend re-export, emitter wiring) is NOT started.
 - `sdk/tests/petscii/frame/fixtures/*.ans` (8) + `manifest.json` - raw ANSI
   captured from real 68K doors through `run-amiga-door.ts`, each verified
   against `dev/scripts/door-corpus/goldens/<id>/output.txt` modulo the clock.
-- `sdk/tests/petscii/frame/corpus.test.ts` - 32 cases, the Phase 2 invariants
-  over every frame of every fixture.
+- `sdk/tests/petscii/frame/corpus.test.ts` - 48 cases, the Phase 2 invariants
+  over EVERY frame of every fixture (not just the last).
+- The manifest carries provenance per fixture: `bytes`, `sha256`, the exact
+  `harness` invocation, `cwd: "web/backend"` and `binariesFrom: "1cdddac24^"`.
+  `corpus.test.ts` asserts the byte count and the hash, so an edited or
+  truncated capture fails loudly instead of quietly weakening the corpus.
+- Mutation proof (source restored immediately after each, `git diff` clean):
+  crop dropping its first column, `isCroppable` losing its one-repeated-glyph
+  rule, `adaptFrame`'s `adapted.cursor.x + 1`, and a truncated fixture all turn
+  the suite red; the cursor mutation fails 16 cases across all 8 fixtures.
 - `web/backend/tests/petscii-frame/classify-parity.test.ts` - SDK/backend
   classifier parity, now including per-fixture coverage.
 - `sdk/petscii/frame/index.ts` - the barrel Phase 3 will export from the package.
@@ -149,6 +172,19 @@ Phase 3 (package export, backend re-export, emitter wiring) is NOT started.
 5. AREXX: `BB_SCRWIDTH` for AREXX doors is still a hard 80; fold it into the
    40-column plan the same way `doorScreenWidth` did for XIM.
 
+### What Phase 3 can now rely on being pinned
+
+Over every frame of all eight captures: each adapted row is exactly 40 cells;
+crop's kept half is verbatim and its dropped half is at most one repeated
+non-alphanumeric glyph; gutter and split preserve the cell multiset; reflow
+preserves the character stream and (unless a word is wider than the screen) the
+word list; `adaptFrame`'s cursor equals the position the row's own rule maps to,
+computed independently of `adaptRows`/`adaptFrame`; and the whole 40x25 result
+survives the transducer onto the KERNAL oracle with that same cursor. NOT
+pinned: colour fidelity per cell through the corpus (the oracle round trip in
+`frame-render-roundtrip.test.ts` carries that on synthetic frames), and any
+door whose output is non-deterministic.
+
 ## Other Notes
 
 - The optional ninth fixture `turbolister` was captured and REJECTED: two runs
@@ -158,6 +194,12 @@ Phase 3 (package export, backend re-export, emitter wiring) is NOT started.
 - `cplistan`, named by the strategy, is not installed under `Doors/` and is not
   in `dev/scripts/door-corpus/corpus.json` at all. The eight captured doors
   replace it and cover every rule and every non-blank row class.
+- **`Doors/TurboLister` was deleted and restored during this work.** Cleaning up
+  the temporarily-restored corpus binaries also removed it, and unlike the other
+  eight it IS tracked in HEAD (it survived `1cdddac24`). It was restored with
+  `git archive HEAD Doors/TurboLister | tar -x -C .` and `git status` for it is
+  empty, so the content matches HEAD exactly - but its file mtimes moved, and if
+  it had carried uncommitted local edits before 2026-09-02 those are gone.
 - `gutter` is exercised by exactly one fixture (`aehelp`, the two-column help
   table). Every other capture's tables reach 80 columns with no collapsible
   gutter run and fall through to `split`. If Phase 3 changes `gutterRow`, that
