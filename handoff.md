@@ -33,29 +33,28 @@ moves.
 `..._grandmaster-against-heboris-and-the-doors-that-hid-their-text.md` is the
 record. **The reference is HeborisCE**
 (`Documentation/7-Reference Sources/HeborisCE-1.1.0`), NOT TetriNET. Landed:
-the Master timing curve (it opened on level-500 values), torikan (`足切り` in
-the source), six rotation systems, the item system (items ride the locking
-piece, `gamestart.c:16230`). 249 -> 318 tests. Next: DEVIL/DOOM/GOD, MISSION,
-PRACTICE, CEMENT/HIDDEN/WIN TYPE, 6 items.
+the Master timing curve (it opened on level-500 values), torikan (`足切り`),
+six rotation systems, the item system (items ride the locking piece,
+`gamestart.c:16230`). 249->318 tests.
 
-**TELNET TAKES NO INPUT in any game-mode door.** `enableGameMode()` switches
-off the character path (`socket-handlers.ts:722`) for browser-only
-`key-down`/`key-up` (`:499-536`). Renders fine. Options in the handoff.
+**TELNET TAKES NO INPUT in any game-mode door.** `enableGameMode()` drops the
+character path (`socket-handlers.ts:722`) for browser-only `key-down`/`key-up`
+(`:499-536`). Options in the handoff. Telnet RENDERING is fixed: solid blocks
+printed `#` (the sparkline branch ate them); they now fill the cell in the
+door's colour via reverse video (`86200b3e5`).
 
 ## Doors and widgets (2026-09-02)
 
 **A ONE-ROW BOX CANNOT HOLD TEXT.** createBox/blessed.box build a Panel,
-which borders when the caller names none. 13 fixed, 15 pinned by
+which borders when none is named. 13 fixed, 15 pinned by
 `oneRowBoxesDoNotCarryAFrame` (`dev/tests/door-regressions.test.ts`).
 
 **A deploy dying in under 20s is the host's `git fetch`** (retried since
 `c41c9aacf`); one dying instantly is `concurrency: deploy-hetzner` cancelling
 it for a newer push.
 
-**Every defect that day was a door hand-rolling a widget the SDK ships** -
-survey: `..._doors-that-hand-roll-sdk-widgets.md`.
-
-## Earlier on 2026-09-02
+**Every defect that day was a door hand-rolling an SDK widget** -
+`..._doors-that-hand-roll-sdk-widgets.md`.
 
 xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume
 deletes via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; a
