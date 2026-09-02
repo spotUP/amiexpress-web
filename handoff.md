@@ -6,13 +6,11 @@
 LIVE at `380f7b4af`.
 
 **The manager kept reporting untruths of one shape: a check answering a
-question nobody asked.** "Read by nothing" meant "is not the
-ONE file the loader picks at level 255", so every security variant, screen-type
-variant and `~SS_`/`~SR_` include read as dead. The health check read `/app`
-while the board is at `/app/data/bbs` - and OFFERED TO FIX IT; matched `xpr`
-where AmiExpress writes `Xpr` (8 protocols read as 0), `doors/` where boards
-write `Doors/`, and `Conf1/Screens` by NUMBER where conference 1 lives in
-Conf2. **Check a claim against the board before believing it.**
+question nobody asked.** "Read by nothing" meant "not the ONE
+file the loader picks at level 255" (security/screen-type variants and
+`~SS_`/`~SR_` includes read as dead); the health check read `/app` not
+`/app/data/bbs` and OFFERED TO FIX IT; `xpr` vs `Xpr` (8 protocols read as 0),
+`doors/` vs `Doors/`, `Conf1/Screens` by NUMBER where conference 1 is Conf2. **Check a claim against the board before believing it.**
 
 `/admin/screens` opens on a GALLERY - every screen and bulletin drawn with the
 editor's renderer, identical copies once, generated files behind a toggle.
@@ -145,16 +143,15 @@ Also open:
    the board; then the editor round-trip (draw, Save, "this file only").
    Neither done by hand. Also DOORREPO's `T`/`H`/`ENTER`/uninstall
    (`Doors/emp_tools` is the interesting case).
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests, never a
-   drive against the LIVE board.
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` were never driven
+   against the LIVE board.
 3. **The release ships THIS board** - the Dockerfile copies our Screens,
-   Conf1-14 and Node0-40 into `/app/default-data`. Needs its own spec.
-4. `Conf<N>.Stats` is still keyed by NUMBER, deliberately - a position, like
-   conferenceAccess. First place to look if conference stats read wrong after
-   the sysop's deletes.
+   Conf1-14 and Node0-40 into `/app/default-data`. Needs a spec.
+4. `Conf<N>.Stats` is keyed by NUMBER on purpose (a position, like
+   conferenceAccess) - first suspect if stats read wrong after deletes.
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON PURPOSE
    - the cheap version broke re-sort.
-6. Audio stutter: one cause fixed, never confirmed.
+6. Audio stutter: one cause fixed, unconfirmed.
 7. **Drive Setup (sysop, 2026-09-02):** the admin's drive section may do very
    little - find what `Drives.info` reaches. Wanted: online storage (S3 and
    the like) for a board's files.
@@ -193,7 +190,7 @@ limits, Phase 4, C64 WALK:** `.../handoffs/2026-09-02_c64-door-adapter-phase3.md
   and `CRITICAL: n library trap(s) missing` are real failures.
 - **Never `git stash` here** - CRLF phantom files block `stash pop` for ever.
   Use `git checkout <ref> -- <paths>`.
-- **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
-- **A door archive names its own command** in `Commands/BBSCmd/<CMD>.info`.
+- **Much of this repo is CRLF** - open files with `newline=''`.
+- **A door archive names its command** in `Commands/BBSCmd/<CMD>.info`.
 - **SDK tests import the built `sdk/dist`** - build before testing.
-- **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
+- **A merged admin screen keeps a redirect** (`src/routes/legacy-routes.ts`).
