@@ -175,9 +175,29 @@ RUN set -eux; \
 
 WORKDIR /app/web/backend
 
+# web/backend/package.json depends on "@amiexpress/bbs-door-sdk": "file:../../sdk",
+# so npm ci below creates a dangling symlink node_modules/@amiexpress/bbs-door-sdk
+# -> /app/sdk. Without this, tsc fails to resolve deep imports like
+# "@amiexpress/bbs-door-sdk/petscii" (TS2307) because /app/sdk never existed in
+# this stage. node_modules is copied too so .d.ts imports of the SDK's own deps
+# (e.g. blessed types) resolve, mirroring the runtime stage below. Only dist/ is
+# needed (not the SDK source): the backend's moduleResolution:node would normally
+# resolve a deep import like "@amiexpress/bbs-door-sdk/petscii" by walking the
+# package's real directory, but sdk/package.json's typesVersions maps that
+# subpath straight to dist/petscii/index.d.ts, so tsc never looks for source.
+COPY --from=sdk-builder /app/sdk/dist /app/sdk/dist
+COPY --from=sdk-builder /app/sdk/package.json /app/sdk/package.json
+COPY --from=sdk-builder /app/sdk/node_modules /app/sdk/node_modules
+
 COPY web/backend/package*.json ./
-# Skip postinstall script (web assets built in separate stages)
-RUN npm ci --ignore-scripts
+# Skip postinstall script (web assets built in separate stages). SKIP_SDK_PREPARE=1
+# is required too: npm still runs the file:-linked SDK's "prepare" script even with
+# --ignore-scripts (documented in the doors-builder stage above and in
+# backend-tests.yml/corpus-integration.yml), and here /app/sdk has no source/tsconfig
+# for that rebuild to compile against - it fails the whole install. The guard in
+# sdk/package.json's prepare script short-circuits that rebuild since dist is already
+# copied in above.
+RUN SKIP_SDK_PREPARE=1 npm ci --ignore-scripts
 
 COPY web/backend ./
 # Run tsc directly since dependencies are already installed via npm ci
