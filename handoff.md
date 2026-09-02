@@ -1,98 +1,95 @@
 # Handoff
 
-## PETSCII overhaul shipped (2026-09-02)
+## START HERE: work finished but NOT committed (2026-09-02)
 
-True C64 support, not xterm-with-a-C64-font: `PetsciiMachine` +
-`PetsciiCanvas` (`packages/terminal/src/petscii/`), a KERNAL-accurate 40x25
-screen-code/color-RAM emulator fed raw bytes over the new `petscii-bytes`
-socket event; xterm hides (not destroyed) while it's active. Backend:
-screen-code conversion, reverse video, VIC-II truecolor palettes
-(`c64-palette.ts`), a real-C64 output path (`petscii.util.ts`). Detection
-ladder, strongest first: `TELNET_PETSCII_PORT` dedicated port (C64 from byte
-one) > TTYPE > DEL-probe on first keypress (`$14`/`$C1`-`$DA` vs ASCII, at
-connect and at the graphics prompt) > NAWS 40x25 (hint only). Docs:
-`ARCHITECTURE.md`, `CONFIGURATION.md` section 5, closure table in
-`thoughts/shared/research/2026-09-01_petscii-audit.md`.
-**Not done - sysop follow-up:** `TELNET_PETSCII_PORT` has no compose port
-mapping or `ufw` rule yet, unreachable from outside the container. **Known
-gaps, by design:** `writePetsciiLine(Buffer)` still uses the old PUA/xterm
-path; real-C64 cursor/F-keys are dropped by the input converter; canvas
-needs a click to focus; PETSCII screens bypass MCI/`~SP`.
+`thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`
+is the full record of that session.
 
-## Alt+Enter, the volume that deletes, CARD LOBBY (2026-09-02, late)
+**GRANDMASTER's two layout fixes are written and uncommittable**, saved as
+`thoughts/shared/patches/2026-09-02_grandmaster-layout.patch`: the menu's
+full-screen background stops outlining the whole terminal ("outer border
+broken"), and the leaderboard measures from the screen instead of an 80x24
+composition and re-renders on resize - it had NO resize handler, so Alt+Enter
+left it in the corner. Blocked because GRANDMASTER does not typecheck at HEAD
+(`endMatch`, `lockFlashChar`) and the hook rebuilds a door's dist. Land it
+when that door compiles.
 
-`thoughts/shared/handoffs/2026-09-02_the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
-is the record; all three are verified in the live container.
+**Every defect reported that day lived in something a door built for itself
+while the SDK already shipped the widget.** Which doors still do it, and
+what to convert next:
+`thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`.
 
-**xterm keeps ONE custom key handler** - `attachCustomKeyEventHandler`
-assigns, it does not append - and BBSTerminal registered two, so Shift+Arrow,
-copy/select-all with mouse reporting off and the Ctrl+Shift+M block had never
-run. One handler now, rules in `classifyKey()`
-(`packages/terminal/src/utils/key-overrides.ts`). **Alt+Enter also fullscreens
-the browser**, on the KEY because `requestFullscreen` needs a user gesture;
-in game mode it toggles the window and sends NO bytes, or the door toggles
-twice per press.
+Three doors could not start at all - whip, Gwall, prompt-complete - because
+only ONE door is compiled during the image build. Two gates stop it now:
+`docker/verify-door-entries.sh` (fails the image build) and
+`tests/doors/door-dist-is-shipped.test.ts`. The deploy also backs up door
+data, WAL files included, because a `.db` alone is an empty header.
+
+## Earlier on 2026-09-02
+
+`..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
+and `..._the-size-switch-the-editors-and-a-real-battle-royale.md` in
+`thoughts/shared/handoffs/`. The facts still worth carrying in the head:
+
+**xterm keeps ONE custom key handler** - it assigns, it does not append.
+Every rule lives in `classifyKey()`
+(`packages/terminal/src/utils/key-overrides.ts`); a test counts them.
+**Alt+Enter fullscreens the browser too**, on the KEY.
 
 **The Doors volume deletes** - `prune_image_door_dists()` in
-`docker-entrypoint.sh` mirrors image door `dist/`: only doors the IMAGE ships
-(a DOORREPO door exists on the volume alone), only inside `dist/`, only
-compiled output whitelisted by extension, never against an empty image dist.
-**That whitelist exists because a dry run against the live volume found
-frogger's and super-qix's `highscores.json` inside `dist/`.** Dry-run any
-delete path against the real volume before shipping it.
+`docker-entrypoint.sh`, whitelisted by extension because frogger and
+super-qix keep high scores inside `dist/`. Dry-run any delete path against
+the real volume first.
 
-**CARD LOBBY's `// @ts-nocheck` hid six crash paths** - gamepad X/Y/A/START at
-an UNO table, the R key, the end of every UNO game, deleting a table. Fixed;
-dead SDK browser mode (192 lines, reachable only from itself) removed; four
-managers extracted; 1923 lines, tsc clean, size switch in.
-`tests/doors/card-lobby-typechecks.test.ts` fails if the suppression returns.
-**NOBODY HAS DRIVEN THOSE SIX PATHS.**
-
-## The size switch, the editors, the battle royale (2026-09-02)
-
-`thoughts/shared/handoffs/2026-09-02_the-size-switch-the-editors-and-a-real-battle-royale.md`
-- the ANSI editor audit and grandmaster's 99-player battle royale.
-
-**Responsive is FOUR things**: ask the terminal to widen, follow the resize,
-put 80 columns back (`sdk/utils/terminal-mode.ts`), and be able to RECEIVE
-the key that asks. Doors with the switch, all starting FIXED: grandmaster
-(also Settings > DISPLAY), sprite-editor, ansi-editor, livechat (wide only on
-/chat), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
+**`// @ts-nocheck` is a bug report** - one line hid six calls to methods
+that do not exist in CARD LOBBY. Doors with the size switch, all starting
+FIXED: grandmaster, sprite-editor, ansi-editor, livechat (wide on /chat
+only), bug-tracker, bbs-dashboard, doors-menu, theme-picker, scrollwars,
 card-lobby.
 
-**A source pin proves a call exists, not that it runs.** The ANSI editor door
-threw on start for every caller while a test asserted its source mentions
-`createTerminalModeSwitch`. Doors that got it later have tests that START
-them.
+**A source pin proves a call exists, not that it runs.**
 
 ## READ THIS FIRST
 
 **Door rendering:**
 `thoughts/shared/handoffs/2026-09-01_door-rendering-the-wrap-bug-and-the-disk.md`.
-Backend line-wrapping corrupted doors painting at absolute cursor positions;
-fixed by `positionsCursorAbsolutely()` (`web/backend/src/utils/ascii-art.util.ts`).
-Debug rendering by CAPTURING real traffic (`XIM_DEBUG=1 XIM_DEBUG_JSON=1
-XIM_DEBUG_AMIGA=1`), never by guessing. Earlier 09-01 handoffs (settings
-admin, sysop list/SMTP, activity feed) and 08-31 (delete rules/DOORREPO) sit
-behind it.
+Backend line-wrapping corrupted every door painting at absolute cursor
+positions; fixed by `positionsCursorAbsolutely()`
+(`web/backend/src/utils/ascii-art.util.ts`) - a door that moves the cursor is
+PAINTING and has no lines to wrap.
+
+**Bytes are milliseconds in a 68K door** - ~45ms per 198-byte XIM message,
+measured. Do not send a colour already set, or pad rows on a cleared screen.
+
+**Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1
+XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`, never by guessing; the handoff carries
+the method and the log-parsing trap that fakes a reproduction. The other
+09-01 handoffs (settings admin, sysop list/SMTP, activity feed) sit beside
+it.
 
 **THE CLASS TO SUSPECT FIRST: two stores.** A user, a computer list, a screen
-type, a door's settings and a password each exist in SQLite AND on disk;
-check the store the CONSUMER reads (`db.authenticateUser` reads the users
-table, express.e and the signup prompt read the .info files).
-**A door must never resolve its own files from `process.cwd()` or bare
-`__dirname`** - use `resolveDoorRoot(__dirname)`/`resolveBbsRoot(__dirname)`.
-Tests: `tests/doors/doors-do-not-use-cwd.test.ts`,
-`tests/no-hardcoded-home-paths.test.ts`.
+type, a door's settings and a password each exist in SQLite AND on disk, and
+the BBS and the admin do not always read the same one. Eight reports in one
+day were all this. Before believing any config change works, check the store
+the CONSUMER reads: `db.authenticateUser` reads the users table, express.e and
+the signup prompt read the .info files.
+**A door must never resolve its files from `process.cwd()` or bare
+`__dirname`** - use `resolveDoorRoot(__dirname)` and `resolveBbsRoot(__dirname)`.
+Two tests fail on the pattern (`tests/doors/doors-do-not-use-cwd.test.ts`,
+`tests/no-hardcoded-home-paths.test.ts`).
+**Doors, deletes, DOORREPO:**
+`thoughts/shared/handoffs/2026-08-31_door-delete-rules-and-doorrepo-parity.md`
+and the two behind it.
 
-**A door is its REGISTRATION.** The `.info` file is the source of truth for
-delete/install/list; read `web/backend/src/doors/door-registration-paths.ts`
-and its case table `examples/doorrepo-c/tests/delete-rule-cases.txt` (the
-same rules exist in C, `examples/doorrepo-c/flow.c`, for DOORREPO on real
-Amiga boards). **Fix one side, fix the other.**
+**A door is its REGISTRATION** - five live reports in one day were the `.info`
+left behind or another door's taken away. Before any delete/install/list path,
+read `web/backend/src/doors/door-registration-paths.ts` and its case table,
+`examples/doorrepo-c/tests/delete-rule-cases.txt`. The same rules exist in C
+(`examples/doorrepo-c/flow.c`) for real Amiga boards. **Fix one side, fix the
+other** - the shared table fails until you do.
 
-**DOORMAN is kept.** The parity spec's phase E is withdrawn; do not delete
-`Doors/door-manager`.
+**DOORMAN is kept.** The parity spec's phase E is withdrawn; it is the
+reference implementation. Do not delete `Doors/door-manager`.
 
 ## Live
 
@@ -121,9 +118,9 @@ Run **`npm run typecheck:tests`**, not just `npm test` - jest uses swc and
 strips types, so a file can be green under jest and fail the typecheck.
 
 A TypeScript door's `dist/` is what runs and the pre-commit hook rebuilds it -
-two agents in one door pull each other's half-finished work into a commit, so
-use separate worktrees. A worktree also needs each door's `node_modules`
-symlinked, or a suite importing that door fails to RUN and reports 0 failures.
+two agents in one door pull each other's work into a commit, so use separate
+worktrees. A worktree also needs each door's `node_modules` symlinked, or a
+suite importing that door fails to RUN and reports 0 failures.
 
 **Door releases are Shrinkler-packed** (`shrinkler-door-releases` skill). A
 crunched door needs MORE emulator memory: crunched DoorRepo (513 KB) is
@@ -135,38 +132,28 @@ refused by the 500 KB door region.
 is the state - the screen file manager, conference directories, and phase 2 of
 the editor, with what each cost.
 
-**A directory is never derivable from a number on this board.** A node's screen
-directory is its `SCREENS` tooltype (ACP.e:2666-2673); a conference's is
-`LOCATION.n` in ConfConfig.info (express.e:31849). Renumbering moves the
-entries and leaves the directories alone, so `Conf<n>` built from a number
-reads the DELETED conference. Two live outages this session were that mistake.
-Use `web/backend/src/conferences/conference-paths.ts` and
-`web/backend/src/screens/screen-resolution.ts`.
+**Phase 2 is DONE - the SDK's ANSI editor runs in the admin.** Record:
+`thoughts/shared/handoffs/2026-09-02_browser-ansi-editor-phase-2-complete.md`.
+Nothing about a drawing tool was written twice: the canvas, the ten tools, undo
+and the CP437/SAUCE codec are the DOOR'S, imported from
+`sdk/engines/ui/ansi-editor` SOURCE; the browser adds a renderer and input and
+nothing else. Colour there is SGR minus 30 - red is 1, not the EGA palette's 4.
 
-**LIVE, verified through the loader in the container:** no invented screen
-fallback; 41 nodes keep their own screens and 215 read `Screens/Node/` by
-tooltype; every conference path reads LOCATION.n, doors included
-(BB_CONFLOCAL, MSGBASE_LOC).
+**Conferences + screen resolution (LOCATION.n / SCREENS tooltype, the deploy
+re-seeding bug, what is LIVE):** all in the START HERE handoff above.
 
 **Measure resolution by driving the loader, never by eye** -
-`dev/scripts/probe-screen-resolution.ts` before and after, then diff.
-`dev/scripts/provision-node-screens.ts` gives a node screens and is NOT in the
-deployed image (`dev/` is not copied).
-
-**Phase 2, the ANSI editor in the browser, is 2 of 6 tasks in.** Plan:
-`docs/superpowers/plans/2026-09-02-screen-manager-phase-2-browser-ansi-editor.md`.
-SDK core aliased into the admin bundle from SOURCE, base64/CP437 bridge done.
-Colour there is SGR minus 30 - red is 1, not the palette's 4.
-
-The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
-2026-09-02 - no more hold-off needed there.
+`dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
+lookups here). `dev/scripts/provision-node-screens.ts` gives a node screens and
+is NOT in the image, so it must be copied into the container to run there.
 
 Also open:
 
-1. **Yours:** nobody has driven the screen manager, or DOORREPO's `T`/`H`/
-   `ENTER`/uninstall, by hand. `Doors/emp_tools` is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests; what has
-   never happened is a drive against the LIVE board.
+1. **Yours:** nobody has driven the screen manager, the browser ANSI editor,
+   or DOORREPO's `T`/`H`/`ENTER`/uninstall by hand. `Doors/emp_tools` is the
+   interesting DOORREPO case.
+2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests, never a
+   drive against the LIVE board.
 3. **The release ships THIS board.** `Dockerfile:262-300` copies our `Screens`,
    `Conf1`-`Conf14` and `Node0`-`Node40` into `/app/default-data`. Needs its
    own spec.
@@ -174,39 +161,40 @@ Also open:
    conferenceAccess. First place to look if conference stats read wrong after
    the sysop's deletes.
 5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON
-   PURPOSE: the cheap version broke re-sort and its own test caught it.
-6. Audio stutter: one cause fixed, diagnostics live, never confirmed.
-7. **Survey every TypeScript door for hand-rolled widgets.** CARD LOBBY used
-   SDK widgets but hand-rolled what the SDK already provides - it computed
-   panel geometry instead of using the layout widget, built an opaque black
-   box instead of `Overlay`, and made bars from plain boxes. EVERY defect
-   reported on 2026-09-02 lived in a hand-rolled part: panels that never
-   moved, dialogs that could not be closed, modals on a black screen, stray
-   white borders. The SDK ships `overlay`, `layout`, `status-bar`,
-   `menu-bar`, `confirm-modal`, `doc-modal`, `prompt`, `search-modal`,
-   `panel`, `fkey-bar`. Check each door against that list.
+   PURPOSE: the cheap version broke re-sort, and its test caught it.
+6. Audio stutter: one cause fixed, never confirmed.
+7. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
+   suspected of doing very little - find out what `Drives.info` actually
+   reaches - and the wanted feature is online storage: S3 buckets and the
+   like, offered as a place a board's files can live.
 8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
    game, and deleting a table have never worked at all.
 
-**GRANDMASTER, THREE open from the sysop (2026-09-02).** The menu's outer
-border is broken too - its bottom edge floats below the three panels, sides
-not meeting it. The leaderboard is
-laid out for 80 columns inside a wide terminal - the same "lays out once,
-never follows the resize" class CARD LOBBY had. And the match history is
-empty: `gm_matches` has 0 rows while `gm_users`, `gm_leaderboards` and
-`gm_user_stats` have 2 each and the board still shows both players' scores,
-so the LEADERBOARD survived and the HISTORY did not. `data/grandmaster.db`
-is a 4 KB header dated Sep 1 22:10 with a 540 KB uncheckpointed WAL; not
-FORCE_REINIT_DOORS (0), not the dist prune (no prune lines for grandmaster),
-not a second database. Start at what ran at 22:10 and at
-`leaderboard-manager.ts:334`.
+The PETSCII overhaul's edits to `screen.handler.ts` (.seq branches) landed
+2026-09-02 - no more hold-off needed there.
+
+**Survey every TypeScript door for hand-rolled widgets.** CARD LOBBY used SDK
+widgets but hand-rolled what the SDK already provides - it computed panel
+geometry instead of using a layout, built an opaque black Box instead of
+`Overlay`, made bars from plain boxes, and wrote its own text window whose
+escape keys never fired. EVERY defect reported on 2026-09-02 lived in a
+hand-rolled part. The SDK ships `overlay`, `layout`, `status-bar`,
+`menu-bar`, `confirm-modal`, `doc-modal`, `prompt`, `search-modal`, `panel`,
+`fkey-bar` - check each door against that list.
+
+**The Doors/GWall vs Doors/Gwall duplicate blocks rebases.** Git tracks two
+different blobs at `Doors/GWall/dist/index.js` and `Doors/Gwall/dist/index.js`
+- one file on a case-insensitive disk - so one of them always reads as
+modified and `git rebase` refuses to start in any worktree. Needs a decision
+on which name survives; `Commands/BBSCmd/GWALL.info` points at
+`DOORS:GWall/GWall`, and the lowercase path is the one with a package.json.
 
 ## Gotchas
 
 - **A green API is not a green disk**, and a symbol-free binary is not one
   that was checked. Look at the bytes.
 - **The emulator logs corruption and continues** - `VERIFICATION: n FAILED`
-  and `CRITICAL: n trap(s) missing` are real failures shown as noise.
+  and `CRITICAL: n library trap(s) missing` are real failures shown as noise.
 - **Never `git stash` here** - the CRLF phantom files block `stash pop`
   permanently. Use `git checkout <ref> -- <paths>`.
 - **Much of this repo is CRLF.** Open files with `newline=''` at both ends.
