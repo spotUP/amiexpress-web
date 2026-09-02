@@ -28,31 +28,38 @@ NOBODY HAS CLICKED IT YET - do one and look at the board.
 full readdir per lookup. Listings and file facts are cached until an mtime
 moves.
 
+## GRANDMASTER against HeborisCE (2026-09-02)
+
+`..._grandmaster-against-heboris-and-the-doors-that-hid-their-text.md` is the
+record; it names the audit.
+
+**The reference is HeborisCE** (`Documentation/7-Reference Sources/HeborisCE-1.1.0`),
+NOT TetriNET - a different lineage in the same door. Landed: the Master
+timing curve (it opened on level-500 values), torikan (`足切り` in the
+source, not "torikan"), six rotation systems, the item system (items ride the
+locking piece, `gamestart.c:16230`). 249 -> 318 tests. Next: DEVIL/DOOM/GOD,
+MISSION, PRACTICE, CEMENT/HIDDEN/WIN TYPE, 6 items.
+
 ## Doors and widgets (2026-09-02)
 
-**A ONE-ROW BOX CANNOT HOLD TEXT.** createBox and blessed.box build a Panel,
-which borders when the caller names none; a framed one-row box has no
-interior. 13 fixed, 15 pinned by `oneRowBoxesDoNotCarryAFrame`
-(`dev/tests/door-regressions.test.ts`) - fix yours, delete its entry.
+**A ONE-ROW BOX CANNOT HOLD TEXT.** createBox/blessed.box build a Panel,
+which borders when the caller names none. 13 fixed, 15 pinned by
+`oneRowBoxesDoNotCarryAFrame` (`dev/tests/door-regressions.test.ts`).
 
-**A deploy dying in under 20s is the host's `git fetch`**, not your commit.
-Retried since `c41c9aacf`.
+**A deploy dying in under 20s is the host's `git fetch`** (retried since
+`c41c9aacf`); one dying instantly is `concurrency: deploy-hetzner` cancelling
+it for a newer push.
 
 **Every defect that day was a door hand-rolling a widget the SDK ships** -
-survey and what remains:
-`thoughts/shared/research/2026-09-02_doors-that-hand-roll-sdk-widgets.md`. Two gates
-stop a door shipping uncompiled (`docker/verify-door-entries.sh`,
-`tests/doors/door-dist-is-shipped.test.ts`); the deploy backs up door data.
-Newest record:
-`thoughts/shared/handoffs/2026-09-02_the-one-row-box-that-could-not-hold-text.md`.
+survey: `..._2026-09-02_doors-that-hand-roll-sdk-widgets.md`. Two gates stop a
+door shipping uncompiled.
 
 ## Earlier on 2026-09-02
 
-`..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`
-and `..._the-size-switch-the-editors-and-a-real-battle-royale.md`: xterm keeps
-ONE custom key handler (`classifyKey()`); the Doors volume deletes via
-`prune_image_door_dists()`, whitelisted by extension; `// @ts-nocheck` is a
-bug report; a source pin proves a call exists, not that it runs.
+xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume
+deletes via `prune_image_door_dists()`, whitelisted by extension;
+`// @ts-nocheck` is a bug report; a source pin proves a call exists, not that
+it runs. Records: `..._the-key-handler-...md`, `..._the-size-switch-...md`.
 
 ## READ THIS FIRST
 
