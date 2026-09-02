@@ -38,7 +38,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatSuggestedTooltypes = exports.renderFileLines = exports.entryHasDoc = exports.registerRepoViewActionKeys = exports.repoViewFooterParts = exports.repoViewCurationAllowed = exports.clampSelection = exports.wrapText = exports.installConsumerDoor = exports.commandClaimedByOtherArchive = exports.findExtractedBinary = exports.extractArchiveTo = exports.extractAndRegisterDoor = exports.buildDoorInfoContent = void 0;
+exports.formatSuggestedTooltypes = exports.renderFileLines = exports.entryHasDoc = exports.registerRepoViewActionKeys = exports.repoViewFooterParts = exports.repoViewCurationAllowed = exports.clampSelection = exports.wrapText = exports.DoormanLayout = exports.installConsumerDoor = exports.commandClaimedByOtherArchive = exports.findExtractedBinary = exports.extractArchiveTo = exports.extractAndRegisterDoor = exports.buildDoorInfoContent = void 0;
 exports.resolveArchivePath = resolveArchivePath;
 exports.createApp = createApp;
 const path = __importStar(require("path"));
@@ -171,98 +171,12 @@ function resolveArchivePath(archivePath) {
 }
 // ─── Shared Layout ───────────────────────────────────────────────────────────
 // A single set of panels that all views update in-place.
-class DoormanLayout {
-    constructor(screen, nodeId) {
-        /** Stops the masthead animation; called when the door tears down. */
-        this.stopMasthead = null;
-        this.screen = screen;
-        this.width = Math.floor(screen.width * 0.35) - 8;
-        this.header = new blessed_1.Panel({ parent: screen, top: 0, left: 0, width: '100%', height: 3,
-            tags: true, style: { fg: door_theme_1.T.ink, bg: door_theme_1.T.bar, border: { fg: door_theme_1.T.accentAlt } }, focusable: false });
-        // The animated slash rail, on the header's first row. A child keeps it
-        // out of the outer geometry - nothing below moves, and a theme with no
-        // rail (classic) gets the plain title it always had.
-        const mastheadRow = new blessed_1.Box({ parent: this.header, top: 0, left: 0, width: '100%-2',
-            height: 1, tags: true, content: '', focusable: false,
-            style: door_theme_1.S.bar.style });
-        this.stopMasthead = (0, theme_1.attachMasthead)(mastheadRow, door_theme_1.CURRENT, {
-            title: 'DOORMAN',
-            // One column short: writing a row's last cell leaves the terminal in
-            // a pending-wrap state and clips the final character.
-            width: Math.max(1, (screen.width || 80) - 3),
-            rail: door_theme_1.S.accent,
-            ink: door_theme_1.S.ink,
-            render: () => screen.render(),
-        });
-        this.footer = new blessed_1.Panel({ parent: screen, bottom: 0, left: 0, width: '100%', height: 3,
-            tags: true, style: { fg: door_theme_1.T.ink, bg: door_theme_1.T.bar, border: { fg: door_theme_1.T.accentAlt } }, focusable: false });
-        this.filterPanel = new blessed_1.Panel({ parent: screen, top: 3, left: 0, width: '35%', height: 3,
-            tags: true, style: { border: { fg: door_theme_1.T.dim } }, focusable: false });
-        // keys:false + inputOnFocus:false make this a DISPLAY-ONLY widget — see
-        // sdk/engines/ui/blessed/widgets/textbox.ts:58-60 (keys:false skips
-        // `this.on('keypress', this._onKeypress)` entirely, so Textbox's own
-        // self-editing insertChar()/deleteChar() path is never wired up at
-        // all, no matter how the box gets focused — keyboard activation,
-        // focusNext()/Tab-cycling, or a mouse click all leave it inert) and
-        // :63-68 (inputOnFocus:false skips the readInput() emit on focus).
-        // RepoView's filterKeypress (below) is the ONLY thing that ever writes
-        // to this box, via setValue() — a single source of truth instead of
-        // two editors racing. Round 1-3 patched that race at the manual-path
-        // level (activation timing, Tab's handled signal); this is the actual
-        // root cause: Textbox is a self-editing widget by default, and nothing
-        // before this depended on catching every path that could focus it —
-        // keys:false removes the capability structurally instead.
-        this.filterBox = new blessed_1.Textbox({ parent: this.filterPanel, top: 0, left: 1, width: '100%-2',
-            height: 1, mouse: true, keys: false, inputOnFocus: false,
-            style: { fg: door_theme_1.T.ink, focus: { fg: door_theme_1.T.warn } } });
-        this.filterPanel.hide();
-        this.listPanel = new blessed_1.Panel({ parent: screen, top: 3, left: 0, width: '35%', height: '100%-6',
-            tags: true, style: { border: { fg: door_theme_1.T.accent } }, focusable: false });
-        this.doorList = new blessed_1.List({ parent: this.listPanel, top: 1, left: 1, width: '100%-2',
-            height: '100%-2', keys: true, vi: false, mouse: true, scrollable: true,
-            alwaysScroll: true, tags: true, wrapItems: false,
-            scrollbar: { ch: ' ', style: { bg: door_theme_1.T.bar } },
-            style: { selected: { bg: door_theme_1.T.bar, fg: door_theme_1.T.ink }, item: { fg: door_theme_1.T.ink } } });
-        this.infoPanel = new blessed_1.Panel({ parent: screen, top: 3, left: '35%', width: '65%',
-            height: '100%-6', tags: true, style: { border: { fg: door_theme_1.T.accentAlt } }, focusable: false });
-        this.infoBox = new blessed_1.ScrollableBox({ parent: this.infoPanel, top: 1, left: 1,
-            width: '100%-2', height: '100%-2', tags: true, scrollable: true, keys: true,
-            style: { fg: door_theme_1.T.ink } });
-        // Disable type-ahead on doorList (re-add keypress without the type-ahead block)
-        const _nav = this.doorList._onKeypress?.bind(this.doorList);
-        this.doorList.removeAllListeners('keypress');
-        if (_nav) {
-            this.doorList.on('keypress', (ch, key) => {
-                if (ch?.length === 1 && /[a-zA-Z0-9/ ]/.test(ch))
-                    return;
-                if (key?.name === 'escape' || ch === '\x1b')
-                    return;
-                return _nav(ch, key);
-            });
-        }
-        this.setHeader(`{center}{${door_theme_1.T.accent}-fg}DOORMAN v2{/${door_theme_1.T.accent}-fg}  {${door_theme_1.T.ink}-fg}Node ${nodeId}{/${door_theme_1.T.ink}-fg}{/center}`);
-    }
-    setHeader(content) { this.header.setContent(content); }
-    setFooter(content) { this.footer.setContent(content); }
-    setListLabel(label) { this.listPanel.setLabel(label); }
-    setListItems(items) { this.doorList.setItems(items); }
-    setListSelect(idx) { this.doorList.select(idx); }
-    get listSelected() { return this.doorList.selected ?? 0; }
-    setInfo(content) { this.infoBox.setContent(content); }
-    focusList() { this.doorList.focus(); }
-    focusFilter() { this.filterBox.focus(); }
-    showRepoLayout() {
-        this.filterPanel.show();
-        this.listPanel.top = 6;
-        this.listPanel.height = '100%-9';
-    }
-    showInstalledLayout() {
-        this.filterPanel.hide();
-        this.listPanel.top = 3;
-        this.listPanel.height = '100%-6';
-    }
-    render() { this.screen.render(); }
-}
+// DoormanLayout moved to ./doorman-layout when app.ts reached the repo's
+// 2000-line ceiling - the same split install-core and repo-view-helpers took.
+// Re-exported so importers and tests are unaffected.
+var doorman_layout_1 = require("./doorman-layout");
+Object.defineProperty(exports, "DoormanLayout", { enumerable: true, get: function () { return doorman_layout_1.DoormanLayout; } });
+const doorman_layout_2 = require("./doorman-layout");
 // ─── Views ────────────────────────────────────────────────────────────────────
 // ── Installed Doors ──────────────────────────────────────────────────────────
 class InstalledView extends ViewManager_1.BaseView {
@@ -334,7 +248,7 @@ class InstalledView extends ViewManager_1.BaseView {
     }
     updateFooter() {
         const d = this.door();
-        this.layout.setFooter((0, installed_footer_1.installedFooter)(!d || d.enabled !== false));
+        this.layout.setFooter((0, installed_footer_1.installedFooter)(!d || d.enabled !== false, this.layout.narrow));
     }
     enter() {
         this.layout.showInstalledLayout();
@@ -607,7 +521,7 @@ Object.defineProperty(exports, "renderFileLines", { enumerable: true, get: funct
 Object.defineProperty(exports, "formatSuggestedTooltypes", { enumerable: true, get: function () { return repo_view_helpers_1.formatSuggestedTooltypes; } });
 const repo_view_helpers_2 = require("./repo-view-helpers");
 const door_theme_1 = require("./door-theme");
-const theme_1 = require("@amiexpress/bbs-door-sdk/engines/ui/theme");
+const blessed_helpers_2 = require("@amiexpress/bbs-door-sdk/utils/blessed-helpers");
 const backend_services_1 = require("./backend-services");
 class RepoView extends ViewManager_1.BaseView {
     constructor(layout, bbs) {
@@ -920,6 +834,7 @@ class RepoView extends ViewManager_1.BaseView {
             installed: !!e?.installed,
             hasJunk,
             hasDoc: (0, repo_view_helpers_2.entryHasDoc)(e),
+            narrow: this.layout.narrow,
         }));
     }
     enter() {
@@ -1512,11 +1427,20 @@ class DocView extends ViewManager_1.BaseView {
         // characters do not.
         const text = this.content.replace(/[\x00-\x08\x0b-\x1f\x7f]/g, '').replace(/[{}]/g, c => `\\${c}`);
         this.panel = new Panel({ parent: this.layout.screen, top: 0, left: 0, width: '100%',
-            height: '100%-3', label: ` ${this.title} `, tags: true, style: { border: { fg: door_theme_1.T.accent } } });
-        const box = new ScrollableBox({ parent: this.panel, top: 1, left: 1, width: '100%-2',
-            height: '100%-2', tags: false, scrollable: true, alwaysScroll: true, content: text });
-        this.hint = new Panel({ parent: this.layout.screen, bottom: 0, left: 0, width: '100%', height: 3,
-            tags: true, content: '{center}[Q/ESC] Close  [↑/↓/PgUp/PgDn] Scroll{/center}',
+            height: this.layout.compact.collapseChrome ? '100%-1' : '100%-3',
+            ...(this.layout.compact.borders ? {} : { border: undefined }),
+            label: ` ${this.title} `, tags: true, style: { border: { fg: door_theme_1.T.accent } } });
+        const box = new ScrollableBox({ parent: this.panel,
+            ...(this.layout.compact.borders
+                ? { top: 1, left: 1, width: '100%-2', height: '100%-2' }
+                : { top: 0, left: 0, width: '100%', height: '100%' }),
+            tags: false, scrollable: true, alwaysScroll: true, content: text });
+        this.hint = new Panel({ parent: this.layout.screen, bottom: 0, left: 0, width: '100%',
+            height: this.layout.compact.collapseChrome ? 1 : 3,
+            ...(this.layout.compact.borders ? {} : { border: undefined }),
+            tags: true, content: this.layout.narrow
+                ? '{center}[Q/ESC] Close  [Up/Dn] Scroll{/center}'
+                : '{center}[Q/ESC] Close  [↑/↓/PgUp/PgDn] Scroll{/center}',
             style: { fg: door_theme_1.T.ink, bg: door_theme_1.T.bar, border: { fg: door_theme_1.T.accentAlt } } });
         this.layout.screen.render();
         this.keys.key(['up', 'down', 'pageup', 'pagedown'], (_, key) => {
@@ -1875,12 +1799,16 @@ async function createApp(session) {
         bbs.write('\r\n\x1b[36mNo doors installed.\x1b[0m\r\n');
         return;
     }
-    const screen = new blessed_1.Screen({ smartCSR: true, fullUnicode: true, title: 'DOORMAN v2',
-        output: (data) => bbs.write(data) });
+    // Through createScreen, not `new Screen`: that helper is the ONE place
+    // that reads bbs.getTerminalSize() and turns a 40x25 PETSCII caller into a
+    // 40x25 canvas. Building the Screen directly is why a C64 got an
+    // 80-column layout folded onto a 40-column screen - the door was painting
+    // at a width nobody had. An 80x24 caller gets exactly what it got before.
+    const screen = (0, blessed_helpers_2.createScreen)(bbs, { smartCSR: true, fullUnicode: true, title: 'DOORMAN v2' });
     const inputManager = new blessed_helpers_1.DoorInputManager(session, screen, { enableGameMode: false, enableGrabKeys: false, enableMouse: true });
     inputManager.enable();
     const nodeId = session.bbsSession?.nodeId ?? '?';
-    const layout = new DoormanLayout(screen, nodeId);
+    const layout = new doorman_layout_2.DoormanLayout(screen, nodeId);
     const vm = new ViewManager_1.ViewManager(screen);
     // Hide cursor after every render — blessed re-shows it on each refresh.
     // This is the only reliable way since blessed ignores external cursor state.

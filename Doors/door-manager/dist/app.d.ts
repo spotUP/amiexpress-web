@@ -13,6 +13,7 @@ interface DoorSession {
     params: string[];
 }
 export declare function resolveArchivePath(archivePath: string | null | undefined): string | null;
+export { DoormanLayout } from './doorman-layout';
 /** True when repo-curation actions (Strip on a repo copy, catalog-row
  * edits, archive delete) are permitted. Owner mode and disabled mode both
  * mean "local catalog only, full local control" (see repoDataSource.ts's
