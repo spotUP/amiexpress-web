@@ -82,6 +82,46 @@
               # Keep the last twenty; they are small and the disk is not.
               ls -1t "$BACKUP_DIR"/bbs-config-*.tar.gz 2>/dev/null | tail -n +21 | xargs -r rm -f
 
+              # The doors' own data: scores, stats, message bases, anything a
+              # door wrote and cannot regenerate.
+              #
+              # The .info backup above covers configuration and nothing else,
+              # so when GRANDMASTER's match history vanished on 2026-09-01
+              # there was nothing to restore from - the file was simply gone.
+              # A deploy is the moment worth capturing, because a deploy is
+              # what replaces the code that owns the data.
+              #
+              # WAL files are included ON PURPOSE. These databases run in WAL
+              # mode, and grandmaster.db was a 4 KB header with 540 KB of
+              # uncheckpointed WAL beside it: backing up the .db alone would
+              # have preserved an empty database and thrown the scores away.
+              #
+              # Only node_modules is pruned. dist/ is NOT: frogger and
+              # super-qix keep their high scores inside dist/, which is also
+              # why the deploy's dist cleanup whitelists compiled extensions
+              # rather than deleting whatever the image lacks. The filters
+              # below match data, not code, so scanning dist costs nothing.
+              echo "== backup: the doors' data =="
+              docker run --rm \
+                -v amiexpress-bbs-data:/data:ro \
+                -v "$BACKUP_DIR":/backup \
+                alpine:3 \
+                sh -c "cd /data && find bbs/Doors -name node_modules -prune -o \
+                       -type f \( -name '*.db' -o -name '*.db-wal' -o -name '*.db-shm' \
+                                 -o -name '*.sqlite' -o -name '*.sqlite3' \
+                                 -o -name '*scores*.json' -o -name '*.dat' \
+                                 -o -path '*/data/*' \) -print \
+                       | tar -czf /backup/bbs-doordata-$STAMP.tar.gz -T -" \
+                || echo "WARNING: door data backup failed, continuing"
+              if [ -f "$BACKUP_DIR/bbs-doordata-$STAMP.tar.gz" ]; then
+                echo "Backup: $BACKUP_DIR/bbs-doordata-$STAMP.tar.gz ($(du -h "$BACKUP_DIR/bbs-doordata-$STAMP.tar.gz" | cut -f1), $(tar -tzf "$BACKUP_DIR/bbs-doordata-$STAMP.tar.gz" | wc -l) files)"
+              else
+                echo "WARNING: no door data archive was written"
+              fi
+              # Twenty of these as well. They are bigger than the .info
+              # archive and still nothing next to the disk.
+              ls -1t "$BACKUP_DIR"/bbs-doordata-*.tar.gz 2>/dev/null | tail -n +21 | xargs -r rm -f
+
               # Always sync to origin/main exactly. `git pull` can silently
               # leave the checkout behind when the working tree has local
               # edits (which the server should never have, but accumulates
@@ -111,6 +151,42 @@
               # which revision it was built from. fetch-live-logs.yml reads
               # /app/.git-sha to surface this — answers "is the live deploy
               # actually fresh?" without having to inspect mtimes.
+              # Remember the image that is serving RIGHT NOW, so a deploy
+              # that builds fine and then cannot start has somewhere to go
+              # back to. Tagged rather than remembered by ID: an untagged
+              # image whose tag has moved is a prune away from being gone.
+              if docker image inspect amiexpress-bbs:latest >/dev/null 2>&1; then
+                docker tag amiexpress-bbs:latest amiexpress-bbs:rollback
+                echo "== previous image tagged amiexpress-bbs:rollback =="
+              else
+                echo "== no previous image to tag (first deploy) =="
+              fi
+
+              # Make room BEFORE building, not after failing to.
+              #
+              # 2026-09-01: the board went down mid-session with the disk at
+              # 100% and the container in a restart loop - the entrypoint
+              # could not write a byte. Nothing in this pipeline had ever
+              # freed anything, so every deploy left its build cache and its
+              # displaced image behind: 27.4GB of buildkit cache across 1348
+              # entries, and 19 images totalling 49GB, on a 75GB disk. The
+              # deploy still reported success, because the workflow is green
+              # when the build is green - the board was serving an image from
+              # hours earlier.
+              #
+              # --keep-storage leaves the recent layers, so an ordinary
+              # deploy still builds from cache; only the long tail goes. The
+              # daemon's own builder.gc enforces the same ceiling between
+              # deploys (see /etc/docker/daemon.json) - this is the belt to
+              # that braces, and the one that runs when it matters.
+              echo "== free space before build =="
+              df -h / | tail -1
+              docker builder prune -f --keep-storage=10GB 2>&1 | tail -2 || true
+              # Untagged leftovers only: :latest and :rollback are tags, so
+              # neither is a dangling image and neither can be caught here.
+              docker image prune -f 2>&1 | tail -2 || true
+              df -h / | tail -1
+
               echo "== docker compose build (with GIT_SHA) =="
               GIT_SHA="$ACTUAL_SHA" docker compose build
 
@@ -169,6 +245,33 @@
                 if [ "$i" = "30" ]; then
                   echo "ERROR: /health never responded after 60s" >&2
                   docker logs amiexpress-bbs --tail 100 >&2
+
+                  # Put the board back up before failing.
+                  #
+                  # Everything above this point is safe: the build happens
+                  # before the swap, so a build that fails leaves the running
+                  # container alone. This is the case that is NOT safe - the
+                  # image built, the container was recreated from it, and it
+                  # will not serve. Without this the deploy reports failure
+                  # and the BBS simply stays down until somebody notices,
+                  # which is what happened on 2026-08-30.
+                  if docker image inspect amiexpress-bbs:rollback >/dev/null 2>&1; then
+                    echo "== rolling back to the previous image ==" >&2
+                    docker tag amiexpress-bbs:rollback amiexpress-bbs:latest
+                    GIT_SHA="rollback" docker compose up -d --force-recreate --no-build || true
+                    for j in $(seq 1 30); do
+                      if curl -fsS http://localhost:3001/health >/dev/null 2>&1; then
+                        echo "OK: board is back up on the previous image after ${j}*2s" >&2
+                        break
+                      fi
+                      sleep 2
+                    done
+                    if ! curl -fsS http://localhost:3001/health >/dev/null 2>&1; then
+                      echo "ERROR: rollback did not come up either - the board is DOWN" >&2
+                    fi
+                  else
+                    echo "ERROR: no rollback image available - the board is DOWN" >&2
+                  fi
                   exit 1
                 fi
                 sleep 2
