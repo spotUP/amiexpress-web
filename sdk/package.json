@@ -24,6 +24,9 @@
       "common": [
         "dist/common/index.d.ts"
       ],
+      "common/run-diff": [
+        "dist/common/run-diff.d.ts"
+      ],
       "core": [
         "dist/core/index.d.ts"
       ],
@@ -135,6 +138,12 @@
       "import": "./dist-esm/common/index.js",
       "require": "./dist/common/index.js",
       "default": "./dist-esm/common/index.js"
+    },
+    "./common/run-diff": {
+      "types": "./dist/common/run-diff.d.ts",
+      "import": "./dist-esm/common/run-diff.js",
+      "require": "./dist/common/run-diff.js",
+      "default": "./dist-esm/common/run-diff.js"
     },
     "./core": {
       "types": "./dist/core/index.d.ts",
