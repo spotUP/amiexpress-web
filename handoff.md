@@ -22,28 +22,28 @@ on the board yet.
 ## GRANDMASTER + CARD LOBBY + the C SDK (2026-09-03, latest)
 
 `..._2026-09-03_card-lobby-themes-host-detection-and-the-c-sdk.md` is the
-record. LIVE at `fde28d8de`. GRANDMASTER's reference is **HeborisCE**, not
-TetriNET; 419 tests.
+record. LIVE at `01c572259`. GRANDMASTER's reference is **HeborisCE**; 419
+tests.
 
-**THE CLASS TO CHECK FIRST HERE: two lists kept in agreement by hand.**
-GRANDMASTER's menu bound `q`/ESC to row 15 - right at sixteen rows, wrong at
-eighteen, so `q` opened HIGH SCORES and nothing errored. CI's door-install
-list went stale a third time and turned main red against two innocent doors.
-Ask what makes a pair agree, and what fails if they stop.
+**THE CLASS TO CHECK FIRST HERE: two things kept in agreement by hand.** Three
+in one day: GRANDMASTER's menu bound `q` to a row index right at sixteen rows
+and wrong at eighteen; CI's door-install list went stale a third time; telnet
+routing was a second copy of web's that disagreed.
 
-Landed: MISSION's **sysop editor** (E on the list; packs to `data/missions/`,
-saves via `parseMissionPack`); in-door **theme menus** for CARD LOBBY, LIVECHAT
-and the ANSIEditor doors, re-tint in `theme/live.ts`; CARD LOBBY's **card style
-panel** and **chat**; **AE_HOST/AE_CAPS** so a 68K door can ask where it runs
-(absence = classic AmiExpress, 80x25 ANSI, the safe path); **C SDK phase 0**
-(`sdk/c/`, a small door is 5,048 bytes); door bundles **15.1 MB -> 10.8**.
+Landed: MISSION's **sysop editor** (E on the list, packs to `data/missions/`);
+in-door **theme menus** (CARD LOBBY, LIVECHAT, the ANSIEditor doors) with a
+re-tint in `theme/live.ts`; CARD LOBBY's **card style panel** and **chat**;
+**AE_HOST/AE_CAPS** for a 68K door to ask where it runs (absence = classic
+AmiExpress, 80x25 ANSI, the safe path); **C SDK phase 0**; door bundles
+**15.1 MB -> 10.8**.
 
-**Four TGM items stay unimplemented on purpose** (X-RAY, COLOR, DARK,
-TRANSFORM): dead code in HeborisCE, never drawn. Do not invent behaviour the
-reference does not have.
+**Four TGM items stay unimplemented** (X-RAY, COLOR, DARK, TRANSFORM): dead
+code in HeborisCE, never drawn.
 
-**TELNET TAKES NO INPUT in a game-mode door**: `enableGameMode()` drops the
-character path (`socket-handlers.ts:722`). Rendering is fixed (`86200b3e5`).
+**TELNET INPUT WORKS** - sysop-confirmed live, `01c572259`. Three causes: the
+game-mode gate dropped the character path for non-browser callers; the hybrid
+client half started for them anyway; the dispatcher returned at the first
+'command' listener. One rule now: `services/door-input-routing.ts`.
 
 ## Doors and widgets (2026-09-02)
 
@@ -57,8 +57,9 @@ that day was a door hand-rolling an SDK widget** -
 `..._doors-that-hand-roll-sdk-widgets.md`.
 
 xterm keeps ONE custom key handler (`classifyKey()`); the Doors volume deletes
-via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; a source pin
-proves a call exists, not that it runs.
+via `prune_image_door_dists()`; `// @ts-nocheck` is a bug report; **a source
+pin proves a call exists, not that it runs** - two tests on 2026-09-03 pinned
+the BUG as the rule. Drive the real path or delete the test.
 
 ## READ THIS FIRST
 

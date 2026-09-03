@@ -88,6 +88,26 @@ test. Prove RED before believing any of them.
   because assets/ is the checkout and the Doors volume sync only ever adds.
   Every save goes through `parseMissionPack`.
 
+## Telnet door input: fixed, and confirmed
+
+The sysop confirmed on a live telnet session (2026-09-03, `01c572259`) that
+door input works. Three separate causes, found and fixed in that order:
+
+1. the game-mode gate dropped the character path for callers with no browser
+   (`deliversKeyEvents`);
+2. a hybrid door's client half started for callers with no browser at all,
+   registering a 'command' listener that swallowed every key
+   (`hasBrowserClient`);
+3. telnet's dispatcher returned at the FIRST 'command' listener, so a door
+   whose prompt listener was still registered never reached its own handler.
+
+Only the third is subtle, and it is the same shape as the day's other two
+bugs: web and telnet each had their own copy of the routing, and the copies
+disagreed. They ask one function now
+(`web/backend/src/services/door-input-routing.ts`), which returns EVERY
+destination rather than the first - because delivering to both a prompt and
+the running door is what socket.io already did on web.
+
 ## Open
 
 - **`ui/menu.ts`**: the tetris-attack branch carries a duplicate menu fix
@@ -96,6 +116,7 @@ test. Prove RED before believing any of them.
 - **`Conf.DB`** shows modified in both my worktrees and is not my work; a
   handoff on main records a Conf.DB discard incident today, so I left it and
   kept the worktrees (`scratchpad/gm-brief`, `scratchpad/land-2`).
-- **Nothing hand-tested yet.** Worth a look: the card style panel, `T` chat
-  across two nodes, View > Theme in LiveChat and the three editor doors, and
-  sound in pengo/frogger plus the showcase mic demo after the bundle trim.
+- **Telnet input is confirmed; the rest is not.** Worth a look: the card style
+  panel, `T` chat across two nodes, View > Theme in LiveChat and the three
+  editor doors, and sound in pengo/frogger plus the showcase mic demo after
+  the bundle trim.
