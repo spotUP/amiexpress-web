@@ -1,4 +1,5 @@
 import { getCompactProfile } from '@amiexpress/bbs-door-sdk/engines/ui/blessed';
+import { type DoorChrome } from '@amiexpress/bbs-door-sdk/engines/ui/theme';
 /** Byte count as a door list shows it. Lives here with the row that uses it. */
 export declare function formatSize(bytes: number): string;
 /** The shape an installed-door row needs. */
@@ -24,7 +25,13 @@ export declare class DoormanLayout {
     infoBox: any;
     filterPanel: any;
     filterBox: any;
-    /** Stops the masthead animation; called when the door tears down. */
+    /** The masthead, its rail and the theme's glitches; stopped at teardown. */
+    chrome: DoorChrome | null;
+    /**
+     * Kept as a field name the door already calls: teardown says
+     * `stopMasthead()`, and there is no reason to make every call site learn
+     * a new one for the same act.
+     */
     stopMasthead: (() => void) | null;
     readonly width: number;
     /** The SDK's compact profile for THIS screen - the only width authority. */

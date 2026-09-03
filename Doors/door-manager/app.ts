@@ -514,8 +514,7 @@ import {
   type ArchiveFileRow,
 } from './repo-view-helpers';
 import { T, S, CURRENT, applyTheme } from './door-theme';
-import { attachMasthead } from '@amiexpress/bbs-door-sdk/engines/ui/theme';
-import { getCompactProfile, effectsAllowed } from '@amiexpress/bbs-door-sdk/engines/ui/blessed';
+import { getCompactProfile } from '@amiexpress/bbs-door-sdk/engines/ui/blessed';
 import { createScreen } from '@amiexpress/bbs-door-sdk/utils/blessed-helpers';
 import {
   getCatalogSvc,
