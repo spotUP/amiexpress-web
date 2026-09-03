@@ -22,16 +22,12 @@ Only ONE door was compiled in the image build; two gates stop that
 (`docker/verify-door-entries.sh`, `tests/doors/door-dist-is-shipped.test.ts`).
 The deploy backs up door data, WAL too.
 
-## Earlier on 2026-09-02
+## Earlier on 2026-09-02 (superseded below by Wave 3/4)
 
-`..._the-key-handler-the-volume-that-never-deleted-and-card-lobbys-nocheck.md`,
-`..._the-size-switch-the-editors-and-a-real-battle-royale.md`. Carry:
-**xterm keeps ONE custom key handler** - assigns, never appends; every rule
-lives in `classifyKey()` (`packages/terminal/src/utils/key-overrides.ts`).
-**Alt+Enter fullscreens the browser too**, on the KEY. **The Doors volume
-deletes** - `prune_image_door_dists()` in `docker-entrypoint.sh`; dry-run any
-delete path on the real volume. **`// @ts-nocheck` is a bug report** - one line
-hid six missing methods in CARD LOBBY; the ten size-switch doors are fixed.
+`..._the-key-handler-...-nocheck.md`, `..._the-size-switch-...-battle-royale.md`
+- xterm's ONE key handler (`classifyKey()`), Alt+Enter fullscreens on the KEY,
+Doors volume deletes via `prune_image_door_dists()` (dry-run first),
+`// @ts-nocheck` is a bug report (hid six methods in CARD LOBBY).
 
 ## READ THIS FIRST
 
@@ -187,3 +183,7 @@ longer scrolls a C64 (`$14`/`$94` corner idiom, KERNAL-faithful oracle,
 - **SDK tests import the built `sdk/dist`** - a source edit is invisible until
   `npm run build:cjs`.
 - **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
+- **2026-09-03 safety checkpoint** swept every worktree's WIP via `git add -A`,
+  once, at sysop request (4 agents hit the weekly limit mid-flight). Rule 6 in
+  `thoughts/BOARD.md` still holds day-to-day. Detail:
+  `.../handoffs/2026-09-03_safety-checkpoint-week-limit-sweep.md`.
