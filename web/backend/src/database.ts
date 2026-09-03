@@ -858,6 +858,28 @@ console.log(`[migration] Reset ${changed.changes} conf_base rows to scan_flags=0
         }
       }
 
+      // Which volume holds a file, and under what key. NULL means local disk,
+      // which is every row on every board that has not configured a bucket.
+      const fileEntryCols = (this.db.prepare('PRAGMA table_info(file_entries)').all() as any[]).map((c) => c.name);
+      if (!fileEntryCols.includes('storage_volume')) {
+        this.db.exec('ALTER TABLE file_entries ADD COLUMN storage_volume INTEGER');
+console.log('✓ Added storage_volume column to file_entries');
+      }
+      if (!fileEntryCols.includes('object_key')) {
+        this.db.exec('ALTER TABLE file_entries ADD COLUMN object_key TEXT');
+console.log('✓ Added object_key column to file_entries');
+      }
+
+      const fileAreaCols = (this.db.prepare('PRAGMA table_info(file_areas)').all() as any[]).map((c) => c.name);
+      if (!fileAreaCols.includes('storage_volume')) {
+        this.db.exec('ALTER TABLE file_areas ADD COLUMN storage_volume INTEGER');
+console.log('✓ Added storage_volume column to file_areas');
+      }
+      if (!fileAreaCols.includes('volume_class_pref')) {
+        this.db.exec('ALTER TABLE file_areas ADD COLUMN volume_class_pref TEXT');
+console.log('✓ Added volume_class_pref column to file_areas');
+      }
+
 console.log('All migrations completed successfully');
     } catch (error) {
 console.error('Error running migrations:', error);
@@ -990,6 +1012,8 @@ console.error('Error running migrations:', error);
           downloadaccess INTEGER DEFAULT 1,
           created INTEGER DEFAULT (strftime('%s', 'now')),
           updated INTEGER DEFAULT (strftime('%s', 'now')),
+          storage_volume INTEGER,
+          volume_class_pref TEXT,
           UNIQUE(name, conferenceid)
         )
       `);
@@ -1011,6 +1035,8 @@ console.error('Error running migrations:', error);
           status TEXT DEFAULT 'active',
           checked TEXT DEFAULT 'N',
           comment TEXT,
+          storage_volume INTEGER,
+          object_key TEXT,
           UNIQUE(filename, areaid)
         )
       `);
@@ -2497,6 +2523,14 @@ console.error(`[Database] Failed to update disk misc for slot ${slotNumber}:`, e
 
   async getFileStatisticsByConference(...args: Parameters<FileRepository['getFileStatisticsByConference']>) {
     return this.fileRepo!.getFileStatisticsByConference(...args);
+  }
+
+  recordLocation(...args: Parameters<FileRepository['recordLocation']>): void {
+    this.fileRepo!.recordLocation(...args);
+  }
+
+  entriesOnVolume(...args: Parameters<FileRepository['entriesOnVolume']>) {
+    return this.fileRepo!.entriesOnVolume(...args);
   }
 
   // Session management methods - delegate to SessionRepository
