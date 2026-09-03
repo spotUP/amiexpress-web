@@ -17,6 +17,7 @@ import { parseMciCodes } from "../../handlers/screen.handler.js";
 import { parseInfoFile } from "../../utils/amiga-command-parser.util.js";
 import { debugLog } from "../../utils/debug-log";
 import * as fs from "fs";
+import * as amigafs from "../../utils/amigafs";
 import * as path from "path";
 import * as net from "net";
 
@@ -2380,7 +2381,8 @@ debugLog(`[DoorMessageHandler]   REL_CONF: conf=${data}`);
         // express.e:4066-4068: Check if file exists in playpen
         {
           const filePath = str || "";
-          const exists = fs.existsSync(filePath) ? 1 : 0;
+          // The door supplies this path; AmigaDOS matched it case-insensitively.
+          const exists = amigafs.existsSync(filePath) ? 1 : 0;
 debugLog(`[DoorMessageHandler]   CHECK_PLAYPEN_EXISTS: "${filePath}" exists=${exists}`);
           this.emulator.writeMemory32(msgAddr + DoorConstants.MESSAGE_DATA_OFFSET, exists);
         }
@@ -2560,7 +2562,9 @@ debugLog(`[DoorMessageHandler]   GET_CMD_TOOLTYPE: key="${tooltypeKey}", command
           ];
 
           for (const infoPath of possiblePaths) {
-            if (fs.existsSync(infoPath)) {
+            // cmdName comes from the door, so the .info basename needs the
+            // case-insensitive walk ("mtop" must reach "MTOP.info").
+            if (amigafs.existsSync(infoPath)) {
               try {
                 const tooltypes = parseInfoFile(infoPath);
                 if (tooltypes.has(tooltypeKey)) {
@@ -3018,7 +3022,7 @@ debugLog(
     while (currentLevel >= minLevel) {
       for (const ext of extensions) {
         const secFilePath = path.join(bbsRoot, `${screenPath}${currentLevel}${ext}`);
-        if (fs.existsSync(secFilePath)) {
+        if (amigafs.existsSync(secFilePath)) {
           return secFilePath;
         }
       }
@@ -3028,7 +3032,7 @@ debugLog(
     // Fall back to base file
     for (const ext of extensions) {
       const basePath = path.join(bbsRoot, `${screenPath}${ext}`);
-      if (fs.existsSync(basePath)) {
+      if (amigafs.existsSync(basePath)) {
         return basePath;
       }
     }
@@ -3046,12 +3050,12 @@ debugLog(
    */
   private async displayFile(filePath: string): Promise<boolean> {
     try {
-      if (!fs.existsSync(filePath)) {
+      if (!amigafs.existsSync(filePath)) {
 debugLog(`[DoorMessageHandler] File not found: ${filePath}`);
         return false;
       }
 
-      const contents = fs.readFileSync(filePath, "utf-8");
+      const contents = amigafs.readFileSync(filePath, "utf-8") as string;
 
       // Process MCI codes in file contents (express.e:6790-6820)
       const bbsSession = (this.config as any)?.bbsSession || {};

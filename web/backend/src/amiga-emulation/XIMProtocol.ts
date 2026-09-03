@@ -26,6 +26,7 @@ import { ximDebugLogger } from './xim/debug-logger';
 import { getDoorLogger, DoorLogger } from './DoorLogger';
 import { ximLogger } from '../utils/XIMLogger';
 import { debugLog } from '../utils/debug-log';
+import * as amigafs from '../utils/amigafs';
 import { debugRegistry } from '../debug/DebugRegistry';
 import * as net from 'net';
 
@@ -832,7 +833,9 @@ debugLog(`[XIMProtocol] GET_CMD_TOOLTYPE: key="${tooltypeKey}" cmd="${cmdName}"`
       ];
 
       for (const infoPath of possiblePaths) {
-        if (fs.existsSync(infoPath)) {
+        // cmdName comes from the door, so the .info basename needs the
+        // case-insensitive walk ("mtop" must reach "MTOP.info").
+        if (amigafs.existsSync(infoPath)) {
           const tooltypes = parseInfoFile(infoPath);
           if (tooltypes.has(tooltypeKey)) {
             tooltypeValue = tooltypes.get(tooltypeKey) || '';
@@ -1808,8 +1811,8 @@ debugLog(`[XIMProtocol]   bbsSession.bbsRoot: ${(this.bbsSession as any)?.bbsRoo
 
     let infoPath = '';
     for (const p of possiblePaths) {
-debugLog(`[XIMProtocol]   Checking: ${p} -> ${fs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'}`);
-      if (fs.existsSync(p)) {
+debugLog(`[XIMProtocol]   Checking: ${p} -> ${amigafs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'}`);
+      if (amigafs.existsSync(p)) {
         infoPath = p;
 debugLog(`[XIMProtocol]   ✓ Found .info file: ${infoPath}`);
         break;
