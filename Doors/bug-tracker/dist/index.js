@@ -331,11 +331,26 @@ ${message}
 }
 
 // app.ts
-import { attachMasthead, footerHints, footerStyle } from "@amiexpress/bbs-door-sdk/engines/ui/theme";
-import { effectsAllowed } from "@amiexpress/bbs-door-sdk/engines/ui/blessed";
+import { attachDoorChrome, footerStyle } from "@amiexpress/bbs-door-sdk/engines/ui/theme";
 
 // layout.ts
 import { getCompactProfile } from "@amiexpress/bbs-door-sdk/engines/ui/blessed";
+var BUG_TRACKER_HINTS = [
+  { key: "Arrows", does: "Navigate" },
+  { key: "Enter", does: "Select" },
+  { key: "ESC", does: "Back" },
+  { key: "Q", does: "Quit" }
+];
+var BUG_TRACKER_HINTS_COMPACT = [
+  { key: "ESC", does: "Back" },
+  { key: "Q", does: "Quit" }
+];
+function listOnScreen(container) {
+  const found = (container?.children ?? []).find(
+    (child) => typeof child?.setItems === "function" && Array.isArray(child?.items)
+  );
+  return found ?? null;
+}
 var CompactLayout = class {
   /** Always a LIVE width - the screen's, read on every access. */
   constructor(widthOf) {
@@ -654,7 +669,8 @@ var BugTrackerApp = class {
   isSysop;
   // UI elements
   headerBox;
-  stopMasthead = null;
+  /** The masthead, the rail, the glitches and the hint line - one handle. */
+  chrome = null;
   terminalMode = null;
   mainContainer;
   footerBox;
@@ -818,15 +834,6 @@ var BugTrackerApp = class {
       content: "",
       style: S.bar.style
     });
-    this.stopMasthead = effectsAllowed(this.screenWidth) ? attachMasthead(mastheadRow, THEME, {
-      title: "BUG TRACKER",
-      // One column short: writing a row's last cell leaves the terminal in
-      // a pending-wrap state and clips the final character.
-      width: Math.max(1, (this.screen.width || 80) - 1),
-      rail: S.accent,
-      ink: S.ink,
-      render: () => this.screen.render()
-    }) : (mastheadRow.setContent(" BUG TRACKER "), () => void 0);
     this.mainContainer = createBox2({
       parent: this.screen,
       top: this.chromeH,
@@ -851,24 +858,24 @@ var BugTrackerApp = class {
       height: 1,
       ...this.frameless,
       style: footerStyle(THEME),
-      content: " " + footerHints(
-        this.compact.collapseChrome ? [
-          // The view's own strip lists its keys; these two always apply.
-          { key: "ESC", does: "Back" },
-          { key: "Q", does: "Quit" }
-        ] : [
-          { key: "Arrows", does: "Navigate" },
-          { key: "Enter", does: "Select" },
-          { key: "ESC", does: "Back" },
-          { key: "Q", does: "Quit" }
-        ],
-        { key: S.key, dim: S.dim },
-        S.rail
-      ),
+      content: "",
       tags: true,
       focusable: false,
       mouse: false,
       clickable: false
+    });
+    this.chrome = attachDoorChrome(THEME, {
+      width: this.screenWidth,
+      title: "BUG TRACKER",
+      masthead: mastheadRow,
+      footer: this.footerBox,
+      hints: BUG_TRACKER_HINTS,
+      compactHints: BUG_TRACKER_HINTS_COMPACT,
+      footerPad: " ",
+      glitch: () => listOnScreen(this.mainContainer),
+      glitchOptions: { tickMs: 400 },
+      styles: S,
+      render: () => this.screen.render()
     });
   }
   clearMain() {
@@ -2282,12 +2289,12 @@ var BugTrackerApp = class {
   // Cleanup
   // ============================================================================
   quit() {
-    if (this.stopMasthead) {
+    if (this.chrome) {
       try {
-        this.stopMasthead();
+        this.chrome.stop();
       } catch {
       }
-      this.stopMasthead = null;
+      this.chrome = null;
     }
     this.terminalMode?.dispose();
     this.terminalMode = null;
