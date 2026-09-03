@@ -143,36 +143,36 @@ lowercase path has the package.json.
 
 ## PETSCII + 40 columns
 
-A web `P` answer or a real C64 gets EVERYTHING as PETSCII - one `sdk/petscii/`
-transducer, KERNAL oracle inside. Overlay retired; a C64 terminal is BLACK;
-only `$02 <colour>` moves background and border. Nothing below is pushed.
-`.../handoffs/2026-09-02_petscii-full-canvas.md`.
+A web `P` answer or a C64 gets EVERYTHING as PETSCII - ONE `sdk/petscii/`
+transducer per SESSION at the CHOKE, KERNAL oracle inside, fed at both
+transports. A C64 terminal is BLACK; only `$02 <colour>` moves the background
+and border. `..._2026-09-02_petscii-full-canvas.md`,
+`..._2026-09-03_petscii-oracle-at-the-choke.md`.
 
-**That model lives at the CHOKE**: ONE transducer per SESSION, fed at both
-transports, so a `.seq` encodes against the cursor, bank and pen the caller
-REALLY has; the render's two taps are gone. Reset at the flip, disposed on
-reconnect. **Walks, cherry-pick order:**
-`.../handoffs/2026-09-03_petscii-oracle-at-the-choke.md`
+**The board is adapted to 40 columns** (Task 1's gate is default-closed):
+MIN_COLUMNS with `[40]`/`[C64]`, SDK XXS=40 tier, narrow tables, screen reflow
+with an `[80-COLUMN ANSI SCREEN - SKIPPED]` token, six adapted doors, effects
+OFF on PETSCII. Two chokes - `wrapForSession` (prose) and
+`wrapDoorTextForSession` (`BBSApi.write`) - are identity for any ANSI caller and
+anything positioning the cursor. A row may use 40 columns, a prompt 39;
+`tests/forty-col-sweep.test.ts` sweeps every surface.
+**WALK:** `..._2026-09-02_c64-40col-adaptation.md`.
 
-**The board is adapted to 40 columns** (8 tasks; Task 1's gate is
-default-closed): MIN_COLUMNS gate with `[40]`/`[C64]`, SDK XXS=40 tier, narrow
-tables, screen reflow with an `[80-COLUMN ANSI SCREEN - SKIPPED]` token, six
-adapted doors, effects OFF on PETSCII. Two chokes - `wrapForSession` (BBS
-prose), `wrapDoorTextForSession` (`BBSApi.write`) - both identity for any ANSI
-caller at any width and anything positioning the cursor. A row may use 40
-columns, a prompt 39; `tests/forty-col-sweep.test.ts` sweeps every surface.
-**Limits, C64 WALK:** `.../handoffs/2026-09-02_c64-40col-adaptation.md`.
-
-**FULL MCI runs inside a `.seq`**: first byte `~` gates a file into MCI - every
-`.TXT` code, structural included, in document order; ungated art stays
-byte-identical; in a gated file EVERY `0x7E` is a token (`~~` escapes).
-**Semantics, WALK:** `.../handoffs/2026-09-02_mci-in-petscii-seq.md`; sysops:
-`Documentation/2-Sysops/CONFIGURATION.md` section 5.
+**FULL MCI runs inside a `.seq`**: first byte `~` gates the file - every `.TXT`
+code, structural ones too, in document order; ungated art stays byte-identical;
+in a gated file EVERY `0x7E` is a token (`~~` escapes). **WALK:**
+`..._2026-09-02_mci-in-petscii-seq.md`; sysops: `CONFIGURATION.md` section 5.
 
 **80-column 68K doors reach a C64** (Phase 3): `WHO`, `S`, `WHAT` carry
-`C64_ADAPT=40`, show `[C64]`, each finished frame reduced to 40 columns (`>`
-marks a shortened column); ANSI bytes untouched. **Seam, Phase 4, WALK:**
-`.../handoffs/2026-09-02_c64-door-adapter-phase3.md`
+`C64_ADAPT=40`, show `[C64]`, each frame reduced to 40 columns (`>` = a
+shortened column). **Phase 4 WALK:** `..._2026-09-02_c64-door-adapter-phase3.md`
+
+**Wave 3 is on main as `2c709ad60`** (53 commits): the wipes are a real screen
+model with delta frames, the terminal fits the window and the viewer overrides
+it, `attachDoorChrome` gives 16 doors the chrome, blessed's bottom-right cell no
+longer scrolls a C64 (`$14`/`$94` corner idiom, KERNAL-faithful oracle,
+4000-case fuzz), and MultiTop's bulletins regenerate on Linux. **WALK:**
+`..._2026-09-03_wave3-wipes-zoom-chrome-corner.md`
 
 ## Gotchas
 
