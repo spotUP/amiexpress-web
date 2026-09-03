@@ -4,6 +4,7 @@
   "description": "Revolutionary BBS Door Development SDK - Dual Runtime (Server & Client)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "bin": {
     "amiexpress-sdk": "./dist/tools/cli/index.js"
   },
