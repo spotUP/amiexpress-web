@@ -860,7 +860,14 @@ The original question and its costing follow.
 > So the C SDK needs a host query before anything else it offers: something
 > like `ae_host_t ae_host(void)` returning the host (amiexpress-web, or
 > classic AmiExpress) together with what that host can carry - PETSCII,
-> wide terminals, the C64 40-column adaptation, mouse. The web host can be
+> wide terminals, the C64 40-column adaptation, mouse.
+>
+> **DONE, BOTH SIDES (2026-09-03).** The board publishes AE_HOST,
+> AE_HOST_VERSION, AE_CONNECTION, AE_CLIENT and AE_CAPS through GetVar() and
+> as ENV: files (`web/backend/src/amiga-emulation/utils/host-vars.ts`,
+> `Documentation/4-Door-Developers/HOST_DETECTION.md`); the door reads them
+> through `sdk/c/include/ae_host.h`. Absent AE_HOST is the safe case and is
+> what a classic board looks like. The web host can be
 > detected from the door port/environment it was started with; a classic
 > host is the fallback and must be the SAFE one (80x25 ANSI, nothing else).
 > A door then asks, rather than assuming. Put this in phase 0 - it changes
@@ -875,7 +882,18 @@ The original question and its costing follow.
 > For the C side this is a build rule, not a feature: `sdk/c/` ships as a
 > static library built one function per section (`-ffunction-sections`,
 > `-fdata-sections`) and doors link with `--gc-sections`, so a door that
-> never draws a list never carries the list widget. Anything that would
+> never draws a list never carries the list widget.
+>
+> **CORRECTED BY PHASE 0 (2026-09-03).** vbcc has neither flag, and neither
+> the host `ar` nor llvm's `emar` can write an archive `vlink` will read
+> (both: *File format not recognized*). What holds on this toolchain, and is
+> now measured by `sdk/c/tools/measure-link.sh`: an Amiga hunk library is the
+> CONCATENATION of hunk objects, and `vlink` pulls a unit out of one only
+> when something references a symbol in it. `hello` linked against a library
+> holding a module it never calls is byte-identical (5,048) to `hello`
+> linked against only what it calls; naming that module as an OBJECT on the
+> link line instead costs its full size (5,476). So the rule is: one module
+> per `.c` file, and doors link the library, never a list of objects. Anything that would
 > defeat it - a registry that references every widget, a table of function
 > pointers "for convenience", a constructor that touches all of them - is
 > banned by construction. Phase 0 has to prove it: build the hello door
@@ -885,6 +903,10 @@ The original question and its costing follow.
 > This bears directly on risk 2. "464 KB for DoorRepo" is a measurement of a
 > door that links everything it has; the number that matters is what a SMALL
 > door costs, and nobody has measured it.
+>
+> **MEASURED BY PHASE 0 (2026-09-03): about 5 KB.** `sdk/c/examples/hello`,
+> which asks where it is running and writes three lines, is 5,048 bytes
+> against the full library; adding one `ae_box()` call costs 460 more.
 
 > The TypeScript side has the same disease and it is visible today:
 > `Doors/card-lobby/dist/client.bundle.js` is **1.3 MB** and the door's
