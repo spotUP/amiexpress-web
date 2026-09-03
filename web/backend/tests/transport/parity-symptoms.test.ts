@@ -169,31 +169,60 @@ describe('TP-1 - the five symptoms a sysop would report', () => {
     expect(bytes.toString('hex')).toBe(Buffer.from([0x41, 0xb7, 0x42]).toString('hex'));
   });
 
-  it('an event the emitter cannot render leaves no trace at all', () => {
-    // Asserted against TODAY's observables only: the adapter (TP-3) does not
-    // exist yet, so this case cannot name it. The triple below IS the silent
-    // drop, and TP-3 rewrites this case to assert the drop record and the one
-    // log line instead.
-    const { socket, emitter, preamble } = realTelnetCaller(72);
+  it('an event the emitter cannot render leaves a ruled, counted trace', () => {
+    // TP-3's SUCCESSOR FORM. The case landed with TP-1 asserting today's
+    // observables only - zero bytes, an `undefined` return, zero log lines -
+    // because the adapter did not exist and the test could not name it. That
+    // triple WAS the silent drop, and its RED evidence is in the ledger.
+    //
+    // TP-3 built the adapter, so the case now asserts what a drop must leave
+    // behind: a record on the CONNECTION (`connection.transportDrops`), the
+    // ruling that classified it, an occurrence count, and exactly ONE log line
+    // however many times the name is emitted. Still no bytes: `door:load-client`
+    // is browser-only and a byte terminal must not be sent anything for it.
+    const { socket, connection, emitter, preamble } = realTelnetCaller(72);
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
     const debugSpy = jest.spyOn(console, 'debug').mockImplementation(() => undefined);
+    let errorCalls: string[] = [];
+    let debugCalls: string[] = [];
 
-    let result: unknown;
     try {
-      result = emitter.emit('door:load-client', {
-        doorId: 'arkanoid',
-        sessionId: 'client-door-1',
-        bundleUrl: '/api/doors/arkanoid/bundle.js',
-      });
+      for (let i = 0; i < 3; i += 1) {
+        emitter.emit('door:load-client', {
+          doorId: 'arkanoid',
+          sessionId: 'client-door-1',
+          bundleUrl: '/api/doors/arkanoid/bundle.js',
+        });
+      }
     } finally {
+      // The counts are TAKEN before the spies are restored: `mockRestore()`
+      // resets the mock's own state, so a `toHaveBeenCalledTimes` after it
+      // reads zero however many calls there were - which is exactly how this
+      // case's TP-1 form could assert "zero log lines" and mean nothing.
+      errorCalls = errorSpy.mock.calls.map((c) => String(c[0]));
+      debugCalls = debugSpy.mock.calls.map((c) => String(c[0]));
       errorSpy.mockRestore();
       debugSpy.mockRestore();
     }
 
+    const drops = (connection as unknown as {
+      transportDrops?: Map<string, { event: string; count: number; ruling: string }>;
+    }).transportDrops;
+
+    expect(drops).toBeDefined();
+    expect(drops?.get('door:load-client')).toEqual({
+      event: 'door:load-client',
+      count: 3,
+      ruling: 'web-only',
+    });
+    // Ruled, so it is not the loud path.
+    expect(errorCalls).toEqual([]);
+    // Once per name per connection, not once per occurrence: a door emitting a
+    // dropped name sixty times a second must not be able to fill the log.
+    expect(debugCalls).toHaveLength(1);
+    expect(debugCalls[0]).toContain("web-only event 'door:load-client'");
+    // And still nothing on the wire.
     expect(socket.since(preamble).length).toBe(0);
-    expect(result).toBeUndefined();
-    expect(errorSpy).toHaveBeenCalledTimes(0);
-    expect(debugSpy).toHaveBeenCalledTimes(0);
   });
 
   it('a browser-only door refuses a telnet caller instead of freezing it', async () => {
