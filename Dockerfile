@@ -115,6 +115,7 @@ WORKDIR /app
 # sdk/node_modules is excluded by .dockerignore; only source + compiled output needed.
 COPY sdk ./sdk
 COPY --from=sdk-builder /app/sdk/dist ./sdk/dist
+COPY --from=sdk-builder /app/sdk/dist-esm ./sdk/dist-esm
 COPY --from=sdk-builder /app/sdk/node_modules ./sdk/node_modules
 COPY Doors ./Doors
 # door-manager is built from source here. It is the only one: building every
@@ -196,6 +197,10 @@ WORKDIR /app/web/backend
 # package's real directory, but sdk/package.json's typesVersions maps that
 # subpath straight to dist/petscii/index.d.ts, so tsc never looks for source.
 COPY --from=sdk-builder /app/sdk/dist /app/sdk/dist
+# The ESM build too: sdk/package.json's exports map sends an `import` (an esbuild/ESM
+# door such as BUGS with the SDK external) to dist-esm/, and its own package.json
+# marks it ESM. Without this copy the door died on live with ERR_MODULE_NOT_FOUND.
+COPY --from=sdk-builder /app/sdk/dist-esm /app/sdk/dist-esm
 COPY --from=sdk-builder /app/sdk/package.json /app/sdk/package.json
 COPY --from=sdk-builder /app/sdk/node_modules /app/sdk/node_modules
 
@@ -284,6 +289,7 @@ RUN echo "[Docker] Verifying frontend dist was copied:" && \
 COPY --from=config-builder /app/web/config-app/dist ./web/config-app/dist
 # Copy SDK dist, package.json, AND node_modules (required for runtime dependencies like 'tone')
 COPY --from=sdk-builder /app/sdk/dist ./sdk/dist
+COPY --from=sdk-builder /app/sdk/dist-esm ./sdk/dist-esm
 COPY --from=sdk-builder /app/sdk/package.json ./sdk/package.json
 COPY --from=sdk-builder /app/sdk/node_modules ./sdk/node_modules
 COPY --from=sdk-preview-builder /app/sdk/tools/preview/frontend/dist ./sdk/tools/preview/frontend/dist
