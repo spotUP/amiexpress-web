@@ -51,6 +51,14 @@ export async function login(username: string, password: string) {
   return { token: res.accessToken, user: res.user };
 }
 
+export async function me() {
+  return request<{ user: { id: string; username: string; secLevel: number } }>('/auth/me');
+}
+
+export function logout(): void {
+  setToken('');
+}
+
 export async function getNodes() {
   const res = await request<{ success: boolean; data: import('./types.js').NodeStatus[] }>('/api/nodes/status');
   return res.data ?? [];
@@ -90,6 +98,16 @@ export async function getConferences() {
 
 export async function getLastCallers(limit = 50) {
   const res = await request<{ success: boolean; data: import('./types.js').CallerRecord[] }>(`/api/stats/last-callers?limit=${limit}`);
+  return res.data ?? [];
+}
+
+export async function getLastUploads(limit = 20) {
+  const res = await request<{ success: boolean; data: Array<{ id: number; filename: string; size?: number; uploader?: string; uploadDate?: string; areaName?: string }> }>(`/api/stats/last-uploads?limit=${limit}`);
+  return res.data ?? [];
+}
+
+export async function getLastDownloads(limit = 20) {
+  const res = await request<{ success: boolean; data: Array<{ id: number; filename: string; size?: number; uploader?: string; downloadCount?: number; areaName?: string }> }>(`/api/stats/last-downloads?limit=${limit}`);
   return res.data ?? [];
 }
 
@@ -690,6 +708,298 @@ export async function toggleTooltypeComment(relativePath: string, key: string) {
 // Operator chat settings
 export async function updateOperatorChatConfig(config: Record<string, unknown>) {
   return request<{ success: boolean }>('/api/config/operator-chat', {
+    method: 'PUT',
+    body: JSON.stringify(config),
+  });
+}
+
+// ───── Phase F: Web config-app parity ──────────────────────────────
+
+// Doors — full CRUD matching web's apiClient
+export async function getDoor(id: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/doors/${id}`);
+  return res.data;
+}
+
+export async function createDoor(door: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/config/doors', {
+    method: 'POST',
+    body: JSON.stringify(door),
+  });
+}
+
+export async function updateDoor(id: number, updates: Record<string, unknown>) {
+  return request<{ success: boolean }>(`/api/config/doors/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+}
+
+/** Delete a door by its COMMAND, not by its row in the list. */
+export async function deleteDoorByCommand(command: string) {
+  return request<{ success: boolean }>(`/api/config/doors/${encodeURIComponent(command)}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function uploadDoorArchive(filePath: string): Promise<{ path?: string; filename?: string; originalname?: string }> {
+  const { createReadStream } = await import('fs');
+  const { basename } = await import('path');
+  const filename = basename(filePath);
+  const chunks: Buffer[] = [];
+  const stream = createReadStream(filePath);
+  for await (const chunk of stream) {
+    chunks.push(chunk as Buffer);
+  }
+  const buffer = Buffer.concat(chunks);
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const formData = new FormData();
+  const file = new File([blob], filename, { type: 'application/octet-stream' });
+  formData.append('door', file);
+  const headers: Record<string, string> = {};
+  if (_token) headers['Authorization'] = `Bearer ${_token}`;
+  const res = await fetch(`${BASE_URL}/api/upload/door`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => res.statusText);
+    throw Object.assign(new Error(`HTTP ${res.status}: ${text}`), { status: res.status });
+  }
+  return res.json() as Promise<{ path?: string; filename?: string; originalname?: string }>;
+}
+
+// Node configuration (separate from live node control)
+export async function getNodeConfigs() {
+  const res = await request<{ success: boolean; data: any[] }>('/api/config/nodes');
+  return res.data ?? [];
+}
+
+export async function getNodeConfig(nodeNumber: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/nodes/${nodeNumber}`);
+  return res.data;
+}
+
+export async function createNodeConfig(config: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/config/nodes', {
+    method: 'POST',
+    body: JSON.stringify(config),
+  });
+}
+
+export async function updateNodeConfig(nodeNumber: number, updates: Record<string, unknown>) {
+  return request<{ success: boolean }>(`/api/config/nodes/${nodeNumber}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+}
+
+export async function deleteNodeConfig(nodeNumber: number) {
+  return request<{ success: boolean }>(`/api/config/nodes/${nodeNumber}`, {
+    method: 'DELETE',
+  });
+}
+
+// Conference configuration
+export async function getConferenceConfigs() {
+  const res = await request<{ success: boolean; data: any[] }>('/api/config/conferences');
+  return res.data ?? [];
+}
+
+export async function getConferenceConfig(confNumber: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/conferences/${confNumber}`);
+  return res.data;
+}
+
+export async function createConferenceConfig(config: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/config/conferences', {
+    method: 'POST',
+    body: JSON.stringify(config),
+  });
+}
+
+export async function updateConferenceConfig(confNumber: number, updates: Record<string, unknown>) {
+  return request<{ success: boolean }>(`/api/config/conferences/${confNumber}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+}
+
+export async function deleteConferenceConfig(confNumber: number) {
+  return request<{ success: boolean }>(`/api/config/conferences/${confNumber}`, {
+    method: 'DELETE',
+  });
+}
+
+// ACS (Access Control System) - levels
+export async function getAcsLevels() {
+  const res = await request<{ success: boolean; data: any[] }>('/api/config/security/levels');
+  return res.data ?? [];
+}
+
+export async function getAcsLevelFlags(level: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/security/levels/${level}`);
+  return res.data;
+}
+
+export async function saveAcsLevelFlags(level: number, flags: Record<string, boolean>) {
+  return request<{ success: boolean }>(`/api/config/security/levels/${level}`, {
+    method: 'PUT',
+    body: JSON.stringify({ flags }),
+  });
+}
+
+export async function createAcsLevel(level: number, copyFrom?: number) {
+  return request<{ success: boolean }>(`/api/config/security/levels/${level}`, {
+    method: 'POST',
+    body: JSON.stringify(copyFrom === undefined ? {} : { copyFrom }),
+  });
+}
+
+// Security access (legacy endpoint - newer web uses ACS levels)
+export async function getSecurityAccessForLevel(level: number) {
+  return requestList<any>(`/api/config/security/${level}`);
+}
+
+export async function createSecurityAccess(access: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/config/security', {
+    method: 'POST',
+    body: JSON.stringify(access),
+  });
+}
+
+export async function updateSecurityAccess(id: number, updates: Record<string, unknown>) {
+  return request<{ success: boolean }>(`/api/config/security/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+}
+
+export async function deleteSecurityAccess(id: number) {
+  return request<{ success: boolean }>(`/api/config/security/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+// Single-entity getters
+export async function getScreenType(id: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/screen-types/${id}`);
+  return res.data;
+}
+
+export async function getFileChecker(id: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/file-checkers/${id}`);
+  return res.data;
+}
+
+export async function getDrive(id: number) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/drives/${id}`);
+  return res.data;
+}
+
+// File checker errors
+export async function getFileCheckerErrors(checkerId: number) {
+  const res = await request<{ success: boolean; data: any[] }>(`/api/config/file-checkers/${checkerId}/errors`);
+  return res.data ?? [];
+}
+
+export async function createFileCheckerError(checkerId: number, error: Record<string, unknown>) {
+  return request<{ success: boolean }>(`/api/config/file-checkers/${checkerId}/errors`, {
+    method: 'POST',
+    body: JSON.stringify(error),
+  });
+}
+
+export async function deleteFileCheckerError(id: number) {
+  return request<{ success: boolean }>(`/api/config/file-checker-errors/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+// Users
+export async function getUser(id: string) {
+  const res = await request<{ success: boolean; data: any }>(`/api/config/users/${id}`);
+  return res.data;
+}
+
+export async function createUser(user: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/config/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  });
+}
+
+// Audit log with record id filter (web has this)
+export async function getAuditLogForRecord(tableName: string, recordId: number, limit = 50) {
+  const params = new URLSearchParams({ tableName, recordId: String(recordId), limit: String(limit) });
+  const res = await request<{ success: boolean; data: AuditEntry[] }>(`/api/config/audit?${params}`);
+  return res.data ?? [];
+}
+
+// SSH / SMTP
+export async function getSSHKeyInfo() {
+  return request<{ success: boolean; data: any }>('/api/config/ssh-key');
+}
+
+export async function generateSSHKey(keySize = 4096, overwrite = false) {
+  return request<{ success: boolean }>('/api/config/ssh-key/generate', {
+    method: 'POST',
+    body: JSON.stringify({ keySize, overwrite }),
+  });
+}
+
+export async function deleteSSHKey() {
+  return request<{ success: boolean }>('/api/config/ssh-key', { method: 'DELETE' });
+}
+
+export async function testSmtp() {
+  return request<{ success: boolean; message?: string }>('/api/config/smtp/test', { method: 'POST' });
+}
+
+// Logs - with search parameter (matches web)
+export async function getLogsWithSearch(type: 'backend' | 'frontend' | 'door68k', lines = 200, search = '', doorLog?: string) {
+  const params = new URLSearchParams({ type, lines: String(lines) });
+  if (search) params.set('search', search);
+  if (doorLog) params.set('doorLog', doorLog);
+  const res = await request<{ lines: string[]; totalLines: number }>(`/api/config/logs?${params}`);
+  return res;
+}
+
+export async function getDoorLogFiles() {
+  return request<{ success: boolean; data: string[] }>('/api/config/logs/door-68k');
+}
+
+export async function clearLogs(type: 'backend' | 'frontend' | 'door68k' = 'backend', doorLog?: string) {
+  const params = new URLSearchParams({ type });
+  if (doorLog) params.set('doorLog', doorLog);
+  return request<{ success: boolean }>(`/api/config/logs?${params}`, { method: 'DELETE' });
+}
+
+// Sessions - raw log + save + stats
+export async function getSessionLogRaw(sessionId: string): Promise<string> {
+  const headers: Record<string, string> = {};
+  if (_token) headers['Authorization'] = `Bearer ${_token}`;
+  const res = await fetch(`${BASE_URL}/api/sessions/${sessionId}/log/raw`, { headers });
+  if (!res.ok) throw new Error('Failed to fetch raw log');
+  return res.text();
+}
+
+export async function saveSessionLog(sessionId: string) {
+  return request<{ success: boolean }>(`/api/sessions/${sessionId}/save`, { method: 'POST' });
+}
+
+export async function getSessionStats() {
+  return request<{ success: boolean; data: any }>('/api/sessions/stats');
+}
+
+// Global wall config (web has this, TUI's GlobalWallPage only edits comments)
+export async function getGlobalWallConfig() {
+  return request<{ success: boolean; data: any }>('/api/globalwall/config');
+}
+
+export async function updateGlobalWallConfig(config: Record<string, unknown>) {
+  return request<{ success: boolean }>('/api/globalwall/config', {
     method: 'PUT',
     body: JSON.stringify(config),
   });
