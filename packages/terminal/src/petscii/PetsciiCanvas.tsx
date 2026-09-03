@@ -3,8 +3,6 @@ import type { PetsciiMachine } from '@amiexpress/bbs-door-sdk/petscii';
 import { C64_PALETTE_COLODORE } from '@amiexpress/bbs-door-sdk/petscii';
 import { buildGlyphAtlas, glyphCellIndex, TintedAtlasCache } from './glyph-atlas';
 import { keyEventToPetscii } from './keymap';
-import { socket } from '../index';
-import type { PetsciiCanvasHandle } from './index';
 
 export interface PetsciiCanvasProps {
   machine: PetsciiMachine;
@@ -141,28 +139,15 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
     return () => { cancelled = true; };
   }, []);
 
-  // Cursor state: respect cursorVisible prop if provided, otherwise blink normally.
-  let cursorOn: boolean;
-  if (cursorVisible !== undefined) {
-    cursorOn = cursorVisible;
-  } else {
-    const [cursorOnLocal, setCursorOnLocal] = useState(true);
-    useEffect(() => {
-      const id = setInterval(() => setCursorOnLocal((v) => !v), CURSOR_BLINK_MS);
-      return () => clearInterval(id);
-    }, []);
-    cursorOn = cursorOnLocal;
-  }
-
-  // Listen for cursor-control from backend (door handler emits cursor-visible events)
+  // Cursor blink timer.
   useEffect(() => {
-    if (!socket?.connected) return;
-    const handler = (visible: boolean) => {
-      setCursorOn(visible);
-    };
-    socket.on('cursor-visible', handler);
-    return () => socket.off('cursor-visible', handler);
-  }, [cursorVisible, setCursorOn]);
+    const id = setInterval(() => setCursorOn((v) => !v), CURSOR_BLINK_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  // Cursor state: when cursorVisible prop is provided, use it directly;
+  // otherwise use the state variable which blinks via the effect below.
+  const effectiveCursorOn = cursorVisible !== undefined ? cursorVisible : cursorOn;
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -199,12 +184,12 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
 
     // Block cursor: a solid cell in the cursor's ink color, blinking on an
     // interval, matching the C64's solid-reverse-block screen-editor cursor.
-    if (cursorOn) {
+    if (effectiveCursorOn) {
       const cursorIdx = s.cursorY * COLS + s.cursorX;
       ctx.fillStyle = palette[s.colorRam[cursorIdx] & 0x0F];
       ctx.fillRect(border + s.cursorX * destCell, border + s.cursorY * destCell, destCell, destCell);
     }
-  }, [machine, palette, scale, cursorOn, width, height, border]);
+  }, [machine, palette, scale, effectiveCursorOn, width, height, border]);
 
   // Keep a ref to the latest draw() so the onUpdate subscription below
   // doesn't need to be torn down and rebuilt every cursor blink.
@@ -264,7 +249,7 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
   // Repaint on every cursor blink toggle.
   useEffect(() => {
     if (atlasReady) draw();
-  }, [cursorOn, atlasReady, draw]);
+  }, [cursorOn, atlasReady, draw, effectiveCursorOn]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLCanvasElement>) => {
     // Let Ctrl/Cmd/Alt chords (copy, select-all, browser reload, etc.) pass

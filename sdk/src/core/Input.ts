@@ -32,15 +32,17 @@ export class Input implements InputAPI {
   // ===== Core Input Methods =====
 
   async waitForKey(): Promise<KeyPress> {
+    await this.output.showCursor();
     return new Promise((resolve, reject) => {
       let timeout: NodeJS.Timeout | null = null;
 
-      const cleanup = () => {
+      const cleanup = async () => {
         if (timeout) clearTimeout(timeout);
         this.bbsSession.doorInputHandler = null;
         if (this.socket) {
           this.socket.off('disconnect', onDisconnect);
         }
+        await this.output.hideCursor();
       };
 
       const onDisconnect = () => {

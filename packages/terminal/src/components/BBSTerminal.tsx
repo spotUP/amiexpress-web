@@ -350,6 +350,7 @@ export const BBSTerminal = forwardRef<BBSTerminalRef, BBSTerminalProps>(({
   // reads it from state instead of a ref (a ref read during render is not
   // safe under concurrent rendering). Written next to the ref, always.
   const [petsciiMachine, setPetsciiMachine] = useState<PetsciiMachine | null>(null);
+  const [petsciiCursorVisible, setPetsciiCursorVisible] = useState<boolean | undefined>(undefined);
   const petsciiTransducerRef = useRef<AnsiToPetsciiTransducer | null>(null);
   const petsciiCanvasRef = useRef<PetsciiCanvasHandle | null>(null);
   const clearPetsciiSession = useCallback(() => {
@@ -1618,6 +1619,11 @@ export const BBSTerminal = forwardRef<BBSTerminalRef, BBSTerminalProps>(({
     socket.on('video:stop-stream', (_data, callback) => {
       mediaHandler.stopVideo();
       if (typeof callback === 'function') callback({ success: true });
+    });
+
+    // Cursor control for PETSCII mode - backend emits this when doors start/exit
+    socket.on('cursor-visible', (visible: boolean) => {
+      setPetsciiCursorVisible(visible);
     });
 
     // Socket event handlers
@@ -3563,7 +3569,7 @@ export const BBSTerminal = forwardRef<BBSTerminalRef, BBSTerminalProps>(({
               machine={petsciiMachine}
               focusable
               focusOnMount
-              cursorVisible={undefined}
+              cursorVisible={petsciiCursorVisible}
               onData={(bytes) => {
               // keymap.ts bytes -> the same ASCII/ANSI the server reads from
               // xterm, via the SDK's shared PETSCII input map (cursor and

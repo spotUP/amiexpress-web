@@ -44,10 +44,12 @@ export class Output implements OutputAPI {
 
   async hideCursor(): Promise<void> {
     this.socket.emit('ansi-output', '\x1b[?25l');
+    this.socket.emit('cursor-visible', false);
   }
 
   async showCursor(): Promise<void> {
     this.socket.emit('ansi-output', '\x1b[?25h');
+    this.socket.emit('cursor-visible', true);
   }
 
   async eraseToEndOfLine(): Promise<void> {

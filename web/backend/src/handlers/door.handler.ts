@@ -2107,7 +2107,9 @@ console.log(`[executeTypeScriptDoor] Starting TypeScript door: ${door.name}`);
 console.log(`[executeTypeScriptDoor] Door path: ${door.path}`);
 
   // Hide cursor immediately — before any door code runs or imports complete.
+  // Emit both ANSI sequence (for xterm) and socket event (for PETSCII canvas)
   socket.emit('ansi-output', '\x1b[?25l');
+  socket.emit('cursor-visible', false);
 
   let wrappedSocket: any;
 
@@ -2482,7 +2484,9 @@ console.log(`[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mo
     socket.emit('door:status', { status: 'stopped' });
     socket.emit('door-active', false);
     // Restore cursor visibility now that the door has exited
+    // Emit both ANSI sequence (for xterm) and socket event (for PETSCII canvas)
     socket.emit('ansi-output', '\x1b[?25h');
+    socket.emit('cursor-visible', true);
 
     // Restore modem speed emulation if it was active before door
     if (savedModemSpeed > 0) {
