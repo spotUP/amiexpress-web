@@ -60,6 +60,7 @@ import {
   setMessageCommandsDependencies,
 } from '../../src/handlers/message/message-commands.handler';
 import { setSession, deleteSession } from '../../src/server/session-manager';
+import { setupTelnetSSHHandler } from '../../src/server/transport-session';
 import { createBBSApi } from '../../src/doors/BBSApi';
 import { getClientDoorBridge } from '../../src/doors/client-door-bridge';
 import { DoorInputManager } from '../../../../sdk/utils/door-input-manager';
@@ -309,9 +310,22 @@ describe('TP-1 - the five symptoms a sysop would report', () => {
 
     // The telnet caller is registered exactly the way telnet-server.ts
     // registers one: by the CONNECTION's sessionId. There is no socket.io
-    // socket for it, so io.sockets.sockets cannot hold it - which is the
+    // socket for it, so the io namespace cannot hold it - which is the
     // defect this case names.
     setSession(connection.sessionId, victim);
+
+    // TP-10: and the caller is driven through the REAL transport entry point,
+    // the one telnet-server.ts hands every connection to. That is where the
+    // session is bound to its connection emitter
+    // (server/session-emitter-registry.ts), so the kick can find a caller who
+    // is in no socket.io room at all. Nothing here is a test-only shortcut:
+    // this is the same call index.ts makes on 'connection'.
+    setupTelnetSSHHandler(connection, 'telnet', {
+      io: { sockets: { sockets: new Map() } } as never,
+      sessions,
+      nodeManager: { releaseSession: async () => undefined },
+      handleCommand: () => undefined,
+    });
 
     setMessageCommandsDependencies({
       messageBases: [],

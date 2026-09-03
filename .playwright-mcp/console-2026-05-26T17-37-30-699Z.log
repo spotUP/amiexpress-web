@@ -1,0 +1,17 @@
+[     371ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     390ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     390ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     391ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     410ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     414ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     414ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     427ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     427ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     427ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     428ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     428ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     428ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     434ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     434ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     511ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[    4721ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-BCiVtKwL.js:92

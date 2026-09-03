@@ -1,0 +1,31 @@
+[     122ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     131ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     132ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     132ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     138ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     147ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     147ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     154ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     154ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     154ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     154ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     172ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     172ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     172ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     172ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     239ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[    3297ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-BCiVtKwL.js:92
+[    3958ms] [LOG] [BBSTerminal] door-active received: false @ http://localhost:3001/assets/index-BCiVtKwL.js:92
+[   98146ms] [LOG] [DISCONNECT] Client disconnected, reason: transport close @ http://localhost:3001/assets/index-BCiVtKwL.js:88
+[   98146ms] [LOG] [DISCONNECT] Disconnect details: {reason: transport close, socketId: undefined, loginState: waiting, forcedDisconnect: false, timestamp: 2026-05-26T17:41:01.428Z} @ http://localhost:3001/assets/index-BCiVtKwL.js:88
+[   98146ms] [LOG] [DISCONNECT] Network disconnect - preserving session state for reconnection @ http://localhost:3001/assets/index-BCiVtKwL.js:88
+[   99230ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[   99230ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[  102030ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[  102030ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[  105038ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[  105038ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[  108044ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[  108044ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[  111053ms] [ERROR] WebSocket connection to 'ws://localhost:3001/socket.io/?EIO=4&transport=websocket' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[  111053ms] [ERROR] [Terminal] Connection error: websocket error @ http://localhost:3001/assets/index-BCiVtKwL.js:82

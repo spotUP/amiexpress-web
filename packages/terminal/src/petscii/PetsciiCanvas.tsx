@@ -3,6 +3,8 @@ import type { PetsciiMachine } from '@amiexpress/bbs-door-sdk/petscii';
 import { C64_PALETTE_COLODORE } from '@amiexpress/bbs-door-sdk/petscii';
 import { buildGlyphAtlas, glyphCellIndex, TintedAtlasCache } from './glyph-atlas';
 import { keyEventToPetscii } from './keymap';
+import { socket } from '../index';
+import type { PetsciiCanvasHandle } from './index';
 
 export interface PetsciiCanvasProps {
   machine: PetsciiMachine;
@@ -26,6 +28,8 @@ export interface PetsciiCanvasProps {
   focusable?: boolean;
   /** Focus the canvas as soon as it mounts (the full-canvas session makes it the keyboard surface). */
   focusOnMount?: boolean;
+  /** Control cursor visibility: true=always show, false=always hide, default=true (blink). */
+  cursorVisible?: boolean;
 }
 
 export interface PetsciiCanvasHandle {
@@ -68,6 +72,7 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
   onData,
   focusable = false,
   focusOnMount = false,
+  cursorVisible,
 }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -136,11 +141,18 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
     return () => { cancelled = true; };
   }, []);
 
-  // Cursor blink timer.
-  useEffect(() => {
-    const id = setInterval(() => setCursorOn((v) => !v), CURSOR_BLINK_MS);
-    return () => clearInterval(id);
-  }, []);
+  // Cursor state: respect cursorVisible prop if provided, otherwise blink normally.
+  let cursorOn: boolean;
+  if (cursorVisible !== undefined) {
+    cursorOn = cursorVisible;
+  } else {
+    const [cursorOnLocal, setCursorOnLocal] = useState(true);
+    useEffect(() => {
+      const id = setInterval(() => setCursorOnLocal((v) => !v), CURSOR_BLINK_MS);
+      return () => clearInterval(id);
+    }, []);
+    cursorOn = cursorOnLocal;
+  }
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;

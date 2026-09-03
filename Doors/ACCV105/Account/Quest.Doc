@@ -1,0 +1,232 @@
+
+                 »» From The Worlds No.1 /X Door Makers ««
+
+         °        °        °   °      °    °       °   °   °    °
+      °    ° __°   __° __° ______ °_  __° __ °__° ______° __ °     °
+   °    °   /~~\° /~~\/~~\/~~ _~~\/~\/~~\/~~\/~~\/~~ _~~\/~~\ 93' °   °
+      °  ° /   / /   /   /  ¬\/  / _____/  _/\  /  /\/  /  _/ °   °
+     °    /\  /\/   /\  /   \  _/  _/  /   /   /      _/\  /_  ° °   °
+   °   °  \_ ¬ /   /  _/\  //  /  /  °/  _/   /   /\  /  _/  \°    °
+      °    \__  __/___/\__/ \_/\_/ °  \____/\/\__/___/_  ____/ © DLS
+   °  "  " """\/"""""""""" ° """" °  ° """"    """"""""\/"""""" "  "  °
+      °    °    °       °      °      °    °     °       ° °    °  °
+        °    °     °  °     °      °      °   °     °     °   °
+             V·i·r·t·u·a·l P·r·e·s·e·n·t·s Q·u·e·s·t V·1·.·1·0
+
+                                 Starring
+
+                     Delusion of Virtual as Programmer
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Introduction, Preface
+
+	Quest (Questionary Helper) was from the begining developed and
+	spread for the first time 06-07-92 and was the first Quest door
+	for the /X package. I am very disapointed that people from the
+	scene tries to steal my name, like the AFL Quest program which
+	actually even does about the same things as my program.
+	Anyway this new version V1.10 was developed to fit inside the
+	Account ED package so you now can look at your users and edit
+	faster than ever. All sysop commands in the previous Quest doors
+	has been removed and the old source has got some new and faster
+	routines. There are also several new functions which I've
+	included to this version more about them later. From now on Quest
+	will be shipped together with every new version of Account ED, BUT
+	if there comes any updates on Quest before a new Account ED package
+	is released, then Quest will be spread as normal with the file
+	name QST-VXXX where XXX is the version number.
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	What will Quest do for you?
+
+	Quest let's you skip your Script14400 files and the Answers file
+	which to many sysop give them a hard headace.. I think you know
+	what I mean when you've got 4 new users and then you should
+	update them, phew what a booring job.. Load your answers file
+	into CED and then go to the bottom of a 200kb large file!
+
+	Well, forget that then you have Account ED & Quest, which are
+	the perfect couple.. Quest let's your users answer to all questions
+	you prefer and then stores their answers separately in the QuestApp
+	directory. If you then wanna look at any applications you just
+	search for that user in the Account Editor and then press the / key
+	and you will then immidiately have that users application on your
+	screen. If it concerns new user you just use the Scan for New Users
+	function in the Account Editor and you will both see the users
+	account and the questionary!! That's what I call powerfull!
+	You can even print the users questionary if you like to!
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Instalation ..
+
+	Snap the following row to your BBS:Commands/BBS.Cmd file:
+
+	*QUEST    Rm005Doors:Arexx/Account/Quest.rexx
+
+	You should then use the MCI commands to envoke Quest and I
+	recommend that you first in your BBS:Node(x)/Joined.txt file
+	adds this line:
+
+	~CC_QUEST
+
+	Which will automatically start quest then a user has given his
+	phone number and so on!
+	
+	When you have managed to do that it would be time to move the
+	Account ED & Quest package to your Doors:Arexx/ path, which is
+	the path all my doors requires so you better not put it elsewhere.
+
+	After doing that you should edit the AccEd.Presets file which
+	is the main configuration file for Account ED & Quest.
+
+	| Recieve App Mail | Delusion           | Print Account    |   On |                  |
+	| AccountED Colour | [0m               | Search New Users |  300 |                  |
+	| Log Status AccED | 4                  | Members Conf     |    5 |                  |
+	| Reserved Nothing |                    | Kickout After X  |    5 |------------------|
+	| Reserved Nothing |                    | Questionary      |    4 | AccountED © 1993 |
+	| AutoAccess Quest | No                 | MustEnter No Ret |  Yes | Delusion of VTL! |
+	--------------------------------------------------------------------------------------
+
+	At the end of that file you will find the above. Here is what it
+	means..
+
+	Recieve App Mail - is the person who gets the message from the new user
+	Kickout After X  - drops carrier on a user who has pressed return on 5
+			   or more questions in the questionary
+	Questionary	 - Is which number on the questionary which it will
+			   question from. They are located in the QuestQst dir
+	AutoAccess Quest - It will automatically give a new user access after
+			   answering the questions. It will use the first preset
+			   in the preset file and give that access to the new
+			   user so he could upload and thing like that.
+			   If you wan't to use this function choose YES otherwise
+			   just enter NO
+	MustEnter No Ret - If this is set to YES a user can't pres return on
+			   a questions becouse there will come up a text that
+			   says you may not do so and ask the question again.
+			   However if you wan't to use the kickout after X
+			   function you have to set this one to NO.
+
+	That was all that concerned Quest, but remember that the first preset
+	in this file is used to give new users access if you have choosed
+	auto acess! Example file is included in the archive.
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	How to set up the Questions file
+
+	Old users of Quest should also read this, it's completly different!
+
+	As you may be familiar to the MCI commands inside /X I've created
+	something that looks the same, but in a reverse mode if you could
+	say so. Before every question you can give these command:
+
+	~	- Just question that question
+	        - Nothing, means it's a comment and will only be displayed
+	~N	- It tells Account ED that the users real name is asked
+	~A	- Tells that it's the users address being asked, note that
+		  you can have 2 such commands after each other so you could
+		  ask the adress on 2 lines
+	~C	- Tells that you are asking for the users country
+	~V	- Tells that you are asking for the users Voice Phone Number
+	~D	- Tells that you are asking for the users Data  Phone Number
+	~S	- Tells that you are asking for the users Sex & Age
+	~P	- Tells that you are asking for the users Social Security Code
+	~U	- Tells that you are asking for what the users does with his
+		  computer and such things.
+	~W	- Tells that you are asking for from where he got you phone #
+	~R	- Works like the ~A command in the way that you could use two
+		  questions with a ~R before so the user could give two lines
+		  with reasons why you should let him into you BBS
+
+	An example questionary is included. The questionary is originally
+	designed by The Silencer / Equinox, but slightly remade by Delusion!
+
+	Anyway you now might wonder why you should tell the Questionary program
+	what you intend to ask and such things, well it's very simple!
+	In comming versions of Account ED it should be possible to both get
+	the users Account and the most essintial infomation from the questionary
+	on the screen at the same time, like the users name and social security
+	code. I have NOT coded that feature in Account ED yet, but it will
+	very soon come. So here is your chance to be one step ahead :) so you
+	will have it working as soon as the new Account ED arrives.
+
+	In older versions of Quest you could choose to save the users answers
+	with questions and answers or answers alone. Becouse of the above said
+	new features the questions and answers format doesn't work so there
+	for that function has been removed and you can only save the answers.
+	Account ED still supports the both formats so you can view older
+	questionaries, but you have to the ~X commands to your old questionaries
+	if you have some in your Doors:Arexx/Quest/Questions direcotry and copy
+	them into the Doors:Arexx/Account/QuestQST dir. As you may have guessed
+	the function with diplaying info in Account Ed will not work on old
+	questionaries which is in the form Questions - Answers. I will maybe
+	fix a converter util for that.
+
+	Note that all commands has to be two chars, if you only have a ~ on
+	a question it should look like "~ " and if you have a two chars command
+	it should look like "~N" for instance. This goes for the space command
+	too which would look like "  ", remeber that you should NOT write the
+	" " before and after it's only so you could see what I mean.
+
+	In otherwords this means that all questions should start on column 3
+	and in column 1 and 2 there should be the commands!
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Greetings
+
+	My regards has to go to the folowing people in no order.
+
+	D-Zire of Silents		»» Thanx all time m8
+	The Silencer of Equinox		»» Looking forward to your netmailprg
+	Ice of Silents			»» When does you start to use LaC again?
+	Kid Curry of Endless Piracy	»» Could use your support again!
+	Norad of Anarchy		»» Thanx for using my LastCallersUtil!
+	Fox & Philix of 2000 AD		»» For being my cool cosysops
+	Nightshade of Priority		»» I will soon make C doors, then..!
+	Rioter of Equinox		»» Articles comming soon for your mag
+	Kaka of Virtual			»» My /X door developer companion
+	It of Cryptoburners		»» Thanx for comments and calling me!
+	Micro Pal of Alcatraz		»» Looking forward to your slide show!
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Final words
+
+	Quest and Account ED are my favourite doors which is a
+	unbelievable help for all sysops. The reason why it took so long
+	for the V1.10 update were that I was not sure wether I should
+	include a simple account editor into the Quest package or include
+	the Quest sysops command into Account ED. Well after making AccED
+	such a powerfull util with the latest updates there was no questions
+	about it and I slowly began making Account ED quest compatible.
+	Today Account ED is 100% Quest compatible and serves the purpose
+	even better becouse of the much more fast code in Account ED and
+	to the fact that it has never been more easy to upgrade a new user
+	or look at an old users account. So I feel very proud to bring you
+	this update and hopes it adds on to the family of well known doors!
+
+	These are some other doors that I've made, Account ED, Sysop Uploader,
+	File Comment, Virtual Vote, Connect, Node Activities, News mag,
+	Log Viewer, Config Ed (BBS:ConfigX), Virtual Chart, LastCallers Util
+	DirXCleaner, MailServer (DNET), Members and Password Fail!
+
+	If I get the chance I hope to have a chat with you at a party,
+	maybe at Computer Crossroads or at European Computer Conference,
+	invitation text to the last party is supplied within this archive!
+	I would be gratefull if you called my board and come with complaints,
+	ideas or whatever you may come up with on all my doors!
+
+	This program is Copyright Delusion of Virtual and may not be sold in
+	any form or made profitable on without the permission of the author.
+
+	Yours, Delusion of Virtual, Sat 01 May 1993
+ 
+        Can be reached at, INSANiTY +46(0)589-10780, DualStandard
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/                                                   A DLS Dezign Prod 93'

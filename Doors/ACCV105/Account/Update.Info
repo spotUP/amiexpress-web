@@ -1,0 +1,15 @@
+
+Update Info
+~~~~~~~~~~~~
+This update from 1.04 to 1.05 requires a whole new AccEd.Presets
+file so you have to read the chapter about the presets in the Doc file.
+
+Old users of Quest must read the entire quest doc and fix lots'a things
+but it shouldn't be to complicated and it's worth it!
+
+I hope these two doors will help you as much as they help me!
+
+PS! There will soon be released a converter to convert your
+    BBS:Node(x)/Answers to the Quest format which Account ED supports.
+    It will also probably manage to convert older Questionaries from
+    quest to the new standard so it could be viewed in the Account Editor.

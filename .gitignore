@@ -362,7 +362,24 @@ Doors/DOORSMENU.info
 # sami-log runtime store
 Utils/samilog/SAmiLog.Store
 
-# GMaster binary assets (large audio files)
+# GMaster audio lives ON THE SERVER, not in git: 29 MB of MP3 (18 tracks,
+# 83 effects, 10 voice clips) for one door is not worth carrying in a
+# repository, and that is the sysop's call.
+#
+# It is on the live volume at
+#   /app/data/bbs/Doors/grandmaster/assets/{music,sounds,voices}
+# and it SURVIVES deploys: the entrypoint syncs Doors/ with `cp -r src/. dst/`,
+# which is additive, and only the explicit ORPHANS list is ever deleted.
+#
+# To restore it on a fresh server, from a checkout that has the files:
+#   cd Doors/grandmaster/assets && tar czf /tmp/a.tgz music sounds voices
+#   scp /tmp/a.tgz root@<host>:/tmp/
+#   docker cp /tmp/a.tgz amiexpress-bbs:/tmp/
+#   docker exec amiexpress-bbs sh -c \
+#     'cd /app/data/bbs/Doors/grandmaster/assets && tar xzf /tmp/a.tgz'
+#
+# Without it every sound and track in that door 404s, which is what it did
+# from 2026-01-12 until 2026-08-31.
 Doors/grandmaster/assets/music/
 Doors/grandmaster/assets/sounds/
 Doors/grandmaster/assets/voices/
@@ -488,6 +505,9 @@ Doors/DoorRepo/DoorRepo.token
 # Python bytecode from dev/scripts helpers
 __pycache__/
 *.pyc
+
+# Cross-session agent board; shared via the working tree, never via git
+thoughts/BOARD.md
 
 # A 68K emulator trace capture, 42 MB / 992,731 lines, written at the repo root
 # by the XIM debug path. It was indexed as drawable art by the screen gallery

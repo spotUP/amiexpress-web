@@ -1,0 +1,127 @@
+
+	Account 1ED © Delusion of Virtual 1992, 1993
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Virtual Account Ed, History
+
+ 08-28-92 V1.00
+
+      ° First version & Release version. Everything is new features
+	so I wont tell you them again, just take a closer look at the doc
+
+ 09-04-92 V1.01
+
+      ° VERY NASTY BUG found, when you saved an account where you had
+	changed the users name, the user couldn't log in to the bbs becouse
+	AmiEx couldn't find the name! Fixed!! Puuh, sorry guys! I forgot to
+	save the new name in the user.keys file! The new routine also cleans
+	up the user keys file :)
+      ° Bug fixed with the New Users Scan... I changed some things just
+	before I released the first version and a bug slipped thru, but it
+	now even works greater!!
+      ° You can now specify a conf that no one can give access to ie a conf
+	for only the members in your group or so!
+      ° It now writes a line in the CallersLog file:
+	Account Editing... SecLevel: 255 (AccEd) Where seclevel is the
+	securety level of the person who account edited!
+      ° You can view the log file within the program with the commadand LOG
+      ° Many opening and closing with the user data file was removed to
+	increase speed while accessing the hard drive, therefor Do not
+	read/write the user data with another program when using Account Ed!
+      ° Finaly: Take a look at the doc file for more info how to set the NEW
+	CONFIG PARAMETERS provided in this new version! All external files
+	are STILL compatible backwards :)
+
+ 03-27-93 V1.03 Major Update for /X 2.35+
+
+      ° The program is now fixed for AmiExpress 2.30+
+      ° Fixed bug then a board had more than 255 users my util freaked out
+      ° Added in extra security checks so you now must have all users who
+        should have access to account ed in a list
+      ° Added in so the sysop can specify a time period when no one is
+        allowed to use account ed, like between 24.00 and 08.00 for instance
+      ° Added in compatibility with Virtual Quest (Questionary Door Helper)
+        so you now only have to push a button to get the users answers while
+        you are account editing that particulary user!
+      ° Added in an extra help page inside the account editor for all commands
+      ° Added in the new functions like users baud rate, top cps ul/dl ie
+      ° Added in so you can give each preset an description so your cosysop
+        knows which preset to give to different users!
+      ° Code optimized and the preset file is NOT compatible backwards!
+
+ 04-05-93 V1.04 DeZign
+
+      ° The layout of the account editor improved an redesigned
+      ° Due to the sillyness of the /X standard of keys for different
+	functions inside the account editor I have remapped the keyboard
+	functions to be more easy to overview and so on
+      ° Added the computerlist to the preset file for faster program start
+      ° Added in one more option to each preset, Autorejoin conference!
+	this functions is placed in the 5:th row from the left. Please
+	look in the manual for more information.
+      ° Documentation rewritten and freshned up a bit, hope you'll like it!
+      ° Added in built in calculator which will help you adding bytes or
+	subtracting bytes from a users account. It works on everything
+	that has got with the users upload, downloads to do. These are
+	the mathematic chars it can handle, +, -, * and / .. Try it!
+      ° Finaly I've managed to retain the information with the last on date
+	so now you can se then a user was last on
+      ° Adding a new feature giving a rating on all users you browse through
+	I'm not really sure yet if this rating is a fair one, haven't tested
+	it yet on so much users, but as far as I can see I think it's pretty
+	fair. It gives a user a rating number depending on how much he
+	has uploaded, downloaded, written and called. If a user has a negative
+	number I really think you should talk with that user!
+      ° You can now press TAB when you have searched for a user and want's
+	to continue searching. This goes for the New Users commands aswell!
+      ° You can now press SPACE to reload a users account if you have
+	changed something wrong in the account!
+      ° Added in so you could choose an security level for seeing users
+	passwords when browsing through the accounts. If you sets this to 255
+	it means that only the sysop will se different users passwords, but
+	the cosysops could se all other information about a users!
+      ° Added in so you have to push a special button for showing a users
+	password so no one beside you will see it by mistake! This function
+	is toggable, so you can set the defualt, on / off. Press SHIFT+C
+	to toggle a password. You can't edit a password when not displayed!
+	This idea originaly came from Excelsior of Virtual! Thanx m8!
+      ° Password option added to access AccED, wanted by It of Cryptoburners
+
+ 05-01-93 V1.05 OptimiZe made at the Gathering II in Norway
+
+      ° Search for name routine fastened up around 500% I think,
+	it should now be equal to the built in or even faster!
+      ° Built in message writer to inactive users with a litle warning
+	note which says that the user shall upload if he don't wan't to
+	get deleted. Just press W and the Account Editor will write a msg
+	to the user you are account editing!
+      ° Printer output routine improved and is now faster
+      ° Whole new routine installed, Messagebase cleaner which deletes all
+	your old mail which users have recieved. Finaly there is a util that
+	does that and this one also remembers which the last message you
+	deleted was!
+      ° You can now define in which colour the info in the account editor
+	will be printed in, in the preset file.
+      ° You can now delete a users questionary when you are editing the
+	users account. It has password support so your cosysops don't
+	mess up anything :) Inside the editor is the command D
+      ° Rebuilt the Presets file again, but this time I've included all
+	parameters for both Quest & Account ED which has been inside the
+	source before and made it a lot easier to change in! Please
+	consult the doc file to see how to upgrade your old Preset file
+      ° Help page significantly improved, this time with all commands
+      ° Built in the last command that now makes this door 100% Quest
+	compatible, so from now on all sysop commands in Quest has been
+	removed. Quest will from now on be shipped with Account ED in a new
+	special Account ED Edition.
+      ° A litle bug has been reported in version 1.04 of Account ED, then
+	you saved a new users account several times. It has been fixed
+	without my knowledge due to the new Search for User routines
+      ° Give/Take conference access routine partly rewritten
+      ° And as always code optimized, this versions source length is even
+	shorter than the previous one and has got much more powerful commands
+	that's what I call an update!
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Read this file for the latest info on AccED!

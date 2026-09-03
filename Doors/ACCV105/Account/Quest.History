@@ -1,0 +1,151 @@
+
+	Quest, Questionary Helper © Delusion of Virtual 1992, 1993
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Virtual Quest, History
+
+ 06-07-92 V1.00
+
+      ° Were never officialy released due to the lack of functions
+
+ 06-08-92 V1.02
+
+      ° The first released version! The most of the functions I had planned
+	were inplemented but I will add some more in the next version!
+
+ 06-09-92 V1.03
+
+      ° A User can now read his old application, a separate security status
+	for that was added in the config file, a bug was fixed! When a user
+	had chosen that his answers was NOT correct he was added as a new
+	user for every time he took No.. And it was the same with the log
+	file but it's fixed now! A bug found then a user was in Quest and
+	of some reason got loss off carrier he would be among the new users
+	but his answer file would not exist and the program would then crash!
+	The program now checks if the file exists before trying to open it!
+
+ 06-19-92 V1.06
+
+      ° Fixed the bug with the questionary! It now works as it was explained
+	in the manual.. Fixed bug when the program showed an application.
+
+      ° Fixed bug when a user took ? in the sysop menues 2.. It wouldn't dir
+	all users only about half of them..
+
+      ° Added an extra option in the config file from wich the sysop now can
+	terrorise the user if the user don't answers all questions.. The prg
+	will whenever a user just presses return and doesn't write anything
+	write a text that says that the user must enter the questions and then
+	will the program ask the questions again! Very usefull against lazy
+	users.. hehe
+
+      ° Added & Fixed so then the user had answered all the questions he/she
+	must either press Y or N to continue, before if you pressed return
+	it only meant the same as a N and some of my users didn't like that..
+
+      ° Added in a new sysop command! You can now DELETE a users applications
+	ie if you think the users hasn't answered it seriously or something
+	like that! You also must enter a password to do so which you can
+	change in the config file!
+
+ 04-07-92 V1.07
+
+      ° The users name is now fully displayed even if it consists of spaces
+	this has been a nasty bug all the time but I didn't know how to fix
+	it until now..
+
+      ° If you list all the applications it will know display it two & two
+	it was a bit hard to read before, it took all day..
+
+      ° File note will now append the whole name but if it consists of spaces
+	it will replace each space with a '-'..
+
+      ° The routine to read applications who was saved with the answers only
+	was optimized and works much faster!
+
+      ° All menues and texts has been optimized and you will see a large
+	speed inprovment in the program!!!
+
+      ° Some minor bugs was fixed but you will probably not notice any
+	difference at all.
+
+      ° Different questionarys at the same time added! Ie if you have used
+	the function save answers only and you want to change your questionary
+	you will doubtless get into some serious trouble.. You either have to
+	change all your application by youself (huu) or use this new version
+	of Quest which keeps track on from wich questionary the answers came!
+	If you have old applications quest will simple enough take it for
+	granted that they where questioned by questions.1! If you now want
+	a new questionary just create a new one and name it questions.2 and
+	put it in the same dir as questions.1, then you only has got to change
+	the deafult questionary in the config file to 2! (The variabel
+	Questionary in the file Quest.CFG)
+
+ 07-10-92 V1.08
+
+      ° The delete password is now not displayed on the screen when you
+	write it in, there will only be * displayed instead of each char!
+
+      ° A bunch of bugs fixed & the list all applications routine was
+	optimized again and is now even faster...
+
+      ° Added in so Quest will write a line in the callerslog if anyone
+	deletes the new users log or a users application and of course in
+	colour!
+
+ 08-11-92 V1.09
+
+      ° You can now search for an application with the users name instead
+	of only the slot number.
+
+      ° The listening routine for all users has been redone and is now
+	much faster. It gets it's info from the log file nowadays.
+
+      ° All external Dos commands where changed to use internal functions
+	that are built in the Rexxsyslib.library, thus the FileNote command
+	are still loaded from CLI so please have paitience with that.
+
+      ° Many bugs where changed and some unneccessary crap was removed from
+	the source! This time it shall WORK!
+
+      ° This version is only an apetizer for version V1.10 with built in
+	account ed! So please hold on..
+
+ 05-01-93 V1.10 Major Update for /X 2.35+
+
+      ° Finaly the time for an update has come and it has been worth waiting
+	for. What have happened is that all sysop commands has been built in
+	to Account ED instead for more efficient and faster user updates.
+	Therefor has that code been removed from Quest, and the remaining
+	code has been optimized and sometime rewritten. Here are the new
+	features!
+      ° Added in MCI like commands that will show certain info from the
+	questionary in the users account (using Account ED) in comming versions
+	of Account ED, this feature is only built in Quest today, but soon
+	in Account ED too more info in the Doc file.
+      ° All configuration values now are loaded from Account Ed's preset file
+	AccEd.Presets
+      ° Built in automatic user upgrader so your user can automatically gain
+	access after answering the questions. They will get the first preset
+	inte the AccEd.Presets file if this function is turned on.
+      ° Forces all new users to write a letter to sysop about themselves thru
+	an built in mail program
+      ° Automatically hangs up after the user answered all questions and
+	written the letter to sysop if not AutoAccess is on
+      ° Gives the user a opurtunity to operate sysop before it hangs up
+      ° Drops carrier if a user press a defined number of returns
+      ° Prompts that the user must answer all questions if a user press return
+	and ask the question again (it's configurable)
+      ° Automatically deletes the questionary which may exists on the new
+	users slot number and moves the one deleted questionary to the QuestDel
+	directory and renames it to the users name who answered it so there
+	will never be a problem if you forgets to delete a users questionary
+	you've deleted!
+      ° Old users who answers the questions will not be thrown out and
+	doesn't have to write a letter to sysop. Usefull if you wan't all
+	your old users to answer you questions with quest instead
+      ° Code optimized and almost rewritten
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Read this file for the latest info on Quest!

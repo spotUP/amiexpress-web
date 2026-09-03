@@ -1,0 +1,309 @@
+[0;36m[1m
+╔═══════════════════════════════════════════════════════════════════╗
+║                    AmiExpress BBS Startup                         ║
+╚═══════════════════════════════════════════════════════════════════╝
+[0m
+[0;36m→ Starting in normal mode (clean door output)[0m
+   [0;37mUse --debug to see full debug logs[0m
+[0;36m→ Will open BBS terminal only (no Admin/SDK tabs)[0m
+   [0;37mUse --full to open all three apps, or --sdk-only for SDK only[0m
+[0;36m→ Door file watcher ENABLED (auto-restart on door changes)[0m
+   [0;37mUse --no-watch to disable[0m
+[0;33m[1m→ QUICK MODE: Skipping all builds (using existing artifacts)[0m
+   [0;37mRemove --quick for full build with dependency checks[0m
+[0;36m→ Cleaning up old logs (retain 7d, max 250 files)...[0m
+[0;36m   [CLEANUP] Truncating door-68k.log (100KB)[0m
+[0;36m   [CLEANUP] Truncating filehandle-debug.log (6896KB)[0m
+[0;33m   [CLEANUP] Keeping 20 most recent door logs (deleting 25 old)[0m
+[0;36m→ Skipping cache clearing (use --clean if needed). Runtime ESM cache-busting is active.[0m
+
+[0;36m→ Logs will be saved to:[0m
+   [0;37m/Users/spot/Code/amiexpress-web/logs/backend.log[0m
+   [0;37m/Users/spot/Code/amiexpress-web/logs/preview.log[0m
+
+[0;33m→ QUICK MODE: Skipping dependency checks and builds[0m
+
+-> Killing AmiExpress servers (project: /Users/spot/Code/amiexpress-web)...
+[OK] All servers killed
+[0;36m-> Starting servers (unified deployment - all frontends served from backend)...[0m
+
+   [0;35m[1/2][0m Starting backend... [0;32m[WATCH MODE][0m
+   [0;36mDoor file watcher will auto-restart backend when doors change[0m
+[0;32m[STARTED][0m
+   [0;35m[2/2][0m Starting SDK preview backend... [0;32m[STARTED][0m
+
+[0;36m→ Waiting for backend to be ready (port 3001)...[0m
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+   [0;32m[OK] Backend listening on port 3001[0m
+[DEBUG] DEBUG_OUTPUT: false (from env: false)
+[DEBUG] DOORS_DIR: /Users/spot/Code/amiexpress-web/doors
+[DEBUG] Checking for existing servers on port 8080...
+[OK] No old servers found
+[PACKAGE] Serving React frontend from frontend/dist/
+
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║   [GAME]  AmiExpress BBS Door Preview Server                   ║
+║                                                                ║
+║   Server running at: http://localhost:8080                     ║
+║                                                                ║
+║   Features:                                                    ║
+║   [OK] Live ANSI rendering                                     ║
+║   [OK] Real-time keyboard input                                ║
+║   [OK] Hot reload on file changes                              ║
+║   [OK] Debug console                                           ║
+║                                                                ║
+║   Open your browser and start testing!                         ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+  
+
+[0;32m[1m
+======================================================================
+                   AmiExpress BBS - Servers Running                  
+======================================================================
+[0m
+[0;36m  UNIFIED DEPLOYMENT (All Frontends Served from Single Backend):[0m
+[0;36m  ----------------------------------------------------------------[0m
+
+[0;32m  [BBS][0m    [0;37mhttp://localhost:3001/[0m
+           [0;36mMain BBS Terminal Interface[0m
+           [0;33mLogin: sysop / sysop[0m
+
+[0;35m  [ADMIN][0m  [0;37mhttp://localhost:3001/admin/[0m
+           [0;36mConfiguration Management Panel[0m
+           [0;33mLogin: sysop / sysop[0m
+
+[0;34m  [SDK][0m    [0;37mhttp://localhost:3001/sdk/[0m
+           [0;36mDoor Development Preview Tool[0m
+           [0;33m(Backend API on port 8080)[0m
+
+[0;37m  [API][0m    [0;37mhttp://localhost:3001/api/[0m
+           [0;36mBackend REST API Server[0m
+[0;37m  [TELNET][0m [0;37mtelnet localhost 64128[0m
+[0;37m  [SSH][0m    [0;37mssh -p 31337 user@localhost[0m
+
+[0;37m  Production URLs: [0;36mhttps://bbs.uprough.net/[0m
+                   [0;36mhttps://bbs.uprough.net/admin/[0m
+                   [0;36mhttps://bbs.uprough.net/sdk/[0m
+
+[0;37m  Note: All frontends built and served as static files from backend[0m
+[0;37m        No separate dev servers running for instant startup[0m
+
+[0;31m  Press Ctrl+C to stop all servers[0m
+
+[0;32m[1m
+======================================================================
+[0m
+
+[0;32m[LAUNCH][0m Opening BBS at [0;36mhttp://localhost:3001/[0m...
+
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ User joined room: sysop general
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ User left room: sysop general
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ User joined room: sysop general
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ User joined room: sysop general
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ [LibraryLoader] Successfully loaded AEDoor.library at 0x200000
+✅ Connected to SQLite database
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+[WEB] BBS accessible at http://localhost:3001/
+
+[0;36m→ Stopping servers...[0m
+[0;32m[OK] Servers stopped[0m

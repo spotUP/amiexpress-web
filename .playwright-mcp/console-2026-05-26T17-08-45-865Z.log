@@ -1,0 +1,18 @@
+[     280ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     292ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     292ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     293ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     302ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[     304ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     305ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     317ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     317ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     317ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     317ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     319ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     319ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     319ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-BCiVtKwL.js:54
+[     320ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-BCiVtKwL.js:82
+[     402ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-BCiVtKwL.js:73
+[    3707ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-BCiVtKwL.js:92
+[    4361ms] [LOG] [BBSTerminal] door-active received: false @ http://localhost:3001/assets/index-BCiVtKwL.js:92

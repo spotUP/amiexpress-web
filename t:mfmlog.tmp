@@ -1,0 +1,17 @@
+{
+  "id": "1",
+  "username": "sysop",
+  "location": "Test Lab",
+  "secLevel": 255,
+  "slotNumber": 1,
+  "uploads": 0,
+  "bytesUpload": 0,
+  "downloads": 0,
+  "bytesDownload": 0,
+  "messagesPosted": 0,
+  "timesCalled": 1,
+  "topUploadCPS": 0,
+  "topDownloadCPS": 0,
+  "calls": 1,
+  "lastLogin": "2026-05-26T15:28:08.366Z"
+}

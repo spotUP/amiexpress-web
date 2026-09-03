@@ -21,6 +21,7 @@
 import express, { Request, Response } from 'express';
 import { Server as SocketIOServer } from 'socket.io';
 import { sessions, socketToNodeId, getSocketIdByNodeId } from '../server/session-manager';
+import { emitterForNodeId } from '../server/session-emitter-registry';
 import { getSystemTime } from '../utils/date-time.util';
 import {
   setNodeReservation,
@@ -260,20 +261,27 @@ export function createNodeControlRouter(io: SocketIOServer): ReturnType<typeof e
     // subscribes to and report success, so the caller stayed online and the
     // sysop was told they had been removed. A browser node IS its socket, so
     // closing the socket is what kicking one means here.
-    const socket = io.sockets.sockets.get(validation.socketId!);
-    if (!socket) {
+    // TP-10: resolved through the ONE session-emitter registry, which knows a
+    // telnet/SSH caller's connection emitter as well as a web caller's live
+    // socket - the io namespace held only the web half, so this route reported
+    // "no active socket connection" for a byte-transport node that was plainly
+    // online in the node list. `system-message` is rendered for a byte
+    // terminal by the transport adapter (TP-4), so the notice reaches the
+    // caller on every transport before the carrier drops.
+    const target = emitterForNodeId(nodeId, io);
+    if (!target) {
       return res.status(404).json({
         success: false,
         message: `Node ${nodeId} has no active socket connection`,
       });
     }
 
-    socket.emit('system-message', {
+    target.emitter.emit('system-message', {
       text: reason
         ? `\r\nDisconnected by the sysop: ${reason}\r\n`
         : '\r\nDisconnected by the sysop.\r\n',
     });
-    socket.disconnect(true);
+    target.emitter.disconnect(true);
 
     console.log(`[Node Control] Kicked node ${nodeId} (socket: ${validation.socketId})`);
 

@@ -811,6 +811,8 @@ var init_colors = __esm({
 
 // ../../sdk/dist-esm/engines/ui/blessed/core/responsive-constants.js
 function getBreakpointName(width) {
+  if (width < BREAKPOINT_XXS)
+    return "xxs";
   if (width < BREAKPOINT_XS)
     return "xs";
   if (width < BREAKPOINT_SM)
@@ -823,6 +825,9 @@ function isMobileWidth(width) {
   return width < BREAKPOINT_XS;
 }
 function calculateDialogWidth(screenWidth) {
+  if (screenWidth < BREAKPOINT_XXS) {
+    return Math.min(screenWidth, Math.max(MIN_DIALOG_WIDTH, screenWidth - 2));
+  }
   if (screenWidth < BREAKPOINT_XS) {
     return Math.min(MAX_DIALOG_WIDTH_MOBILE, screenWidth - DIALOG_EDGE_PADDING * 2);
   }
@@ -836,11 +841,15 @@ function enforceMinTouchHeight(height, touchFriendly) {
   }
   return height;
 }
-var MIN_TOUCH_HEIGHT, BREAKPOINT_XS, BREAKPOINT_SM, BREAKPOINT_MD, SWIPE_THRESHOLD, SWIPE_THRESHOLD_VERTICAL, SWIPE_MAX_TIME, LONG_PRESS_TIME, DOUBLE_TAP_INTERVAL, MAX_DIALOG_WIDTH_MOBILE, MAX_DIALOG_WIDTH_PERCENT, DIALOG_EDGE_PADDING, DEFAULT_PADDING, MOBILE_PADDING;
+function isCompactWidth(width) {
+  return width < BREAKPOINT_XXS;
+}
+var MIN_TOUCH_HEIGHT, BREAKPOINT_XXS, BREAKPOINT_XS, BREAKPOINT_SM, BREAKPOINT_MD, SWIPE_THRESHOLD, SWIPE_THRESHOLD_VERTICAL, SWIPE_MAX_TIME, LONG_PRESS_TIME, DOUBLE_TAP_INTERVAL, MAX_DIALOG_WIDTH_MOBILE, MAX_DIALOG_WIDTH_PERCENT, MIN_DIALOG_WIDTH, DIALOG_EDGE_PADDING, DEFAULT_PADDING, MOBILE_PADDING;
 var init_responsive_constants = __esm({
   "../../sdk/dist-esm/engines/ui/blessed/core/responsive-constants.js"() {
     "use strict";
     MIN_TOUCH_HEIGHT = 3;
+    BREAKPOINT_XXS = 41;
     BREAKPOINT_XS = 50;
     BREAKPOINT_SM = 80;
     BREAKPOINT_MD = 120;
@@ -851,6 +860,7 @@ var init_responsive_constants = __esm({
     DOUBLE_TAP_INTERVAL = 300;
     MAX_DIALOG_WIDTH_MOBILE = 45;
     MAX_DIALOG_WIDTH_PERCENT = 0.8;
+    MIN_DIALOG_WIDTH = 20;
     DIALOG_EDGE_PADDING = 2;
     DEFAULT_PADDING = 1;
     MOBILE_PADDING = 0;
@@ -1375,6 +1385,9 @@ var init_box = __esm({
           case "xs":
             newPadding = this._responsivePadding.xs ?? this._originalPadding;
             break;
+          case "xxs":
+            newPadding = this._responsivePadding.xxs ?? this._responsivePadding.xs ?? this._originalPadding;
+            break;
         }
         if (newPadding !== void 0) {
           this.options.padding = newPadding;
@@ -1417,6 +1430,7 @@ var init_box = __esm({
        */
       static getDefaultResponsivePadding() {
         return {
+          xxs: MOBILE_PADDING,
           xs: MOBILE_PADDING,
           small: MOBILE_PADDING,
           medium: DEFAULT_PADDING,
@@ -2629,14 +2643,28 @@ var init_element = __esm({
       // ============================================================================
       // Focus Management
       // ============================================================================
+      /**
+       * Focus this element.
+       *
+       * `focusable` governs the TAB ORDER - whether Tab and the screen's focus
+       * navigation stop here - and `_getFocusable()` reads it for exactly that.
+       * It does not veto an explicit call: a caller asking for focus by name has
+       * already decided.
+       *
+       * This used to return silently when `focusable` was false, which every
+       * Element is by DEFAULT (see the defaults above). A door that opened a
+       * scrollable text window and called `focus()` on it kept the focus it had,
+       * so the window's own `key(['escape', 'q'])` handlers never ran and the
+       * dialog could not be closed at all - CARD LOBBY's profile, achievements
+       * and leaderboard windows, reported 2026-09-02 as "i can't exit them".
+       * Silently ignoring the call is what made it hard to find.
+       */
       focus() {
         if (this.destroyed || !this.screen)
           return;
         if (this.disabled)
           return;
-        if (this.options.focusable !== false) {
-          this.screen.setFocused(this);
-        }
+        this.screen.setFocused(this);
       }
       blur() {
         if (this.destroyed)
@@ -4353,6 +4381,7 @@ var init_keybindings = __esm({
 var init_responsive_layout = __esm({
   "../../sdk/dist-esm/engines/ui/blessed/core/responsive-layout.js"() {
     "use strict";
+    init_responsive_constants();
   }
 });
 
@@ -7112,7 +7141,7 @@ var init_dockable_panel = __esm({
         });
         this.onScreenEvent("resize", () => {
           const breakpoint = this.screen.responsiveLayout.getBreakpoint();
-          const isMobile = breakpoint === "xs";
+          const isMobile = isCompactWidth(this.screen.width) || breakpoint === "xs";
           if (isMobile) {
             this.mobileMode = true;
             this.setState({
@@ -12464,7 +12493,20 @@ var init_editor_state = __esm({
 });
 
 // ../../sdk/dist-esm/engines/ui/blessed/widgets/ansi-editor.js
-var FKEY_CHAR_SETS, HALF_BLOCK, ANSIEditor;
+function invertTags(tag) {
+  return tag.replace(/\{(\/?)([a-z0-9-]+?)-(fg|bg)\}/gi, (_m, close, colour, kind) => `{${close}${colour}-${kind === "fg" ? "bg" : "fg"}}`);
+}
+function menuItemLabel(text, key) {
+  if (!key)
+    return text;
+  const gap = MENU_ITEM_COLUMNS - text.length - key.length;
+  return gap > 0 ? `${text}${" ".repeat(gap)}${key}` : `${text}  ${key}`;
+}
+function menuWidthFor(items) {
+  const longest = items.reduce((n, i) => Math.max(n, i.label.length), 0);
+  return Math.max(MENU_ITEM_COLUMNS, longest) + 4;
+}
+var FKEY_CHAR_SETS, MENU_ITEM_COLUMNS, HALF_BLOCK, ANSIEditor;
 var init_ansi_editor = __esm({
   "../../sdk/dist-esm/engines/ui/blessed/widgets/ansi-editor.js"() {
     "use strict";
@@ -12498,6 +12540,7 @@ var init_ansi_editor = __esm({
       // Set 8: Greek letters
       ["\u03B1", "\u03B2", "\u03B3", "\u03B4", "\u03B5", "\u03B8", "\u03BB", "\u03BC", "\u03C3", "\u03C4", "\u03C6", "\u03C9"]
     ];
+    MENU_ITEM_COLUMNS = 20;
     HALF_BLOCK = {
       UPPER: "\u2580",
       // Upper half filled
@@ -12541,6 +12584,47 @@ var init_ansi_editor = __esm({
       /** Get the current draw-mode canvas dimensions in cells. */
       getCanvasSize() {
         return { width: this.canvasW, height: this.canvasH };
+      }
+      /**
+       * Show (or clear) a ghost canvas beneath the empty cells of this one.
+       * Pass null to remove it. Cells outside its bounds simply have no ghost.
+       */
+      /** Show or hide the dim dot that marks a transparent cell. */
+      setTransparencyGuide(on) {
+        this.transparencyGuide = on;
+        if (this.mode === "draw") {
+          this.syncCoreCanvasToDisplay();
+          this.screen?.render();
+        }
+      }
+      isTransparencyGuideOn() {
+        return this.transparencyGuide;
+      }
+      setUnderlay(canvas) {
+        this.underlayCanvas = canvas;
+        if (this.mode === "draw") {
+          this.syncCoreCanvasToDisplay();
+          this.screen?.render();
+        }
+      }
+      /**
+       * Show or hide the drawing cursor.
+       *
+       * A host that animates the canvas has to be able to take the caret off
+       * it: playback in the sprite studio drew frame after frame with the
+       * cursor sitting on top of the art - "when anims play the cursor/caret
+       * must be hidden" (2026-09-02).
+       */
+      setCursorVisible(visible) {
+        if (!this.drawCursor)
+          return;
+        if (visible) {
+          this.drawCursor.show();
+          this.updateDrawCursor();
+        } else {
+          this.drawCursor.hide();
+        }
+        this.screen?.render();
       }
       /** Get the current magnification, in characters per cell. */
       getCellScale() {
@@ -12605,6 +12689,12 @@ var init_ansi_editor = __esm({
           mouse: true,
           vi: true
         });
+        this.underlayCanvas = null;
+        this.transparencyGuide = false;
+        this.extraMenus = [];
+        this.extraMenuDropdowns = [];
+        this.extraToolbar = [];
+        this.extraToolbarWidth = 0;
         this.fkeySetIndex = 0;
         this.fkeyButtons = [];
         this.mode = "draw";
@@ -12658,12 +12748,17 @@ var init_ansi_editor = __esm({
         this.maxLineLength = options.maxLineLength || 160;
         this.optCanvasWidth = options.canvasWidth || 80;
         this.optCanvasHeight = options.canvasHeight || 25;
+        this.extraMenus = options.extraMenus ?? [];
+        this.extraToolbar = options.extraToolbar ?? [];
+        this.transparencyGuide = options.showTransparencyGuide ?? false;
         this.optCellScaleX = Math.max(1, Math.floor(options.cellScaleX ?? 1));
         this.optCellScaleY = Math.max(1, Math.floor(options.cellScaleY ?? 1));
         this.transparentBackground = options.transparentBackground ?? false;
         this.showLineNumbers = options.showLineNumbers ?? true;
         this.onSaveCallback = options.onSave;
         this.onSaveAsCallback = options.onSaveAs;
+        this.onNewCallback = options.onNew;
+        this.onResizeCallback = options.onResize;
         this.onOpenCallback = options.onOpen;
         this.onOpenBBSCallback = options.onOpenBBS;
         this.onExitCallback = options.onExit;
@@ -12702,6 +12797,24 @@ var init_ansi_editor = __esm({
           this.viewport.focus();
         }
       }
+      /**
+       * Where the draw canvas sits, and how big it is.
+       *
+       * Sized to the canvas's own extent (cells times scale) and centred in the
+       * region left over after the sidebar, the chrome above and the status bar
+       * below. Clamped so a canvas at least as large as the room starts flush
+       * where it always did - centring must never push content off the top or
+       * the left, which is the usual way this goes wrong.
+       */
+      centredCanvasGeometry(topOffset, sidebarWidth, showStatusBar) {
+        const width = this.canvasW * this.scaleX;
+        const height = this.canvasH * this.scaleY;
+        const roomW = this.width - sidebarWidth;
+        const roomH = this.height - topOffset - (showStatusBar ? 1 : 0);
+        const left = sidebarWidth + Math.max(0, Math.floor((roomW - width) / 2));
+        const top = topOffset + Math.max(0, Math.floor((roomH - height) / 2));
+        return { top, left, width, height };
+      }
       createUI(options) {
         let topOffset = 0;
         const showMenuBar = options.showMenuBar !== false;
@@ -12738,12 +12851,13 @@ var init_ansi_editor = __esm({
           wrap: false
           // ANSI content is fixed width - never wrap
         });
+        const canvasGeom = this.centredCanvasGeometry(topOffset, sidebarWidth, showStatusBar);
         this.drawCanvas = new Canvas2({
           parent: this,
-          top: topOffset,
-          left: sidebarWidth,
-          right: 0,
-          bottom: showStatusBar ? 1 : 0,
+          top: canvasGeom.top,
+          left: canvasGeom.left,
+          width: canvasGeom.width,
+          height: canvasGeom.height,
           style: { bg: "black", fg: "white" },
           keys: true,
           mouse: true,
@@ -12799,6 +12913,7 @@ var init_ansi_editor = __esm({
             tags: true
           });
         }
+        this.createExtraToolbar();
         this.updateDisplay();
       }
       /**
@@ -12814,15 +12929,14 @@ var init_ansi_editor = __esm({
           style: { bg: "gray", fg: "black" },
           tags: true
         });
-        const menus = [
-          { label: " File ", left: 0 },
-          { label: " Edit ", left: 6 },
-          { label: " Layer ", left: 12 },
-          { label: " Select ", left: 19 },
-          { label: " Colors ", left: 28 },
-          { label: " View ", left: 36 },
-          { label: " Help ", left: 42 }
-        ];
+        const ownLabels = [" File ", " Edit ", " Layer ", " Select ", " Colors ", " View ", " Help "];
+        const hostLabels = this.extraMenus.map((m) => ` ${m.label} `);
+        let nextLeft = 0;
+        const menus = [...ownLabels, ...hostLabels].map((label) => {
+          const left = nextLeft;
+          nextLeft += label.length;
+          return { label, left };
+        });
         const menuButtons = [];
         menus.forEach((menu) => {
           const btn = new Box({
@@ -12847,7 +12961,8 @@ var init_ansi_editor = __esm({
           this.selectionMenu,
           this.colorsMenu,
           this.viewMenu,
-          this.helpMenu
+          this.helpMenu,
+          ...this.extraMenuDropdowns
         ];
         menuButtons.forEach((btn, idx) => {
           const dropdown = dropdownMenus[idx];
@@ -12862,25 +12977,43 @@ var init_ansi_editor = __esm({
       createDropdownMenus() {
         if (!this.screen)
           return;
+        this.extraMenuDropdowns = this.extraMenus.map((menu) => new DropdownMenu({
+          parent: this.screen,
+          // Wide enough for the host's own longest label. A fixed 22 clipped
+          // the hotkey off the end of the label it was added to, which is the
+          // one part of a menu item nobody can guess.
+          width: menuWidthFor(menu.items),
+          items: menu.items
+        }));
         const fileMenuItems = [
-          { label: "New", action: () => this.newDocument() },
-          { label: "Open...", action: () => this.onOpenCallback?.() }
+          { label: "New", action: () => {
+            void (this.onNewCallback ? this.onNewCallback() : this.newDocument());
+          } }
         ];
+        if (this.onOpenCallback) {
+          fileMenuItems.push({ label: "Open...", action: () => this.onOpenCallback?.() });
+        }
         if (this.onOpenBBSCallback) {
           fileMenuItems.push({ label: "Open BBS Files...", action: () => this.onOpenBBSCallback?.() });
         }
-        fileMenuItems.push({ label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: "Save", action: () => this.save() }, { label: "Save As...", action: () => this.onSaveAsCallback?.() }, { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: "SAUCE Info...", action: () => this.showSauceEditor() }, { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: "Exit", action: () => this.onExitCallback?.() });
+        fileMenuItems.push({ label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: menuItemLabel("Save", "C-s"), action: () => this.save() });
+        if (this.onSaveAsCallback) {
+          fileMenuItems.push({ label: "Save As...", action: () => this.onSaveAsCallback?.() });
+        }
+        fileMenuItems.push({ label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: "Canvas Size...", action: () => {
+          void this.changeCanvasSize();
+        } }, { label: "SAUCE Info...", action: () => this.showSauceEditor() }, { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true }, { label: menuItemLabel("Exit", "ESC"), action: () => this.onExitCallback?.() });
         this.fileMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: menuWidthFor(fileMenuItems),
           items: fileMenuItems
         });
         this.editMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
-            { label: "Undo", action: () => this.undo() },
-            { label: "Redo", action: () => this.redo() },
+            { label: menuItemLabel("Undo", "C-z"), action: () => this.undo() },
+            { label: menuItemLabel("Redo", "C-y"), action: () => this.redo() },
             { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true },
             { label: "Cut", action: () => this.cutSelection() },
             { label: "Copy", action: () => this.copySelection() },
@@ -12892,7 +13025,7 @@ var init_ansi_editor = __esm({
         });
         this.selectionMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
             { label: "Select All", action: () => this.selectAll() },
             { label: "Deselect", action: () => this.deselect() },
@@ -12906,10 +13039,10 @@ var init_ansi_editor = __esm({
         });
         this.colorsMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
-            { label: "Foreground...", action: () => this.showColorPicker(true) },
-            { label: "Background...", action: () => this.showColorPicker(false) },
+            { label: menuItemLabel("Foreground...", "A-c"), action: () => this.showColorPicker(true) },
+            { label: menuItemLabel("Background...", "A-b"), action: () => this.showColorPicker(false) },
             { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true },
             { label: "Swap FG/BG", action: () => this.swapColors() },
             { label: "Default Colors", action: () => this.resetColors() },
@@ -12919,7 +13052,7 @@ var init_ansi_editor = __esm({
         });
         this.layerMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
             { label: "Add Layer", action: () => this.addLayer() },
             { label: "Delete Layer", action: () => this.deleteLayer() },
@@ -12936,20 +13069,20 @@ var init_ansi_editor = __esm({
         });
         this.viewMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
             { label: "Toggle Sidebar", action: () => this.toggleSidebar() },
             { label: "Toggle Toolbar", action: () => this.toggleFkeyToolbar() },
             { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true },
-            { label: "Text Mode", action: () => this.mode !== "text" && this.toggleMode() },
-            { label: "Draw Mode", action: () => this.mode !== "draw" && this.toggleMode() }
+            { label: menuItemLabel("Text Mode", "C-m"), action: () => this.mode !== "text" && this.toggleMode() },
+            { label: menuItemLabel("Draw Mode", "C-m"), action: () => this.mode !== "draw" && this.toggleMode() }
           ]
         });
         this.helpMenu = new DropdownMenu({
           parent: this.screen,
-          width: 22,
+          width: MENU_ITEM_COLUMNS + 4,
           items: [
-            { label: "Keyboard Shortcuts", action: () => this.showHelp() },
+            { label: menuItemLabel("Keyboard Shortcuts", "?"), action: () => this.showHelp() },
             { label: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", separator: true },
             { label: "About ANSI Editor", action: () => this.showAbout() }
           ]
@@ -12972,6 +13105,125 @@ var init_ansi_editor = __esm({
         if (item?.menu) {
           item.menu.openAt(item.left + this.aleft + 1, this.atop + 2);
         }
+      }
+      /**
+       * The host's controls, on the RIGHT of the status bar.
+       *
+       * They floated in a framed strip under the canvas for one commit and the
+       * sysop's verdict was "this was an ugly toolbar - move it to the footer
+       * on the right side instead". The footer is the right home: the editor
+       * already has exactly one row of chrome at the bottom, it is always
+       * there, and it needs no room test, no repositioning when the canvas
+       * moves, and no rule about what happens at 80 columns.
+       *
+       * Segments are boxes over the status bar's own text rather than part of
+       * its content, because a segment is clickable - the same shape the F-key
+       * toolbar's buttons have. The status bar drops its own optional readouts
+       * when the strip needs the room (see updateStatusBar).
+       */
+      createExtraToolbar() {
+        if (this.extraToolbar.length === 0 || !this.statusBar)
+          return;
+        const bar2 = new Box({
+          parent: this.statusBar,
+          top: 0,
+          right: 0,
+          width: 1,
+          // sized to its content by layoutExtraToolbar()
+          height: 1,
+          style: { bg: "blue", fg: "white" },
+          tags: true,
+          focusable: false
+        });
+        this.extraToolbarBar = bar2;
+        this.layoutExtraToolbar();
+      }
+      /** Place the segments, and size the strip to what they came to. */
+      layoutExtraToolbar() {
+        const bar2 = this.extraToolbarBar;
+        if (!bar2)
+          return;
+        for (const child of bar2.children.slice())
+          child.destroy();
+        let x = 0;
+        this.extraToolbar.forEach((group, g) => {
+          if (g > 0) {
+            new Text({
+              parent: bar2,
+              top: 0,
+              left: x,
+              width: 3,
+              height: 1,
+              content: " \xB7 ",
+              style: { bg: "blue", fg: "white" },
+              tags: true
+            });
+            x += 3;
+          }
+          group.forEach((item, i) => {
+            if (i > 0)
+              x += 1;
+            const text = typeof item.label === "function" ? item.label() : item.label;
+            const segment = new Box({
+              parent: bar2,
+              top: 0,
+              left: x,
+              width: text.length,
+              height: 1,
+              content: text,
+              style: item.action ? { bg: "blue", fg: "white", hover: { bg: "cyan", fg: "black" } } : { bg: "blue", fg: "lightcyan" },
+              tags: true,
+              mouse: Boolean(item.action),
+              clickable: Boolean(item.action),
+              focusable: false
+            });
+            if (item.action)
+              segment.on("click", () => item.action());
+            x += text.length;
+          });
+        });
+        bar2.width = x;
+        this.extraToolbarWidth = x;
+      }
+      /**
+       * Take the menus down with the editor.
+       *
+       * The dropdowns are parented to the SCREEN, not to this widget, because a
+       * menu must paint over everything - so Element.destroy()'s sweep of its
+       * own children never reached them. A host that REBUILDS the editor (a
+       * zoom step, a resize, opening another document - the sprite studio does
+       * all three) left eleven hidden dropdowns behind every time, each holding
+       * an action closing over the editor that had just been destroyed.
+       */
+      destroy() {
+        for (const menu of [
+          this.fileMenu,
+          this.editMenu,
+          this.selectionMenu,
+          this.colorsMenu,
+          this.layerMenu,
+          this.viewMenu,
+          this.helpMenu,
+          ...this.extraMenuDropdowns
+        ]) {
+          menu?.destroy();
+        }
+        this.extraMenuDropdowns = [];
+        super.destroy();
+      }
+      /**
+       * Re-read the strip's labels.
+       *
+       * A host calls this when the state a readout shows has changed - the
+       * frame number, whether it is playing - rather than rebuilding the editor
+       * for a two-character difference.
+       */
+      refreshExtraToolbar() {
+        if (!this.extraToolbarBar)
+          return;
+        this.layoutExtraToolbar();
+        this.updateStatusBar();
+        this.screen?.render();
       }
       /**
        * Create F-key character toolbar (Moebius-style)
@@ -13882,6 +14134,183 @@ BBS Door SDK v2.0{/gray-fg}
         aboutModal.display(focusTarget);
       }
       /**
+       * Ask for one line of text, in the editor's own style.
+       *
+       * Modelled on the SAUCE dialog's field editor, which was the only text
+       * input this widget had and was welded inside it.
+       */
+      promptForText(title, initial = "") {
+        return new Promise((resolve) => {
+          if (!this.screen) {
+            resolve(null);
+            return;
+          }
+          const box = new Box({
+            parent: this.screen,
+            top: "center",
+            left: "center",
+            width: 44,
+            height: 5,
+            border: { type: "line" },
+            label: ` ${title} `,
+            tags: true,
+            keys: true,
+            focusable: true,
+            style: { bg: "black", fg: "white", border: { fg: "yellow" } }
+          });
+          const line3 = new Text({
+            parent: box,
+            top: 1,
+            left: 2,
+            width: 38,
+            tags: true,
+            content: ""
+          });
+          const hint = new Text({
+            parent: box,
+            bottom: 0,
+            left: 2,
+            tags: true,
+            content: "{gray-fg}Enter: accept   ESC: cancel{/gray-fg}"
+          });
+          let value = initial;
+          const paint = () => {
+            line3.setContent(`{inverse}${value.padEnd(34)}{/inverse}`);
+            this.screen?.render();
+          };
+          paint();
+          const finish = (answer) => {
+            box.removeListener("keypress", onKey);
+            hint.destroy();
+            box.destroy();
+            this.restoreFocusAfterDialog();
+            resolve(answer);
+          };
+          const onKey = (_ch, key) => {
+            if (key?.name === "escape") {
+              finish(null);
+              return;
+            }
+            if (key?.name === "enter") {
+              finish(value.trim());
+              return;
+            }
+            if (key?.name === "backspace") {
+              value = value.slice(0, -1);
+              paint();
+              return;
+            }
+            const ch = key?.ch ?? _ch;
+            if (ch && ch.length === 1 && !key?.ctrl && !key?.meta && value.length < 34) {
+              value += ch;
+              paint();
+            }
+          };
+          this.modalOpen = true;
+          box.on("keypress", onKey);
+          this.takeModalFocus(box);
+          this.screen.render();
+        });
+      }
+      /** A one-line notice that goes away on any key. */
+      showMessage(title, text, colour = "cyan") {
+        if (!this.screen)
+          return;
+        const box = new Box({
+          parent: this.screen,
+          top: "center",
+          left: "center",
+          width: Math.max(24, text.length + 6),
+          height: 5,
+          border: { type: "line" },
+          label: ` ${title} `,
+          content: text,
+          padding: { left: 2, right: 2, top: 1, bottom: 1 },
+          tags: true,
+          keys: true,
+          focusable: true,
+          style: { bg: "black", fg: "white", border: { fg: colour } }
+        });
+        const close = () => {
+          box.destroy();
+          this.restoreFocusAfterDialog();
+        };
+        this.modalOpen = true;
+        box.key(["escape", "enter", "space", "q"], close);
+        this.takeModalFocus(box);
+        this.screen.render();
+      }
+      /**
+       * Grow or crop the canvas, keeping the artwork that still fits.
+       *
+       * There was no way to change the size of a document once it was open -
+       * "there seem be no way to change canvas size for loaded projects"
+       * (2026-09-02) - so a canvas was whatever it happened to be created as.
+       * Cells outside the new bounds are dropped, new ones start empty, and
+       * every layer is resized with it or the stack would go ragged.
+       */
+      resizeCanvas(width, height) {
+        const w = Math.max(1, Math.floor(width));
+        const h = Math.max(1, Math.floor(height));
+        if (!this.cellCanvas)
+          return;
+        if (w === this.canvasW && h === this.canvasH)
+          return;
+        const resize = (canvas) => {
+          const next = [];
+          for (let y = 0; y < h; y++) {
+            next[y] = [];
+            for (let x = 0; x < w; x++) {
+              next[y][x] = canvas[y]?.[x] ?? { char: " ", fg: 7, bg: 0 };
+            }
+          }
+          return next;
+        };
+        for (const layer of this.layers) {
+          if (layer.canvas)
+            layer.canvas = resize(layer.canvas);
+        }
+        this.adoptCellCanvas(this.layers[this.activeLayerIndex]?.canvas ?? resize(this.cellCanvas));
+        this.optCanvasWidth = w;
+        this.optCanvasHeight = h;
+        this.cursor.line = Math.min(this.cursor.line, h - 1);
+        this.cursor.col = Math.min(this.cursor.col, w - 1);
+        this.selection = null;
+        this.modified = true;
+        const topOffset = (this.menuBar ? 1 : 0) + (this.fkeyToolbar ? 1 : 0);
+        const geom = this.centredCanvasGeometry(topOffset, this.sidebar ? 6 : 0, !!this.statusBar);
+        this.drawCanvas.top = geom.top;
+        this.drawCanvas.left = geom.left;
+        this.drawCanvas.width = geom.width;
+        this.drawCanvas.height = geom.height;
+        this.syncCoreCanvasToDisplay();
+        this.updateDisplay();
+        this.screen?.render();
+      }
+      /**
+       * Ask for a new canvas size.
+       *
+       * A host that owns the document answers this itself - a sprite has cells,
+       * frames and animations, and resizing only the editor's canvas would
+       * leave the door's document behind. Without such a host the widget asks
+       * for WxH and resizes its own canvas.
+       */
+      async changeCanvasSize() {
+        if (this.onResizeCallback) {
+          await this.onResizeCallback();
+          return;
+        }
+        const answer = await this.promptForText("Canvas Size", `${this.canvasW}x${this.canvasH}`);
+        if (!answer)
+          return;
+        const match2 = /^\s*(\d+)\s*[xX*]\s*(\d+)\s*$/.exec(answer);
+        if (!match2) {
+          this.showMessage("Canvas Size", "Give it as WIDTHxHEIGHT, like 80x25.", "yellow");
+          return;
+        }
+        this.resizeCanvas(Number(match2[1]), Number(match2[2]));
+      }
+      /**
        * Show SAUCE metadata editor dialog
        */
       showSauceEditor() {
@@ -14097,7 +14526,7 @@ BBS Door SDK v2.0{/gray-fg}
         modal.key(["escape", "q"], () => closeDialog(true));
         overlay.on("cancel", () => closeDialog(false));
         overlay.show();
-        modal.focus();
+        this.takeModalFocus(modal);
         this.screen.render();
       }
       /**
@@ -14122,20 +14551,21 @@ BBS Door SDK v2.0{/gray-fg}
        * Toggle sidebar visibility
        */
       toggleSidebar() {
-        if (this.sidebar) {
-          if (this.sidebar.hidden) {
-            this.sidebar.show();
-            this.viewport.left = 6;
-            this.drawCanvas.left = 6;
-            this.drawCursor.left = 6;
-          } else {
-            this.sidebar.hide();
-            this.viewport.left = 0;
-            this.drawCanvas.left = 0;
-            this.drawCursor.left = 0;
-          }
-          this.screen?.render();
-        }
+        if (!this.sidebar)
+          return;
+        const showing = this.sidebar.hidden;
+        if (showing)
+          this.sidebar.show();
+        else
+          this.sidebar.hide();
+        const sidebarWidth = showing ? 6 : 0;
+        const topOffset = (this.menuBar ? 1 : 0) + (this.fkeyToolbar ? 1 : 0);
+        this.viewport.left = sidebarWidth;
+        const geom = this.centredCanvasGeometry(topOffset, sidebarWidth, !!this.statusBar);
+        this.drawCanvas.top = geom.top;
+        this.drawCanvas.left = geom.left;
+        this.updateDrawCursor();
+        this.screen?.render();
       }
       /**
        * Toggle F-key toolbar visibility
@@ -14260,6 +14690,17 @@ BBS Door SDK v2.0{/gray-fg}
         });
       }
       setupMouseHandlers() {
+        this.on("mouse", (data) => {
+          if (!data || data.action !== "wheelup" && data.action !== "wheeldown")
+            return;
+          if (this.modalOpen)
+            return;
+          this.emit("canvas-wheel", {
+            direction: data.action === "wheelup" ? "up" : "down",
+            col: this.screenToCanvasX(data.x - this.drawCanvas.ileft),
+            line: this.screenToCanvasY(data.y - this.drawCanvas.itop)
+          });
+        });
         this.viewport.on("click", (data) => {
           if (!data)
             return;
@@ -14304,13 +14745,15 @@ BBS Door SDK v2.0{/gray-fg}
         this.drawCanvas.on("mouse", (data) => {
           if (!data || !data.action || this.modalOpen || DropdownMenu.shouldBlockClick())
             return;
+          if (data.action === "mouseup") {
+            this.flushDrawChunk();
+          }
           const x = data.x - this.drawCanvas.ileft;
           const y = data.y - this.drawCanvas.itop;
           if (x < 0 || y < 0)
             return;
-          if (data.action === "mouseup") {
-            this.flushDrawChunk();
-          }
+          if (data.action === "wheelup" || data.action === "wheeldown")
+            return;
           this.cursor.col = this.screenToCanvasX(x);
           this.cursor.line = this.screenToCanvasY(y);
           this.updateDrawCursor();
@@ -14688,11 +15131,27 @@ BBS Door SDK v2.0{/gray-fg}
           return;
         const canvasTop = this.drawCanvas.position.top || 0;
         const canvasLeft = this.drawCanvas.position.left || 0;
-        this.drawCursor.top = canvasTop + this.cursor.line * this.scaleY;
+        const halfBlockCursor = this.brushMode === "half-block" && this.scaleY >= 2;
+        const height = halfBlockCursor ? Math.floor(this.scaleY / 2) : this.scaleY;
+        const subOffset = halfBlockCursor && this.halfBlockSubY === 1 ? height : 0;
+        this.drawCursor.top = canvasTop + this.cursor.line * this.scaleY + subOffset;
         this.drawCursor.left = canvasLeft + this.cursor.col * this.scaleX;
         this.drawCursor.width = this.scaleX;
-        this.drawCursor.height = this.scaleY;
-        this.drawCursor.setContent(this.currentChar.repeat(this.scaleX));
+        this.drawCursor.height = height;
+        const cell = this.cellCanvas?.[this.cursor.line]?.[this.cursor.col];
+        const emptyCell = !cell || cell.transparent || !cell.char || cell.char === " ";
+        if (emptyCell) {
+          this.drawCursor.style = { bg: "red", fg: "red" };
+          this.drawCursor.setContent(this.currentChar.repeat(this.scaleX));
+          return;
+        }
+        this.drawCursor.style = { bg: "black", fg: "white" };
+        const firstSub = subOffset;
+        const rows = [];
+        for (let row = 0; row < height; row++) {
+          rows.push(invertTags(this.magnifiedCellTag(cell, firstSub + row, this.cursor.col, this.cursor.line)));
+        }
+        this.drawCursor.setContent(rows.join("\n"));
       }
       /**
        * Paint the current fg/bg/char cell at the cursor through the library's
@@ -15132,21 +15591,102 @@ BBS Door SDK v2.0{/gray-fg}
        * canvas's own - the marching-ants selection overlay does exactly that -
        * without duplicating the loop and its scaling.
        */
+      /**
+       * What is visible at (x, y), the layer stack included.
+       *
+       * Each layer owns a canvas and the ACTIVE one is what the tools paint,
+       * but nothing ever composited them: a layer's `visible` flag changed no
+       * pixel, so Add Layer, Toggle Visibility, Move Up and Move Down were a
+       * menu that did nothing you could see (audited 2026-09-02 against "most
+       * entries seem dead"). The active layer wins wherever it has been drawn
+       * on; where it has not, the topmost VISIBLE layer below shows through,
+       * which is what a layer is for.
+       */
+      compositeCellAt(x, y) {
+        const own = this.cellCanvas?.[y]?.[x];
+        const blank = (c) => !c || c.transparent === true || (c.char === " " || !c.char) && !c.bg;
+        if (!blank(own))
+          return own;
+        if (this.layers.length > 1) {
+          for (let i = this.activeLayerIndex - 1; i >= 0; i--) {
+            const layer = this.layers[i];
+            if (!layer?.visible)
+              continue;
+            const cell = layer.canvas?.[y]?.[x];
+            if (!blank(cell))
+              return cell;
+          }
+        }
+        return own || { char: " ", fg: 7, bg: 0 };
+      }
       buildCanvasContent(cellAt) {
         const rows = [];
         for (let y = 0; y < this.canvasH; y++) {
-          let row = "";
-          for (let x = 0; x < this.canvasW; x++) {
-            row += this.cellToDisplayTag(cellAt(x, y), this.scaleX);
-          }
-          for (let n = 0; n < this.scaleY; n++)
+          for (let sub = 0; sub < this.scaleY; sub++) {
+            let row = "";
+            for (let x = 0; x < this.canvasW; x++) {
+              row += this.magnifiedCellTag(cellAt(x, y), sub, x, y);
+            }
             rows.push(row);
+          }
         }
         return rows.join("\n");
       }
+      /**
+       * One cell's appearance in sub-row `sub` of its magnified box.
+       *
+       * At scale 1 this is just the cell. Magnified, a half-block glyph must be
+       * RESOLVED rather than repeated: '▀' drawn four times down is four rows of
+       * "upper half filled" - stripes - when what magnification means is two
+       * solid rows of the top colour over two of the bottom. Reported from the
+       * sprite studio, where a crocodile came out as horizontal bars.
+       *
+       * An ordinary character is not a pixel pair, so it is repeated as before.
+       * An odd scale gives the extra row to the TOP half, matching how the
+       * half-block cursor already treats the upper row as the default.
+       */
+      magnifiedCellTag(cell, sub, x, y) {
+        if (cell.transparent && x !== void 0 && y !== void 0) {
+          const ghost = this.underlayCanvas?.[y]?.[x];
+          if (ghost && !ghost.transparent) {
+            return `{gray-fg}{black-bg}${(ghost.char || " ").repeat(this.scaleX)}{/black-bg}{/gray-fg}`;
+          }
+        }
+        if (cell.transparent) {
+          if (!this.transparencyGuide) {
+            return `{black-fg}{black-bg}${" ".repeat(this.scaleX)}{/black-bg}{/black-fg}`;
+          }
+          if (this.scaleX === 1 && this.scaleY === 1) {
+            return this.cellToDisplayTag(cell, 1);
+          }
+          const midRow = Math.floor(this.scaleY / 2);
+          const midCol = Math.floor(this.scaleX / 2);
+          const run = sub === midRow ? " ".repeat(midCol) + "." + " ".repeat(this.scaleX - midCol - 1) : " ".repeat(this.scaleX);
+          return `{gray-fg}{black-bg}${run}{/black-bg}{/gray-fg}`;
+        }
+        if (this.scaleY === 1) {
+          return this.cellToDisplayTag(cell, this.scaleX);
+        }
+        const isUpper = cell.char === HALF_BLOCK.UPPER;
+        const isLower = cell.char === HALF_BLOCK.LOWER;
+        const isFull = cell.char === HALF_BLOCK.FULL;
+        if (!isUpper && !isLower && !isFull) {
+          return this.cellToDisplayTag(cell, this.scaleX);
+        }
+        const topHalf = Math.ceil(this.scaleY / 2);
+        const inTop = sub < topHalf;
+        let colour;
+        if (isFull)
+          colour = cell.fg;
+        else if (isUpper)
+          colour = inTop ? cell.fg : cell.bg;
+        else
+          colour = inTop ? cell.bg : cell.fg;
+        return this.cellToDisplayTag({ char: HALF_BLOCK.FULL, fg: colour, bg: colour }, this.scaleX);
+      }
       cellToDisplayTag(cell, repeat = 1) {
         if (cell.transparent) {
-          return `{gray-fg}{black-bg}${".".repeat(repeat)}{/black-bg}{/gray-fg}`;
+          return this.transparencyGuide ? `{gray-fg}{black-bg}${".".repeat(repeat)}{/black-bg}{/gray-fg}` : `{black-fg}{black-bg}${" ".repeat(repeat)}{/black-bg}{/black-fg}`;
         }
         const fgColor = _ANSIEditor.ANSI_COLOR_NAMES[cell.fg] || "white";
         const bgColor = _ANSIEditor.ANSI_COLOR_NAMES[cell.bg] || "black";
@@ -15202,7 +15742,7 @@ BBS Door SDK v2.0{/gray-fg}
         this.drawCanvas.setContent(this.buildCanvasContent((x, y) => {
           const isEdge = x >= minX && x <= maxX && y >= minY && y <= maxY && (y === minY || y === maxY || x === minX || x === maxX);
           const useMarch = isEdge && (x + y) % 2 === 0;
-          return useMarch ? marchCell : this.cellCanvas[y]?.[x] || { char: " ", fg: 7, bg: 0 };
+          return useMarch ? marchCell : this.compositeCellAt(x, y);
         }));
         if (this.drawCursor) {
           this.drawCursor.setFront();
@@ -15281,7 +15821,7 @@ BBS Door SDK v2.0{/gray-fg}
       syncCoreCanvasToDisplay() {
         if (!this.cellCanvas)
           return;
-        this.drawCanvas.setContent(this.buildCanvasContent((x, y) => this.cellCanvas[y]?.[x] || { char: " ", fg: 7, bg: 0 }));
+        this.drawCanvas.setContent(this.buildCanvasContent((x, y) => this.compositeCellAt(x, y)));
         if (this.drawCursor) {
           this.drawCursor.setFront();
         }
@@ -15380,7 +15920,22 @@ BBS Door SDK v2.0{/gray-fg}
           "colorize": "COL"
         };
         const brushIndicator = this.brushMode !== "text" ? `{green-fg}${brushModeNames[this.brushMode]}${this.brushMode === "half-block" ? this.halfBlockSubY === 0 ? "\u2580" : "\u2584" : ""}{/}` : "";
-        this.statusBar.setContent(` ${modifiedMark} ${pos} | ${canvasSize} | {${fgColor}-fg}{${bgColor}-bg}${charPreview}{/} {${fgColor}-fg}FG:${this.currentFg.toString().padStart(2)}{/} {${bgColor}-bg}{white-fg}BG:${this.currentBg.toString().padStart(2)}{/} | {cyan-fg}${toolName}{/}${drawingState}` + (brushIndicator ? ` ${brushIndicator}` : "") + (layerInfo ? ` | ${layerInfo}` : "") + (iceIndicator ? ` ${iceIndicator}` : ""));
+        const pieces = [
+          { text: ` ${modifiedMark} ${pos}`, drop: Infinity },
+          { text: ` | ${canvasSize}`, drop: 4 },
+          { text: ` | {${fgColor}-fg}{${bgColor}-bg}${charPreview}{/} {${fgColor}-fg}FG:${this.currentFg.toString().padStart(2)}{/} {${bgColor}-bg}{white-fg}BG:${this.currentBg.toString().padStart(2)}{/}`, drop: 5 },
+          { text: ` | {cyan-fg}${toolName}{/}${drawingState}`, drop: Infinity },
+          { text: brushIndicator ? ` ${brushIndicator}` : "", drop: 3 },
+          { text: layerInfo ? ` | ${layerInfo}` : "", drop: 2 },
+          { text: iceIndicator ? ` ${iceIndicator}` : "", drop: 1 }
+        ];
+        const room = this.width - (this.extraToolbarWidth > 0 ? this.extraToolbarWidth + 1 : 0);
+        const plain = (text) => text.replace(/\{[^}]*\}/g, "").length;
+        const line3 = (dropped2) => pieces.filter((p) => p.drop > dropped2).map((p) => p.text).join("");
+        let dropped = 0;
+        while (plain(line3(dropped)) > room && dropped < 5)
+          dropped++;
+        this.statusBar.setContent(line3(dropped));
       }
       updateToolbar() {
         if (this.fkeyToolbar) {
@@ -15453,7 +16008,26 @@ BBS Door SDK v2.0{/gray-fg}
         });
         modal.display();
       }
+      /**
+       * Give a modal the keyboard and KEEP it.
+       *
+       * focus() alone loses to the click that opened it: the same mouse
+       * dispatch carries on to the elements underneath and the canvas takes
+       * focus straight back, so Tab, Enter and Escape never reach the dialog -
+       * "sauce info does nothing" (2026-09-02), which is the same fault the
+       * sprite studio's own requesters had. A trap reasserts itself whenever
+       * focus lands outside it.
+       */
+      takeModalFocus(el) {
+        this.modalTrap = el;
+        el.focus();
+        this.screen?.trapFocus?.(el);
+      }
       restoreFocusAfterDialog() {
+        if (this.modalTrap) {
+          this.screen?.releaseFocusTrap?.(this.modalTrap);
+          this.modalTrap = void 0;
+        }
         setImmediate(() => {
           this.modalOpen = false;
         });
@@ -15645,7 +16219,7 @@ BBS Door SDK v2.0{/gray-fg}
         modal.key(["escape", "q"], () => closeDialog(false));
         overlay.on("cancel", () => closeDialog(false));
         overlay.show();
-        modal.focus();
+        this.takeModalFocus(modal);
         this.screen.render();
       }
       showCharacterPicker() {
@@ -15722,7 +16296,7 @@ BBS Door SDK v2.0{/gray-fg}
         list.key(["escape", "q"], () => closeDialog());
         overlay.on("cancel", () => closeDialog());
         overlay.show();
-        list.focus();
+        this.takeModalFocus(list);
         this.screen.render();
       }
       showHelp() {
@@ -16293,6 +16867,7 @@ var init_blessed = __esm({
     init_stacked_gauge();
     init_colorpicker();
     init_fileexplorer();
+    init_ansi_editor();
     init_ansi_editor();
     init_doc_modal();
     init_login_modal();
@@ -44379,55 +44954,55 @@ var TrackerEngine = class _TrackerEngine {
 };
 
 // ../../sdk/dist-esm/media/VoiceCapture.js
-var import_events6 = __toESM(require_events());
+var import_events6 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/network-engine.js
-var import_events19 = __toESM(require_events());
+var import_events19 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/broker/broker-client.js
-var import_events7 = __toESM(require_events());
+var import_events7 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/broker/lobby-broker.js
 var BROKER_KEY = Symbol.for("aex-lobby-broker");
 
 // ../../sdk/dist-esm/engines/network/modules/connection.js
-var import_events8 = __toESM(require_events());
+var import_events8 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/lobby.js
-var import_events9 = __toESM(require_events());
+var import_events9 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/matchmaking.js
-var import_events10 = __toESM(require_events());
+var import_events10 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/sync.js
-var import_events11 = __toESM(require_events());
+var import_events11 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/prediction.js
-var import_events12 = __toESM(require_events());
+var import_events12 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/interpolation.js
-var import_events13 = __toESM(require_events());
+var import_events13 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/presence.js
-var import_events14 = __toESM(require_events());
+var import_events14 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/social.js
-var import_events15 = __toESM(require_events());
+var import_events15 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/leaderboard.js
-var import_events16 = __toESM(require_events());
+var import_events16 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/replay.js
-var import_events17 = __toESM(require_events());
+var import_events17 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/network/modules/security.js
-var import_events18 = __toESM(require_events());
+var import_events18 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/ai/ai-engine.js
-var import_events20 = __toESM(require_events());
+var import_events20 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/engines/tactical/tactical-combat-engine.js
-var import_events21 = __toESM(require_events());
+var import_events21 = __toESM(require_events(), 1);
 var TerrainType;
 (function(TerrainType2) {
   TerrainType2["Plains"] = "plains";
@@ -44477,19 +45052,19 @@ var UnitClass;
 })(UnitClass || (UnitClass = {}));
 
 // ../../sdk/dist-esm/components/level/level-manager.js
-var import_events22 = __toESM(require_events());
+var import_events22 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/components/inventory/inventory-system.js
-var import_events23 = __toESM(require_events());
+var import_events23 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/components/dialogue/dialogue-system.js
-var import_events24 = __toESM(require_events());
+var import_events24 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/components/quest/quest-system.js
-var import_events25 = __toESM(require_events());
+var import_events25 = __toESM(require_events(), 1);
 
 // ../../sdk/dist-esm/components/tactical/class-system.js
-var import_events26 = __toESM(require_events());
+var import_events26 = __toESM(require_events(), 1);
 var MovementType;
 (function(MovementType2) {
   MovementType2["Infantry"] = "Infantry";

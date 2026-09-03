@@ -1,0 +1,396 @@
+
+                 »» From The Worlds No.1 /X Door Makers ««
+
+         °        °        °   °      °    °       °   °   °    °
+      °    ° __°   __° __° ______ °_  __° __ °__° ______° __ °     °
+   °    °   /~~\° /~~\/~~\/~~ _~~\/~\/~~\/~~\/~~\/~~ _~~\/~~\ 93' °   °
+      °  ° /   / /   /   /  ¬\/  / _____/  _/\  /  /\/  /  _/ °   °
+     °    /\  /\/   /\  /   \  _/  _/  /   /   /      _/\  /_  ° °   °
+   °   °  \_ ¬ /   /  _/\  //  /  /  °/  _/   /   /\  /  _/  \°    °
+      °    \__  __/___/\__/ \_/\_/ °  \____/\/\__/___/_  ____/ © DLS
+   °  "  " """\/"""""""""" ° """" °  ° """"    """"""""\/"""""" "  "  °
+      °    °    °       °      °      °    °     °       ° °    °  °
+        °    °     °  °     °      °      °   °     °     °   °
+         V·i·r·t·u·a·l P·r·e·s·e·n·t·s A·c·c·o·u·n·t E·d V·1·.·0·5
+
+                                 Starring
+
+                     Delusion of Virtual as Programmer
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Introduction, Preface
+    
+	Finaly I've rewritten this 6 months old documentation and given
+	it a new look that should be far more easier to read and get some
+	hints from. This is revision V1.05 and you might have to take a
+	closer look at some upgraded fascillities that is not compatible
+	with V1.04 & V1.03, but here we go from the begining so hang on ..
+
+	Account Editor (Short name AccED) is a so called ARexx Door for
+	the /X 2.35+ package and will interfer as an AIM (Arexx Interface
+        Module). If you use this door you can make the security on your
+	board even higher with the high security features of this door.
+
+	The source is not compiled and should be rather easy for an ARexx
+	programmer to take a look at, which you also should do if you
+	wan't to be sure there is no backdoors provided with the source
+	from one in the row of people who got it before you. To be sure
+	wether there is a backdoor or not you should call my board INSANiTY
+	which is the official distrubtion site for my doors and my /X
+	echo mail package which is available for a nominal fee. I'm right
+	now doing a major update on that program so it can aproximatly
+	be delivered first at May. ßeta versions will be available sooner.
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	What will AccED do for you?
+
+	Account Ed is designed with high security in mind and I think my
+	door is the first one that can lock out a user at a specific time
+	period, ie between 24.00 and 08.00 in the morning if you think
+	that no one should access the account editor then.
+
+	It also checks if a person got the right name from a list of
+	persons alloved to use the account editor. This works in the same
+	way as Maltese Falcons Remote Shell and Sysop Download utils.
+
+	Every entry in the user data that someone who is in Account ED
+	look at will be reported and logged in a speciall Account ED log
+	file. It will also add comments if someone read or wrote an account
+	and if you print an account. Yes, you could actually print an account
+	to your printer using the printer settings from your Amiga DOS.
+	This feature is really my favorite, if you are going to delete an
+	user you could easily print the users account before selecting
+	delete and store it somewhere for no good but anyway ..
+
+	You can lock certain functions in the account editor for your
+	cosysops so they only could use the 6 pre defined presets, no
+	I'm joking .. 6 presets, NO! the 9 pre defined presets with a
+	comment which you can write so the cosysop knows what each preset
+	stands for and for which users they are meant. Nice ehh!?
+
+	Like the MCP (Master Control Program) by Bryce, you can give and
+	take access for a conference for all your users, so if you close
+	a conference you easily can delete all users access to it or if
+	you simple have started a new area. But.. wouldn't it be nice to
+	go a litle bit further and include one more nice feature into that
+	powerfull command? Yes! You can define between which two access
+	levels a user must be so you could give/take access from users who
+	only has got the security level 30 to 40 ie.
+
+	As the need to check for a user that you by mistake has given a too
+	high security level even grows stronger the more hackers there
+	are around I've included the feature to get a list of all users
+	between to certain security levels so you could use 200 to 255 or
+	if you simple wan't a whole userlist you type 1 to 255 ..
+	This section of Account ED also includes the possibility to get
+	a list of all users who has got access to a certain conference for
+	instance your groups member conference 5!
+
+	Back to the main account editor there are some major line ups if
+	you compare to the built in editor. First of all the design is
+	made to be easy to overview and fast to get some particular
+	information about one user. The built in one was so messy that I
+	had a hard time to understand my own account with the download /
+	upload cps and location put like a joke on the screen. This is
+	should be easy to read and each function has got new letters
+	becouse the old ones was worn out and not well placed. I hope
+	you'll soon learn the new keys!
+
+	The help page inside the account editor is for easy access to
+	the most common functions inside the editor. You simple press
+	a key and you can view it at the same time as the account is on
+	the same page so you easily could compare and so on. If you
+	have used my Questionary Door called Quest (last version V1.09)
+	this program is fully compatible with Quest. Anytime when you
+	are reading a persons account you could press a key and get that
+	users questionary on your screen. Very usefull if you upgrade
+	first time users.. I think you remeber yourself loading a text-
+	editor with your Answers file and trying to upgrade that poor
+	users account, but how did your cosysops manage!? I guess that
+	they didn't and the security with new users failed on your board!
+
+	Ever wanted a function that writes a letter very fast to your
+	users and saying that they should upload and shows the users
+	stats with uploaded/download bytes & file, calls and message?
+	Well it's built in into Account ED!
+
+	Another thing that can make you nervs popp up is then you have
+	to delete old recieved messages from users who has not choosen
+	delete then they've replied letters and all those EALL messages
+	that you new users hate.. Account ED has a built in function
+	which scanns your msgbase and deletes old mail and asks what
+	you want to do with the EALL messages!!
+
+	You can give a speciall access level for viewing the passwords
+	of all acounts, if you do not have this security level Account ED
+	will prompt Not Displayed as a password. You can choose if the
+	password default should be shown to the ones with the security
+	level or they have to press a special key combination for the
+	password to appear. Usefull if you have some friends beside you!
+
+	What about security for your groups conference then? Well as this
+	program has been around a while I've thought of that too, so you
+	could specify a conference to which no one could give access!
+	This means that your cosysop not can give himself access to your
+	groups member area!!
+
+	Ok I see that you are beginning to understand why I developed
+	this new account editor, so I will now give you only one more
+	reason to use it. If you sometimes have an upload competion on
+	your board you know how anyoing it is to give that poor winner
+	his rewareded upload credits, it usually means that you have
+	to run down the stairs to get a pocket calculator and then
+	enter his new upload bytes. But you could stop doing that
+	already today if you use this account editor with built in
+	calculator which can add and sub from a users account. You just
+	choose the field you wan't to change and use the upper case of
+	the letter instead and you will be asked if you wan't to sub or
+	add and how many bytes. This works for all fields that has got
+	to do with upload, download and limits.
+
+	Oh, sorry I forgot to tell you one thing. In the /X account editor
+	when you choose ie to change the users uploaded creds it clears
+	that field and you have to try to remember what there was standing.
+	My account editor will not remove anything that you don't write
+	over and when you move the cursor with the backspace key it won't
+	remove any letters from the screen, but just in memory so you
+	easily could remeber what was standing there before and you then
+	can write over it!
+
+	These is more features than many doors together can't even handle!
+	So you'd better take a closer look or you'll regret it!
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Instalation ..
+
+	Snap the following row to your BBS:Commands/BBS.Cmd file:
+
+	*1        Rm230Doors:Arexx/Account/AccEd.rexx
+
+	This will let all users with security level 230 and higher access
+	the account editor if their names are in the allowed user list.
+
+	When you have managed to do that it would be time to move the
+	Account ED package to your Doors:Arexx/ path, which is the path
+	all my doors requires so you better not put it elsewhere.
+
+	Previous user must note that there should be 3 new directories inside
+	the Account/ direcotry called: QuestApp, QuestDel and QuestQst.
+	if you are previous running Quest and has got it in the
+	Doors:Arexx/Quest/ dir you should move your questions from the answers
+	dir to the QuestApp dir in the Account directory. Otherwise Account ED
+	can't get the questionaries! (More info in the Quest doc file)
+
+	After doing that you should edit the AccEd.Presets file which
+	shall contain your personal presets and comments. I will only
+	give a brief explenation on how that file works, you have to
+	find out the rest by yourself!
+
+	The 7 present at the left top edge is the numbers of presets you
+	are going to have. To add one for instance add the number to 8
+	and enter the new values under the 7:th preset. 2359 and 0730 is the
+	time period when no one has got access to Account ED. The names
+	located under the presets is all users who are allowed to use
+	the account editor.
+
+	  Comment         SecL  RaT Rat Aut  Bytelimit ConfAccess  TimeLim  Computers
+	7--------------------------------------------------------------1.05-------------------
+Preset1	| Lamer          | 5   | 1 | 2 | 1 | 100000   | X________ | 1200  | Amiga 500        |
+Preset2 | PD User        | 20  | 1 | 3 | 2 | 500000   | X_X__X_X_ | 3600  | Amiga 500+       |
+Preset3 | Elite User     | 30  | 1 | 3 | 4 | 2500000  | X_XX_X_X_ | 3600  | Amiga 600        |
+Preset4	| Elite Trader   | 40  | 1 | 3 | 7 | 5000000  | X_X__XXX_ | 4800  | Amiga 1000       |
+Preset5	| Virtual Member | 50  | 1 | 0 | 4 | 10000000 | X_XXXX_X_ | 7200  | Amiga 1200       |
+Preset6	| Virtual Member | 50  | 1 | 0 | 7 | 10000000 | X_X_XXXX_ | 7200  | Amiga 2000       |
+Preset7	| Proud CoSysop  | 230 | 0 | 0 | 7 | 10000000 | X_XX_XXXX | 14400 | Amiga 3000       |
+Preset8	|                |     |   |   |   |          |           |       | Amiga 4000       |
+Preset9	|                |     |   |   |   |          |           |       | PC Com 286       |
+	2359-----------------------------------------------------------0730 PC Com 386       |
+	| Delusion Sauna Fox D-Zire                                       | PC Com 486       |
+	------------------------------------------------------------------- PC Com 586       |
+	| UserData Path    | BBS:User.Data      | Enable Seclevel  |  255 | Atari 1040       |
+	| UserKeys Path    | BBS:User.Keys      | ChangeAcc Seclev |  255 | Other            |
+	| Write Note Path  | BBS:Conf-7         | MsgBaseClean Sec |  255 |                  |
+	| AccED Password   | Transworld         | See Users Pass   |  255 |                  |
+	| DeleteQuest Pass | Bobolink           | Show Users Pass  |  Off |                  |
+	| Recieve App Mail | Delusion           | Print Account    |   On |                  |
+	| AccountED Colour | [0m               | Search New Users |  300 |                  |
+	| Log Status AccED | 4                  | Members Conf     |    5 |                  |
+	| Reserved Nothing |                    | Kickout After X  |    5 |------------------|
+	| Reserved Nothing |                    | Questionary      |    4 | AccountED © 1993 |
+	| AutoAccess Quest | No                 | MustEnter No Ret |  Yes | Delusion of VTL! |
+	--------------------------------------------------------------------------------------
+
+	In previous preset files the computer list was in this form:
+	Amiga 500¬Amiga 1000¬ and so on, now it should stand in descending
+	order in the column which says computers.
+
+	Under the names with the persons who has got access to Account
+	(Delusion Sauna Fox D-Zire) is all the configuration datas for both
+	Quest and Account ED, all values who has got to do with Quest is
+	explained separately in the Quest Doc so here comes the explanations:
+
+	UserData Path	- The path on you harddrive where your userdata is
+
+	UserData Keys	- The path on you harddrive where your userkeys is
+
+	Write Note Path - This is the path to the conference where you wan't
+			  the warning notes made in Account ED to come
+			  This should be a path to one of your 9 conferences
+
+	AccED Password	- If you wan't to enter a password to use Account ED
+			  you should enter a password here, if this line
+			  is empty Account Ed wont ask you for a password
+
+	DeleteQuestPass - This is the password a user has to enter if he
+			  want's to delete a users questionary (application)
+
+	AccountEdColour - This is the colour in which all data in the AccED
+			  will be displayed in
+
+	Log Status AccEd- Maybe you don't wan't to log every action taken in
+			  Account ED, then you should change the Log variabel.
+			  Here is what the different numbers means:
+
+			  1, Log only when an account is read
+			  2, Log only when an account is saved
+			  3, Log both read and save
+			  4, Log both read and save, but not then sysop does it!
+			  0, Log nothing
+
+	Enable Seclevel	- This is the security level a user has got to have to
+			  change anything in a users account than the name,
+			  location and autorejoin conference. A user with
+			  lower status than the enable status can however use
+			  the nine presets, which is the meaning that the user
+			  should use instead. I recomend that you lower your
+			  cosysops security level to 230 and keep yours at 255.
+			  They can not logon your password becouse a user can
+			  not look at the slot number 1 and they can not give
+			  anyone higher security level than they self got, so
+			  a cosysop with 230 can not give himself security
+			  level 255 and play sysop which is the case with the
+			  built in account editor!
+
+	ChangeAcc Seclev- This is the access level a user has got to have if
+			  he want's to give or take access from all users for
+			  a certain conference.	I explained that command in
+			  the features so read more about it there!
+
+	MsgBaseClean Sec- The access level required to use the built in
+			  message base cleaner, to delete old recieved mail
+
+	See Users Pass	- If you do not have this access level or higher you
+			  won't be able	to se different users passwords when
+			  using the account editor. Have you sometime asked
+			  yourself the question, why should my cosysop se
+			  other users passwords, then he just should upgrade
+			  users accounts!?
+
+	Show Users Pass - This option works like this.. If a user has got the
+			  requested security level entered at SeePass the user
+			  will then be able to se another users password, but
+			  if this option is turned Off your user has to	push
+			  Shift+C to see the password and edit it. If he
+			  doesn't there	will only stand Not Displayed. If you
+			  have choosed to let your cosysops view the users
+			  passwords, but don't wan't them to see them by
+			  defualt you should choose Off, if you always wan't
+			  to see the password you should choose On and the
+			  passwords will be displayed if you have SeePass
+			  security level.
+
+	Print Account	- If you do not own a printer you should deffinently
+			  chose Off as a printer option, or if you don't wan't
+			  anyone to print an account.
+
+	Search New Users- This one is made to increase the speed when searching
+			  for new users. If you know that you will never get a
+			  new user with the slot number under 300, then choose
+			  300 and the Account Editor will start to search for
+			  new users beginning at the slot number 300!
+
+	Members Conf	- As my board is Virtual European HeadQuarter and main
+			  board for all our comming productions and so on in
+			  our special member area, I found it very anoying
+			  with cosysops giving them selves access to that
+			  conference just of curiosity. That problem has now
+			  been eliminated with this feature letting the sysop
+			  specify a conference where no one can give themselves
+			  access too. The only way to give a user access to
+			  conference is to use the built in /X editor on the F6
+			  key when someone is currently online!
+
+	This is how it could look. Do not snap this one, use the supplied
+	one in this archive called AccEd.Presets. Please note that everything
+	is position dependant, all configuration parameters must stand between
+	a | and a | so it could look like this |         BBS:User.Data | or
+	| BBS:User.Data.          | it doesn't matter.
+
+	If you have any questions concerning this rather complicated config
+	file, don't be afraid to call my board and ask!
+
+	You should now be finished with the instalation.
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Greetings
+
+	My regards has to go to the folowing people in no order.
+
+	D-Zire of Silents		»» Thanx all time m8
+	The Silencer of Equinox		»» Looking forward to your netmailprg
+	Quaz of Addonic			»» Do you really think ADC is the right?
+	Ice of Silents			»» When does you start to use LaC again?
+	Kid Curry of Endless Piracy	»» Could use your support again!
+	Norad of Anarchy		»» Thanx for using my LastCallersUtil!
+	Fox of 2000 AD			»» For being my cool cosysop
+	Nightshade of Priority		»» I will soon make C doors, then..!
+	Rioter of Equinox		»» Articles comming soon for your mag
+	Kaka of Virtual			»» My /X door developer companion
+	It of Cryptoburners		»» Thanx for comments and calling me!
+	Micro Pal of Alcatraz		»» Looking forward to your slide show
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/
+	Final words
+
+	This util has been developed and updated under a very long period.
+	The first version was made for /X 1.1x so you could imagine.
+	6 months ago I thought this was the best account editor available,
+	well it actually was the only replacement editor available. Now 6
+	months later I still thinks this one is the best, compared to the
+	built in.. There are no opponents nowadays either and I can only
+	say thank you! Becouse with that you all have proved that there
+	is no need for another one than this and I will continue to update
+	this one to even fit your needs in the future. Maybe there will
+	come a C version later this year, but no promises. It depends on
+	how much time I can spare for producing this account editor.
+ 
+	I hope you will get very much use of this util, or you won't se
+	if it helps or not becouse your board will not be hacked (hope
+	fully), but if your board doesn't get hacked you can thank this
+	util and your other utils like them from Maltese Falcon!
+
+	These are some other doors that I've made, Quest, Sysop Uploader,
+	File Comment, Virtual Vote, Connect, Node Activities, News mag,
+	Log Viewer, Config Ed, Virtual Chart, LastCallers Util, DirXCleaner
+	MailServer (DNET), Members and Password Fail!
+
+	If I get the chance I hope to have a chat with you at a party,
+	maybe Computer Crossroads or at European Computer Conference,
+	invitation text to the last party is supplied within this archive!
+	I would be gratefull if you called my board and come with complaints,
+	ideas or whatever you may come up with on all my doors!
+
+	This program is Copyright Delusion of Virtual and may not be sold in
+	any form or made profitable on without the permission of the author.
+
+	Yours, Delusion of Virtual, Sat 1 May 1993
+ 
+        Can be reached at, INSANiTY +46(0)589-10780, DualStandard
+
+  /\  __________________/\/\_________________/\___________ _  _  _   _    _
+ /  \/                                                   A DLS Dezign Prod 93'

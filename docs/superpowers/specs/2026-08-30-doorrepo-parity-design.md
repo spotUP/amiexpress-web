@@ -213,9 +213,29 @@ by line rather than after a pause.
 Metadata/DIZ panel, file explorer, `.info` editor, delete log, built against B
 and C. Done when the sysop can do every DOORMAN task in DOORREPO.
 
-**E - retire DOORMAN.**
-Remove the TypeScript door once D has run on the live board and the sysop has
-used it. Done when `Doors/door-manager` is gone and no command points at it.
+**E - retire DOORMAN. WITHDRAWN 2026-08-31 - do not do this.**
+The sysop's decision, and it stands: DOORMAN is kept. It is a good reference
+implementation - the TypeScript side of every rule this door has to carry -
+and DOORREPO is not finished. Nothing about phase A-D changes; only the
+removal is off.
+
+Two reasons it would have been wrong to do, both measured rather than
+assumed:
+
+- **Upload is not a requirement.** DOORMAN's Upload reads a file from the
+  sysop's own machine over the web terminal's transfer channel, which a 68K
+  door has no path to on any board. The sysop settled it on 2026-08-31: it
+  is not needed. Doors arrive through the repo catalog. So this is not a
+  capability gap to be closed, and no work is queued for it - DOORREPO does
+  every DOORMAN task that is actually wanted.
+- **The one gap that COULD be closed, was.** ENTER now runs a door from
+  DOORREPO's board list via RETURNCOMMAND (XIM 136), the same
+  queue-then-exit order DOORMAN uses and for the same reason - two doors
+  cannot share a node.
+
+The six references to `Doors/door-manager` in `web/backend/src` are all
+comments, so removal would be small if this is ever revisited. It is not
+queued.
 
 ## Testing
 

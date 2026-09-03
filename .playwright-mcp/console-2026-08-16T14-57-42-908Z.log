@@ -1,0 +1,39 @@
+[    3053ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3146ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[    3146ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[    3147ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[    3358ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[    3367ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3368ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3368ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3368ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3368ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3368ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3463ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[    3464ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[    3464ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[    3465ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[    3465ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[    6830ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-DmX2Ev4k.js:92
+[    7496ms] [LOG] [BBSTerminal] door-active received: false @ http://localhost:3001/assets/index-DmX2Ev4k.js:92
+[   98090ms] [LOG] 🔐 Username entered: sysopclaude @ http://localhost:3001/assets/index-DmX2Ev4k.js:100
+[  103901ms] [LOG] [DISCONNECT] Client disconnected, reason: io server disconnect @ http://localhost:3001/assets/index-DmX2Ev4k.js:88
+[  103901ms] [LOG] [DISCONNECT] Disconnect details: {reason: io server disconnect, socketId: undefined, loginState: registering, forcedDisconnect: false, timestamp: 2026-08-16T14:59:26.808Z} @ http://localhost:3001/assets/index-DmX2Ev4k.js:88
+[  103902ms] [LOG] [DISCONNECT] Network disconnect - preserving session state for reconnection @ http://localhost:3001/assets/index-DmX2Ev4k.js:88
+[  108209ms] [LOG] [Font Preload] Loading all fonts... @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108214ms] [LOG] [BBSTerminal] Window resize listener attached @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[  108214ms] [LOG] [BBSTerminal] ResizeObserver attached @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[  108214ms] [LOG] [Terminal] Connecting to: http://localhost:3001 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[  108218ms] [LOG] [Terminal] Connected to BBS backend @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[  108218ms] [LOG] [Terminal] Sent initial size: 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[  108218ms] [LOG] [GamepadManager] Starting gamepad polling... @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108219ms] [LOG] [Gamepad] Gamepad support initialized @ http://localhost:3001/assets/index-DmX2Ev4k.js:82
+[  108222ms] [LOG] [Font Preload] Loaded: TopazPlus_a500 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108222ms] [LOG] [Font Preload] Loaded: TopazPlus_a1200 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108224ms] [LOG] [Font Preload] Loaded: Topaz_a1200 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108224ms] [LOG] [Font Preload] Loaded: Topaz_a500 @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108224ms] [LOG] [Font Preload] Loaded: mosoul @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108224ms] [LOG] [Font Preload] All fonts loaded @ http://localhost:3001/assets/index-DmX2Ev4k.js:54
+[  108234ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[  108335ms] [LOG] [BBSTerminal] Fixed mode - ignoring resize, staying at 80x25 @ http://localhost:3001/assets/index-DmX2Ev4k.js:73
+[  111440ms] [LOG] [BBSTerminal] door-active received: true @ http://localhost:3001/assets/index-DmX2Ev4k.js:92

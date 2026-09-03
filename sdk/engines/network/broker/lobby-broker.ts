@@ -129,6 +129,9 @@ export class LobbyBroker {
           case 'lobby:start_game':
             this.handleStartGame(clientId);
             break;
+          case 'lobby:game_over':
+            this.handleGameOver(clientId);
+            break;
           case 'lobby:force_start':
             this.handleForceStart(clientId);
             break;
@@ -236,6 +239,19 @@ export class LobbyBroker {
       return;
     }
 
+    if (!asSpectator && lobby.state === 'countdown') {
+      // Somebody arrived while the host was counting down. Take the seat
+      // and stop the clock rather than turning them away: the countdown can
+      // be started by a host sitting alone (one player is enough, so a host
+      // can play bots), and refusing here is how two people who both wanted
+      // a game ended up in two lobbies. The host starts again with a real
+      // opponent, which is what they were waiting for.
+      this.clearCountdown(lobby.id);
+      lobby.state = 'waiting';
+      lobby.countdown = 0;
+      this.broadcastToLobby(lobby.id, 'lobby:countdown', { seconds: 0, cancelled: true });
+    }
+
     if (!asSpectator && lobby.state !== 'waiting') {
       callback?.({ success: false, error: 'Game already in progress' });
       return;
@@ -317,20 +333,49 @@ export class LobbyBroker {
       this.handleLeaveLobby(clientId);
     }
 
-    // Find a waiting matchmaking lobby with the same mode
+    // Find a waiting lobby with the same mode.
+    //
+    // If two people are online and both ask for the same game, they must end
+    // up in the same lobby. Every extra condition here is a way for that to
+    // fail quietly, and two of them did (reported live 2026-08-31: two
+    // browsers in the 1v1 versus lobby, neither seeing the other):
+    //
+    //   - `settings.matchmaking === true` excluded any lobby that was not
+    //     itself created by matchmaking. A player who opened a lobby by any
+    //     other route was invisible to the next person searching, who then
+    //     made a second lobby beside them.
+    //
+    //   - "don't match against yourself" compared the BBS USER id, so two
+    //     sessions of one account - two browsers, the case anybody testing
+    //     this reaches for first - were treated as the same person and
+    //     deliberately kept apart. A session is a player; that is what the
+    //     clientId identifies.
+    //
+    // What is left is the minimum that has to be true: a game of this mode,
+    // open, public, with room. The OLDEST such lobby wins, so two players
+    // searching at the same moment converge on one rather than picking
+    // different ones.
     let targetLobby: Lobby | null = null;
     for (const lobby of this.lobbies.values()) {
       if (
-        lobby.state === 'waiting' &&
+        // 'countdown' counts as joinable, not just 'waiting'. A host alone
+        // in a 1v1 lobby can start a countdown - one player is enough, so a
+        // host can play bots - and the moment that happens the lobby stops
+        // being 'waiting' and matchmaking cannot see it. The next person
+        // searching then opens a second lobby beside it and the two never
+        // meet, which is what "two browsers, two accounts, neither sees the
+        // other" looked like (reported live 2026-08-31). A game that has
+        // actually STARTED is another matter and stays excluded.
+        (lobby.state === 'waiting' || lobby.state === 'countdown') &&
         !lobby.isPrivate &&
         lobby.players.length < lobby.maxPlayers &&
         lobby.settings?.mode === data.mode &&
-        lobby.settings?.matchmaking === true &&
-        // Don't match against yourself
-        !lobby.players.some(p => p.id === client.playerId)
+        // Not a lobby THIS SESSION is already sitting in.
+        this.clientLobbies.get(clientId) !== lobby.id
       ) {
-        targetLobby = lobby;
-        break;
+        if (!targetLobby || lobby.created < targetLobby.created) {
+          targetLobby = lobby;
+        }
       }
     }
 
@@ -590,6 +635,40 @@ export class LobbyBroker {
     setTimeout(() => {
       this.broadcastToLobby(lobby.id, 'lobby:game_started');
     }, 100);
+  }
+
+  /**
+   * The match is over: the lobby goes back to being a lobby.
+   *
+   * Nothing ever did this. A lobby went to 'playing' and stayed there for
+   * the life of the process - so the players could not start a second game
+   * in it, matchmaking would not offer it to anybody else, and the room
+   * simply leaked. The door's answer was to drop everyone back to the main
+   * menu when a game ended, which is what the sysop reported: "when a vs
+   * game ends i get thrown out to the main menu, i should stay in the lobby
+   * for more games".
+   *
+   * Any player in the lobby may report it, not just the host: in a 1v1 the
+   * host is as likely to be the one who lost, and a game whose end depends
+   * on the loser staying connected is a game that never ends.
+   *
+   * Ready flags are cleared with it. They described who was ready for the
+   * game that has just finished, and leaving them set would start the next
+   * one the instant the screen appeared.
+   */
+  private handleGameOver(clientId: string): void {
+    const { lobby } = this.getPlayerInLobby(clientId);
+    if (!lobby) return;
+    if (lobby.state === 'waiting') return;      // already back, or never left
+
+    this.clearCountdown(lobby.id);
+    lobby.state = 'waiting';
+    lobby.countdown = 0;
+    for (const player of lobby.players) {
+      player.ready = false;
+    }
+
+    this.broadcastToLobby(lobby.id, 'lobby:updated', lobby);
   }
 
   private handleForceStart(clientId: string): void {

@@ -14,12 +14,12 @@ status: draft
 - `resolvePetsciiPath()` — `web/backend/src/handlers/screen.handler.ts:269-279`.
   For a `petsciiMode` session, any resolved path gets a sibling `.seq` probe and
   the `.seq` wins.
-- `addPetsciiVariants()` — `screen.handler.ts:1570-1584`. Ordering is
-  `NAME.seq`, `NAME.SEQ`, `NAME`, `NAME.txt`, `NAME.TXT`, …
+- `addPetsciiVariants()` — `screen.handler.ts:1570-1584`: `NAME.seq`,
+  `NAME.SEQ`, `NAME`, `NAME.txt`, `NAME.TXT`, …
 - `filenameVariations` — `screen.handler.ts:1602-1629`. A `petsciiMode` session
   uses the PETSCII variant list; a real C64 (`terminalType === 'c64'`) first
   tries `NAME_C64` (`:1622-1624`).
-- `findSecurityScreen(..., petscii=true)` — `screen.handler.ts:1639`, so
+- `findSecurityScreen(..., petscii=true)` — `screen.handler.ts:1639`:
   `LOGON20.seq`-style per-security variants are found too.
 
 ### Read
@@ -51,9 +51,9 @@ The bytes never touch `parseMciCodes` (`screen.handler.ts:379`) or the
 
 ### Two consumers, one payload
 
-- **Web "P" session** — `packages/terminal/src/components/BBSTerminal.tsx:2193-2200`.
-  base64 → `Uint8Array` → `petsciiTransducerRef.current.observe(bytes)` (so the
-  client-side oracle knows what the screen now shows) → `enqueuePetscii(bytes)`
+- **Web "P" session** — `packages/terminal/src/components/BBSTerminal.tsx:2193-2200`:
+  base64 → `Uint8Array` → `petsciiTransducerRef.current.observe(bytes)` (the
+  client oracle must see what the screen now shows) → `enqueuePetscii(bytes)`
   → `PetsciiMachine` → canvas.
 - **Telnet C64** — `web/backend/src/server/connection-emitter.ts:130-140`. The
   bytes are `observe()`d into the session transducer and written to the wire
@@ -77,8 +77,8 @@ is automatically shared — the lever for this feature.
 First byte `0x7E`. On the ANSI path this is a redirect. On the PETSCII path it
 goes out raw, so a C64 caller logging off sees the literal text
 `~SR_WORK:BBS/SCREENS/LOGOFF/LOGOFF.SEQ` instead of the art. By contrast every
-`Node*/BBSTITLE.SEQ` (1834 bytes) contains **zero** `0x7E` bytes and starts with
-`0x20` — real art is unaffected either way.
+`Node*/BBSTITLE.SEQ` (1834 bytes) contains **zero** `0x7E` bytes (so does the bank-flipping
+`Node1/Screens/BBSTITLE.SEQ`) — real art is unaffected either way.
 
 ## 2. What express.e did
 
@@ -104,8 +104,8 @@ What express.e *does* give is the shape of the decision:
   (`express.e:5768-5802`) → `processMciCmd` (`express.e:5258+`) → `aePuts`, all
   8-bit ASCII into the same stream as the art.
 
-So the original's answer to "which bank" is implicitly "the one byte encoding
-there is". A `.seq` has two banks, and that is a genuinely new problem.
+The original's answer to "which bank" is implicitly "the one byte encoding
+there is". A `.seq` has two, which is a genuinely new problem.
 
 ## 3. The byte-level problem
 
@@ -125,8 +125,11 @@ there is". A `.seq` has two banks, and that is a genuinely new problem.
    (`sdk/petscii/ansi-to-petscii.ts:310-333`) implements the bank-1 half and
    forces bank 1 via `printByte`/`ensureBank`
    (`ansi-to-petscii.ts:266-270`, `:221-225`).
-4. **Bank state is positional.** A `.seq` may flip banks with `$0E`/`$8E`
-   anywhere. `PetsciiMachine` already tracks it — `state.charsetBank`
+4. **Bank state is positional, and shipped art really does flip it.**
+   `Node1/Screens/BBSTITLE.SEQ` (864 bytes) starts
+   `1f 12 8e 54 0e 4f ...` and carries **11 `$0E` and 11 `$8E`** switches; a
+   token's bank cannot be assumed per file. (`Node*/BBSTITLE.SEQ`, 1834 bytes,
+   has none — both shapes exist on disk.) `PetsciiMachine` already tracks it — `state.charsetBank`
    (`sdk/petscii/petscii-machine.ts:47`, control handling `:100-110`) — so
    feeding the art bytes emitted so far gives the bank (and `cursorX`,
    `reverse`, `pen`) at the token position for free.
@@ -170,14 +173,13 @@ All short, fixed-ish width, and all want a width prefix (`~10N|`).
 
 - `~WX`/wipes — the wipe pipeline is ANSI-only and is already skipped
   (`screen.handler.ts:1868-1872`).
-- `~SP` soft pause — deliberately dropped for PETSCII today
-  (`screen.handler.ts:1868-1876`); restoring it means a pause prompt in PETSCII
-  bytes, a separate decision.
+- `~SP` soft pause — dropped for PETSCII today (`screen.handler.ts:1868-1876`);
+  restoring it means a pause prompt in PETSCII bytes, a separate decision.
 - `~CR` (`:774`) emits `\r\n`; in a `.seq` the correct byte is `$0D` alone.
 - `~AK` access keys (`:769`) and the list builders `~CL`/`~ML` produce
   multi-line ANSI-width text that will smear a 40-column frame.
-- `~c0..~c7` / `~b0..~b7` ANSI colour codes — PETSCII colour is a single byte;
-  a `.seq` artist writes it directly.
+- `~c0..~c7`/`~b0..~b7` ANSI colour — PETSCII colour is one byte the artist
+  writes directly.
 
 ## 5. Proposed design
 
@@ -187,17 +189,15 @@ All short, fixed-ish width, and all want a width prefix (`~10N|`).
    latin-1 string view of the buffer (`buf.toString('latin1')`), get bytes back
    with `Buffer.from(out, 'latin1')`.
 2. Extract `AnsiToPetsciiTransducer.printChar`'s table
-   (`ansi-to-petscii.ts:310-333`) into an exported pure
-   `asciiToPetsciiByte(code: number, bank: 0 | 1): number` in
-   `sdk/petscii/`, and build `encodePetsciiValue(text, bank)` on it. Re-point
-   `printChar` and `convertAsciiToPetsciiOutput` (`petscii.util.ts:584`) at it —
-   three copies become one.
+   (`ansi-to-petscii.ts:310-333`) into a pure exported
+   `asciiToPetsciiByte(code, bank)` in `sdk/petscii/`, build
+   `encodePetsciiValue(text, bank)` on it, and re-point `printChar` and
+   `convertAsciiToPetsciiOutput` (`petscii.util.ts:584`) at it — 3 copies → 1.
 3. Track the bank with `PetsciiMachine` (`petscii-machine.ts`), fed the bytes
    already emitted. No new bank scanner.
 4. Do the work **once**, server-side, in `emitPetsciiScreen`
-   (`screen.handler.ts:1892`), before the base64. Both transports
-   (`BBSTerminal.tsx:2194` and `connection-emitter.ts:130`) then get identical
-   bytes by construction.
+   (`screen.handler.ts:1892`) before the base64, so both transports
+   (`BBSTerminal.tsx:2194`, `connection-emitter.ts:130`) get identical bytes.
 
 **Gate** — express.e parity: process only when `buffer[0] === 0x7E`
 (`express.e:6800-6806`). Every shipped art `.seq` starts with `0x20` and is
@@ -205,7 +205,7 @@ therefore untouched.
 
 **Invariants**
 
-- Art bytes outside a matched token are copied byte for byte; a file that fails
+- Art bytes outside a matched token are copied byte for byte; a file failing
   the gate is emitted `Buffer.equals`-identical to disk.
 - A substituted value never crosses into the wrong bank: the encoder is called
   with the machine's `charsetBank` at that byte offset, and emits no bank switch

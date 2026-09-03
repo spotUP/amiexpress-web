@@ -956,3 +956,952 @@ sysop: 	Download Failed..
 17-Aug-26 08:57 Door: DOORMAN
 17-Aug-26 19:43 Door: FRONTEND
 17-Aug-26 19:43 Door exit: FRONTEND
+31-Aug-26 22:40 Door: FRONTEND
+31-Aug-26 22:40 Door exit: FRONTEND
+31-Aug-26 22:51 Door: FRONTEND
+31-Aug-26 22:51 Door exit: FRONTEND
+**************************************************************
+31-Aug-26 22:51 [1] spot (LOCAL) -[uP rOUGH]-
+31-Aug-26 22:51 Door: GMASTER
+31-Aug-26 22:51 Door: GMASTER
+31-Aug-26 23:44 Door: FRONTEND
+31-Aug-26 23:44 Door exit: FRONTEND
+01-Sep-26 00:47 Door: FRONTEND
+01-Sep-26 00:47 Door exit: FRONTEND
+01-Sep-26 02:24 Door: FRONTEND
+01-Sep-26 02:24 Door exit: FRONTEND
+01-Sep-26 02:24 Door: FRONTEND
+01-Sep-26 02:24 Door exit: FRONTEND
+01-Sep-26 02:35 Door: FRONTEND
+01-Sep-26 02:35 Door exit: FRONTEND
+01-Sep-26 02:35 Door: FRONTEND
+01-Sep-26 02:36 Door exit: FRONTEND
+01-Sep-26 02:36 Door: FRONTEND
+01-Sep-26 02:36 Door exit: FRONTEND
+01-Sep-26 02:37 Door: FRONTEND
+01-Sep-26 02:37 Door exit: FRONTEND
+01-Sep-26 02:37 Door: FRONTEND
+01-Sep-26 02:37 Door exit: FRONTEND
+01-Sep-26 02:38 Door: FRONTEND
+01-Sep-26 02:38 Door exit: FRONTEND
+01-Sep-26 02:38 Door: FRONTEND
+01-Sep-26 02:38 Door exit: FRONTEND
+01-Sep-26 02:39 Door: FRONTEND
+01-Sep-26 02:39 Door exit: FRONTEND
+01-Sep-26 02:40 Door: FRONTEND
+01-Sep-26 02:40 Door exit: FRONTEND
+01-Sep-26 02:40 Door: FRONTEND
+01-Sep-26 02:40 Door exit: FRONTEND
+01-Sep-26 02:40 Door: FRONTEND
+01-Sep-26 02:40 Door exit: FRONTEND
+01-Sep-26 02:41 Door: FRONTEND
+01-Sep-26 02:41 Door exit: FRONTEND
+01-Sep-26 02:44 Door: FRONTEND
+01-Sep-26 02:44 Door exit: FRONTEND
+01-Sep-26 02:55 Door: FRONTEND
+01-Sep-26 02:55 Door exit: FRONTEND
+01-Sep-26 02:55 Door: FRONTEND
+01-Sep-26 02:55 Door exit: FRONTEND
+01-Sep-26 02:57 Door: FRONTEND
+01-Sep-26 02:57 Door exit: FRONTEND
+01-Sep-26 03:02 Door: FRONTEND
+01-Sep-26 03:02 Door exit: FRONTEND
+01-Sep-26 08:20 Door: FRONTEND
+01-Sep-26 08:20 Door exit: FRONTEND
+01-Sep-26 08:23 Door: FRONTEND
+01-Sep-26 08:23 Door exit: FRONTEND
+01-Sep-26 08:27 Door: FRONTEND
+01-Sep-26 08:27 Door exit: FRONTEND
+01-Sep-26 08:39 Door: FRONTEND
+01-Sep-26 08:39 Door exit: FRONTEND
+01-Sep-26 08:46 Door: FRONTEND
+01-Sep-26 08:46 Door exit: FRONTEND
+01-Sep-26 08:49 Door: FRONTEND
+01-Sep-26 08:49 Door exit: FRONTEND
+01-Sep-26 08:53 Door: FRONTEND
+01-Sep-26 08:53 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 08:53 [1] sysop (LOCAL) Server Room
+01-Sep-26 08:53 Door: DOORS
+01-Sep-26 08:53 Door exit: DOORS
+01-Sep-26 08:53 Door: 5DPAGER
+sysop: PAGED SYSOP AT: 06:55:03 STATUS: BREAK
+sysop: 5D_Page - Page reason: q
+01-Sep-26 08:55 Door exit: 5DPAGER
+01-Sep-26 08:55 Door: FRONTEND
+01-Sep-26 08:55 Door exit: FRONTEND
+01-Sep-26 09:01 Door: FRONTEND
+01-Sep-26 09:01 Door exit: FRONTEND
+01-Sep-26 09:02 Door: FRONTEND
+01-Sep-26 09:02 Door exit: FRONTEND
+01-Sep-26 09:03 Door: FRONTEND
+01-Sep-26 09:03 Door exit: FRONTEND
+01-Sep-26 09:05 Door: FRONTEND
+01-Sep-26 09:05 Door exit: FRONTEND
+01-Sep-26 09:05 Door: FRONTEND
+01-Sep-26 09:05 Door exit: FRONTEND
+01-Sep-26 09:10 Door: FRONTEND
+01-Sep-26 09:10 Door exit: FRONTEND
+01-Sep-26 09:12 Door: FRONTEND
+01-Sep-26 09:12 Door exit: FRONTEND
+01-Sep-26 09:13 Door: FRONTEND
+01-Sep-26 09:13 Door exit: FRONTEND
+01-Sep-26 09:14 Door: FRONTEND
+01-Sep-26 09:14 Door exit: FRONTEND
+01-Sep-26 09:14 Door: FRONTEND
+01-Sep-26 09:14 Door exit: FRONTEND
+01-Sep-26 09:14 Door: FRONTEND
+01-Sep-26 09:14 Door exit: FRONTEND
+01-Sep-26 09:20 Door: FRONTEND
+01-Sep-26 09:20 Door exit: FRONTEND
+01-Sep-26 09:20 Door: FRONTEND
+01-Sep-26 09:20 Door exit: FRONTEND
+01-Sep-26 09:21 Door: FRONTEND
+01-Sep-26 09:21 Door exit: FRONTEND
+01-Sep-26 09:21 Door: FRONTEND
+01-Sep-26 09:21 Door exit: FRONTEND
+01-Sep-26 09:22 Door: FRONTEND
+01-Sep-26 09:22 Door exit: FRONTEND
+01-Sep-26 09:22 Door: FRONTEND
+01-Sep-26 09:22 Door exit: FRONTEND
+01-Sep-26 09:25 Door: FRONTEND
+01-Sep-26 09:25 Door exit: FRONTEND
+01-Sep-26 09:26 Door: FRONTEND
+01-Sep-26 09:26 Door exit: FRONTEND
+01-Sep-26 09:26 Door: FRONTEND
+01-Sep-26 09:26 Door exit: FRONTEND
+01-Sep-26 09:28 Door: FRONTEND
+01-Sep-26 09:28 Door exit: FRONTEND
+01-Sep-26 09:29 Door: FRONTEND
+01-Sep-26 09:29 Door exit: FRONTEND
+01-Sep-26 09:44 Door: FRONTEND
+01-Sep-26 09:44 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 09:44 [1] sysop (LOCAL) Server Room
+01-Sep-26 09:44 Door: DOORS
+01-Sep-26 09:48 Door: FRONTEND
+01-Sep-26 09:48 Door exit: FRONTEND
+01-Sep-26 09:49 Door: FRONTEND
+01-Sep-26 09:49 Door exit: FRONTEND
+01-Sep-26 09:49 Door: FRONTEND
+01-Sep-26 09:49 Door exit: FRONTEND
+01-Sep-26 09:53 Door: FRONTEND
+01-Sep-26 09:53 Door exit: FRONTEND
+01-Sep-26 09:53 Door: FRONTEND
+01-Sep-26 09:53 Door exit: FRONTEND
+01-Sep-26 09:54 Door: FRONTEND
+01-Sep-26 09:54 Door exit: FRONTEND
+01-Sep-26 09:54 Door: FRONTEND
+01-Sep-26 09:54 Door exit: FRONTEND
+01-Sep-26 09:56 Door: FRONTEND
+01-Sep-26 09:56 Door exit: FRONTEND
+01-Sep-26 10:00 Door: FRONTEND
+01-Sep-26 10:00 Door exit: FRONTEND
+01-Sep-26 10:02 Door: FRONTEND
+01-Sep-26 10:02 Door exit: FRONTEND
+01-Sep-26 10:13 Door: FRONTEND
+01-Sep-26 10:13 Door exit: FRONTEND
+01-Sep-26 10:14 Door: FRONTEND
+01-Sep-26 10:14 Door exit: FRONTEND
+01-Sep-26 10:18 Door: FRONTEND
+01-Sep-26 10:18 Door exit: FRONTEND
+01-Sep-26 10:21 Door: FRONTEND
+01-Sep-26 10:21 Door exit: FRONTEND
+01-Sep-26 10:23 Door: FRONTEND
+01-Sep-26 10:23 Door exit: FRONTEND
+01-Sep-26 10:24 Door: FRONTEND
+01-Sep-26 10:24 Door exit: FRONTEND
+01-Sep-26 10:25 Door: FRONTEND
+01-Sep-26 10:25 Door exit: FRONTEND
+01-Sep-26 10:27 Door: FRONTEND
+01-Sep-26 10:27 Door exit: FRONTEND
+01-Sep-26 10:28 Door: FRONTEND
+01-Sep-26 10:28 Door exit: FRONTEND
+01-Sep-26 10:28 Door: FRONTEND
+01-Sep-26 10:28 Door exit: FRONTEND
+01-Sep-26 10:29 Door: FRONTEND
+01-Sep-26 10:29 Door exit: FRONTEND
+01-Sep-26 10:30 Door: FRONTEND
+01-Sep-26 10:30 Door exit: FRONTEND
+01-Sep-26 10:33 Door: FRONTEND
+01-Sep-26 10:33 Door exit: FRONTEND
+01-Sep-26 10:55 Door: FRONTEND
+01-Sep-26 10:55 Door: FRONTEND
+01-Sep-26 10:56 Door: FRONTEND
+01-Sep-26 10:56 Door exit: FRONTEND
+01-Sep-26 11:02 Door: FRONTEND
+01-Sep-26 11:02 Door exit: FRONTEND
+01-Sep-26 11:06 Door: FRONTEND
+01-Sep-26 11:06 Door exit: FRONTEND
+01-Sep-26 11:06 Door: FRONTEND
+01-Sep-26 11:06 Door: FRONTEND
+01-Sep-26 11:06 Door: FRONTEND
+01-Sep-26 11:07 Door: FRONTEND
+01-Sep-26 11:07 Door exit: FRONTEND
+01-Sep-26 11:07 Door: FRONTEND
+01-Sep-26 11:07 Door exit: FRONTEND
+01-Sep-26 11:11 Door: FRONTEND
+01-Sep-26 11:12 Door exit: FRONTEND
+01-Sep-26 11:13 Door: FRONTEND
+01-Sep-26 11:13 Door exit: FRONTEND
+01-Sep-26 11:15 Door: FRONTEND
+01-Sep-26 11:15 Door exit: FRONTEND
+01-Sep-26 11:17 Door: FRONTEND
+01-Sep-26 11:18 Door: FRONTEND
+01-Sep-26 11:18 Door exit: FRONTEND
+01-Sep-26 11:49 Door: FRONTEND
+01-Sep-26 11:49 Door exit: FRONTEND
+01-Sep-26 11:54 Door: FRONTEND
+01-Sep-26 11:54 Door exit: FRONTEND
+01-Sep-26 12:05 Door: FRONTEND
+01-Sep-26 12:05 Door exit: FRONTEND
+01-Sep-26 12:09 Door: FRONTEND
+01-Sep-26 12:09 Door exit: FRONTEND
+01-Sep-26 12:10 Door: FRONTEND
+01-Sep-26 12:10 Door exit: FRONTEND
+01-Sep-26 12:11 Door: FRONTEND
+01-Sep-26 12:11 Door exit: FRONTEND
+01-Sep-26 12:12 Door: FRONTEND
+01-Sep-26 12:12 Door exit: FRONTEND
+01-Sep-26 12:31 Door: FRONTEND
+01-Sep-26 12:31 Door exit: FRONTEND
+01-Sep-26 12:33 Door: FRONTEND
+01-Sep-26 12:33 Door exit: FRONTEND
+01-Sep-26 12:33 Door: FRONTEND
+01-Sep-26 12:33 Door exit: FRONTEND
+01-Sep-26 12:34 Door: FRONTEND
+01-Sep-26 12:34 Door exit: FRONTEND
+01-Sep-26 12:35 Door: FRONTEND
+01-Sep-26 12:35 Door exit: FRONTEND
+01-Sep-26 12:45 Door: FRONTEND
+01-Sep-26 12:45 Door exit: FRONTEND
+01-Sep-26 12:46 Door: FRONTEND
+01-Sep-26 12:46 Door exit: FRONTEND
+01-Sep-26 12:46 Door: FRONTEND
+01-Sep-26 12:46 Door exit: FRONTEND
+01-Sep-26 12:47 Door: FRONTEND
+01-Sep-26 12:47 Door exit: FRONTEND
+01-Sep-26 12:48 Door: FRONTEND
+01-Sep-26 12:48 Door exit: FRONTEND
+01-Sep-26 12:49 Door: FRONTEND
+01-Sep-26 12:49 Door exit: FRONTEND
+01-Sep-26 13:02 Door: FRONTEND
+01-Sep-26 13:02 Door exit: FRONTEND
+01-Sep-26 13:02 Door: FRONTEND
+01-Sep-26 13:02 Door exit: FRONTEND
+01-Sep-26 13:03 Door: FRONTEND
+01-Sep-26 13:03 Door exit: FRONTEND
+01-Sep-26 13:04 Door: FRONTEND
+01-Sep-26 13:04 Door: FRONTEND
+01-Sep-26 13:04 Door exit: FRONTEND
+01-Sep-26 13:05 Door: FRONTEND
+01-Sep-26 13:05 Door exit: FRONTEND
+01-Sep-26 13:08 Door: FRONTEND
+01-Sep-26 13:09 Door exit: FRONTEND
+01-Sep-26 13:09 Door: FRONTEND
+01-Sep-26 13:10 Door exit: FRONTEND
+01-Sep-26 13:12 Door: FRONTEND
+01-Sep-26 13:12 Door exit: FRONTEND
+01-Sep-26 13:13 Door: FRONTEND
+01-Sep-26 13:13 Door exit: FRONTEND
+01-Sep-26 13:15 Door: FRONTEND
+01-Sep-26 13:15 Door exit: FRONTEND
+01-Sep-26 13:16 Door: FRONTEND
+01-Sep-26 13:16 Door exit: FRONTEND
+01-Sep-26 13:17 Door: FRONTEND
+01-Sep-26 13:17 Door exit: FRONTEND
+01-Sep-26 13:22 Door: FRONTEND
+01-Sep-26 13:22 Door exit: FRONTEND
+01-Sep-26 13:23 Door: FRONTEND
+01-Sep-26 13:23 Door exit: FRONTEND
+01-Sep-26 13:48 Door: FRONTEND
+01-Sep-26 13:48 Door exit: FRONTEND
+01-Sep-26 13:49 Door: FRONTEND
+01-Sep-26 13:49 Door exit: FRONTEND
+01-Sep-26 13:51 Door: FRONTEND
+01-Sep-26 13:51 Door exit: FRONTEND
+01-Sep-26 13:52 Door: FRONTEND
+01-Sep-26 13:52 Door exit: FRONTEND
+01-Sep-26 14:00 Door: FRONTEND
+01-Sep-26 14:00 Door exit: FRONTEND
+01-Sep-26 14:02 Door: FRONTEND
+01-Sep-26 14:02 Door exit: FRONTEND
+01-Sep-26 14:05 Door: FRONTEND
+01-Sep-26 14:05 Door exit: FRONTEND
+01-Sep-26 14:05 Door: FRONTEND
+01-Sep-26 14:06 Door exit: FRONTEND
+01-Sep-26 14:08 Door: FRONTEND
+01-Sep-26 14:08 Door exit: FRONTEND
+01-Sep-26 14:11 Door: FRONTEND
+01-Sep-26 14:11 Door exit: FRONTEND
+01-Sep-26 14:12 Door: FRONTEND
+01-Sep-26 14:12 Door exit: FRONTEND
+01-Sep-26 14:12 Door: FRONTEND
+01-Sep-26 14:12 Door exit: FRONTEND
+01-Sep-26 14:13 Door: FRONTEND
+01-Sep-26 14:13 Door exit: FRONTEND
+01-Sep-26 14:13 Door: FRONTEND
+01-Sep-26 14:13 Door exit: FRONTEND
+01-Sep-26 14:13 Door: FRONTEND
+01-Sep-26 14:13 Door exit: FRONTEND
+01-Sep-26 14:14 Door: FRONTEND
+01-Sep-26 14:14 Door exit: FRONTEND
+01-Sep-26 14:14 Door: FRONTEND
+01-Sep-26 14:14 Door exit: FRONTEND
+01-Sep-26 14:14 Door: FRONTEND
+01-Sep-26 14:14 Door exit: FRONTEND
+01-Sep-26 14:17 Door: FRONTEND
+01-Sep-26 14:17 Door exit: FRONTEND
+01-Sep-26 14:17 Door: FRONTEND
+01-Sep-26 14:17 Door exit: FRONTEND
+01-Sep-26 14:19 Door: FRONTEND
+01-Sep-26 14:19 Door exit: FRONTEND
+01-Sep-26 14:28 Door: FRONTEND
+01-Sep-26 14:28 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 14:31 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 14:31 Door: FROGGER
+01-Sep-26 14:31 Door: FROGGER
+01-Sep-26 14:33 Door: FRONTEND
+01-Sep-26 14:33 Door exit: FRONTEND
+01-Sep-26 14:34 Door: FRONTEND
+01-Sep-26 14:34 Door exit: FRONTEND
+01-Sep-26 14:35 Door: FRONTEND
+01-Sep-26 14:35 Door exit: FRONTEND
+01-Sep-26 14:35 Door: FRONTEND
+01-Sep-26 14:35 Door exit: FRONTEND
+01-Sep-26 14:38 Door: FRONTEND
+01-Sep-26 14:38 Door exit: FRONTEND
+01-Sep-26 14:38 Door: FRONTEND
+01-Sep-26 14:38 Door exit: FRONTEND
+01-Sep-26 14:39 Door: FRONTEND
+01-Sep-26 14:39 Door exit: FRONTEND
+01-Sep-26 14:39 Door: FRONTEND
+01-Sep-26 14:39 Door exit: FRONTEND
+01-Sep-26 14:42 Door: FRONTEND
+01-Sep-26 14:42 Door exit: FRONTEND
+01-Sep-26 14:43 Door: FRONTEND
+01-Sep-26 14:43 Door exit: FRONTEND
+01-Sep-26 14:43 Door: FRONTEND
+01-Sep-26 14:43 Door exit: FRONTEND
+01-Sep-26 14:44 Door: FRONTEND
+01-Sep-26 14:44 Door exit: FRONTEND
+01-Sep-26 14:44 Door: FRONTEND
+01-Sep-26 14:44 Door exit: FRONTEND
+01-Sep-26 14:44 Door: FRONTEND
+01-Sep-26 14:44 Door exit: FRONTEND
+01-Sep-26 14:49 Door: FRONTEND
+01-Sep-26 14:49 Door exit: FRONTEND
+01-Sep-26 14:50 Door: FRONTEND
+01-Sep-26 14:50 Door exit: FRONTEND
+01-Sep-26 14:51 Door: FRONTEND
+01-Sep-26 14:51 Door exit: FRONTEND
+01-Sep-26 14:52 Door: FRONTEND
+01-Sep-26 14:52 Door exit: FRONTEND
+01-Sep-26 14:53 Door: FRONTEND
+01-Sep-26 14:53 Door exit: FRONTEND
+01-Sep-26 14:53 Door: FRONTEND
+01-Sep-26 14:53 Door exit: FRONTEND
+01-Sep-26 14:53 Door: FRONTEND
+01-Sep-26 14:53 Door exit: FRONTEND
+01-Sep-26 14:53 Door: FRONTEND
+01-Sep-26 14:53 Door exit: FRONTEND
+01-Sep-26 14:54 Door: FRONTEND
+01-Sep-26 14:54 Door exit: FRONTEND
+01-Sep-26 14:54 Door: FRONTEND
+01-Sep-26 14:54 Door exit: FRONTEND
+01-Sep-26 14:55 Door: FRONTEND
+01-Sep-26 14:55 Door exit: FRONTEND
+01-Sep-26 14:55 Door: FRONTEND
+01-Sep-26 14:55 Door exit: FRONTEND
+01-Sep-26 15:15 Door: FRONTEND
+01-Sep-26 15:15 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 15:15 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 15:16 Door: FROGGER
+01-Sep-26 15:16 Door: FROGGER
+01-Sep-26 15:49 Door: FRONTEND
+01-Sep-26 15:49 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 15:49 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 15:49 Door: PENGO
+01-Sep-26 15:49 Door: PENGO
+01-Sep-26 16:39 Door: FRONTEND
+01-Sep-26 16:39 Door exit: FRONTEND
+01-Sep-26 16:40 Door: FRONTEND
+01-Sep-26 16:40 Door exit: FRONTEND
+01-Sep-26 16:51 Door: FRONTEND
+01-Sep-26 16:51 Door exit: FRONTEND
+01-Sep-26 16:51 Door: FRONTEND
+01-Sep-26 16:51 Door exit: FRONTEND
+01-Sep-26 16:52 Door: FRONTEND
+01-Sep-26 16:52 Door exit: FRONTEND
+01-Sep-26 16:52 Door: FRONTEND
+01-Sep-26 16:52 Door exit: FRONTEND
+01-Sep-26 16:53 Door: FRONTEND
+01-Sep-26 16:53 Door exit: FRONTEND
+01-Sep-26 16:58 Door: FRONTEND
+01-Sep-26 16:58 Door exit: FRONTEND
+01-Sep-26 17:05 Door: FRONTEND
+01-Sep-26 17:05 Door exit: FRONTEND
+01-Sep-26 17:22 Door: FRONTEND
+01-Sep-26 17:22 Door exit: FRONTEND
+01-Sep-26 17:26 Door: FRONTEND
+01-Sep-26 17:26 Door exit: FRONTEND
+01-Sep-26 17:28 Door: FRONTEND
+01-Sep-26 17:28 Door exit: FRONTEND
+01-Sep-26 17:31 Door: FRONTEND
+01-Sep-26 17:31 Door exit: FRONTEND
+01-Sep-26 17:38 Door: FRONTEND
+01-Sep-26 17:38 Door exit: FRONTEND
+01-Sep-26 17:40 Door: FRONTEND
+01-Sep-26 17:40 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 17:40 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 17:40 Door: RIP
+01-Sep-26 17:41 Door: FRONTEND
+01-Sep-26 17:42 Door: FRONTEND
+01-Sep-26 17:42 Door exit: FRONTEND
+01-Sep-26 17:43 Door: FRONTEND
+01-Sep-26 17:43 Door exit: FRONTEND
+01-Sep-26 17:45 Door: FRONTEND
+01-Sep-26 17:45 Door: FRONTEND
+01-Sep-26 17:45 Door exit: FRONTEND
+01-Sep-26 17:46 Door: FRONTEND
+01-Sep-26 17:46 Door exit: FRONTEND
+01-Sep-26 17:47 Door: FRONTEND
+01-Sep-26 17:47 Door exit: FRONTEND
+01-Sep-26 17:47 Door: FRONTEND
+01-Sep-26 17:47 Door exit: FRONTEND
+01-Sep-26 17:48 Door: FRONTEND
+01-Sep-26 17:48 Door exit: FRONTEND
+01-Sep-26 17:58 Door: FRONTEND
+01-Sep-26 17:58 Door exit: FRONTEND
+01-Sep-26 18:19 Door: FRONTEND
+01-Sep-26 18:19 Door exit: FRONTEND
+01-Sep-26 18:20 Door: FRONTEND
+01-Sep-26 18:20 Door exit: FRONTEND
+01-Sep-26 18:21 Door: FRONTEND
+01-Sep-26 18:21 Door exit: FRONTEND
+01-Sep-26 18:21 Door: FRONTEND
+01-Sep-26 18:21 Door exit: FRONTEND
+01-Sep-26 18:21 Door: FRONTEND
+01-Sep-26 18:22 Door exit: FRONTEND
+01-Sep-26 18:22 Door: FRONTEND
+01-Sep-26 18:22 Door exit: FRONTEND
+01-Sep-26 18:24 Door: FRONTEND
+01-Sep-26 18:24 Door exit: FRONTEND
+01-Sep-26 18:26 Door: FRONTEND
+01-Sep-26 18:26 Door exit: FRONTEND
+01-Sep-26 19:09 Door: FRONTEND
+01-Sep-26 19:09 Door exit: FRONTEND
+01-Sep-26 19:36 Door: FRONTEND
+01-Sep-26 19:36 Door exit: FRONTEND
+01-Sep-26 19:51 Door: FRONTEND
+01-Sep-26 19:51 Door exit: FRONTEND
+01-Sep-26 19:54 Door: FRONTEND
+01-Sep-26 19:54 Door exit: FRONTEND
+01-Sep-26 19:56 Door: FRONTEND
+01-Sep-26 19:56 Door exit: FRONTEND
+01-Sep-26 19:59 Door: FRONTEND
+01-Sep-26 19:59 Door exit: FRONTEND
+01-Sep-26 20:00 Door: FRONTEND
+01-Sep-26 20:00 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 20:01 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 20:01 Door: SPRITED
+01-Sep-26 20:03 Door: FRONTEND
+01-Sep-26 20:03 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 20:03 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 20:03 Door: PENGO
+01-Sep-26 20:03 Door: PENGO
+01-Sep-26 20:04 Door exit: PENGO
+01-Sep-26 20:04 Door: SPRITED
+01-Sep-26 20:06 Door: FRONTEND
+01-Sep-26 20:06 Door exit: FRONTEND
+01-Sep-26 20:07 Door: FRONTEND
+01-Sep-26 20:07 Door exit: FRONTEND
+01-Sep-26 20:08 Door: FRONTEND
+01-Sep-26 20:08 Door exit: FRONTEND
+01-Sep-26 20:18 Door: FRONTEND
+01-Sep-26 20:18 Door exit: FRONTEND
+01-Sep-26 20:19 Door: FRONTEND
+01-Sep-26 20:19 Door exit: FRONTEND
+01-Sep-26 20:19 Door: FRONTEND
+01-Sep-26 20:19 Door exit: FRONTEND
+01-Sep-26 20:19 Door: FRONTEND
+01-Sep-26 20:19 Door exit: FRONTEND
+01-Sep-26 20:21 Door: FRONTEND
+01-Sep-26 20:21 Door: FRONTEND
+01-Sep-26 20:21 Door exit: FRONTEND
+01-Sep-26 20:26 Door: FRONTEND
+01-Sep-26 20:26 Door exit: FRONTEND
+01-Sep-26 20:27 Door: FRONTEND
+01-Sep-26 20:27 Door exit: FRONTEND
+01-Sep-26 20:34 Door: FRONTEND
+01-Sep-26 20:34 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 20:34 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 20:34 Door: SPRITED
+01-Sep-26 20:37 Door: FRONTEND
+01-Sep-26 20:37 Door exit: FRONTEND
+01-Sep-26 20:45 Door: FRONTEND
+01-Sep-26 20:45 Door exit: FRONTEND
+01-Sep-26 20:46 Door: FRONTEND
+01-Sep-26 20:46 Door exit: FRONTEND
+01-Sep-26 20:50 Door: FRONTEND
+01-Sep-26 20:50 Door exit: FRONTEND
+01-Sep-26 20:59 Door: FRONTEND
+01-Sep-26 20:59 Door exit: FRONTEND
+01-Sep-26 21:00 Door: FRONTEND
+01-Sep-26 21:00 Door exit: FRONTEND
+01-Sep-26 21:03 Door: FRONTEND
+01-Sep-26 21:03 Door exit: FRONTEND
+01-Sep-26 21:05 Door: FRONTEND
+01-Sep-26 21:05 Door exit: FRONTEND
+01-Sep-26 21:06 Door: FRONTEND
+01-Sep-26 21:06 Door exit: FRONTEND
+01-Sep-26 21:12 Door: FRONTEND
+01-Sep-26 21:12 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 21:12 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 21:12 Door: RIP
+01-Sep-26 21:21 Door: FRONTEND
+01-Sep-26 21:21 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 21:21 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 21:21 Door: RIP
+01-Sep-26 21:33 Door: FRONTEND
+01-Sep-26 21:33 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 21:33 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 21:33 Door: RIP
+01-Sep-26 21:33 Door exit: RIP
+01-Sep-26 21:42 Door: FRONTEND
+01-Sep-26 21:42 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 21:42 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 21:42 Door: RIP
+01-Sep-26 21:46 Door: FRONTEND
+01-Sep-26 21:46 Door exit: FRONTEND
+01-Sep-26 21:46 Door: FRONTEND
+01-Sep-26 21:46 Door exit: FRONTEND
+01-Sep-26 21:54 Door: FRONTEND
+01-Sep-26 21:54 Door exit: FRONTEND
+01-Sep-26 21:55 Door: FRONTEND
+01-Sep-26 21:55 Door exit: FRONTEND
+01-Sep-26 21:55 Door: FRONTEND
+01-Sep-26 21:55 Door exit: FRONTEND
+01-Sep-26 21:55 Door: FRONTEND
+01-Sep-26 21:55 Door exit: FRONTEND
+01-Sep-26 21:56 Door: FRONTEND
+01-Sep-26 21:56 Door exit: FRONTEND
+01-Sep-26 21:57 Door: FRONTEND
+01-Sep-26 21:57 Door exit: FRONTEND
+01-Sep-26 21:58 Door: FRONTEND
+01-Sep-26 21:58 Door exit: FRONTEND
+01-Sep-26 22:05 Door: FRONTEND
+01-Sep-26 22:05 Door exit: FRONTEND
+01-Sep-26 22:05 Door: FRONTEND
+01-Sep-26 22:05 Door exit: FRONTEND
+01-Sep-26 22:11 Door: FRONTEND
+01-Sep-26 22:11 Door exit: FRONTEND
+01-Sep-26 22:11 Door: FRONTEND
+01-Sep-26 22:11 Door exit: FRONTEND
+01-Sep-26 22:11 Door: FRONTEND
+01-Sep-26 22:11 Door exit: FRONTEND
+01-Sep-26 22:11 Door: FRONTEND
+01-Sep-26 22:12 Door exit: FRONTEND
+01-Sep-26 22:13 Door: FRONTEND
+01-Sep-26 22:13 Door exit: FRONTEND
+01-Sep-26 22:14 Door: FRONTEND
+01-Sep-26 22:14 Door exit: FRONTEND
+01-Sep-26 22:16 Door: FRONTEND
+01-Sep-26 22:16 Door exit: FRONTEND
+01-Sep-26 22:16 Door: FRONTEND
+01-Sep-26 22:16 Door exit: FRONTEND
+01-Sep-26 22:21 Door: FRONTEND
+01-Sep-26 22:21 Door exit: FRONTEND
+01-Sep-26 22:22 Door: FRONTEND
+01-Sep-26 22:22 Door exit: FRONTEND
+01-Sep-26 22:22 Door: FRONTEND
+01-Sep-26 22:22 Door exit: FRONTEND
+01-Sep-26 22:23 Door: FRONTEND
+01-Sep-26 22:23 Door exit: FRONTEND
+01-Sep-26 22:23 Door: FRONTEND
+01-Sep-26 22:23 Door exit: FRONTEND
+01-Sep-26 22:41 Door: FRONTEND
+01-Sep-26 22:41 Door exit: FRONTEND
+01-Sep-26 22:41 Door: FRONTEND
+01-Sep-26 22:41 Door exit: FRONTEND
+01-Sep-26 22:42 Door: FRONTEND
+01-Sep-26 22:42 Door exit: FRONTEND
+01-Sep-26 22:43 Door: FRONTEND
+01-Sep-26 22:43 Door exit: FRONTEND
+01-Sep-26 22:44 Door: FRONTEND
+01-Sep-26 22:44 Door exit: FRONTEND
+01-Sep-26 22:44 Door: FRONTEND
+01-Sep-26 22:44 Door exit: FRONTEND
+01-Sep-26 22:45 Door: FRONTEND
+01-Sep-26 22:45 Door exit: FRONTEND
+01-Sep-26 22:47 Door: FRONTEND
+01-Sep-26 22:47 Door exit: FRONTEND
+01-Sep-26 22:47 Door: FRONTEND
+01-Sep-26 22:47 Door exit: FRONTEND
+01-Sep-26 22:53 Door: FRONTEND
+01-Sep-26 22:53 Door exit: FRONTEND
+01-Sep-26 22:53 Door: FRONTEND
+01-Sep-26 22:53 Door exit: FRONTEND
+01-Sep-26 22:53 Door: FRONTEND
+01-Sep-26 22:53 Door exit: FRONTEND
+01-Sep-26 22:54 Door: FRONTEND
+01-Sep-26 22:54 Door exit: FRONTEND
+01-Sep-26 22:55 Door: FRONTEND
+01-Sep-26 22:55 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 22:55 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 22:55 Door: GMASTER
+01-Sep-26 22:55 Door: GMASTER
+01-Sep-26 22:56 Door: FRONTEND
+01-Sep-26 23:00 Door: FRONTEND
+01-Sep-26 23:00 Door exit: FRONTEND
+01-Sep-26 23:40 Door: FRONTEND
+01-Sep-26 23:40 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 23:40 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 23:40 Door: LIVECHAT
+01-Sep-26 23:46 Door: FRONTEND
+01-Sep-26 23:46 Door exit: FRONTEND
+**************************************************************
+01-Sep-26 23:46 [1] sysop (LOCAL) -uP rOUGH!-
+01-Sep-26 23:46 Door: GMASTER
+01-Sep-26 23:46 Door: GMASTER
+02-Sep-26 00:14 Door: FRONTEND
+02-Sep-26 00:14 Door exit: FRONTEND
+02-Sep-26 00:25 Door: FRONTEND
+02-Sep-26 00:25 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 00:25 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 00:25 Door: GMASTER
+02-Sep-26 00:25 Door: GMASTER
+02-Sep-26 00:27 Door: FRONTEND
+02-Sep-26 00:27 Door exit: FRONTEND
+02-Sep-26 00:27 Door: FRONTEND
+02-Sep-26 00:27 Door exit: FRONTEND
+02-Sep-26 00:28 Door: FRONTEND
+02-Sep-26 00:28 Door exit: FRONTEND
+02-Sep-26 00:29 Door: FRONTEND
+02-Sep-26 00:29 Door exit: FRONTEND
+02-Sep-26 00:29 Door: FRONTEND
+02-Sep-26 00:29 Door exit: FRONTEND
+02-Sep-26 00:29 Door: FRONTEND
+02-Sep-26 00:29 Door exit: FRONTEND
+02-Sep-26 00:30 Door: FRONTEND
+02-Sep-26 00:30 Door exit: FRONTEND
+02-Sep-26 00:30 Door: FRONTEND
+02-Sep-26 00:30 Door exit: FRONTEND
+02-Sep-26 00:31 Door: FRONTEND
+02-Sep-26 00:31 Door exit: FRONTEND
+02-Sep-26 00:31 Door: FRONTEND
+02-Sep-26 00:31 Door exit: FRONTEND
+02-Sep-26 00:32 Door: FRONTEND
+02-Sep-26 00:32 Door exit: FRONTEND
+02-Sep-26 00:32 Door: FRONTEND
+02-Sep-26 00:32 Door exit: FRONTEND
+02-Sep-26 00:43 Door: FRONTEND
+02-Sep-26 00:43 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 00:43 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 00:43 Door: GL
+02-Sep-26 00:43 Door exit: GL
+02-Sep-26 00:43 Door: GWALL
+02-Sep-26 00:43 Door exit: GWALL
+02-Sep-26 00:44 	Joined conference: Amiga Warez!
+02-Sep-26 00:44 Door: CONFTOP
+02-Sep-26 00:44 Door exit: CONFTOP
+02-Sep-26 00:44 Door: FR
+02-Sep-26 00:48 Door: FRONTEND
+02-Sep-26 00:48 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 00:48 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 00:48 Door: GMASTER
+02-Sep-26 00:48 Door: GMASTER
+02-Sep-26 01:03 Door: FRONTEND
+02-Sep-26 01:03 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 01:04 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 01:04 Door: SPRITED
+02-Sep-26 01:06 Door: FRONTEND
+02-Sep-26 01:06 Door exit: FRONTEND
+02-Sep-26 01:45 Door: FRONTEND
+02-Sep-26 01:45 Door exit: FRONTEND
+02-Sep-26 01:59 Door: FRONTEND
+02-Sep-26 01:59 Door exit: FRONTEND
+02-Sep-26 01:59 Door: FRONTEND
+02-Sep-26 01:59 Door exit: FRONTEND
+02-Sep-26 02:00 Door: FRONTEND
+02-Sep-26 02:00 Door exit: FRONTEND
+02-Sep-26 02:00 Door: FRONTEND
+02-Sep-26 02:00 Door exit: FRONTEND
+02-Sep-26 02:00 Door: FRONTEND
+02-Sep-26 02:00 Door exit: FRONTEND
+02-Sep-26 02:01 Door: FRONTEND
+02-Sep-26 02:01 Door exit: FRONTEND
+02-Sep-26 02:08 Door: FRONTEND
+02-Sep-26 02:08 Door exit: FRONTEND
+02-Sep-26 02:09 Door: FRONTEND
+02-Sep-26 02:09 Door exit: FRONTEND
+02-Sep-26 02:09 Door: FRONTEND
+02-Sep-26 02:09 Door exit: FRONTEND
+02-Sep-26 02:10 Door: FRONTEND
+02-Sep-26 02:10 Door exit: FRONTEND
+02-Sep-26 02:10 Door: FRONTEND
+02-Sep-26 02:10 Door exit: FRONTEND
+02-Sep-26 02:11 Door: FRONTEND
+02-Sep-26 02:11 Door exit: FRONTEND
+02-Sep-26 02:11 Door: FRONTEND
+02-Sep-26 02:11 Door exit: FRONTEND
+02-Sep-26 02:11 Door: FRONTEND
+02-Sep-26 02:12 Door exit: FRONTEND
+02-Sep-26 02:13 Door: FRONTEND
+02-Sep-26 02:13 Door exit: FRONTEND
+02-Sep-26 02:13 Door: FRONTEND
+02-Sep-26 02:13 Door exit: FRONTEND
+02-Sep-26 02:13 Door: FRONTEND
+02-Sep-26 02:13 Door exit: FRONTEND
+02-Sep-26 02:13 Door: FRONTEND
+02-Sep-26 02:13 Door exit: FRONTEND
+02-Sep-26 02:14 Door: FRONTEND
+02-Sep-26 02:14 Door exit: FRONTEND
+02-Sep-26 02:14 Door: FRONTEND
+02-Sep-26 02:14 Door exit: FRONTEND
+02-Sep-26 02:14 Door: FRONTEND
+02-Sep-26 02:14 Door exit: FRONTEND
+02-Sep-26 02:14 Door: FRONTEND
+02-Sep-26 02:14 Door exit: FRONTEND
+02-Sep-26 02:15 Door: FRONTEND
+02-Sep-26 02:15 Door exit: FRONTEND
+02-Sep-26 02:15 Door: FRONTEND
+02-Sep-26 02:15 Door exit: FRONTEND
+02-Sep-26 02:15 Door: FRONTEND
+02-Sep-26 02:15 Door exit: FRONTEND
+02-Sep-26 02:16 Door: FRONTEND
+02-Sep-26 02:16 Door exit: FRONTEND
+02-Sep-26 02:16 Door: FRONTEND
+02-Sep-26 02:16 Door exit: FRONTEND
+02-Sep-26 02:18 Door: FRONTEND
+02-Sep-26 02:18 Door exit: FRONTEND
+02-Sep-26 02:19 Door: FRONTEND
+02-Sep-26 02:19 Door exit: FRONTEND
+02-Sep-26 02:21 Door: FRONTEND
+02-Sep-26 02:21 Door exit: FRONTEND
+02-Sep-26 02:21 Door: FRONTEND
+02-Sep-26 02:21 Door exit: FRONTEND
+02-Sep-26 02:24 Door: FRONTEND
+02-Sep-26 02:24 Door exit: FRONTEND
+02-Sep-26 02:24 Door: FRONTEND
+02-Sep-26 02:24 Door exit: FRONTEND
+02-Sep-26 02:28 Door: FRONTEND
+02-Sep-26 02:28 Door exit: FRONTEND
+02-Sep-26 08:09 Door: FRONTEND
+02-Sep-26 08:09 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 08:09 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 08:09 Door: CARDLOBBY
+02-Sep-26 08:09 Door: CARDLOBBY
+02-Sep-26 08:44 Door: FRONTEND
+02-Sep-26 08:44 Door exit: FRONTEND
+02-Sep-26 09:21 Door: FRONTEND
+02-Sep-26 09:21 Door exit: FRONTEND
+02-Sep-26 11:04 Door: FRONTEND
+02-Sep-26 11:04 Door exit: FRONTEND
+02-Sep-26 11:55 Door: FRONTEND
+02-Sep-26 11:55 Door exit: FRONTEND
+02-Sep-26 12:36 Door: FRONTEND
+02-Sep-26 12:36 Door exit: FRONTEND
+02-Sep-26 14:21 Door: FRONTEND
+02-Sep-26 14:21 Door exit: FRONTEND
+02-Sep-26 17:57 Door: FRONTEND
+02-Sep-26 17:57 Door exit: FRONTEND
+**************************************************************
+02-Sep-26 17:57 [1] sysop (LOCAL) -uP rOUGH!-
+02-Sep-26 17:57 Door: GL
+02-Sep-26 17:57 Door exit: GL
+02-Sep-26 17:57 Door: GWALL
+02-Sep-26 17:57 Door exit: GWALL
+02-Sep-26 17:57 	Joined conference: Lamer Zone
+02-Sep-26 17:57 	Joined conference: Amiga Warez!
+02-Sep-26 17:57 	Joined conference: Abandoned Apps
+02-Sep-26 17:57 	Joined conference: /X Section
+02-Sep-26 17:57 	Joined conference: C64
+02-Sep-26 17:57 	Joined conference: Scene Stuff
+02-Sep-26 17:57 	Joined conference: Chip Tunes
+02-Sep-26 17:57 	Joined conference: Requests
+02-Sep-26 17:57 	Joined conference: ADF Area
+02-Sep-26 17:57 	Joined conference: ASCII & ANSI
+02-Sep-26 17:57 	Joined conference: Demo Dungeon
+02-Sep-26 17:57 	Joined conference: Private
+02-Sep-26 17:57 	Joined conference: Beavis Collection
+02-Sep-26 17:57 	Joined conference: bAUD bOY bATTLE
+02-Sep-26 17:57 	Joined conference: Lamer Zone
+02-Sep-26 17:57 	Joined conference: Amiga Warez!
+02-Sep-26 17:57 	Joined conference: Abandoned Apps
+02-Sep-26 17:57 	Joined conference: /X Section
+02-Sep-26 17:57 	Joined conference: C64
+02-Sep-26 17:57 	Joined conference: Scene Stuff
+02-Sep-26 17:57 	Joined conference: Chip Tunes
+02-Sep-26 17:57 	Joined conference: Requests
+02-Sep-26 17:57 	Joined conference: ADF Area
+02-Sep-26 17:57 	Joined conference: ASCII & ANSI
+02-Sep-26 17:57 	Joined conference: Demo Dungeon
+02-Sep-26 17:57 	Joined conference: Private
+02-Sep-26 17:57 	Joined conference: Beavis Collection
+02-Sep-26 17:57 	Joined conference: bAUD bOY bATTLE
+02-Sep-26 17:57 	Joined conference: Amiga Warez!
+02-Sep-26 17:57 Door: CONFTOP
+02-Sep-26 17:57 Door exit: CONFTOP
+02-Sep-26 18:32 Door: FRONTEND
+02-Sep-26 18:32 Door exit: FRONTEND
+02-Sep-26 19:42 Door: FRONTEND
+02-Sep-26 19:42 Door exit: FRONTEND
+02-Sep-26 23:30 Door: FRONTEND
+02-Sep-26 23:30 Door exit: FRONTEND
+03-Sep-26 01:45 Door: FRONTEND
+03-Sep-26 01:45 Door exit: FRONTEND
+**************************************************************
+03-Sep-26 01:45 [1] sysop (LOCAL) -uP rOUGH!-
+03-Sep-26 01:45 Door: BUGS
+03-Sep-26 01:48 Door exit: BUGS
+**************************************************************
+03-Sep-26 01:48 [1] sysop (LOCAL) -uP rOUGH!-
+03-Sep-26 01:48 	Joined conference: Lamer Zone
+03-Sep-26 01:48 	Joined conference: Amiga Warez!
+03-Sep-26 01:48 	Joined conference: Abandoned Apps
+03-Sep-26 01:48 	Joined conference: /X Section
+03-Sep-26 01:48 	Joined conference: C64
+03-Sep-26 01:48 	Joined conference: Scene Stuff
+03-Sep-26 01:48 	Joined conference: Chip Tunes
+03-Sep-26 01:48 	Joined conference: Requests
+03-Sep-26 01:48 	Joined conference: ADF Area
+03-Sep-26 01:48 	Joined conference: ASCII & ANSI
+03-Sep-26 01:48 	Joined conference: Demo Dungeon
+03-Sep-26 01:48 	Joined conference: Private
+03-Sep-26 01:48 	Joined conference: Beavis Collection
+03-Sep-26 01:48 	Joined conference: bAUD bOY bATTLE
+03-Sep-26 01:48 	Joined conference: Lamer Zone
+03-Sep-26 01:48 	Joined conference: Amiga Warez!
+03-Sep-26 01:48 	Joined conference: Abandoned Apps
+03-Sep-26 01:48 	Joined conference: /X Section
+03-Sep-26 01:48 	Joined conference: C64
+03-Sep-26 01:48 	Joined conference: Scene Stuff
+03-Sep-26 01:48 	Joined conference: Chip Tunes
+03-Sep-26 01:48 	Joined conference: Requests
+03-Sep-26 01:48 	Joined conference: ADF Area
+03-Sep-26 01:48 	Joined conference: ASCII & ANSI
+03-Sep-26 01:48 	Joined conference: Demo Dungeon
+03-Sep-26 01:48 	Joined conference: Private
+03-Sep-26 01:48 	Joined conference: Beavis Collection
+03-Sep-26 01:48 	Joined conference: bAUD bOY bATTLE
+03-Sep-26 01:48 	Joined conference: Amiga Warez!
+03-Sep-26 01:48 Door: CONFTOP
+03-Sep-26 01:48 Door exit: CONFTOP
+03-Sep-26 01:57 Door: FRONTEND
+03-Sep-26 01:57 Door exit: FRONTEND
+**************************************************************
+03-Sep-26 01:57 [1] sysop (LOCAL) -uP rOUGH!-
+03-Sep-26 01:57 Door: LIVECHAT
+03-Sep-26 01:57 Door: LIVECHAT
+03-Sep-26 02:11 Door: FRONTEND
+03-Sep-26 02:11 Door exit: FRONTEND
+03-Sep-26 04:27 Door: FRONTEND
+03-Sep-26 04:27 Door exit: FRONTEND
+03-Sep-26 04:29 Door: FRONTEND
+03-Sep-26 04:29 Door exit: FRONTEND
+03-Sep-26 04:31 Door: FRONTEND
+03-Sep-26 04:31 Door exit: FRONTEND
+03-Sep-26 04:32 Door: FRONTEND
+03-Sep-26 04:32 Door exit: FRONTEND
+03-Sep-26 04:33 Door: FRONTEND
+03-Sep-26 04:33 Door exit: FRONTEND
+03-Sep-26 04:33 Door: FRONTEND
+03-Sep-26 04:33 Door exit: FRONTEND
+03-Sep-26 04:35 Door: FRONTEND
+03-Sep-26 04:35 Door exit: FRONTEND
+03-Sep-26 04:35 Door: FRONTEND
+03-Sep-26 04:36 Door exit: FRONTEND
+03-Sep-26 04:36 Door: FRONTEND
+03-Sep-26 04:36 Door exit: FRONTEND
+03-Sep-26 04:39 Door: FRONTEND
+03-Sep-26 04:39 Door exit: FRONTEND
+03-Sep-26 04:39 Door: FRONTEND
+03-Sep-26 04:39 Door exit: FRONTEND
+03-Sep-26 04:45 Door: FRONTEND
+03-Sep-26 04:45 Door exit: FRONTEND
+03-Sep-26 04:46 Door: FRONTEND
+03-Sep-26 04:46 Door exit: FRONTEND
+03-Sep-26 04:48 Door: FRONTEND
+03-Sep-26 04:48 Door exit: FRONTEND
+03-Sep-26 04:48 Door: FRONTEND
+03-Sep-26 04:49 Door exit: FRONTEND
+03-Sep-26 04:55 Door: FRONTEND
+03-Sep-26 04:55 Door exit: FRONTEND
+03-Sep-26 05:47 Door: FRONTEND
+03-Sep-26 05:47 Door exit: FRONTEND
+03-Sep-26 06:59 Door: FRONTEND
+03-Sep-26 06:59 Door exit: FRONTEND
+03-Sep-26 07:02 Door: FRONTEND
+03-Sep-26 07:02 Door exit: FRONTEND
+03-Sep-26 07:03 Door: FRONTEND
+03-Sep-26 07:03 Door exit: FRONTEND
+03-Sep-26 07:05 Door: FRONTEND
+03-Sep-26 07:05 Door exit: FRONTEND
+03-Sep-26 07:05 Door: FRONTEND
+03-Sep-26 07:05 Door exit: FRONTEND
+03-Sep-26 07:08 Door: FRONTEND
+03-Sep-26 07:08 Door exit: FRONTEND
+03-Sep-26 07:09 Door: FRONTEND
+03-Sep-26 07:09 Door exit: FRONTEND
+**************************************************************
+03-Sep-26 07:09 [1] sysop (LOCAL) -uP rOUGH!-
+03-Sep-26 07:09 Door: GL
+03-Sep-26 07:09 Door exit: GL
+03-Sep-26 07:09 Door: GWALL
+03-Sep-26 07:09 Door exit: GWALL
+03-Sep-26 07:09 	Joined conference: Lamer Zone
+03-Sep-26 07:09 	Joined conference: Amiga Warez!
+03-Sep-26 07:09 	Joined conference: Abandoned Apps
+03-Sep-26 07:09 	Joined conference: /X Section
+03-Sep-26 07:09 	Joined conference: C64
+03-Sep-26 07:09 	Joined conference: Scene Stuff
+03-Sep-26 07:09 	Joined conference: Chip Tunes
+03-Sep-26 07:09 	Joined conference: Requests
+03-Sep-26 07:09 	Joined conference: ADF Area
+03-Sep-26 07:09 	Joined conference: ASCII & ANSI
+03-Sep-26 07:09 	Joined conference: Demo Dungeon
+03-Sep-26 07:09 	Joined conference: Private
+03-Sep-26 07:09 	Joined conference: Beavis Collection
+03-Sep-26 07:09 	Joined conference: bAUD bOY bATTLE
+03-Sep-26 07:09 	Joined conference: Lamer Zone
+03-Sep-26 07:09 	Joined conference: Amiga Warez!
+03-Sep-26 07:09 	Joined conference: Abandoned Apps
+03-Sep-26 07:09 	Joined conference: /X Section
+03-Sep-26 07:09 	Joined conference: C64
+03-Sep-26 07:09 	Joined conference: Scene Stuff
+03-Sep-26 07:09 	Joined conference: Chip Tunes
+03-Sep-26 07:09 	Joined conference: Requests
+03-Sep-26 07:09 	Joined conference: ADF Area
+03-Sep-26 07:09 	Joined conference: ASCII & ANSI
+03-Sep-26 07:09 	Joined conference: Demo Dungeon
+03-Sep-26 07:09 	Joined conference: Private
+03-Sep-26 07:09 	Joined conference: Beavis Collection
+03-Sep-26 07:09 	Joined conference: bAUD bOY bATTLE
+03-Sep-26 07:09 	Joined conference: Amiga Warez!
+03-Sep-26 07:09 Door: CONFTOP
+03-Sep-26 07:09 Door exit: CONFTOP
+03-Sep-26 07:10 Door: LOGOFF4
+03-Sep-26 07:10 Door exit: LOGOFF4
+03-Sep-26 07:10 Door: FRONTEND
+03-Sep-26 07:10 Door exit: FRONTEND
+03-Sep-26 13:43 Door: FRONTEND
+03-Sep-26 13:43 Door exit: FRONTEND
