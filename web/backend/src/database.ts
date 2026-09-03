@@ -2497,6 +2497,10 @@ console.error(`[Database] Failed to update disk misc for slot ${slotNumber}:`, e
     return this.fileRepo!.getFileEntry(...args);
   }
 
+  async getFileEntryByName(...args: Parameters<FileRepository['getFileEntryByName']>) {
+    return this.fileRepo!.getFileEntryByName(...args);
+  }
+
   async deleteFileEntry(...args: Parameters<FileRepository['deleteFileEntry']>) {
     return this.fileRepo!.deleteFileEntry(...args);
   }
