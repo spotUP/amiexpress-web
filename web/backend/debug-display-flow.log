@@ -1824,3 +1824,236 @@ Stack: TypeError: socket.on is not a function
     at performConferenceScan (/Users/spot/Code/amiexpress-web/web/backend/src/handlers/message/message-scan.handler.ts:885:3)
     at Object.<anonymous> (/Users/spot/Code/amiexpress-web/web/backend/tests/message-scan-parity.test.ts:415:5)
 Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:27:24.538Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:183:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:27:29.010Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:215:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:27:33.256Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:361:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:27:36.658Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:388:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:27:38.695Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:415:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:28:03.364Z] Error in display state handling: callersLog is not a function
+Stack: TypeError: callersLog is not a function
+    at callersLog (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/operations/conference.handler.ts:313:11)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:915:29)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:847:9)
+    at handleCommand (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:2524:5)
+    at handleGdprBackfillInput (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/user/gdpr.handler.ts:289:5)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/gdpr-backfill.test.ts:109:7)
+Session: {"state":"loggedon","subState":"auto_rejoin","currentConf":1}
+[2026-09-03T05:33:41.402Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:215:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:33:43.046Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:361:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:33:44.430Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:388:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:33:44.990Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:415:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:21.198Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:215:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:21.728Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:361:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:22.169Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:388:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:22.538Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at on (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:415:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:39.961Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at async finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at async advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at async performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at async Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:215:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:40.713Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at async finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at async advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at async performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at async Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:361:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:41.044Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at async finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at async advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at async performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at async Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:388:5)
+Session: {"subState":"display_menu","currentConf":1}
+[2026-09-03T05:34:41.453Z] Error in display state handling: socket.on is not a function
+Stack: TypeError: socket.on is not a function
+    at getAnsiBuffer (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:176:10)
+    at emitText (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:201:18)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/ansi-buffer.util.ts:217:3)
+    at emitPrompt (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/utils/output.util.ts:54:19)
+    at doPause (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/screen.handler.ts:2985:13)
+    at advanceDisplayFlow (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/command.handler.ts:954:11)
+    at async finishConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:488:5)
+    at async advanceConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:853:3)
+    at async performConferenceScan (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/src/handlers/message/message-scan.handler.ts:916:3)
+    at async Object.<anonymous> (/private/tmp/claude-501/-Users-spot-Code-amiexpress-web/3a17737a-685a-4060-9128-93a25e550b24/scratchpad/land-2/web/backend/tests/message-scan-parity.test.ts:415:5)
+Session: {"subState":"display_menu","currentConf":1}
