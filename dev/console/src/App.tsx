@@ -12,6 +12,7 @@ import { LogsTab } from './components/tabs/LogsTab.js';
 import { DoorsTab } from './components/tabs/DoorsTab.js';
 import { SystemTab } from './components/tabs/SystemTab.js';
 import { SystemConfigPage } from './components/tabs/SystemConfigPage.js';
+import { SystemStatusPage } from './components/tabs/SystemStatusPage.js';
 import { HealthCheckPage } from './components/tabs/HealthCheckPage.js';
 import { AuditLogPage } from './components/tabs/AuditLogPage.js';
 import { SessionLogsPage } from './components/tabs/SessionLogsPage.js';
@@ -53,6 +54,7 @@ const PAGE_COMPONENTS: Record<string, React.FC | undefined> = {
   doors:          DoorsTab,
   system:         SystemTab,
   // Phase B
+  'system-status': SystemStatusPage,
   'system-config': SystemConfigPage,
   health:          HealthCheckPage,
   audit:           AuditLogPage,

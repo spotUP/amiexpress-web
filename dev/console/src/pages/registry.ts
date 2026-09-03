@@ -262,6 +262,17 @@ export const PAGES: PageMeta[] = [
 
   // ─── System ────────────────────────────────────────────────────
   {
+    id: 'system-status',
+    label: 'System Status',
+    category: 'System',
+    footerHint: '[↑↓] scroll  [r] refresh',
+    helpKeys: [
+      ['↑↓', 'Scroll entries'],
+      ['r',  'Refresh from server'],
+    ],
+    implemented: true,
+  },
+  {
     id: 'system-config',
     label: 'System Config',
     category: 'System',
