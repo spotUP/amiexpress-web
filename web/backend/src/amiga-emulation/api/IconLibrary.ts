@@ -3,6 +3,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import * as amigafs from '../../utils/amigafs';
+import {
+  conferenceDirectory,
+  conferenceLocation,
+  loadConfConfig,
+} from '../../services/conf-config.service';
 
 /**
  * icon.library - Amiga Icon/Tooltype Library
@@ -665,20 +670,29 @@ console.log(`[icon.library]   No match found`);
       // PathManager aliases BBSn: → BBS: so paths like BBS2:Conf1/Upload/ imported
       // from multi-drive installations resolve cleanly; no filtering needed here.
       let maxNdirs = 0;
-      const confDirs = entries
-        .filter(e => e.isDirectory() && /^Conf\d+$/i.test(e.name))
-        .map(e => {
-          const m = e.name.match(/\d+/);
-          return m ? parseInt(m[0], 10) : 0;
-        })
-        .filter(n => n > 0)
-        .sort((a, b) => a - b);
+      // Enumerate from ConfConfig.info's NCONFS, not from directory names: a
+      // conference whose LOCATION.n points outside the BBS root, or at a
+      // directory not called "Conf<n>", has no matching entry here and would
+      // never be listed at all. The directory scan stays as the fallback for a
+      // board with no ConfConfig.info.
+      const confCount = loadConfConfig(this.bbsRoot)?.confCount ?? 0;
+      const confDirs = confCount > 0
+        ? Array.from({ length: confCount }, (_, i) => i + 1)
+        : entries
+            .filter(e => e.isDirectory() && /^Conf\d+$/i.test(e.name))
+            .map(e => {
+              const m = e.name.match(/\d+/);
+              return m ? parseInt(m[0], 10) : 0;
+            })
+            .filter(n => n > 0)
+            .sort((a, b) => a - b);
       for (const confNum of confDirs) {
         let ulpath = '';
         let dlpath = '';
         let ndirs = 0;
 
-        const confInfoPath = path.join(this.bbsRoot, `Conf${confNum}`, 'ConfConfig.info');
+        const confDirHost = conferenceDirectory(this.bbsRoot, confNum);
+        const confInfoPath = path.join(confDirHost, 'ConfConfig.info');
         const resolved = amigafs.resolvePath(confInfoPath);
         if (resolved) {
           const confTools = this.parseInfoFile(resolved);
@@ -704,8 +718,7 @@ console.log(`[icon.library]   No match found`);
         // (e.g. set to 1 at install time and never updated as uploads create new directories).
         // Use whichever value is higher so AquaScan always sees all real directories.
         try {
-          const confDir = path.join(this.bbsRoot, `Conf${confNum}`);
-          const confEntries = fs.readdirSync(confDir);
+          const confEntries = amigafs.readdirSync(confDirHost);
           let highestDir = 0;
           for (const name of confEntries) {
             const m = name.match(/^[Dd][Ii][Rr](\d+)$/);
@@ -721,9 +734,12 @@ console.log(`[icon.library]   No match found`);
 
         // Fall back to conventional Upload/ directory if ConfConfig.info missing or incomplete
         if (!ulpath) {
-          const uploadDir = path.join(this.bbsRoot, `Conf${confNum}`, 'Upload');
+          const uploadDir = path.join(confDirHost, 'Upload');
           if (amigafs.existsSync(uploadDir)) {
-            ulpath = `BBS:Conf${confNum}/Upload/`;
+            // The door reads this, so it is the AMIGA form of the conference's
+            // own LOCATION - not a rebuilt "BBS:Conf<n>/".
+            const confLoc = conferenceLocation(this.bbsRoot, confNum).replace(/\/+$/, '');
+            ulpath = `${confLoc}/Upload/`;
           }
         }
         if (!dlpath && ulpath) {
