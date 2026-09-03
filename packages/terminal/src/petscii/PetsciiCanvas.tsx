@@ -154,6 +154,16 @@ export const PetsciiCanvas = forwardRef<PetsciiCanvasHandle, PetsciiCanvasProps>
     cursorOn = cursorOnLocal;
   }
 
+  // Listen for cursor-control from backend (door handler emits cursor-visible events)
+  useEffect(() => {
+    if (!socket?.connected) return;
+    const handler = (visible: boolean) => {
+      setCursorOn(visible);
+    };
+    socket.on('cursor-visible', handler);
+    return () => socket.off('cursor-visible', handler);
+  }, [cursorVisible, setCursorOn]);
+
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     const atlasCache = atlasCacheRef.current;

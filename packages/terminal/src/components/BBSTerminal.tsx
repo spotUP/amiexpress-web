@@ -3558,12 +3558,13 @@ export const BBSTerminal = forwardRef<BBSTerminalRef, BBSTerminalProps>(({
             backgroundColor: '#000',
           }}
         >
-          <PetsciiCanvas
-            ref={petsciiCanvasRef}
-            machine={petsciiMachine}
-            focusable
-            focusOnMount
-            onData={(bytes) => {
+<PetsciiCanvas
+              ref={petsciiCanvasRef}
+              machine={petsciiMachine}
+              focusable
+              focusOnMount
+              cursorVisible={undefined}
+              onData={(bytes) => {
               // keymap.ts bytes -> the same ASCII/ANSI the server reads from
               // xterm, via the SDK's shared PETSCII input map (cursor and
               // function keys included), then the one input path.
