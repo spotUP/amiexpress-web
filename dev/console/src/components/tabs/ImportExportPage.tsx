@@ -1,212 +1,437 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Text, useInput } from 'ink';
 import Spinner from 'ink-spinner';
-import { getImportSessions, validateImport, executeImport, cancelImport, deleteImport, listExports, createExport } from '../../api/client.js';
+import { uploadArchive, getImportSession, validateImport, executeImport } from '../../api/client.js';
+import type { ValidationResult, ImportSummary, ImportResult, ImportProgress } from '../../api/types.js';
 import { ConfirmDialog } from '../shared/ConfirmDialog.js';
-import type { ImportSession } from '../../api/client.js';
 
-const ITEMS_START_ROW = 7;
+type Step = 'upload' | 'validate' | 'resolve' | 'execute' | 'complete';
+type Strategy = 'skip' | 'replace' | 'rename' | 'merge';
 
-type Section = 'import' | 'export';
-type Mode = 'list' | 'confirm';
+const STEP_ORDER: Step[] = ['upload', 'validate', 'resolve', 'execute', 'complete'];
+
+function StepIndicator({ current }: { current: Step }) {
+  const labels = ['1.Upload', '2.Validate', '3.Resolve', '4.Execute', '5.Complete'];
+  const currentIdx = STEP_ORDER.indexOf(current);
+  return (
+    <Box marginBottom={1} flexDirection="row" gap={2}>
+      {STEP_ORDER.map((step, idx) => {
+        const done = idx < currentIdx;
+        const active = idx === currentIdx;
+        return (
+          <Text key={step} bold={active} color={done ? 'green' : active ? 'cyan' : 'gray'}>
+            {done ? '[x]' : active ? '[>]' : '[ ]'} {labels[idx]}
+          </Text>
+        );
+      })}
+    </Box>
+  );
+}
+
+function ProgressBar({ percent }: { percent: number }) {
+  const width = 30;
+  const filled = Math.round((percent / 100) * width);
+  const empty = width - filled;
+  return (
+    <Box>
+      <Text>{'['}</Text>
+      <Text color="green">{'\u2588'.repeat(filled)}</Text>
+      <Text dimColor>{'\u2591'.repeat(empty)}</Text>
+      <Text>{']'} {percent}%</Text>
+    </Box>
+  );
+}
+
+function SummaryBox({ summary }: { summary: ImportSummary }) {
+  return (
+    <Box flexDirection="column" marginBottom={1} paddingX={1} borderStyle="round" borderColor="cyan">
+      <Text bold>Import Summary</Text>
+      <Text>  Users: {summary.users}</Text>
+      <Text>  Conferences: {summary.conferences}</Text>
+      <Text>  Commands: {summary.commands}</Text>
+      <Text>  Nodes: {summary.nodes}</Text>
+    </Box>
+  );
+}
 
 export function ImportExportPage() {
-  const [section, setSection] = useState<Section>('import');
-  const [mode, setMode] = useState<Mode>('list');
+  const [step, setStep] = useState<Step>('upload');
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [filename, setFilename] = useState<string>('');
 
-  // Import state
-  const [sessions, setSessions] = useState<ImportSession[]>([]);
-  const [selectedSessionIdx, setSelectedSessionIdx] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
+  // Upload state
+  const [uploadPath, setUploadPath] = useState('');
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
-  // Export state
-  const [exports, setExports] = useState<Array<{ filename: string; size?: number; createdAt?: string }>>([]);
-  const [exportCheckboxes, setExportCheckboxes] = useState({ users: true, messages: false, files: false });
-  const [confirmMsg, setConfirmMsg] = useState('');
+  // Validate state
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
-  const loadSessions = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  // Resolve state
+  const [strategies, setStrategies] = useState<{
+    userConflictStrategy: Strategy;
+    conferenceConflictStrategy: Strategy;
+    commandConflictStrategy: Strategy;
+  }>({
+    userConflictStrategy: 'skip',
+    conferenceConflictStrategy: 'skip',
+    commandConflictStrategy: 'skip',
+  });
+  const [executing, setExecuting] = useState(false);
+
+  // Execute state
+  const [progress, setProgress] = useState<ImportProgress | null>(null);
+  const [executeError, setExecuteError] = useState<string | null>(null);
+
+  // Complete state
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
+
+  // Reset state
+  const [confirmReset, setConfirmReset] = useState(false);
+
+  const hasConflicts =
+    (validationResult?.conflicts?.userConflicts?.length || 0) > 0 ||
+    (validationResult?.conflicts?.conferenceConflicts?.length || 0) > 0 ||
+    (validationResult?.conflicts?.commandConflicts?.length || 0) > 0;
+
+  const loadSession = useCallback(async () => {
+    if (!sessionId) return null;
     try {
-      const data = await getImportSessions();
-      setSessions(data);
-      setSelectedSessionIdx(0);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to load sessions');
-    } finally {
-      setLoading(false);
+      const data = await getImportSession(sessionId) as any;
+      return data;
+    } catch {
+      return null;
     }
-  }, []);
+  }, [sessionId]);
 
-  const loadExports = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await listExports();
-      setExports(data);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to load exports');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
+  // Poll progress during execute
   useEffect(() => {
-    if (section === 'import') loadSessions();
-    else loadExports();
-  }, [section, loadSessions, loadExports]);
+    if (step !== 'execute' || !sessionId) return;
+    const interval = setInterval(async () => {
+      const session = await loadSession() as any;
+      if (session) {
+        setProgress({
+          id: session.id,
+          status: session.status,
+          progress: session.progress || 0,
+          message: session.message,
+        });
+        if (session.status === 'completed') {
+          setStep('complete');
+          if (session.result) {
+            setImportResult(session.result);
+          }
+          clearInterval(interval);
+        } else if (session.status === 'failed') {
+          setExecuteError(session.error || 'Import failed');
+          clearInterval(interval);
+        }
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [step, sessionId, loadSession]);
 
-  const selected = sessions[selectedSessionIdx];
-
-  const handleImportAction = async (action: 'validate' | 'execute' | 'cancel' | 'delete') => {
-    if (!selected) return;
-    setStatus(null);
-    try {
-      if (action === 'validate') await validateImport(selected.id);
-      else if (action === 'execute') await executeImport(selected.id);
-      else if (action === 'cancel') await cancelImport(selected.id);
-      else if (action === 'delete') await deleteImport(selected.id);
-      setStatus(`${action === 'validate' ? 'Validated' : action === 'execute' ? 'Executed' : action === 'cancel' ? 'Cancelled' : 'Deleted'}`);
-      await loadSessions();
-    } catch (e: unknown) {
-      setStatus(`Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
+  const handleUpload = async () => {
+    if (!uploadPath.trim()) {
+      setUploadError('Please enter a file path');
+      return;
     }
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const result = await uploadArchive(uploadPath.trim());
+      setSessionId(result.sessionId);
+      setFilename(result.filename);
+      setStep('validate');
+    } catch (e: any) {
+      setUploadError(e.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleValidate = async () => {
+    if (!sessionId) return;
+    setValidating(true);
+    setValidationError(null);
+    try {
+      const result = await validateImport(sessionId) as any;
+      setValidationResult(result);
+      setStep('resolve');
+    } catch (e: any) {
+      setValidationError(e.message || 'Validation failed');
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  const handleExecute = async () => {
+    if (!sessionId) return;
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      await executeImport(sessionId);
+      setStep('execute');
+    } catch (e: any) {
+      setExecuteError(e.message || 'Execute failed');
+      setExecuting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setStep('upload');
+    setSessionId(null);
+    setFilename('');
+    setUploadPath('');
+    setUploadError(null);
+    setValidationResult(null);
+    setValidationError(null);
+    setStrategies({
+      userConflictStrategy: 'skip',
+      conferenceConflictStrategy: 'skip',
+      commandConflictStrategy: 'skip',
+    });
+    setProgress(null);
+    setImportResult(null);
+    setExecuteError(null);
   };
 
   useInput((input, key) => {
-    if (mode === 'confirm') return;
-
-    if (input === '1') { setSection('import'); return; }
-    if (input === '2') { setSection('export'); return; }
-
-    if (section === 'import') {
-      if (key.upArrow) setSelectedSessionIdx(i => Math.max(0, i - 1));
-      if (key.downArrow) setSelectedSessionIdx(i => Math.min(sessions.length - 1, i + 1));
-      if (input === 'v' && selected) handleImportAction('validate');
-      if (input === 'x' && selected) handleImportAction('execute');
-      if (input === 'c' && selected) handleImportAction('cancel');
-      if (input === 'd' && selected) handleImportAction('delete');
-    } else {
-      if (input === 'u') setExportCheckboxes(c => ({ ...c, users: !c.users }));
-      if (input === 'm') setExportCheckboxes(c => ({ ...c, messages: !c.messages }));
-      if (input === 'f') setExportCheckboxes(c => ({ ...c, files: !c.files }));
-      if (input === 'n') {
-        setConfirmMsg(`Create export: [u]sers=${exportCheckboxes.users}, [m]essages=${exportCheckboxes.messages}, [f]iles=${exportCheckboxes.files}`);
-        setMode('confirm');
+    if (confirmReset) {
+      if (input === 'y' || input === 'Y') {
+        setConfirmReset(false);
+        handleReset();
+      } else if (input === 'n' || input === 'N' || key.escape) {
+        setConfirmReset(false);
       }
+      return;
+    }
+
+    if (step === 'upload') {
+      if (key.escape) { setUploadPath(''); return; }
+      if (key.backspace || key.delete) { setUploadPath(v => v.slice(0, -1)); return; }
+      if (key.return) { handleUpload(); return; }
+      if (input && !key.ctrl && !key.meta) { setUploadPath(v => v + input); return; }
+    }
+
+    if (step === 'validate') {
+      if (input === 'v' && !validating) { handleValidate(); return; }
+      if (input === 'b') { setStep('upload'); return; }
+    }
+
+    if (step === 'resolve') {
+      if (input === 's') { setStrategies(s => ({ ...s, userConflictStrategy: 'skip' })); return; }
+      if (input === 'r') { setStrategies(s => ({ ...s, userConflictStrategy: 'replace' })); return; }
+      if (input === 'm') { setStrategies(s => ({ ...s, userConflictStrategy: 'merge' })); return; }
+      if (input === 'n') { setStrategies(s => ({ ...s, userConflictStrategy: 'rename' })); return; }
+      if (input === 'S') { setStrategies(s => ({ ...s, conferenceConflictStrategy: 'skip' })); return; }
+      if (input === 'R') { setStrategies(s => ({ ...s, conferenceConflictStrategy: 'replace' })); return; }
+      if (input === 'M') { setStrategies(s => ({ ...s, conferenceConflictStrategy: 'merge' })); return; }
+      if (input === 'N') { setStrategies(s => ({ ...s, conferenceConflictStrategy: 'rename' })); return; }
+      if (input === 'c') { setStrategies(s => ({ ...s, commandConflictStrategy: 'skip' })); return; }
+      if (input === 'C') { setStrategies(s => ({ ...s, commandConflictStrategy: 'replace' })); return; }
+      if (input === 'x' && !hasConflicts && !executing) { handleExecute(); return; }
+      if (input === 'b') { setStep('validate'); return; }
+    }
+
+    if (step === 'complete') {
+      if (input === 'r') { setConfirmReset(true); return; }
     }
   });
 
-  const handleExportConfirm = async () => {
-    setMode('list');
-    try {
-      await createExport({
-        includeUsers: exportCheckboxes.users,
-        includeMessages: exportCheckboxes.messages,
-        includeFiles: exportCheckboxes.files,
-      });
-      setStatus('Export created');
-      await loadExports();
-    } catch (e: unknown) {
-      setStatus(`Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
-    }
-  };
-
-  if (loading) return <Box><Text color="yellow"><Spinner type="dots" /></Text><Text> Loading...</Text></Box>;
-
   return (
     <Box flexDirection="column">
-      {mode === 'confirm' && (
+      <StepIndicator current={step} />
+
+      {/* Step 1: Upload */}
+      {step === 'upload' && (
+        <Box flexDirection="column">
+          <Text bold>Upload BBS Archive</Text>
+          <Text dimColor>Enter path to archive file (LHA, LZX, ZIP, TAR):</Text>
+          <Box marginTop={1}>
+            <Text>{'> '}</Text>
+            <Text color="cyan">{uploadPath}</Text>
+            <Text>{'\u2588'}</Text>
+          </Box>
+          {uploadError && (
+            <Box marginTop={1}>
+              <Text color="red">Error: {uploadError}</Text>
+            </Box>
+          )}
+          {uploading && (
+            <Box marginTop={1}>
+              <Text color="yellow"><Spinner type="dots" /></Text>
+              <Text> Uploading...</Text>
+            </Box>
+          )}
+          <Box marginTop={1}>
+            <Text dimColor>[Enter] Upload  [Esc] Clear</Text>
+          </Box>
+        </Box>
+      )}
+
+      {/* Step 2: Validate */}
+      {step === 'validate' && (
+        <Box flexDirection="column">
+          <Text bold>Validating Archive...</Text>
+          <Box marginTop={1}>
+            <Text dimColor>Filename: {filename}</Text>
+          </Box>
+          {validating && (
+            <Box marginTop={1}>
+              <Text color="yellow"><Spinner type="dots" /></Text>
+              <Text> Validating...</Text>
+            </Box>
+          )}
+          {!validating && validationError && (
+            <Box marginTop={1}>
+              <Text color="red">Error: {validationError}</Text>
+            </Box>
+          )}
+          {!validating && !validationError && (
+            <Box marginTop={1}>
+              <Text dimColor>Press [v] to validate</Text>
+            </Box>
+          )}
+          <Box marginTop={1}>
+            <Text dimColor>[b] Back to Upload</Text>
+          </Box>
+        </Box>
+      )}
+
+      {/* Step 3: Resolve */}
+      {step === 'resolve' && validationResult && (
+        <Box flexDirection="column">
+          <SummaryBox summary={validationResult.summary} />
+
+          {hasConflicts ? (
+            <Box flexDirection="column" marginBottom={1}>
+              <Text bold color="yellow">Conflicts Detected</Text>
+              {validationResult.conflicts.userConflicts && validationResult.conflicts.userConflicts.length > 0 && (
+                <Text dimColor>  Users: {validationResult.conflicts.userConflicts.length} conflict(s)</Text>
+              )}
+              {validationResult.conflicts.conferenceConflicts && validationResult.conflicts.conferenceConflicts.length > 0 && (
+                <Text dimColor>  Conferences: {validationResult.conflicts.conferenceConflicts.length} conflict(s)</Text>
+              )}
+              {validationResult.conflicts.commandConflicts && validationResult.conflicts.commandConflicts.length > 0 && (
+                <Text dimColor>  Commands: {validationResult.conflicts.commandConflicts.length} conflict(s)</Text>
+              )}
+            </Box>
+          ) : (
+            <Box marginBottom={1}>
+              <Text color="green">No conflicts - ready to import</Text>
+            </Box>
+          )}
+
+          <Box flexDirection="column" paddingX={1} borderStyle="round" borderColor="cyan">
+            <Text bold>Resolution Strategies</Text>
+            <Text>User:       [s]kip  [r]eplace  [m]erge  re[n]ame</Text>
+            <Text>Conference: [S]kip  [R]eplace  [M]erge  re[N]ame</Text>
+            <Text>Command:    [c]kip  [C]eplace</Text>
+          </Box>
+
+          <Box marginTop={1} flexDirection="column">
+            <Text dimColor>User:       [{strategies.userConflictStrategy === 'skip' ? 'X' : ' '}] skip  [{strategies.userConflictStrategy === 'replace' ? 'X' : ' '}] replace  [{strategies.userConflictStrategy === 'merge' ? 'X' : ' '}] merge  [{strategies.userConflictStrategy === 'rename' ? 'X' : ' '}] rename</Text>
+            <Text dimColor>Conference: [{strategies.conferenceConflictStrategy === 'skip' ? 'X' : ' '}] skip  [{strategies.conferenceConflictStrategy === 'replace' ? 'X' : ' '}] replace  [{strategies.conferenceConflictStrategy === 'merge' ? 'X' : ' '}] merge  [{strategies.conferenceConflictStrategy === 'rename' ? 'X' : ' '}] rename</Text>
+            <Text dimColor>Command:    [{strategies.commandConflictStrategy === 'skip' ? 'X' : ' '}] skip  [{strategies.commandConflictStrategy === 'replace' ? 'X' : ' '}] replace</Text>
+          </Box>
+
+          {executing && (
+            <Box marginTop={1}>
+              <Text color="yellow"><Spinner type="dots" /></Text>
+              <Text> Executing...</Text>
+            </Box>
+          )}
+          {executeError && (
+            <Box marginTop={1}>
+              <Text color="red">Error: {executeError}</Text>
+            </Box>
+          )}
+
+          <Box marginTop={1}>
+            <Text dimColor>[x] Execute  [b] Back</Text>
+          </Box>
+        </Box>
+      )}
+
+      {/* Step 4: Execute */}
+      {step === 'execute' && (
+        <Box flexDirection="column">
+          <Text bold>Importing BBS Data...</Text>
+          <Box marginTop={1}>
+            <Text dimColor>Session: {sessionId}</Text>
+          </Box>
+          <Box marginTop={1}>
+            <ProgressBar percent={progress?.progress || 0} />
+          </Box>
+          <Box marginTop={1}>
+            <Text dimColor>Status: {progress?.status || 'Starting...'}</Text>
+          </Box>
+          {progress?.message && (
+            <Box marginTop={1}>
+              <Text dimColor>Message: {progress.message}</Text>
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {/* Step 5: Complete */}
+      {step === 'complete' && (
+        <Box flexDirection="column">
+          {importResult?.success ? (
+            <Text bold color="green">Import completed successfully!</Text>
+          ) : (
+            <Text bold color="red">Import completed with errors</Text>
+          )}
+
+          {importResult && (
+            <Box flexDirection="column" marginTop={1}>
+              <Text>Users Imported: {importResult.usersImported}</Text>
+              <Text>Conferences Imported: {importResult.conferencesImported}</Text>
+              <Text>Commands Imported: {importResult.commandsImported}</Text>
+            </Box>
+          )}
+
+          {importResult?.errors && importResult.errors.length > 0 && (
+            <Box flexDirection="column" marginTop={1}>
+              <Text bold color="red">Errors ({importResult.errors.length}):</Text>
+              {importResult.errors.slice(0, 5).map((e, i) => (
+                <Text key={i} color="red" dimColor>  - {e}</Text>
+              ))}
+              {importResult.errors.length > 5 && (
+                <Text dimColor>  ... and {importResult.errors.length - 5} more</Text>
+              )}
+            </Box>
+          )}
+
+          {importResult?.warnings && importResult.warnings.length > 0 && (
+            <Box flexDirection="column" marginTop={1}>
+              <Text bold color="yellow">Warnings ({importResult.warnings.length}):</Text>
+              {importResult.warnings.slice(0, 5).map((w, i) => (
+                <Text key={i} color="yellow" dimColor>  - {w}</Text>
+              ))}
+              {importResult.warnings.length > 5 && (
+                <Text dimColor>  ... and {importResult.warnings.length - 5} more</Text>
+              )}
+            </Box>
+          )}
+
+          <Box marginTop={1}>
+            <Text dimColor>[r] Import Another Archive</Text>
+          </Box>
+        </Box>
+      )}
+
+      {/* Reset confirmation */}
+      {confirmReset && (
         <ConfirmDialog
-          message={confirmMsg}
-          onConfirm={handleExportConfirm}
-          onCancel={() => setMode('list')}
+          message="Reset and start a new import?"
+          onConfirm={() => { setConfirmReset(false); handleReset(); }}
+          onCancel={() => setConfirmReset(false)}
         />
       )}
-
-      <Box marginBottom={1}>
-        <Text bold color={section === 'import' ? 'cyan' : 'white'}>[1] Import</Text>
-        <Text>  </Text>
-        <Text bold color={section === 'export' ? 'cyan' : 'white'}>[2] Export</Text>
-      </Box>
-
-      {error && (
-        <Box marginBottom={1}>
-          <Text color="red">Error: {error}</Text>
-        </Box>
-      )}
-
-      {status && (
-        <Box marginBottom={1}>
-          <Text color="green">{status}</Text>
-        </Box>
-      )}
-
-      {section === 'import' ? (
-        <Box flexDirection="column">
-          <Box marginBottom={1}>
-            <Text dimColor>Import Sessions</Text>
-          </Box>
-          {sessions.length === 0 ? (
-            <Text dimColor>No import sessions</Text>
-          ) : (
-            <>
-              {sessions.map((s, i) => (
-                <Box key={s.id}>
-                  <Text color={i === selectedSessionIdx ? 'cyan' : 'white'} bold={i === selectedSessionIdx}>
-                    {i === selectedSessionIdx ? '▶ ' : '  '}
-                    {s.filename ?? `(${s.id.slice(0, 8)}...)`}
-                  </Text>
-                  <Text dimColor>  {s.status ?? 'pending'}</Text>
-                </Box>
-              ))}
-              {selected && (
-                <Box marginTop={1}>
-                  <Text dimColor>
-                    [v]alidate  [x]ecute  [c]ancel  [d]elete
-                  </Text>
-                </Box>
-              )}
-            </>
-          )}
-        </Box>
-      ) : (
-        <Box flexDirection="column">
-          <Box marginBottom={1}>
-            <Text dimColor>Export Options</Text>
-          </Box>
-          <Box marginBottom={1}>
-            <Text>{exportCheckboxes.users ? '[X]' : '[ ]'} [u]sers</Text>
-            <Text>  </Text>
-            <Text>{exportCheckboxes.messages ? '[X]' : '[ ]'} [m]essages</Text>
-            <Text>  </Text>
-            <Text>{exportCheckboxes.files ? '[X]' : '[ ]'} [f]iles</Text>
-          </Box>
-          <Box marginBottom={2}>
-            <Text dimColor>[n]ew export  [u/m/f] toggle</Text>
-          </Box>
-
-          <Box marginBottom={1}>
-            <Text dimColor>Previous Exports</Text>
-          </Box>
-          {exports.length === 0 ? (
-            <Text dimColor>No exports yet</Text>
-          ) : (
-            exports.map(e => (
-              <Box key={e.filename}>
-                <Text>{e.filename}</Text>
-                {e.size && <Text dimColor>  {e.size} bytes</Text>}
-              </Box>
-            ))
-          )}
-        </Box>
-      )}
-
-      <Box marginTop={1}>
-        <Text dimColor>[1]Import [2]Export</Text>
-      </Box>
     </Box>
   );
 }

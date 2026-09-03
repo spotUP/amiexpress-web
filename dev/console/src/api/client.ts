@@ -474,6 +474,51 @@ export async function deleteSecurity(id: number) {
 
 // ───── Phase D: Door install, Import/Export, Batch editor, Global wall ──
 
+export async function uploadArchive(filePath: string): Promise<{ sessionId: string; filename: string; size?: number }> {
+  const BASE_URL = process.env['AMIEXPRESS_URL'] ?? 'http://localhost:3001';
+  const token = getToken();
+
+  // Read file and create FormData in Node.js environment
+  const { createReadStream, statSync } = await import('fs');
+  const { basename } = await import('path');
+  const stats = statSync(filePath);
+  const filename = basename(filePath);
+
+  // Create a Readable stream and convert to ArrayBuffer
+  const chunks: Buffer[] = [];
+  const stream = createReadStream(filePath);
+  for await (const chunk of stream) {
+    chunks.push(chunk as Buffer);
+  }
+  const buffer = Buffer.concat(chunks);
+
+  // Create Blob and FormData (Node.js 18+)
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const formData = new FormData();
+  const file = new File([blob], filename, { type: 'application/octet-stream' });
+  formData.append('archive', file);
+
+  const headers: Record<string, string> = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${BASE_URL}/api/import/upload`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => res.statusText);
+    throw Object.assign(new Error(`Upload failed: ${res.status} ${text}`), { status: res.status });
+  }
+
+  const data = await res.json() as { success: boolean; sessionId: string; filename: string; size?: number };
+  if (!data.success) {
+    throw new Error('Upload failed');
+  }
+  return { sessionId: data.sessionId, filename: data.filename, size: data.size };
+}
+
 export async function installDoorArchive(archive: { filename?: string; path?: string }) {
   return request<{ success: boolean; message?: string }>('/api/config/doors/install-archive', {
     method: 'POST',

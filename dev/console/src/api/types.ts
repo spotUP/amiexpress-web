@@ -163,3 +163,54 @@ export interface SecurityRow {
   enabled: boolean;
   description?: string;
 }
+
+// Import/Export types (mirrors web admin)
+export interface ImportValidation {
+  users?: { errors?: string[]; warnings?: string[] };
+  conferences?: { errors?: string[]; warnings?: string[] };
+  commands?: { errors?: string[]; warnings?: string[] };
+  [key: string]: { errors?: string[]; warnings?: string[] } | undefined;
+}
+
+export interface ImportConflict {
+  import: Record<string, unknown>;
+  existing: Record<string, unknown>;
+}
+
+export interface ImportConflicts {
+  userConflicts?: ImportConflict[];
+  conferenceConflicts?: ImportConflict[];
+  commandConflicts?: ImportConflict[];
+  recommendations?: string[];
+}
+
+export interface ImportSummary {
+  users: number;
+  conferences: number;
+  commands: number;
+  nodes: number;
+}
+
+export interface ValidationResult {
+  success: boolean;
+  valid: boolean;
+  validation: ImportValidation;
+  conflicts: ImportConflicts;
+  summary: ImportSummary;
+}
+
+export interface ImportResult {
+  success: boolean;
+  usersImported: number;
+  conferencesImported: number;
+  commandsImported: number;
+  errors: string[];
+  warnings: string[];
+}
+
+export interface ImportProgress {
+  id: string;
+  status: string;
+  progress: number;
+  message?: string;
+}
