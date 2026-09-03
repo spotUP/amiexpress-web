@@ -354,7 +354,11 @@ the ref just read and passed as `update-ref`'s old value).
   grandmaster files had changed again under a concurrent session in the
   meantime). `stash@{0}` is KEPT as the safety net - never drop it, never
   `stash pop` in this tree. Commit by path through a private index, and read
-  `git diff --cached --stat` before every commit.
+  `git diff --cached --stat` before every commit. On 2026-09-03 the OC-8 agent
+  ran `git checkout -- Conf.DB` against the SHARED tree by mistake while
+  cleaning a probe worktree and discarded the uncommitted root `Conf.DB`
+  (local dev per-user conference state, not sysop config); unrecoverable.
+  Every brief since forbids checkout/restore/reset/clean on any shared path.
 - **Never restore `Bulletins/bull*.txt` as if it were damage** - see the
   `bulletins-are-multitop-output` memory. A modified bulletin is normal; a
   0-byte one means a backend was killed inside MultiTop's ~6-second write.
