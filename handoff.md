@@ -19,26 +19,31 @@ board or express.e via `dev/scripts/generate-screen-provenance.ts`.
 files, 41 copies of one NODE_BULL.TXT); nobody has checked a repaired screen
 on the board yet.
 
-## GRANDMASTER against HeborisCE (2026-09-02)
+## GRANDMASTER + CARD LOBBY + the C SDK (2026-09-03, latest)
 
-`..._grandmaster-backlog-devil-items-and-the-settings-that-did-nothing.md` is
-the record. **The reference is HeborisCE**, NOT TetriNET. 369 tests; backlog
-clear but MISSION.
+`..._2026-09-03_card-lobby-themes-host-detection-and-the-c-sdk.md` is the
+record. LIVE at `fde28d8de`. GRANDMASTER's reference is **HeborisCE**, not
+TetriNET; 419 tests.
 
-**THE CLASS TO CHECK FIRST HERE: a setting nothing reads.** Three in one pass:
-`sonic_drop` handled by nothing (hence ACE-ARS's up-key lock "blocked on
-inventing a key"), `softDropSpeed` with a row, a range and no consumer, item
-pools drawing items the engine could not carry out. Ask who CONSUMES a knob.
+**THE CLASS TO CHECK FIRST HERE: two lists kept in agreement by hand.**
+GRANDMASTER's menu bound `q`/ESC to row 15 - right at sixteen rows, wrong at
+eighteen, so `q` opened HIGH SCORES and nothing errored. CI's door-install
+list went stale a third time and turned main red against two innocent doors.
+Ask what makes a pair agree, and what fails if they stop.
 
-Landed: Death 20G from level 0, ends 1300, climbs its dgname ladder to GOD; `itemMode` reaches every mode; DEATH BLOCK (BIG), ROLL ROLL,
-ROTATE LOCK, HIDE NEXT, <->REV, BOOST; versus level/line goals; HIDDEN;
-PRACTICE goals. **CEMENT is not in HeborisCE at all.** **MISSION is
-data-driven** (`loadMissionData`, 42 objective types) - it needs a plan.
+Landed: MISSION's **sysop editor** (E on the list; packs to `data/missions/`,
+saves via `parseMissionPack`); in-door **theme menus** for CARD LOBBY, LIVECHAT
+and the ANSIEditor doors, re-tint in `theme/live.ts`; CARD LOBBY's **card style
+panel** and **chat**; **AE_HOST/AE_CAPS** so a 68K door can ask where it runs
+(absence = classic AmiExpress, 80x25 ANSI, the safe path); **C SDK phase 0**
+(`sdk/c/`, a small door is 5,048 bytes); door bundles **15.1 MB -> 10.8**.
 
-**TELNET TAKES NO INPUT in any game-mode door.** `enableGameMode()` drops the
-character path (`socket-handlers.ts:722`) for browser-only `key-down`/`key-up`
-(`:499-536`); options in that handoff. Telnet RENDERING fixed (`86200b3e5`):
-solid blocks via reverse video instead of `#`.
+**Four TGM items stay unimplemented on purpose** (X-RAY, COLOR, DARK,
+TRANSFORM): dead code in HeborisCE, never drawn. Do not invent behaviour the
+reference does not have.
+
+**TELNET TAKES NO INPUT in a game-mode door**: `enableGameMode()` drops the
+character path (`socket-handlers.ts:722`). Rendering is fixed (`86200b3e5`).
 
 ## Doors and widgets (2026-09-02)
 
@@ -133,9 +138,8 @@ Also open:
 1. **Yours, and the biggest one:** LOOK at a repaired screen (above); then the
    editor round-trip (draw, Save, "this file only"). Also DOORREPO's
    `T`/`H`/`ENTER`/uninstall (`Doors/emp_tools` is the interesting case).
-   **GRANDMASTER's whole new backlog is undriven too** - items outside versus,
-   Death's 1300 ending and GOD, HIDDEN, the practice and versus goals, BIG
-   pieces, ROLL ROLL.
+   **GRANDMASTER is undriven by hand** - items, Death's 1300 GOD ending,
+   HIDDEN, the goals, MISSION and its new sysop editor.
 2. `PUT /installed/:cmd/info` and the streaming `DELETE` were never driven
    against the LIVE board.
 3. **The release ships THIS board** - the Dockerfile copies our Screens,
@@ -148,8 +152,8 @@ Also open:
 7. **Drive Setup (sysop, 2026-09-02):** the admin's drive section may do very
    little - find what `Drives.info` reaches. Wanted: online storage (S3 and
    the like) for a board's files.
-8. **Drive CARD LOBBY by hand** - four gamepad paths, the end of an UNO game
-   and deleting a table have never worked.
+8. **Drive CARD LOBBY by hand** - four gamepad paths, the end of an UNO game,
+   deleting a table; plus today's card style panel, `T` chat and Views > Theme.
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk; land by cherry-pick onto an origin/main worktree until
