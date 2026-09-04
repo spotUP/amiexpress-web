@@ -141,7 +141,7 @@ codec imported from `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a
 renderer and input. Colour is SGR minus 30 - red is 1, not the EGA palette's 4.
 Earlier: `..._browser-ansi-editor-phase-2-complete.md`.
 
-**TUI admin Phase A+B complete.** All ~22 pages use `T.*` theme tokens. Inline editing wired: CrudList (8 pages), SystemConfig (per-field auto-save), DoorsTab, UsersTab. Sidebar border highlights on focus. Header rail constant-width. Build passes clean. Next: Phase C — responsive content panel sizing.
+**TUI admin Phase A+B+C complete.** All ~22 pages use `T.*` theme tokens. Inline editing wired: CrudList (8 pages), SystemConfig (per-field auto-save), DoorsTab, UsersTab. Sidebar border highlights on focus. Header rail constant-width. DoorsTab grid cols computed from content panel width, not full terminal. Build passes clean.
 
 **Measure resolution by driving the loader, never by eye** -
 `dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
