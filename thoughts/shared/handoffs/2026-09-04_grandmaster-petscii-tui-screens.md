@@ -95,19 +95,11 @@ Some work remains: TGM game modes show black screen at 40 columns (GameScreen us
 
 ## OPEN ITEMS
 
-1. **TGM mode black screen at 40 columns** → GameScreen.etupUI() use fixed 80-col poitions. Board at lef:2, but side panel (grade/stat/zone/ection) at lef:40+ overflow. Need compact layout branch.
-
-2. **TUI theme tokens** → ~15 page still use hardcoded color, need to be wired to T.* theme token.
-
-3. **Sprie upload** → API function exit, UI not yet wired.
+1. **Sprie upload** → API function exit, UI not yet wired.
 
 ## NEXT SESSION STRT
 
-1. **Fix ameScreen for 40 columns**:
-   - Read `isCompactWidth(his.screen.wih)` in etupUI()
-   - Hide overflow panel (nextBox/ holdBox/ gradeBox/ statBox/ zoneBox) at 40
-   - expan board box to fll available widh
-   - Adjust boad rendering from 22→ ful-wih (40 col)
-
-2. Enable SDK build for fresh checkout: `cd sk && npn run build:cj`
-3. Build grandmaster: `cd Doos/grandmater && npn run build`
+1. **TUI theme tokens** — fixed (all 6 remaining pages wired to T.* tokens)
+2. **TGM GameScreen compact layout** — fixed (isCompactWidth branch hides side panels at 40 cols)
+3. **Enable SDK build for fresh checkout**: `cd sk && npn run build:cj`
+4. **Build grandmaster**: `cd Doos/grandmater && npn run build`
