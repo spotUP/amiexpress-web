@@ -152,8 +152,9 @@ launch_tmux_session() {
   # Pane 1: console TUI (right side, waits for backend)
   # Guarded: an unbuilt or uninstalled console prints what to run rather than
   # a module-resolution stack trace.
+  # Use 'script' to force TTY allocation for Ink's raw mode, then exec bash to keep pane alive.
   tmux split-window -h -p 45 -t "${session}:amiexpress.0" \
-    "cd '$root' && sleep 8 && if [ -f dev/console/dist/src/index.js ] && [ -d dev/console/node_modules ]; then node dev/console/dist/src/index.js; else echo '[console] unavailable - run: (cd dev/console && npm install && npm run build)'; fi; bash"
+    "cd '$root' && sleep 8 && if [ -f dev/console/dist/src/index.js ] && [ -d dev/console/node_modules ]; then script -q -c 'node dev/console/dist/src/index.js' /dev/null; else echo '[console] unavailable - run: (cd dev/console && npm install && npm run build)'; fi; exec bash"
 
   # Pane 2: live backend log tail (bottom-left). `tail -F` follows the file
   # across rotation; we wait for the file to appear so tail doesn't error

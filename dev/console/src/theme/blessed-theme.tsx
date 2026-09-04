@@ -2,6 +2,8 @@
 // Ports the SDK's blessed-lite.ts theme to React Ink components
 // Matches the TypeScript doors' UI exactly
 
+import Spinner from 'ink-spinner';
+
 // ANSI Escape Sequences (from blessed-lite.ts)
 export const ANSI = {
   // Cursor control
@@ -245,6 +247,20 @@ interface BlessedBoxProps {
   padding?: number;
   width?: number | string;
   height?: number | string;
+  flexDirection?: 'row' | 'column';
+  paddingX?: number;
+  paddingY?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+  gap?: number;
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
+  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around';
+  minWidth?: number;
+  flexGrow?: number;
+  flexWrap?: 'wrap' | 'nowrap';
+  [key: string]: any;
 }
 
 export function BlessedBox({
@@ -278,13 +294,14 @@ interface BlessedTextProps {
   variant?: keyof typeof THEME;
   bold?: boolean;
   dim?: boolean;
+  color?: string;
 }
 
-export function BlessedText({ children, variant = 'primary', bold = false, dim = false }: BlessedTextProps) {
+export function BlessedText({ children, variant = 'primary', bold = false, dim = false, color }: BlessedTextProps) {
   const theme = THEME[variant];
   return (
     <Text
-      color={theme.fg}
+      color={color || theme.fg}
       bold={bold || theme.bold}
       dimColor={dim || theme.fg === 'gray'}
     >
@@ -300,9 +317,11 @@ interface BlessedSpinnerProps {
 }
 
 export function BlessedSpinner({ variant = 'dots', color = 'cyan' }: BlessedSpinnerProps) {
-  // Use ink-spinner internally, but with our theme color
-  const Spinner = require('ink-spinner').default;
-  return <Spinner type={variant} color={color} />;
+  return (
+    <Text color={color}>
+      <Spinner type={variant} />
+    </Text>
+  );
 }
 
 // Blessed progress bar

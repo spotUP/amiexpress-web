@@ -13,6 +13,15 @@ process.on('exit', exitAltScreen);
 process.on('SIGINT', () => { exitAltScreen(); process.exit(0); });
 process.on('SIGTERM', () => { exitAltScreen(); process.exit(0); });
 
+// Check if stdin is a TTY before enabling raw mode features
+const isTTY = process.stdin.isTTY;
+
+// Make TTY status globally available
+declare global {
+  var __CONSOLE_TTY__: boolean | undefined;
+}
+(globalThis as any).__CONSOLE_TTY__ = isTTY;
+
 function Root() {
   const { token, username, error, loading, login } = useAuth();
 
@@ -23,9 +32,13 @@ function Root() {
   return <App username={username ?? 'sysop'} />;
 }
 
-const { waitUntilExit } = render(<Root />, {
+const renderOptions = {
   patchConsole: true,
-});
+  ...(isTTY ? { stdin: process.stdin, exitOnCtrlC: true } : { exitOnCtrlC: false }),
+};
+
+const { waitUntilExit } = render(<Root />, renderOptions);
 
 await waitUntilExit();
+exitAltScreen();
 process.exit(0);
