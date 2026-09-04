@@ -146,8 +146,13 @@ PETSCII cursor visibility. GRANDMASTER menu 1:1 with ANSI (all 19 items at
 40 cols, rainbow animated compact boot). TUI console: screen browse/preview/
 delete/repair. Sprite chars PETSCII-safe.
 
-**OPEN: TGM modes black screen at 40 columns** — GameScreen uses fixed
-80-col positions (grade/stats at left:40+). Needs compact layout branch.
+**CLOSED: TGM modes black screen at 40 columns** — compact layout branch landed
+at `ef34a6448`. GameScreen now checks `isCompactWidth()`, hides side panels,
+board fills screen width.
+**CLOSED: Font + modem speed persisting across sessions** — written to cookie
+alongside localStorage. Modem speed applied to ModemEmulator before first
+socket event so pre-login banner paces correctly. Cookie falls back when
+localStorage unavailable (private browsing).
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk, so one always reads as modified and `git rebase`
