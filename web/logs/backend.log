@@ -1,0 +1,797 @@
+
+> backend@1.0.0 dev
+> npx tsx src/index.ts
+
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[NodeManager] Initializing 255 nodes
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[DoorDropFile] Initialized
+  BBS root: /Users/spot/Code/amiexpress-web
+  BBS name: Uptown (from bbsConfig.info)
+  Sysop: Spot (from bbsConfig.info)
+Initializing SQLite database connection...
+Database directory: ./data
+Database file: amiexpress.db
+Full path: data/amiexpress.db
+✓ Directory exists: ./data
+Opening SQLite database...
+✓ Database opened
+Setting WAL mode...
+✓ WAL mode set
+Enabling foreign keys...
+✓ Foreign keys enabled
+✅ Connected to SQLite database
+[command.handler] displayFlowStates: [
+  'display_bull',
+  'display_node_bull',
+  'exec_quicknew',
+  'conf_scan',
+  'display_conf_bull',
+  'auto_rejoin',
+  'display_menu'
+]
+[CORS] NODE_ENV: development
+[CORS] Configured origins: [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
+  'http://localhost:5177',
+  'http://localhost:5178',
+  'http://localhost:5179',
+  'http://localhost:5180',
+  'http://localhost:5181',
+  'http://localhost:5182',
+  'http://localhost:5183',
+  'http://localhost:5184',
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'https://bbs.uprough.net',
+  'https://uptown.uprough.net',
+  'https://hippoplayer.se',
+  'https://www.hippoplayer.se'
+]
+[PathManager] Initialized assigns:
+  doors: => /Users/spot/Code/amiexpress-web/Doors/
+  bbs: => /Users/spot/Code/amiexpress-web/
+  data: => /Users/spot/Code/amiexpress-web/data/
+  screens: => /Users/spot/Code/amiexpress-web/Screens/
+  bulletins: => /Users/spot/Code/amiexpress-web/Bulletins/
+  s: => /Users/spot/Code/amiexpress-web/S/
+  work: => /Users/spot/Code/amiexpress-web/
+  sami: => /Users/spot/Code/amiexpress-web/S/
+  env: => /tmp/ram/ENV/
+  progdir: => /Users/spot/Code/amiexpress-web/
+  sys: => /Users/spot/Code/amiexpress-web/System/
+  c: => /Users/spot/Code/amiexpress-web/System/C/
+  l: => /Users/spot/Code/amiexpress-web/System/L/
+  libs: => /Users/spot/Code/amiexpress-web/System/Libs/
+  devs: => /Users/spot/Code/amiexpress-web/System/Devs/
+  fonts: => /Users/spot/Code/amiexpress-web/System/Fonts/
+  locale: => /Users/spot/Code/amiexpress-web/System/Locale/
+  prefs: => /Users/spot/Code/amiexpress-web/System/Prefs/
+  classes: => /Users/spot/Code/amiexpress-web/System/Classes/
+  ram: => /tmp/ram/
+  t: => /tmp/
+[debug-mcp] endpoints mounted at /debug/api (NODE_ENV=development)
+[BBSEventEmitter] Initialized with Socket.IO server
+Initializing database and loading data...
+Creating database tables...
+Loaded 0 AREXX scripts
+Database tables created successfully
+Running database migrations...
+Checking for missing columns in users table...
+Checking for missing columns in system_config table...
+Checking for missing columns in conferences table...
+Checking for missing columns in messages table...
+Checking for missing columns in door_catalog table...
+[+] door_installs table ensured
+All migrations completed successfully
+Database migrations completed
+[DB Init] Creating default data...
+[DB Init] Default data already exists, skipping initialization
+Default data initialized
+Initializing user disk files...
+User disk files initialized
+Initializing message directories...
+[MessageFileManager] Initializing MsgBase directories...
+[MessageFileManager] MsgBase directories initialized
+Message directories initialized
+Initializing conference database...
+Conference database initialized
+Initializing file area directories...
+[FileAreaManager] Initializing file area directories...
+[FileAreaManager] File area directories initialized
+File area directories initialized
+Initializing message index files (HeaderFile, MailStats, MailLock)...
+Message index files initialized
+Initializing user database files (user.data, user.keys, user.misc)...
+User database files initialized
+[ClientDoorBundler] Cache cleared
+[Server] Cleared door bundle cache (development mode)
+[INIT] bbsRoot=/Users/spot/Code/amiexpress-web
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[INIT] ACS toggles loaded — CREDITBYKB=false
+[INIT] Found 14 conferences in ConfConfig.info
+[MessageBaseLoader] Loaded 14 message bases from disk
+[FileAreas] Loaded 19 file areas from 14 conferences
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[AREXX] engine=native (auto: native available)
+[setMessagingDependencies] call #1 hasDb=true hasCallersLog=true hasSetEnvStat=false _dbTypeAfter=object from at initializeData (/Users/spot/Code/amiexpress-web/web/backend/src/server/initialization.ts:552:5)
+  Scanning BBSCMD directory: /Users/spot/Code/amiexpress-web/Conf1/Commands/BBSCmd
+    Directory does not exist, skipping
+  Scanning BBSCMD directory: /Users/spot/Code/amiexpress-web/Commands/BBSCmd
+  [BBSCMD] 1 registration(s) skipped - LOCATION missing: BESTCONF -> Doors/BestConf/BestConf.XIM
+  Scanning SYSCMD directory: /Users/spot/Code/amiexpress-web/Conf1/Commands/SysCmd
+    Directory does not exist, skipping
+  Scanning SYSCMD directory: /Users/spot/Code/amiexpress-web/Commands/SysCmd
+  [SYSCMD] 5 registration(s) skipped - LOCATION missing: ANSI -> Doors/AnsiSkip/AnsiSKIP.rexx, PWFAIL -> Doors/AquaPWFail/AquaPWFail, XPR -> Doors/XPR/XPR, ANNLOGON -> Doors/Announce/AnnLogon.32, QUICK -> Doors/intellect/quick/quicklogon
+[loadCommands] 136 commands loaded
+[initializeDoors] commandCache.bbscmd.size=119, syscmd.size=17
+[AmigaDoorManager] Scanned 120 door definitions, 119 active
+[initializeDoors] Registered door: 5DPAGER  Doors/5DPAGER/Doors/5D/5D_Page/5D_Page (type: FIM)
+[initializeDoors] Registered door: ADDBBS  Doors/AddBBS/AddBBS (type: DD)
+[initializeDoors] Registered door: ANSI-EDIT  Doors/ansi-editor (type: typescript)
+[initializeDoors] Registered door: ARKANOID  Doors/arkanoid (type: typescript)
+[initializeDoors] Registered door: AVAIL  Doors/AVAIL/AVAIL.rexx (type: AIM)
+[initializeDoors] Registered door: AVHBC  Doors/AVHBaudCheck/AVH-BaudCheck (type: DD)
+[initializeDoors] Registered door: B  Doors/EmP_Tools/Bulls (type: XIM)
+[initializeDoors] Registered door: BUGS  Doors/bug-tracker (type: typescript)
+[initializeDoors] Registered door: CARDLOBBY  Doors/card-lobby (type: typescript)
+[initializeDoors] Registered door: DASHBOARD  Doors/bbs-dashboard (type: typescript)
+[initializeDoors] Registered door: DD  doors/TurboLister/TurboLister.XiM (type: XIM)
+[initializeDoors] Registered door: DEL  Doors/-mgs!-MgzListMan/MGZLISTMAN (type: XIM)
+[initializeDoors] Registered door: DONKEYKONG  Doors/donkey-kong (type: typescript)
+[initializeDoors] Registered door: DOORMAN  Doors/door-manager (type: typescript)
+[initializeDoors] Registered door: DOORREPO  Doors/DoorRepo/doorrepo.amiga (type: XIM)
+[initializeDoors] Registered door: DOORS  Doors/doors-menu (type: typescript)
+[initializeDoors] Registered door: DREAMINDEX  Doors/DreamIndex/DreamIndex (type: DD)
+[initializeDoors] Registered door: DREAMSCAN  Doors/DreamScan/DreamScan (type: DD)
+[initializeDoors] Registered door: DREAMSTATS  Doors/DreamStats/DreamStats (type: DD)
+[initializeDoors] Registered door: DTAGWALL  Doors/DreamTagWall/DreamTagWall (type: DD)
+[initializeDoors] Registered door: DUPESTART1  Doors/CONFTOP/CONFTOP020.X (type: XIM)
+[initializeDoors] Registered door: E  Doors/5D-EnterMsg/5D-EnterMsg (type: XIM)
+[initializeDoors] Registered door: ED  Doors/5D-Edit/5D-Edit (type: XIM)
+[initializeDoors] Registered door: FILETEST  Doors/FILE-OPS-TEST (type: SIM)
+[initializeDoors] Registered door: FRIENDSONLY  Doors/FriendsOnly/FriendsOnly (type: DD)
+[initializeDoors] Registered door: FROGGER  Doors/frogger (type: typescript)
+[initializeDoors] Registered door: GALAGA  Doors/galaga (type: typescript)
+[initializeDoors] Registered door: GANJA  Doors/dopewars (type: typescript)
+[initializeDoors] Registered door: GLC  Doors/glc/glcviewer (type: XIM)
+[initializeDoors] Registered door: GMASTER  Doors/grandmaster (type: typescript)
+[initializeDoors] Registered door: GWALL  Doors/GWall/GWall (type: XIM)
+[initializeDoors] Registered door: HACKCHECK  Doors/HackCheck/HackCheck (type: DD)
+[initializeDoors] Registered door: HDRDROP  Doors/header-dropdown-demo (type: typescript)
+[initializeDoors] Registered door: HELLPAGER  Doors/HellPager/HellPager (type: DD)
+[initializeDoors] Registered door: I  Doors/EPUtils/SysInfo/SysInfo (type: XIM)
+[initializeDoors] Registered door: INTDEMO  Doors/INTERACTIVE-DEMO (type: SIM)
+[initializeDoors] Registered door: IRC  Doors/livechat (type: typescript)
+[initializeDoors] Registered door: J  Doors/emp_tools/Joincnf (type: XIM)
+[initializeDoors] Registered door: JOUST  Doors/joust (type: typescript)
+[initializeDoors] Registered door: KICKBOX  Doors/KickBox/KickBox.Rexx (type: AIM)
+[initializeDoors] Registered door: KICK  Doors/!!!War!!!/WarKick'Em/WarKick'Em (type: XIM)
+[initializeDoors] Registered door: L  Doors/scan.x (type: XIM)
+[initializeDoors] Registered door: LIVECHAT  Doors/livechat (type: typescript)
+[initializeDoors] Registered door: MEGATOP  Doors/MegaTop/MegaTop (type: DD)
+[initializeDoors] Registered door: MRC  Doors/mrc/mrc_door (type: XIM)
+[initializeDoors] Registered door: MRCSTAT1  Doors/mrc/mrcstat1 (type: XIM)
+[initializeDoors] Registered door: MSTAC  Doors/MST-AC/MST-AC (type: DD)
+[initializeDoors] Registered door: MSTCO  Doors/MST-CO/MST-CO (type: DD)
+[initializeDoors] Registered door: MSTPL  Doors/MST-PL/MST-PL (type: DD)
+[initializeDoors] Registered door: MSTRE  Doors/MST-RE/MST-RE (type: DD)
+[initializeDoors] Registered door: MSTSE  Doors/MST-SE/MST-SE (type: DD)
+[initializeDoors] Registered door: MSTUM  Doors/MST-UM/MST-UM (type: DD)
+[initializeDoors] Registered door: MTOP  Doors/multitop/mtop (type: SIM)
+[initializeDoors] Registered door: NEOBLESSEDSHOWCASE  Doors/neo-blessed-showcase (type: typescript)
+[initializeDoors] Registered door: NEOSHOWCASE  Doors/neo-blessed-showcase (type: typescript)
+[initializeDoors] Registered door: NEWUSERCHECK  Doors/Mael-NewUserCheck/Mael-NewUserCheck (type: DD)
+[initializeDoors] Registered door: OLM  Doors/!!!WAR!!!/WAROLM/WAROLM (type: XIM)
+[initializeDoors] Registered door: PENGO  Doors/pengo (type: typescript)
+[initializeDoors] Registered door: PHREAKWARS  Doors/phreakwars (type: typescript)
+[initializeDoors] Registered door: PIPEDREAM  Doors/pipe-dream (type: typescript)
+[initializeDoors] Registered door: PONG  Doors/ncurses-pong (type: typescript)
+[initializeDoors] Registered door: POOLCOMMENT  Doors/PoolComment/PoolComment (type: DD)
+[initializeDoors] Registered door: POOLDIR  Doors/PoolDir/PoolDir (type: DD)
+[initializeDoors] Registered door: PROMPTCOMPLETE  Doors/prompt-complete (type: typescript)
+[initializeDoors] Registered door: PUZZLEBOBBLE  Doors/puzzle-bobble (type: typescript)
+[initializeDoors] Registered door: REALNAME  amixnet/doors/REALNAMES (type: XIM)
+[initializeDoors] Registered door: RIP  Doors/rip-browser (type: typescript)
+[initializeDoors] Registered door: RQ  Doors/Sceptic/F!-Request/Request.rexx (type: AIM)
+[initializeDoors] Registered door: RTW  Doors/RTW/RTW (type: XIM)
+[initializeDoors] Registered door: S  Doors/ustats/stats (type: XIM)
+[initializeDoors] Registered door: SCROLLWARS  Doors/scrollwars (type: typescript)
+[initializeDoors] Registered door: SENT  Doors/FILEID/FILEID (type: XIM)
+[initializeDoors] Registered door: SHADOWDEMO  Doors/widget-shadow-demo (type: typescript)
+[initializeDoors] Registered door: SIDBEE  Doors/SidBee/SidBee (type: DD)
+[initializeDoors] Registered door: SIZE  Doors/SizeCheck/SizeCheck (type: XIM)
+[initializeDoors] Registered door: SOMEINFO  Doors/SOMEINFO/someinfo.rexx (type: AIM)
+[initializeDoors] Registered door: SPEEDCHK  Doors/SPEEDCHK/SPEEDCHK.rexx (type: AIM)
+[initializeDoors] Registered door: SPRITED  Doors/sprite-editor (type: typescript)
+[initializeDoors] Registered door: STNG  Doors/STNG/STNG.Rexx (type: AIM)
+[initializeDoors] Registered door: STRIP  Doors/ami-stripper (type: typescript)
+[initializeDoors] Registered door: STUPID  Doors/FILEID/FILEID (type: XIM)
+[initializeDoors] Registered door: SUPERQIX  Doors/super-qix (type: typescript)
+[initializeDoors] Registered door: SENT_FE  Doors/Sent_FE/Sent_FE (type: XIM)
+[initializeDoors] Registered door: TC  Doors/telnet (type: typescript)
+[initializeDoors] Registered door: TCONNECT  Doors/telnet (type: typescript)
+[initializeDoors] Registered door: THEME  Doors/theme-picker (type: typescript)
+[initializeDoors] Registered door: TLIST  Doors/SRH/TList/TLP2 (type: XIM)
+[initializeDoors] Registered door: TTT  Doors/tic-tac-toe (type: typescript)
+[initializeDoors] Registered door: TELNET-FRONT  Doors/telnet-front (type: typescript)
+[initializeDoors] Registered door: USERLIST  Doors/Mael-Userlist/Mael-Userlist (type: DD)
+[initializeDoors] Registered door: VOICECHAT  Doors/voice-chat (type: typescript)
+[initializeDoors] Registered door: WHAT  Doors/What/What (type: XIM)
+[initializeDoors] Registered door: WHIP  Doors/whip (type: typescript)
+[initializeDoors] Registered door: WHO  Doors/RTW/RTW (type: XIM)
+[initializeDoors] Registered door: Z  Doors/5D-ZippySearch/5D-ZippySearch (type: XIM)
+[initializeDoors] Registered door: ZOOKEEPER  Doors/zoo-keeper (type: typescript)
+[initializeDoors] Registered door: _S  Doors/zOOTILITY/zOOsTAT (type: XIM)
+[initializeDoors] Registered door: AE  Doors/mail-composer (type: typescript)
+[initializeDoors] Registered door: BBSLINK  Doors/bbslink (type: typescript)
+[initializeDoors] Registered door: BK  doors/bytekiller/bytekiller (type: XIM)
+[initializeDoors] Registered door: CHAT  doors/Nodechat/newchat (type: XIM)
+[initializeDoors] Registered door: CONFTOP  Doors/CONFTOP/CONFTOP020.X (type: XIM)
+[initializeDoors] Registered door: CS  Doors/AquaScan/AquaScan.000 (type: XIM)
+[initializeDoors] Registered door: CTOP  Doors/CONFTOP/ctop (type: XIM)
+[initializeDoors] Registered door: F  Doors/AquaScan/AquaScan.020 (type: XIM)
+[initializeDoors] Registered door: FAKE  Doors/bytekiller/byteComment (type: XIM)
+[initializeDoors] Registered door: FR  Doors/AquaScan/AquaScan.000 (type: XIM)
+[initializeDoors] Registered door: GA  Doors/GetAnswer/GetAnswer.030 (type: XIM)
+[initializeDoors] Registered door: GAMES  Doors/5D-AdiMenu/5D-AdiMenu (type: XIM)
+[initializeDoors] Registered door: GL  Doors/glc/glcviewer (type: XIM)
+[initializeDoors] Registered door: LINKWALL  Doors/bbslinkwall (type: typescript)
+[initializeDoors] Registered door: MRCSTAT2  Doors/mrc/mrcstat2 (type: XIM)
+[initializeDoors] Registered door: N  Doors/AquaScan/AquaScan.000 (type: XIM)
+[initializeDoors] Registered door: NSU  Doors/AquaScan/AquaScan.000 (type: XIM)
+[initializeDoors] Registered door: NUKE  Doors/Bossnuke/Bossnuke (type: XIM)
+[initializeDoors] Registered door: REQ  Doors/Request/Request (type: XIM)
+[initializeDoors] Registered door: SCAN  Doors/AquaScan/AquaScan.000 (type: XIM)
+[initializeDoors] Registered door: ULIST  Doors/5D-User/5D-User (type: XIM)
+[initializeDoors] Registered door: WALL  Doors/dRE/dRE!WAll/dRE!WAll (type: XIM)
+[initializeDoors] WARN: door DD LOCATION="doors/TurboLister/TurboLister.XiM" resolves outside Doors/ (/Users/spot/Code/amiexpress-web/doors/TurboLister/TurboLister.XiM) — move to Doors/ and update .info
+[initializeDoors] WARN: door REALNAME LOCATION="amixnet/doors/REALNAMES" resolves outside Doors/ (/Users/spot/Code/amiexpress-web/amixnet/doors/REALNAMES) — move to Doors/ and update .info
+[initializeDoors] WARN: door BK LOCATION="doors/bytekiller/bytekiller" resolves outside Doors/ (/Users/spot/Code/amiexpress-web/doors/bytekiller/bytekiller) — move to Doors/ and update .info
+[initializeDoors] WARN: door CHAT LOCATION="doors/Nodechat/newchat" resolves outside Doors/ (/Users/spot/Code/amiexpress-web/doors/Nodechat/newchat) — move to Doors/ and update .info
+[initializeDoors] Total doors registered: 119
+[AmigaDoorManager] Scanned 120 door definitions, 119 active
+[BBSCmd watcher] watching 1 command directory
+[DEPRECATED] setChatState called - state now managed by ChatSessionUseCase
+[DEPRECATED] setConstants called - constants now imported directly
+[setMessagingDependencies] call #2 hasDb=false hasCallersLog=false hasSetEnvStat=true _dbTypeAfter=object from at initializeData (/Users/spot/Code/amiexpress-web/web/backend/src/server/initialization.ts:712:5)
+[DI Container] Initialized with all dependencies
+[DI] setProcessOlmMessageQueue called, fn type: function
+[DI] processOlmMessageQueue registered in container
+[LogRetention] started — 10 MB cap per log file, retention target ~90d
+[initializeData] Loaded 14 conferences, 14 bases, 19 areas, 119 doors
+[MOIRA WASM] Memory page table updated
+[MOIRA WASM]   Chip RAM pages: 0x00-0x1f
+[MOIRA WASM]   Fast RAM pages: 0x20-0x3f
+[MOIRA WASM]   ROM pages: 0xF8-0xFF
+[MOIRA WASM] MoiraCPU initialized with vAmiga-style memory architecture!
+[MOIRA WASM]   Chip RAM: 2048 KB (mask: 0x1fffff)
+[MOIRA WASM]   ROM: 512 KB (mask: 0x7ffff)
+[MoiraEmulator] moira.js loaded from /Users/spot/Code/amiexpress-web/web/backend/src/amiga-emulation/cpu/build/moira.js
+[ROM] Loading Kickstart ROM from: /Users/spot/Code/amiexpress-web/web/backend/data/amiga-roms/Kickstart v3.1 rev 40.63 (1993)(Commodore)(A500-A600-A2000).rom
+[ROM] Kickstart 3.1 loaded successfully
+[ROM] Mapped to memory range: 0xF80000 - 0xFFFFFF
+[MOIRA WASM] Memory page table updated
+[MOIRA WASM]   Chip RAM pages: 0x00-0x1f
+[MOIRA WASM]   Fast RAM pages: 0x20-0x3f
+[MOIRA WASM]   ROM pages: 0xF8-0xFF
+[MOIRA WASM] ROM loaded: 524288 bytes
+[MOIRA WASM]   ROM buffer size: 524288 bytes
+[MOIRA WASM]   ROM mask: 0x7ffff
+[MOIRA WASM]   Exception vectors copied to chip RAM: 1024 bytes
+[MoiraEmulator] ROM loaded (524288 bytes)
+[MoiraEmulator] ROM mapped to 0xF80000-0xFFFFFF
+[MoiraEmulator] Exception vectors copied to 0x000000
+[LibraryTraps] Loaded LVOs from /Users/spot/Code/amiexpress-web/Documentation/7-Reference Sources/LVOs.i
+[MoiraEmulator] Library trap handler registered
+[LibraryTraps] Installing Exec.library vectors at base 0x80000
+  [FreeSignal] Vector at 0x7feb0 (offset -336)
+  [RemPort] Vector at 0x7fe98 (offset -360)
+  [OpenDevice] Vector at 0x7fe44 (offset -444)
+  [CloseDevice] Vector at 0x7fe3e (offset -450)
+  [DoIO] Vector at 0x7fe38 (offset -456)
+  [CheckIO] Vector at 0x7fe2c (offset -468)
+  [WaitIO] Vector at 0x7fe26 (offset -474)
+  [AbortIO] Vector at 0x7fe20 (offset -480)
+  [CreateIORequest] Vector at 0x7fd72 (offset -654)
+  [DeleteIORequest] Vector at 0x7fd6c (offset -660)
+  [AllocEntry] Vector at 0x7ff22 (offset -222)
+  [FreeEntry] Vector at 0x7ff1c (offset -228)
+  [OpenResource] Vector at 0x7fe0e (offset -498)
+  [SetFunction] Vector at 0x7fe5c (offset -420)
+  [AddTask] Vector at 0x7fee6 (offset -282)
+  [AddSemaphore] Vector at 0x7fda8 (offset -600)
+  [AddIntServer] Vector at 0x7ff58 (offset -168)
+  [CacheControl] Vector at 0x7fd78 (offset -648)
+  [RemMemHandler] Vector at 0x7ff7c (offset -132)
+  [SetIntVector] Vector at 0x7ff5e (offset -162)
+  [AllocTrap] Vector at 0x7feaa (offset -342)
+  [FreeTrap] Vector at 0x7fea4 (offset -348)
+  [SendIO] Vector at 0x7fe32 (offset -462)
+  [SumLibrary] Vector at 0x7fe56 (offset -426)
+  [OpenLibrary] Vector at 0x7fdd8 (offset -552)
+  [CloseLibrary] Vector at 0x7fe62 (offset -414)
+  [RawDoFmt] Vector at 0x7fdf6 (offset -522)
+  [InitStruct] Vector at 0x7ffb2 (offset -78)
+  [MakeLibrary] Vector at 0x7ffac (offset -84)
+  [MakeFunctions] Vector at 0x7ffa6 (offset -90)
+  [FindResident] Vector at 0x7ffa0 (offset -96)
+  [InitResident] Vector at 0x7ff9a (offset -102)
+  [Alert] Vector at 0x7ff94 (offset -108)
+  [Forbid] Vector at 0x7ff7c (offset -132)
+  [Permit] Vector at 0x7ff76 (offset -138)
+  [SuperState] Vector at 0x7ff6a (offset -150)
+  [UserState] Vector at 0x7ff64 (offset -156)
+  [Allocate] Vector at 0x7ff46 (offset -186)
+  [Insert] Vector at 0x7ff16 (offset -234)
+  [AddHead] Vector at 0x7ff10 (offset -240)
+  [AddTail] Vector at 0x7ff0a (offset -246)
+  [Remove] Vector at 0x7ff04 (offset -252)
+  [RemHead] Vector at 0x7fefe (offset -258)
+  [RemTail] Vector at 0x7fef8 (offset -264)
+  [Enqueue] Vector at 0x7fef2 (offset -270)
+  [InitSemaphore] Vector at 0x7fdd2 (offset -558)
+  [ObtainSemaphore] Vector at 0x7fdcc (offset -564)
+  [ReleaseSemaphore] Vector at 0x7fdc6 (offset -570)
+  [AttemptSemaphore] Vector at 0x7fdc0 (offset -576)
+  [FindSemaphore] Vector at 0x7fdae (offset -594)
+  [OldOpenLibrary] Vector at 0x7fe68 (offset -408)
+  [Disable] Vector at 0x7ff88 (offset -120)
+  [Enable] Vector at 0x7ff82 (offset -126)
+  [Deallocate] Vector at 0x7ff40 (offset -192)
+  [AvailMem] Vector at 0x7ff28 (offset -216)
+  [FindName] Vector at 0x7feec (offset -276)
+  [TypeOfMem] Vector at 0x7fdea (offset -534)
+  [CacheClearU] Vector at 0x7fd84 (offset -636)
+  [CacheClearE] Vector at 0x7fd7e (offset -642)
+  [ObtainSemaphoreShared] Vector at 0x7fd5a (offset -678)
+  [AllocMem] Vector at 0x7ff3a (offset -198)
+  [FreeMem] Vector at 0x7ff2e (offset -210)
+  [FindTask] Vector at 0x7feda (offset -294)
+  [SetTaskPri] Vector at 0x7fed4 (offset -300)
+  [SetSignal] Vector at 0x7fece (offset -306)
+  [FindPort] Vector at 0x7fe7a (offset -390)
+  [PutMsg] Vector at 0x7fe92 (offset -366)
+  [GetMsg] Vector at 0x7fe8c (offset -372)
+  [Wait] Vector at 0x7fec2 (offset -318)
+  [Signal] Vector at 0x7febc (offset -324)
+  [Supervisor] Vector at 0x7ffe2 (offset -30)
+  [AllocSignal] Vector at 0x7feb6 (offset -330)
+  [AddPort] Vector at 0x7fe9e (offset -354)
+  [ReplyMsg] Vector at 0x7fe86 (offset -378)
+  [WaitPort] Vector at 0x7fe80 (offset -384)
+  [CreatePort] Vector at 0x7ff8e (offset -114)
+  [CreateMsgPort] Vector at 0x7fd66 (offset -666)
+  [DeleteMsgPort] Vector at 0x7fd60 (offset -672)
+  [AllocVec] Vector at 0x7fd54 (offset -684)
+  [FreeVec] Vector at 0x7fd4e (offset -690)
+  [CreatePool] Vector at 0x7fd48 (offset -696)
+  [DeletePool] Vector at 0x7fd42 (offset -702)
+  [AllocPooled] Vector at 0x7fd3c (offset -708)
+  [FreePooled] Vector at 0x7fd36 (offset -714)
+  [CopyMem] Vector at 0x7fd90 (offset -624)
+  [CopyMemQuick] Vector at 0x7fd8a (offset -630)
+  [StackSwap] Vector at 0x7fd24 (offset -732)
+[LibraryTraps] Installed 87 Exec.library vectors
+[LibraryTraps] Stubbed 40 LVOs for exec.library from LVOs.i
+[LibraryLoader] Loading dos.library (version >= 37)
+[LibraryLoader] ✅ dos.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[LibraryTraps] Installing dos.library vectors at base 0xb0000
+  [Open] Vector at 0xaffe2 (offset -30)
+  [Close] Vector at 0xaffdc (offset -36)
+  [Read] Vector at 0xaffd6 (offset -42)
+  [Write] Vector at 0xaffd0 (offset -48)
+  [Input] Vector at 0xaffca (offset -54)
+  [Output] Vector at 0xaffc4 (offset -60)
+  [Seek] Vector at 0xaffbe (offset -66)
+  [DeleteFile] Vector at 0xaffb8 (offset -72)
+  [Rename] Vector at 0xaffb2 (offset -78)
+  [Lock] Vector at 0xaffac (offset -84)
+  [UnLock] Vector at 0xaffa6 (offset -90)
+  [DupLock] Vector at 0xaffa0 (offset -96)
+  [Examine] Vector at 0xaff9a (offset -102)
+  [ExNext] Vector at 0xaff94 (offset -108)
+  [Info] Vector at 0xaff8e (offset -114)
+  [CreateDir] Vector at 0xaff88 (offset -120)
+  [CurrentDir] Vector at 0xaff82 (offset -126)
+  [IoErr] Vector at 0xaff7c (offset -132)
+  [CreateProc] Vector at 0xaff76 (offset -138)
+  [Exit] Vector at 0xaff70 (offset -144)
+  [LoadSeg] Vector at 0xaff6a (offset -150)
+  [UnLoadSeg] Vector at 0xaff64 (offset -156)
+  [DeviceProc] Vector at 0xaff52 (offset -174)
+  [SetComment] Vector at 0xaff4c (offset -180)
+  [SetProtection] Vector at 0xaff46 (offset -186)
+  [DateStamp] Vector at 0xaff40 (offset -192)
+  [Delay] Vector at 0xaff3a (offset -198)
+  [WaitForChar] Vector at 0xaff34 (offset -204)
+  [ParentDir] Vector at 0xaff2e (offset -210)
+  [IsInteractive] Vector at 0xaff28 (offset -216)
+  [Execute] Vector at 0xaff22 (offset -222)
+  [AllocDosObject] Vector at 0xaff1c (offset -228)
+  [FreeDosObject] Vector at 0xaff16 (offset -234)
+  [SelectInput] Vector at 0xafeda (offset -294)
+  [SelectOutput] Vector at 0xafed4 (offset -300)
+  [FGetC] Vector at 0xafece (offset -306)
+  [FPutC] Vector at 0xafec8 (offset -312)
+  [UnGetC] Vector at 0xafec2 (offset -318)
+  [FRead] Vector at 0xafebc (offset -324)
+  [FWrite] Vector at 0xafeb6 (offset -330)
+  [FGets] Vector at 0xafeb0 (offset -336)
+  [FPuts] Vector at 0xafeaa (offset -342)
+  [VFPrintf] Vector at 0xafe9e (offset -354)
+  [Flush] Vector at 0xafe98 (offset -360)
+  [DupLockFromFH] Vector at 0xafe8c (offset -372)
+  [OpenFromLock] Vector at 0xafe86 (offset -378)
+  [ParentOfFH] Vector at 0xafe80 (offset -384)
+  [ExamineFH] Vector at 0xafe7a (offset -390)
+  [NameFromLock] Vector at 0xafe6e (offset -402)
+  [SplitName] Vector at 0xafe62 (offset -414)
+  [SetIoErr] Vector at 0xafe32 (offset -462)
+  [Fault] Vector at 0xafe2c (offset -468)
+  [PrintFault] Vector at 0xafe26 (offset -474)
+  [Cli] Vector at 0xafe14 (offset -492)
+  [GetFileSysTask] Vector at 0xafdf6 (offset -522)
+  [SetFileSysTask] Vector at 0xafdf0 (offset -528)
+  [FindCliProc] Vector at 0xafdde (offset -546)
+  [MaxCli] Vector at 0xafdd8 (offset -552)
+  [GetCurrentDirName] Vector at 0xafdcc (offset -564)
+  [GetProgramName] Vector at 0xafdc0 (offset -576)
+  [SetProgramDir] Vector at 0xafdae (offset -594)
+  [GetProgramDir] Vector at 0xafda8 (offset -600)
+  [SystemTagList] Vector at 0xafda2 (offset -606)
+  [DateToStr] Vector at 0xafd18 (offset -744)
+  [StrToDate] Vector at 0xafd12 (offset -750)
+  [CheckSignal] Vector at 0xafce8 (offset -792)
+  [ReadArgs] Vector at 0xafce2 (offset -798)
+  [ParsePattern] Vector at 0xafcb8 (offset -840)
+  [MatchPattern] Vector at 0xafcb2 (offset -846)
+  [FreeArgs] Vector at 0xafca6 (offset -858)
+  [FilePart] Vector at 0xafc9a (offset -870)
+  [PathPart] Vector at 0xafc94 (offset -876)
+  [AddPart] Vector at 0xafc8e (offset -882)
+  [SetVar] Vector at 0xafc7c (offset -900)
+  [GetVar] Vector at 0xafc76 (offset -906)
+  [DeleteVar] Vector at 0xafc70 (offset -912)
+  [PutStr] Vector at 0xafc4c (offset -948)
+  [VPrintf] Vector at 0xafc46 (offset -954)
+  [ParsePatternNoCase] Vector at 0xafc3a (offset -966)
+  [MatchPatternNoCase] Vector at 0xafc34 (offset -972)
+  [LockDosList] Vector at 0xafd72 (offset -654)
+  [UnLockDosList] Vector at 0xafd6c (offset -660)
+  [AttemptLockDosList] Vector at 0xafd66 (offset -666)
+  [FindDosEntry] Vector at 0xafd54 (offset -684)
+  [NextDosEntry] Vector at 0xafd4e (offset -690)
+  [MatchFirst] Vector at 0xafcca (offset -822)
+  [MatchNext] Vector at 0xafcc4 (offset -828)
+  [MatchEnd] Vector at 0xafcbe (offset -834)
+  [IsFileSystem] Vector at 0xafe02 (offset -510)
+  [SetProgramName] Vector at 0xafe0e (offset -498)
+  [GetArgStr] Vector at 0xafdea (offset -534)
+  [ReadItem] Vector at 0xafda2 (offset -606)
+  [GetDeviceProc] Vector at 0xafd7e (offset -642)
+  [VFWritef] Vector at 0xafea4 (offset -348)
+  [SetMode] Vector at 0xafe56 (offset -426)
+  [ExAll] Vector at 0xafe50 (offset -432)
+  [StartNotify] Vector at 0xafc88 (offset -888)
+  [DoPkt] Vector at 0xaff10 (offset -240)
+  [StrToLong] Vector at 0xafcd0 (offset -816)
+[LibraryTraps] Installed 99 dos.library vectors
+[LibraryTraps] Stubbed 61 LVOs for dos.library from LVOs.i
+[LibraryLoader] Loading rexxsyslib.library (version >= 0)
+[LibraryLoader] Found library: /Users/spot/Code/amiexpress-web/Libs/rexxsyslib.library
+[LibraryLoader] Read 33392 bytes from /Users/spot/Code/amiexpress-web/Libs/rexxsyslib.library
+[LibraryLoader] Parsed 2 segments
+[LibraryLoader] Allocated base address: 0x200000
+[LibraryLoader] Loading code segment (33280 bytes) at 0x200000
+[LibraryLoader] Loading data segment (0 bytes) at 0x208200
+[LibraryLoader] Applying 1 relocation groups
+[LibraryLoader] Stored ExecBase (0x80000) at library+0x22
+✅ [LibraryLoader] Successfully loaded rexxsyslib.library at 0x200000
+   Jump table entries: 0
+[LibraryTraps] Installing rexxsyslib.library vectors at base 0x200000
+  [CreateArgstring] Vector at 0x1fff82 (offset -126)
+  [DeleteArgstring] Vector at 0x1fff7c (offset -132)
+  [LengthArgstring] Vector at 0x1fff76 (offset -138)
+  [CreateRexxMsg] Vector at 0x1fff70 (offset -144)
+  [DeleteRexxMsg] Vector at 0x1fff6a (offset -150)
+  [ClearRexxMsg] Vector at 0x1fff64 (offset -156)
+  [FillRexxMsg] Vector at 0x1fff5e (offset -162)
+  [IsRexxMsg] Vector at 0x1fff58 (offset -168)
+  [InitRexxPort] Vector at 0x1fff1c (offset -228)
+  [LockRexxBase] Vector at 0x1ffe3e (offset -450)
+  [UnlockRexxBase] Vector at 0x1ffe38 (offset -456)
+[LibraryTraps] Installed 11 rexxsyslib.library vectors
+[HunkLoader] Applying 0 relocations to 0 segments
+[AREXX] phantom rexxc port: block=0x210048 port=0x2100a4 sigTask=0x3b00
+[LibraryTraps] Registered custom trap 'OpenDevice' at 0x7fe44
+[LibraryTraps] Registered custom trap 'CloseDevice' at 0x7fe3e
+[LibraryTraps] Synced 296 trap addresses to MOIRA for batch execution
+[AREXX] LibInit: calling rexxsyslib init at 0x20524e (libBase=0x200000)
+[exec-vectors] OpenLibrary TRAP: name="mathieeedoubbas.library" version=0
+[LibraryLoader] Loading mathieeedoubbas.library (version >= 0)
+[LibraryLoader] ✅ mathieeedoubbas.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[exec-vectors] OpenLibrary TRAP result: 0x100000
+[exec-vectors] OpenLibrary TRAP: name="dos.library" version=0
+[LibraryLoader] Loading dos.library (version >= 0)
+[LibraryLoader] ✅ dos.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[ExecLibrary] *** dos.library opened - base=0xb0000 *** Door should store this and use it for all DOS calls
+[exec-vectors] OpenLibrary TRAP result: 0xb0000
+[exec-vectors] FindName: "graphics.library" -> 0 (not found)
+[AREXX] LibInit: success (D0=0x200000) after 178 cycles
+[HunkLoader] Applying 0 relocations to 0 segments
+[LibraryTraps] Synced 296 trap addresses to MOIRA for batch execution
+[AREXX] LoadSeg("REXX:RXC") → 3 seg(s), bptr=0x1000 entry=0x4008
+[AREXX] task-spawn fields populated: name=0x210118("rexx") pri=0 seg=0x1000 stack=8192
+[AREXX] RexxMast service started, running until ready...
+[ExecLibrary][Trap][WaitPort] port=0x3b5c name=Door Task Port
+[exec-vectors] OpenLibrary TRAP: name="dos.library" version=0
+[LibraryLoader] Loading dos.library (version >= 0)
+[LibraryLoader] ✅ dos.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[ExecLibrary] *** dos.library opened - base=0xb0000 *** Door should store this and use it for all DOS calls
+[exec-vectors] OpenLibrary TRAP result: 0xb0000
+[exec-vectors] OpenLibrary TRAP: name="mathieeedoubbas.library" version=0
+[LibraryLoader] Loading mathieeedoubbas.library (version >= 0)
+[LibraryLoader] ✅ mathieeedoubbas.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[exec-vectors] OpenLibrary TRAP result: 0x100000
+[exec-vectors] OpenLibrary TRAP: name="rexxsyslib.library" version=33
+[LibraryLoader] Loading rexxsyslib.library (version >= 33)
+[LibraryLoader] Library already loaded: rexxsyslib.library
+[exec-vectors] OpenLibrary TRAP result: 0x200000
+[ExecLibrary][Trap][WaitPort] port=0x3b5c name=Door Task Port
+[exec-vectors] OpenLibrary TRAP: name="dos.library" version=0
+[LibraryLoader] Loading dos.library (version >= 0)
+[LibraryLoader] ✅ dos.library is ROM-resident (using Kickstart ROM)
+[LibraryLoader]   ROM libraries are native code in ROM, not loaded from disk
+[ExecLibrary] *** dos.library opened - base=0xb0000 *** Door should store this and use it for all DOS calls
+[exec-vectors] OpenLibrary TRAP result: 0xb0000
+[exec-vectors] OpenLibrary TRAP: name="rexxsyslib.library" version=0
+[LibraryLoader] Loading rexxsyslib.library (version >= 0)
+[LibraryLoader] Library already loaded: rexxsyslib.library
+[exec-vectors] OpenLibrary TRAP result: 0x200000
+[ExecLibrary] Forbid() - stub (no-op)
+[AREXX] RexxMast READY — native dispatch active
+[Operator Chat] Handler initialized
+[OK] Operator chat handler initialized
+[Web Push] Initialized with VAPID credentials
+[OK] Web push notifications enabled
+[Static] Serving SDK Preview at /sdk from /Users/spot/Code/amiexpress-web/sdk/tools/preview/frontend/dist
+[Static] Serving Admin Config at /admin from /Users/spot/Code/amiexpress-web/web/config-app/dist
+[Static] Project root: /Users/spot/Code/amiexpress-web
+[Static] Process cwd: /Users/spot/Code/amiexpress-web/web/backend
+[Static] Frontend path: /Users/spot/Code/amiexpress-web/web/frontend/dist
+[Static] Frontend path exists: true
+[Static] Assets path exists: true
+[Static] Fonts path exists: true
+[Static] Assets count: 5, first 5: index-B5a91sBF.js, index-BqfmPa6d.css, socket-BcxXcwBL.js, terminal-D0r5lDjn.js, vendor-BIF_SMrh.js
+[Static] Fonts count: 12
+[Static] Serving BBS Terminal at / from /Users/spot/Code/amiexpress-web/web/frontend/dist
+[OK] HTTP routes registered
+[OK] Database initialization complete
+[SETUP] Found 1 sysop-level user(s)
+[WS-Terminal] Endpoint ready at /ws/terminal
+[Telnet Server] Listening on port 64128
+[OK] HTTP/WebSocket Server running on 0.0.0.0:3001
+[WEB] BBS accessible at http://localhost:3001/
+[OK] Telnet Server ready on port 64128
+[TELNET] Connect: telnet localhost 64128
+[SSH Key] Loaded SSH host key from data/ssh/ssh_host_rsa_key
+[SSH Server] Listening on port 31337
+[OK] SSH Server ready on port 31337
+[SSH] Connect: ssh -p 31337 user@localhost
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[READY] AmiExpress BBS is ready for connections!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[Socket.IO Auth] New connection, has token: false, socket id: JA2L6L9_2IA1ZQRZAAAB
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 1
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: JA2L6L9_2IA1ZQRZAAAB (guest)
+[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: JA2L6L9_2IA1ZQRZAAAB
+[CHAT DEBUG] registerChatHandlers called for socket: JA2L6L9_2IA1ZQRZAAAB
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: JA2L6L9_2IA1ZQRZAAAB
+[Operator Chat] Setting up listeners for socket JA2L6L9_2IA1ZQRZAAAB, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node1
+[DoorDropFile] Created DORINFO1.DEF for Node1
+[CallersLog] Node1: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 1)
+[executeTypeScriptDoor] ===== EXEC ID: mtn0kl09b8ot =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788529980251 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node1
+[DoorDropFile] Deleted DORINFO1.DEF for Node1
+[CallersLog] Node1: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 1)
+[Connection] Welcome sequence complete for node 1, waiting for ANSI response
+[Socket.IO Auth] New connection, has token: false, socket id: CMPoDCbBCbsCOB9ZAAAE
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 2
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: CMPoDCbBCbsCOB9ZAAAE (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: CMPoDCbBCbsCOB9ZAAAE
+[CHAT DEBUG] registerChatHandlers called for socket: CMPoDCbBCbsCOB9ZAAAE
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: CMPoDCbBCbsCOB9ZAAAE
+[Operator Chat] Setting up listeners for socket CMPoDCbBCbsCOB9ZAAAE, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node2
+[DoorDropFile] Created DORINFO2.DEF for Node2
+[CallersLog] Node2: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 2)
+[executeTypeScriptDoor] ===== EXEC ID: mtn0ksbx8s0r =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788529989741 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node2
+[DoorDropFile] Deleted DORINFO2.DEF for Node2
+[CallersLog] Node2: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 2)
+[Connection] Welcome sequence complete for node 2, waiting for ANSI response
+[socket-handlers] checkPauseHandler active: false, flagPauseHandler active: false
+Session state: await subState: ansi_prompt
+Input buffer: ""
+[socket-handlers] ✗ NOT in door or no handler - routing to BBS command handler
+[socket-handlers]   inDoorManager: false
+[socket-handlers]   handler exists: false
+=== handleCommand called ===
+data: "q"
+session.state: await
+session.subState: ansi_prompt
+[handleCommand] ENTRY: data="q" subState=ansi_prompt paginatedScreen=false inDoorManager=false
+=== COMMAND PROCESSED ===
+
+[socket-handlers] checkPauseHandler active: false, flagPauseHandler active: false
+Session state: await subState: ansi_prompt
+Input buffer: ""
+🎯 ENTER KEY DETECTED!
+🎯 Current subState: ansi_prompt
+🎯 Is POST_MESSAGE_SUBJECT? false
+🎯 Input buffer contents: ""
+[socket-handlers] ✗ NOT in door or no handler - routing to BBS command handler
+[socket-handlers]   inDoorManager: false
+[socket-handlers]   handler exists: false
+=== handleCommand called ===
+data: "\r"
+session.state: await
+session.subState: ansi_prompt
+[handleCommand] ENTRY: data="" subState=ansi_prompt paginatedScreen=false inDoorManager=false
+ Graphics prompt response: Q
+[QUICK] Quick logon enabled - will skip bulletins per express.e:29545
+ Graphics mode set: ANSI
+[BBSConfig] bbsConfig.info not found, using defaults
+[SCREEN] [displayScreen] ========================================
+[SCREEN] [displayScreen] REQUESTED SCREEN: BBSTITLE
+[SCREEN] [displayScreen] Conference ID: 1
+[SCREEN] [displayScreen] User: guest
+[SCREEN] [displayScreen] ========================================
+[SCREEN FLOW] Display request for BBSTITLE (runCommands=true) state=ansi_prompt node=2
+[SCREEN] [loadScreenFile] Loading screen: BBSTITLE
+[SCREEN] [loadScreenFile] Base directory: /Users/spot/Code/amiexpress-web
+[SCREEN] [loadScreenFile] Conference ID: 1, Node ID: 2
+[SCREEN] [loadScreenFile] Terminal type: unknown (80x24)
+[SCREEN] [loadScreenFile] PETSCII mode: NO
+[SCREEN] [loadScreenFile] Search locations for BBSTITLE: [ 'Node2' ]
+[SCREEN] [loadScreenFile] Trying 1 location(s) with case-insensitive matching:
+[SCREEN] Found text screen: /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
+[SCREEN] [loadScreenFile]  Found security screen for BBSTITLE at: /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
+[amiga-text-decode] /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
+[amiga-text-decode]   Encoding: iso-8859-1, iCE: false
+[NEWLINE-DEBUG] RAW CONTENT (BBSTITLE): 13894 bytes, 68 \n, 0 \r\n
+[SCREEN] [displayScreen]  Screen loaded successfully: BBSTITLE
+[SCREEN] [displayScreen] Content length: 13894 bytes
+[SCREEN] [displayScreen] PETSCII: NO
+[SCREEN] [displayScreen] Render event: BBSTITLE (node 2)
+[SCREEN FLOW] Loaded BBSTITLE file=/Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT petscii=N bytes=13894
+[DEBUG:SCREEN:INFO] Displaying screen: BBSTITLE {
+  file: '/Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT',
+  size: '13894 bytes',
+  isPetscii: false,
+  conference: 1
+}
+[SCREEN] [MCI] ========== PROCESSING MCI CODES ==========
+[SCREEN] [MCI] Content length: 13894
+[SCREEN] [MCI] Looking for ~XC_ and ~XI codes...
+[DEBUG:MCI:DEBUG] Parsing MCI codes (13894 bytes) 
+[SCREEN] [MCI] Total commands to execute: 0
+=== COMMAND PROCESSED ===
+
+[NEWLINE-DEBUG] AFTER parseMciCodes NORMAL: 0 bytes, 0 \n, 0 \r\n
+[NEWLINE-DEBUG] AFTER addAnsiEscapes: 0 bytes, 0 \n, 0 \r\n
+[NEWLINE-DEBUG] AFTER NORMALIZE: 0 bytes, 0 \n, 0 \r\n
+[WIPE-DEBUG] Screen: BBSTITLE, hasWipeAnimation: false, wipeType: null
+[NEWLINE-DEBUG] SPLIT INTO LINES: 2 lines
+[NEWLINE-DEBUG] FIRST 5 LINES:   [0] len=0: 
+  [1] len=0: 
+[SCREEN FLOW] Parsed BBSTITLE: event=ansi-output commands=0 pause=N pages=2
+[WIPE-CHECK] hasWipeAnimation=false, wipeType=null, screenName=BBSTITLE
+[SCREEN] [displayScreen] Content already emitted inline, skipping frame buffer
+🔍 Checking if username exists: sysop
+User exists, requesting password
+[DISCONNECT] Client disconnected, reason: transport close, socket: CMPoDCbBCbsCOB9ZAAAE
+[DISCONNECT] sessionBeforeDelay.sysopKicked=undefined, nodeId=2
+[DISCONNECT] Waiting 3000ms for potential reconnection...
+[Socket.IO Auth] New connection, has token: false, socket id: SkLfV7PALh2L3vGQAAAH
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 3
