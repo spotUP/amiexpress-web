@@ -782,3 +782,1055 @@ Executing door: FRONTEND
 [HEARTBEAT] Alive, heap: 82MB, rss: 53MB, interval: 60s
 [HEARTBEAT] Alive, heap: 82MB, rss: 53MB, interval: 60s
 [HEARTBEAT] Alive, heap: 82MB, rss: 59MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 58MB, interval: 60s
+[UserFileManager] Serialized user struct: 232 bytes (expected 232)
+[UserFileManager] Serialized userKeys struct: 56 bytes (expected 56)
+[UserFileManager] Serialized userMisc struct: 248 bytes (expected 248)
+[UserFileManager] Updated user files for sysop (slot 2)
+[Database] Synced updated user sysop to disk files (slot 2)
+[NodeManager] DB session cleanup: 2 marked disconnected, 0 old rows deleted
+[HEARTBEAT] Alive, heap: 83MB, rss: 51MB, interval: 60s
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/AWAITSCREEN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/AWAITSCREEN.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/AWAITSCREEN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/AWAITSCREEN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/AWAITSCREEN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/AWAITSCREEN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/AWAITSCREEN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/BULL (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/LOGOFF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/LOGOFF.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/LOGOFF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/LOGOFF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/LOGOFF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/LOGOFF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/LOGOFF (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/LOGON20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/LOGON20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/LOGON20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/LOGON20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/LOGON100.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/LOGON100.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/LOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/LOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/LOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/LOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/LOGON (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/BBSTITLE.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/BBSTITLE.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/BBSTITLE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/BBSTITLE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/BBSTITLE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/BBSTITLE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/BBSTITLE (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/JOIN.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/JOIN.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/JOIN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/JOIN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/JOIN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/JOIN (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/JOIN (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/JOINED.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/JOINED.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/JOINED (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/JOINED (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/JOINED (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/JOINED (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/JOINED (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/JOINCONF.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/JOINCONF.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/JOINCONF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/JOINCONF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/JOINCONF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/JOINCONF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/JOINCONF (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/NEWUSERPW (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/NONEWUSERS (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node0/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node1/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node2/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node3/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node4/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node5/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node6/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node7/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node8/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node9/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node10/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node11/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node12/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node13/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node14/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node15/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node16/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node17/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node18/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node19/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node20/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node21/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node22/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node23/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node24/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node25/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node26/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node27/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node28/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node29/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node30/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node31/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node32/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node33/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node34/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node35/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node36/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node37/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node38/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node39/GUESTLOGON.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Node40/GUESTLOGON.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/GUESTLOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/GUESTLOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/GUESTLOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/GUESTLOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/GUESTLOGON (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/LOCKOUT0 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/LOCKOUT1 (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/PRIVATE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/Screens/BULL (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf2/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf3/BULL20.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/BULL (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf4/Screens/BULL.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf5/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf6/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf7/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf8/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf9/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf10/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf11/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf12/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf13/BULL20.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf14/BULL10.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf1/MENU250.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf2/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf3/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf4/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf5/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf6/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf7/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf8/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf9/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf10/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf11/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf12/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf13/MENU.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf14/MENU.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf11/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf11/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf12/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf12/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/Screens/CONF_JOINMSGBASE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/DownloadMsg (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/Screens/DownloadMsg (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf2/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf3/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf4/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf5/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf6/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf7/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf8/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf9/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf10/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf11/DownloadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf12/DownloadMsg.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/DownloadMsg (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/Screens/DownloadMsg (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf14/DownloadMsg.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf11/FILEHELP.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf12/FILEHELP.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf13/FILEHELP.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/Screens/FILEHELP (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf1/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf2/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf3/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf4/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf5/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf6/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf7/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf8/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf9/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf10/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf11/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf12/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf13/UploadMsg.TXT
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Conf14/UploadMsg.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf1/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf2/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf3/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf4/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf5/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf6/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf7/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf8/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf9/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf10/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf11/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf11/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf12/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf12/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf13/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Conf14/Screens/NOUPLOADS (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Screens/BULL (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/ONENODE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Screens/ONENODE (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Logon24hrs (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Screens/Logon24hrs.TXT
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/NONEWATBAUD (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/NOTTIME (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node0/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node1/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node2/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node3/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node4/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node5/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node6/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node7/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node8/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node9/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node10/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node11/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node12/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node13/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node14/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node15/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node16/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node17/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node18/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node19/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node20/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node21/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node22/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node23/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node24/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node25/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node26/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node27/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node28/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node29/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node30/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node31/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node32/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node33/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node34/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node35/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node36/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node37/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node38/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node39/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node40/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node42/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node43/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node44/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node45/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Node97/NOCALLERSAT (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/LANGUAGES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Screens/LANGUAGES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/INTERNETNAMES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Screens/INTERNETNAMES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/REALNAMES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/Screens/REALNAMES (checked levels 255 down to 5)
+[SCREEN] Not found: /Users/spot/Code/amiexpress-web/MAILSCAN (checked levels 255 down to 5)
+[SCREEN] Found user screen type: /Users/spot/Code/amiexpress-web/Screens/MAILSCAN.TXT
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[UserFileManager] File record count mismatch: data=2, keys=19, misc=1131
+[UserFileManager] Read 1 users from disk files (2 total slots)
+[API] Loaded 1 users from disk files
+[API] Deduplicated to 1 unique users
+[DISCONNECT] Client disconnected, reason: client namespace disconnect, socket: p9XQGJxFDt8oIAuwAAAH
+[DISCONNECT] sessionBeforeDelay.sysopKicked=undefined, nodeId=3
+[DISCONNECT] Waiting 3000ms for potential reconnection...
+[Socket.IO Auth] New connection, has token: false, socket id: KxX5NcJOBKrs8fAfAAAK
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 4
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
+[DISCONNECT] User reconnected during grace period, skipping cleanup
+[DoorsAPI] getDoors() returned 119 doors
+[DoorsAPI] Sending 119 doors to frontend
