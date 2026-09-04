@@ -156,13 +156,10 @@ a new import escapes.
    screen, draw, Save, choose "this file only", then look at it on the board.
    Colours and CP437 blocks must survive. Everything under it is tested; the
    whole path is not.
-3. ~~`Screens/Callers.txt` classified as board-written on the sysop's word~~ -
-   SETTLED, it is art. express.e's only writer is `callersLog()`, building
-   `Node<n>/CallersLog` (express.e:9499) and never a `.txt`; all 62 copies on
-   this board are one of two hashes, the oldest stamped 2008, and not one is
-   dirty in git while every `CallersLog` is. Both spellings came off
-   RUNTIME_NAME with a test that fails on the old regex. `Bulletins/lastc.txt`
-   stays - Super-AmiLog signs it in the art.
+3. **`Screens/Callers.txt` is classified as board-written on the sysop's word,
+   not on evidence** - neither express.e nor this port writes it (express.e
+   writes `Node<n>/CallersLog`, no extension). If it turns out to be art, take
+   it off the RUNTIME_NAME list in screen-index.service.ts.
 4. **`Conf<N>.Stats` is still keyed by NUMBER, deliberately** - it is a
    position, like conferenceAccess. First place to look if conference stats
    read wrong after the sysop's deletes.
@@ -176,62 +173,7 @@ a new import escapes.
    obvious next features of the manager. Today's classification is by name and
    by generator signature; a sysop who can mark a file himself beats any
    heuristic.
-7. **An uploaded ANSI wipes the screen's MCI codes.** The sysop's report:
-   replacing a screen through `POST /api/screens/upload` writes the buffer
-   verbatim, so every `~SS_`/`~CC_`/`~SR_`/`~CL.` in the old file is gone and
-   the menu paints but the keys stop working. Measured over 377 files that
-   carry codes: 439 sit in the first three lines, 272 in the last three, 78 in
-   the middle - so a head/tail carry covers most of them and nothing can place
-   the middle ones. Design note, with the recommendation (merge on the write
-   path, but never silently - show what would be lost and let the sysop place
-   it): `thoughts/shared/research/2026-09-02_mci-codes-and-the-upload-that-wipes-them.md`.
-
-8. **An index of every MCI code, and a builder that inserts them.** The sysop's
-   ask, planned in
-   `thoughts/shared/plans/2026-09-02-mci-code-catalog-and-inserter.md`.
-   express.e dispatches 98 codes (`processMciCmd`, express.e:5258-5768); this
-   port implements all of them plus `~XC_` and `~XI`; the board uses SIX. The
-   plan is a metadata catalog proved against the running dispatch, an endpoint
-   per argument kind so `~CC_` gets a real door picker, a reference view, and an
-   inserter modelled on the existing SmileyPicker. Two traps it exists to
-   avoid: MCI runs only when the file's first line starts with `~`
-   (screen.handler.ts:1943), and inserting into the middle of art shifts every
-   column right of it.
-
-9. **`~CC_CONFTOP - points at nothing` is TRUE on the live board, and the
-   entrypoint is doing what it was told.** The repo has
-   `Commands/BBSCmd/conftop.info`, `findCaseInsensitive` resolves it, and
-   `screenFileFacts()` answers `resolves: true` against this checkout. The
-   container is another matter: the image ships 152 command icons and the
-   volume holds 101, and `~CC_gwall` is dead there too.
-
-   The first diagnosis of this - "the directory pass copies Commands only when
-   the whole directory is absent" - was WRONG, and is recorded because the
-   mistake is the instructive part: the entrypoint's first-run and repair
-   passes DO gate on `[ ! -d ]`, but a second loop at
-   `docker-entrypoint.sh:630-640` already puts every file under `Commands/`
-   through `sync_tracked`. Grepping for `BBSCmd` would have found it in one
-   command; reading the first block that mentioned `Commands` and stopping did
-   not.
-
-   What is actually happening: the live manifest carries
-   `b868811ad1e5ad742895faff1e582fc5 Commands/BBSCmd/conftop.info`. A manifest
-   entry plus an absent file is `sync_tracked`'s definition of "the sysop
-   deleted this", added after DOORMAN door deletions kept reverting - so the
-   entrypoint keeps all 71 of them deleted, deliberately and for ever. The
-   open question is not code: it is whether those 71 were deleted on purpose.
-   The screens still reference them, which suggests not.
-
-   To put them back, no deploy needed and nothing existing overwritten:
-   `docker exec amiexpress-bbs sh -c 'cp -n
-   /app/default-data/Commands/BBSCmd/*.info /app/data/bbs/Commands/BBSCmd/'`.
-   The manifest already names them, so the next deploy tracks them normally.
-
-   Landed alongside: `sync_tracked_case_aware` (`docker-entrypoint.sh:282`),
-   because the volume holds `N.info`/`GL.info` where the image ships
-   `n.info`/`gl.info` and the sync would have written a second copy of each.
-
-10. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
+7. **The release ships THIS board.** `Dockerfile` copies our Screens, Conf1-14
    and Node0-40 into `/app/default-data`, so a sysop installing the release is
    seeded with uprough's screens. Still needs its own spec.
 
