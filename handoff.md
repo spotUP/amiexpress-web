@@ -136,40 +136,18 @@ some of them.
 
 ## Next
 
-**The editor is the DOOR'S** - canvas, ten tools, undo and the CP437/SAUCE
-codec imported from `sdk/engines/ui/ansi-editor` SOURCE; the browser adds a
-renderer and input. Colour is SGR minus 30 - red is 1, not the EGA palette's 4.
-Earlier: `..._browser-ansi-editor-phase-2-complete.md`.
+**GRANDMASTER TETRIS ATTACK | PETSCII parity | TUI screens** (2026-09-04):
+`.../handoffs/2026-09-04_grandmaster-petscii-tui-screens.md`.
 
-**TUI admin Phase A+B+C complete.** All ~22 pages use `T.*` theme tokens. Inline editing wired: CrudList (8 pages), SystemConfig (per-field auto-save), DoorsTab, UsersTab. Sidebar border highlights on focus. Header rail constant-width. DoorsTab grid cols computed from content panel width, not full terminal. Build passes clean.
+All 20 branches merged to main. Worktrees removed — work directly on `main`.
+TETRIS ATTACK: click-to-swap, cancelKeyboardSwap, 2x faster animations, all
+works in PETSCII. Mail scan loop fixed. MSG_READER_NAV single-char commands.
+PETSCII cursor visibility. GRANDMASTER menu 1:1 with ANSI (all 19 items at
+40 cols, rainbow animated compact boot). TUI console: screen browse/preview/
+delete/repair. Sprite chars PETSCII-safe.
 
-**Measure resolution by driving the loader, never by eye** -
-`dev/scripts/probe-screen-resolution.ts` before and after, then diff (5,865
-lookups here). `dev/scripts/provision-node-screens.ts` gives a node screens and
-is NOT in the image, so it must be copied into the container to run there.
-
-Also open:
-
-1. **Yours, and the biggest one:** repair a damaged screen and LOOK at it on
-   the board; then the editor round-trip (draw, Save, "this file only", check
-   the board). Neither done by hand. Also DOORREPO's `T`/`H`/`ENTER`/uninstall
-   - `Doors/emp_tools` is the interesting case.
-2. `PUT /installed/:cmd/info` and the streaming `DELETE` have tests, never a
-   drive against the LIVE board.
-3. **The release ships THIS board** - the Dockerfile copies our Screens,
-   Conf1-14 and Node0-40 into `/app/default-data`. Needs its own spec.
-4. `Conf<N>.Stats` is still keyed by NUMBER, deliberately - a position, like
-   conferenceAccess. First place to look if conference stats read wrong after
-   the sysop's deletes.
-5. Admin remediation 5.3 (memoising nine pages' columns) stays open ON PURPOSE:
-   the cheap version broke re-sort, and its test caught it.
-6. Audio stutter: one cause fixed, never confirmed.
-7. **Drive Setup, from the sysop (2026-09-02):** the admin's drive section is
-   suspected of doing very little - find out what `Drives.info` actually
-   reaches - and the wanted feature is online storage: S3 buckets and the
-   like, offered as a place a board's files can live.
-8. **Drive CARD LOBBY by hand** - the four gamepad paths, the end of an UNO
-   game, and deleting a table have never worked at all.
+**OPEN: TGM modes black screen at 40 columns** — GameScreen uses fixed
+80-col positions (grade/stats at left:40+). Needs compact layout branch.
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk, so one always reads as modified and `git rebase`
