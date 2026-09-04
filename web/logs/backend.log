@@ -596,21 +596,34 @@ User database files initialized
 [READY] AmiExpress BBS is ready for connections!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[Socket.IO Auth] New connection, has token: false, socket id: JA2L6L9_2IA1ZQRZAAAB
+[Socket.IO Auth] New connection, has token: false, socket id: 2dizRuxKIHIMDzBYAAAB
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Socket.IO Auth] New connection, has token: false, socket id: Eipp4i7xsLbuhdqNAAAE
 [Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
 [Operator Chat] Anonymous socket connected (no session)
 [BBSConfig] Loaded configuration from bbsConfig.info
 [BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 1
+[Connection] Starting welcome sequence for node 2
 Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: JA2L6L9_2IA1ZQRZAAAB (guest)
+[SessionLogManager] Started tracking session: 2dizRuxKIHIMDzBYAAAB (guest)
 [BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
 [socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: JA2L6L9_2IA1ZQRZAAAB
-[CHAT DEBUG] registerChatHandlers called for socket: JA2L6L9_2IA1ZQRZAAAB
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: JA2L6L9_2IA1ZQRZAAAB
-[Operator Chat] Setting up listeners for socket JA2L6L9_2IA1ZQRZAAAB, user=anonymous
+[SOCKET-DEBUG] Registering command handler for socket: 2dizRuxKIHIMDzBYAAAB
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: Eipp4i7xsLbuhdqNAAAE (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: Eipp4i7xsLbuhdqNAAAE
+[CHAT DEBUG] registerChatHandlers called for socket: 2dizRuxKIHIMDzBYAAAB
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: 2dizRuxKIHIMDzBYAAAB
+[CHAT DEBUG] registerChatHandlers called for socket: Eipp4i7xsLbuhdqNAAAE
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: Eipp4i7xsLbuhdqNAAAE
+[Operator Chat] Setting up listeners for socket 2dizRuxKIHIMDzBYAAAB, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -625,46 +638,14 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO1.DEF for Node1
 [CallersLog] Node1: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 1)
-[executeTypeScriptDoor] ===== EXEC ID: mtn0kl09b8ot =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn0ya2scwrl =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788529980251 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
-[executeTypeScriptDoor] Door.execute() returned
-[executeTypeScriptDoor] Door completed successfully
-[GameMode] Disabled
-[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
-[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
-[DoorDropFile] Deleted DOOR.SYS for Node1
-[DoorDropFile] Deleted DORINFO1.DEF for Node1
-[CallersLog] Node1: Door exit: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 1)
-[Connection] Welcome sequence complete for node 1, waiting for ANSI response
-[Socket.IO Auth] New connection, has token: false, socket id: CMPoDCbBCbsCOB9ZAAAE
-[Socket.IO Auth] No token provided, allowing anonymous connection
-Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
-[Connection] Starting welcome sequence for node 2
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: CMPoDCbBCbsCOB9ZAAAE (guest)
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: CMPoDCbBCbsCOB9ZAAAE
-[CHAT DEBUG] registerChatHandlers called for socket: CMPoDCbBCbsCOB9ZAAAE
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: CMPoDCbBCbsCOB9ZAAAE
-[Operator Chat] Setting up listeners for socket CMPoDCbBCbsCOB9ZAAAE, user=anonymous
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788530619270 (cache-busting: enabled)
+[Operator Chat] Setting up listeners for socket Eipp4i7xsLbuhdqNAAAE, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -679,13 +660,22 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO2.DEF for Node2
 [CallersLog] Node2: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 2)
-[executeTypeScriptDoor] ===== EXEC ID: mtn0ksbx8s0r =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn0ya2zknrr =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788529989741 (cache-busting: enabled)
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788530619276 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
 [executeTypeScriptDoor] doorModule keys: default, metadata
 [executeTypeScriptDoor] doorModule.default: object
 [executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
@@ -705,93 +695,86 @@ Executing door: FRONTEND
 [CallersLog] Node2: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 2)
 [Connection] Welcome sequence complete for node 2, waiting for ANSI response
-[socket-handlers] checkPauseHandler active: false, flagPauseHandler active: false
-Session state: await subState: ansi_prompt
-Input buffer: ""
-[socket-handlers] ✗ NOT in door or no handler - routing to BBS command handler
-[socket-handlers]   inDoorManager: false
-[socket-handlers]   handler exists: false
-=== handleCommand called ===
-data: "q"
-session.state: await
-session.subState: ansi_prompt
-[handleCommand] ENTRY: data="q" subState=ansi_prompt paginatedScreen=false inDoorManager=false
-=== COMMAND PROCESSED ===
-
-[socket-handlers] checkPauseHandler active: false, flagPauseHandler active: false
-Session state: await subState: ansi_prompt
-Input buffer: ""
-🎯 ENTER KEY DETECTED!
-🎯 Current subState: ansi_prompt
-🎯 Is POST_MESSAGE_SUBJECT? false
-🎯 Input buffer contents: ""
-[socket-handlers] ✗ NOT in door or no handler - routing to BBS command handler
-[socket-handlers]   inDoorManager: false
-[socket-handlers]   handler exists: false
-=== handleCommand called ===
-data: "\r"
-session.state: await
-session.subState: ansi_prompt
-[handleCommand] ENTRY: data="" subState=ansi_prompt paginatedScreen=false inDoorManager=false
- Graphics prompt response: Q
-[QUICK] Quick logon enabled - will skip bulletins per express.e:29545
- Graphics mode set: ANSI
-[BBSConfig] bbsConfig.info not found, using defaults
-[SCREEN] [displayScreen] ========================================
-[SCREEN] [displayScreen] REQUESTED SCREEN: BBSTITLE
-[SCREEN] [displayScreen] Conference ID: 1
-[SCREEN] [displayScreen] User: guest
-[SCREEN] [displayScreen] ========================================
-[SCREEN FLOW] Display request for BBSTITLE (runCommands=true) state=ansi_prompt node=2
-[SCREEN] [loadScreenFile] Loading screen: BBSTITLE
-[SCREEN] [loadScreenFile] Base directory: /Users/spot/Code/amiexpress-web
-[SCREEN] [loadScreenFile] Conference ID: 1, Node ID: 2
-[SCREEN] [loadScreenFile] Terminal type: unknown (80x24)
-[SCREEN] [loadScreenFile] PETSCII mode: NO
-[SCREEN] [loadScreenFile] Search locations for BBSTITLE: [ 'Node2' ]
-[SCREEN] [loadScreenFile] Trying 1 location(s) with case-insensitive matching:
-[SCREEN] Found text screen: /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
-[SCREEN] [loadScreenFile]  Found security screen for BBSTITLE at: /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
-[amiga-text-decode] /Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT
-[amiga-text-decode]   Encoding: iso-8859-1, iCE: false
-[NEWLINE-DEBUG] RAW CONTENT (BBSTITLE): 13894 bytes, 68 \n, 0 \r\n
-[SCREEN] [displayScreen]  Screen loaded successfully: BBSTITLE
-[SCREEN] [displayScreen] Content length: 13894 bytes
-[SCREEN] [displayScreen] PETSCII: NO
-[SCREEN] [displayScreen] Render event: BBSTITLE (node 2)
-[SCREEN FLOW] Loaded BBSTITLE file=/Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT petscii=N bytes=13894
-[DEBUG:SCREEN:INFO] Displaying screen: BBSTITLE {
-  file: '/Users/spot/Code/amiexpress-web/Node2/BBSTITLE.TXT',
-  size: '13894 bytes',
-  isPetscii: false,
-  conference: 1
-}
-[SCREEN] [MCI] ========== PROCESSING MCI CODES ==========
-[SCREEN] [MCI] Content length: 13894
-[SCREEN] [MCI] Looking for ~XC_ and ~XI codes...
-[DEBUG:MCI:DEBUG] Parsing MCI codes (13894 bytes) 
-[SCREEN] [MCI] Total commands to execute: 0
-=== COMMAND PROCESSED ===
-
-[NEWLINE-DEBUG] AFTER parseMciCodes NORMAL: 0 bytes, 0 \n, 0 \r\n
-[NEWLINE-DEBUG] AFTER addAnsiEscapes: 0 bytes, 0 \n, 0 \r\n
-[NEWLINE-DEBUG] AFTER NORMALIZE: 0 bytes, 0 \n, 0 \r\n
-[WIPE-DEBUG] Screen: BBSTITLE, hasWipeAnimation: false, wipeType: null
-[NEWLINE-DEBUG] SPLIT INTO LINES: 2 lines
-[NEWLINE-DEBUG] FIRST 5 LINES:   [0] len=0: 
-  [1] len=0: 
-[SCREEN FLOW] Parsed BBSTITLE: event=ansi-output commands=0 pause=N pages=2
-[WIPE-CHECK] hasWipeAnimation=false, wipeType=null, screenName=BBSTITLE
-[SCREEN] [displayScreen] Content already emitted inline, skipping frame buffer
-🔍 Checking if username exists: sysop
-User exists, requesting password
-[DISCONNECT] Client disconnected, reason: transport close, socket: CMPoDCbBCbsCOB9ZAAAE
-[DISCONNECT] sessionBeforeDelay.sysopKicked=undefined, nodeId=2
-[DISCONNECT] Waiting 3000ms for potential reconnection...
-[Socket.IO Auth] New connection, has token: false, socket id: SkLfV7PALh2L3vGQAAAH
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node1
+[DoorDropFile] Deleted DORINFO1.DEF for Node1
+[CallersLog] Node1: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 1)
+[Connection] Welcome sequence complete for node 1, waiting for ANSI response
+[Socket.IO Auth] New connection, has token: false, socket id: p9XQGJxFDt8oIAuwAAAH
 [Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
 [Operator Chat] Anonymous socket connected (no session)
 [BBSConfig] Loaded configuration from bbsConfig.info
 [BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 3
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: p9XQGJxFDt8oIAuwAAAH (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: p9XQGJxFDt8oIAuwAAAH
+[CHAT DEBUG] registerChatHandlers called for socket: p9XQGJxFDt8oIAuwAAAH
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: p9XQGJxFDt8oIAuwAAAH
+[Operator Chat] Setting up listeners for socket p9XQGJxFDt8oIAuwAAAH, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node3
+[DoorDropFile] Created DORINFO3.DEF for Node3
+[CallersLog] Node3: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 3)
+[executeTypeScriptDoor] ===== EXEC ID: mtn0yg7sezxn =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788530627225 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node3
+[DoorDropFile] Deleted DORINFO3.DEF for Node3
+[CallersLog] Node3: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 3)
+[Connection] Welcome sequence complete for node 3, waiting for ANSI response
+[HEARTBEAT] Alive, heap: 84MB, rss: 66MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 135MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 69MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 133MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 68MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 65MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 64MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 65MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 57MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 60MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 70MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 61MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 60MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 57MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 64MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 59MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 53MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 51MB, interval: 60s
+[HEARTBEAT] Alive, heap: 82MB, rss: 52MB, interval: 60s

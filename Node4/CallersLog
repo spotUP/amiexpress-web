@@ -1952,3 +1952,11 @@ sysop: 5D_Page - Page reason: q
 04-Sep-26 15:19 Door exit: FRONTEND
 04-Sep-26 15:27 Door: FRONTEND
 04-Sep-26 15:27 Door exit: FRONTEND
+04-Sep-26 15:54 Door: FRONTEND
+04-Sep-26 15:54 Door exit: FRONTEND
+04-Sep-26 15:54 	Password Failure (xxxx)
+04-Sep-26 15:54 Door: GMASTER
+04-Sep-26 15:54 Door: GMASTER
+04-Sep-26 15:58 Door exit: GMASTER
+04-Sep-26 15:58 Door: THEME
+04-Sep-26 15:58 Door exit: THEME
