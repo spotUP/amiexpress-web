@@ -95,11 +95,11 @@ Some work remains: TGM game modes show black screen at 40 columns (GameScreen us
 
 ## OPEN ITEMS
 
-1. **Sprie upload** → API function exit, UI not yet wired.
+(none)
 
-## NEXT SESSION STRT
+## COMPLETED AFTER SESSION
 
 1. **TUI theme tokens** — fixed (all 6 remaining pages wired to T.* tokens)
 2. **TGM GameScreen compact layout** — fixed (isCompactWidth branch hides side panels at 40 cols)
-3. **Enable SDK build for fresh checkout**: `cd sk && npn run build:cj`
-4. **Build grandmaster**: `cd Doos/grandmater && npn run build`
+3. **Sprite upload** — built Sprite Manager admin page with API endpoints for list/browse/upload/preview/delete
+4. **Admin auth** — remember-me checkbox, access level control, admin roles page, live permissions
