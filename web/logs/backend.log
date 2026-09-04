@@ -594,35 +594,70 @@ User database files initialized
 [READY] AmiExpress BBS is ready for connections!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[Socket.IO Auth] New connection, has token: false, socket id: VWEXMQ0T80uGH8bpAAAB
+[Socket.IO Auth] New connection, has token: false, socket id: 2ktdyBnZewQtjMSrAAAB
 [Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
 [Operator Chat] Anonymous socket connected (no session)
+[Socket.IO Auth] New connection, has token: false, socket id: AdB-_fcNtOsY1sYRAAAE
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [BBSConfig] Loaded configuration from bbsConfig.info
 [BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 1
-[Socket.IO Auth] New connection, has token: false, socket id: sABHpnwWt2Vkp_y0AAAE
-[Socket.IO Auth] No token provided, allowing anonymous connection
-Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 2
-[Socket.IO Auth] New connection, has token: false, socket id: OESxw4Wdy1ZYS9UzAAAH
+[Socket.IO Auth] New connection, has token: false, socket id: gYTaRvc2LMhk0s6uAAAH
 [Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
 [Operator Chat] Anonymous socket connected (no session)
 [BBSConfig] Loaded configuration from bbsConfig.info
 [BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 3
+[Socket.IO Auth] New connection, has token: false, socket id: znfutooVx1i-w4MfAAAK
+[Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: VWEXMQ0T80uGH8bpAAAB (guest)
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Socket.IO Auth] New connection, has token: false, socket id: 9XNA4-xmzGRPrgNvAAAN
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 4
+[Connection] Starting welcome sequence for node 5
+[Socket.IO Auth] New connection, has token: true, socket id: catjaYNEK8tjJ7sGAAAQ
+[Socket.IO Auth] JWT decoded successfully: { userId: '7ddd39a4-9a2b-485e-ba5a-8cfec20813dd', username: 'sysop' }
+[Socket.IO Auth] Admin authenticated: sysop (secLevel: 255)
+Client connected from 127.0.0.1
+[Operator Chat] Sysop sysop (ID:7ddd39a4-9a2b-485e-ba5a-8cfec20813dd) connected, joined sysops room
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 6
+[Socket.IO Auth] New connection, has token: false, socket id: NUEsaB-qxauE_C6CAAAT
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 7
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: 2ktdyBnZewQtjMSrAAAB (guest)
 [BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
 [socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: VWEXMQ0T80uGH8bpAAAB
-[CHAT DEBUG] registerChatHandlers called for socket: VWEXMQ0T80uGH8bpAAAB
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: VWEXMQ0T80uGH8bpAAAB
-[Operator Chat] Setting up listeners for socket VWEXMQ0T80uGH8bpAAAB, user=anonymous
+[SOCKET-DEBUG] Registering command handler for socket: 2ktdyBnZewQtjMSrAAAB
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: AdB-_fcNtOsY1sYRAAAE (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: AdB-_fcNtOsY1sYRAAAE
+[CHAT DEBUG] registerChatHandlers called for socket: 2ktdyBnZewQtjMSrAAAB
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: 2ktdyBnZewQtjMSrAAAB
+[CHAT DEBUG] registerChatHandlers called for socket: AdB-_fcNtOsY1sYRAAAE
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: AdB-_fcNtOsY1sYRAAAE
+[Operator Chat] Setting up listeners for socket 2ktdyBnZewQtjMSrAAAB, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -637,39 +672,14 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO1.DEF for Node1
 [CallersLog] Node1: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 1)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3s8lqbrtu =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn4jhdad1ud =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535376271 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
-[executeTypeScriptDoor] Door.execute() returned
-[executeTypeScriptDoor] Door completed successfully
-[GameMode] Disabled
-[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
-[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
-[DoorDropFile] Deleted DOOR.SYS for Node1
-[DoorDropFile] Deleted DORINFO1.DEF for Node1
-[CallersLog] Node1: Door exit: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 1)
-[Connection] Welcome sequence complete for node 1, waiting for ANSI response
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: sABHpnwWt2Vkp_y0AAAE (guest)
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: sABHpnwWt2Vkp_y0AAAE
-[CHAT DEBUG] registerChatHandlers called for socket: sABHpnwWt2Vkp_y0AAAE
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: sABHpnwWt2Vkp_y0AAAE
-[Operator Chat] Setting up listeners for socket sABHpnwWt2Vkp_y0AAAE, user=anonymous
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536647342 (cache-busting: enabled)
+[Operator Chat] Setting up listeners for socket AdB-_fcNtOsY1sYRAAAE, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -684,13 +694,170 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO2.DEF for Node2
 [CallersLog] Node2: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 2)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3sa3zcyr9 =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn4jhdl2r7y =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535378224 (cache-busting: enabled)
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536647354 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: gYTaRvc2LMhk0s6uAAAH (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: gYTaRvc2LMhk0s6uAAAH
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[CHAT DEBUG] registerChatHandlers called for socket: gYTaRvc2LMhk0s6uAAAH
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: gYTaRvc2LMhk0s6uAAAH
+[Operator Chat] Setting up listeners for socket gYTaRvc2LMhk0s6uAAAH, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node3
+[DoorDropFile] Created DORINFO3.DEF for Node3
+[CallersLog] Node3: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 3)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4ji3999t7 =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536648279 (cache-busting: enabled)
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: znfutooVx1i-w4MfAAAK (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: znfutooVx1i-w4MfAAAK
+[CHAT DEBUG] registerChatHandlers called for socket: znfutooVx1i-w4MfAAAK
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: znfutooVx1i-w4MfAAAK
+[Operator Chat] Setting up listeners for socket znfutooVx1i-w4MfAAAK, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node4
+[DoorDropFile] Created DORINFO4.DEF for Node4
+[CallersLog] Node4: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 4)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4ji3ha8jg =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536648286 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: 9XNA4-xmzGRPrgNvAAAN (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: 9XNA4-xmzGRPrgNvAAAN
+[CHAT DEBUG] registerChatHandlers called for socket: 9XNA4-xmzGRPrgNvAAAN
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: 9XNA4-xmzGRPrgNvAAAN
+[Operator Chat] Setting up listeners for socket 9XNA4-xmzGRPrgNvAAAN, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node5
+[DoorDropFile] Created DORINFO5.DEF for Node5
+[CallersLog] Node5: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 5)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4ji4qgkl1 =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536648331 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: catjaYNEK8tjJ7sGAAAQ (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: catjaYNEK8tjJ7sGAAAQ
+[CHAT DEBUG] registerChatHandlers called for socket: catjaYNEK8tjJ7sGAAAQ
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: catjaYNEK8tjJ7sGAAAQ
+[Operator Chat] Setting up listeners for socket catjaYNEK8tjJ7sGAAAQ, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node6
+[DoorDropFile] Created DORINFO6.DEF for Node6
+[CallersLog] Node6: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 6)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4ji9m8pjs =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536648507 (cache-busting: enabled)
 [executeTypeScriptDoor] doorModule keys: default, metadata
 [executeTypeScriptDoor] doorModule.default: object
 [executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
@@ -710,43 +877,16 @@ Executing door: FRONTEND
 [CallersLog] Node2: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 2)
 [Connection] Welcome sequence complete for node 2, waiting for ANSI response
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: OESxw4Wdy1ZYS9UzAAAH (guest)
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: OESxw4Wdy1ZYS9UzAAAH
-[CHAT DEBUG] registerChatHandlers called for socket: OESxw4Wdy1ZYS9UzAAAH
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: OESxw4Wdy1ZYS9UzAAAH
-[Operator Chat] Setting up listeners for socket OESxw4Wdy1ZYS9UzAAAH, user=anonymous
-Executing: FRONTEND
-[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
-{
-  "type": "TS",
-  "location": "Doors/telnet-front"
-}
-Executing door: FRONTEND
-[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
-[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
-[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
-[DoorDropFile] Created DOOR.SYS for Node3
-[DoorDropFile] Created DORINFO3.DEF for Node3
-[CallersLog] Node3: Door: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 3)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3sawxg4c4 =====
-[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
-[executeTypeScriptDoor] Door path: Doors/telnet-front
-[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
-[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535379265 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node1
+[DoorDropFile] Deleted DORINFO1.DEF for Node1
+[CallersLog] Node1: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 1)
+[Connection] Welcome sequence complete for node 1, waiting for ANSI response
 [executeTypeScriptDoor] Door.execute() returned
 [executeTypeScriptDoor] Door completed successfully
 [GameMode] Disabled
@@ -757,50 +897,6 @@ Executing door: FRONTEND
 [CallersLog] Node3: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 3)
 [Connection] Welcome sequence complete for node 3, waiting for ANSI response
-[Socket.IO Auth] New connection, has token: false, socket id: cs95JSdzTZZpb4-fAAAK
-[Socket.IO Auth] No token provided, allowing anonymous connection
-Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
-[Connection] Starting welcome sequence for node 4
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: cs95JSdzTZZpb4-fAAAK (guest)
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: cs95JSdzTZZpb4-fAAAK
-[CHAT DEBUG] registerChatHandlers called for socket: cs95JSdzTZZpb4-fAAAK
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: cs95JSdzTZZpb4-fAAAK
-[Operator Chat] Setting up listeners for socket cs95JSdzTZZpb4-fAAAK, user=anonymous
-Executing: FRONTEND
-[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
-{
-  "type": "TS",
-  "location": "Doors/telnet-front"
-}
-Executing door: FRONTEND
-[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
-[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
-[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
-[DoorDropFile] Created DOOR.SYS for Node4
-[DoorDropFile] Created DORINFO4.DEF for Node4
-[CallersLog] Node4: Door: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 4)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3sgowms0m =====
-[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
-[executeTypeScriptDoor] Door path: Doors/telnet-front
-[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
-[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535386759 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
 [executeTypeScriptDoor] Door.execute() returned
 [executeTypeScriptDoor] Door completed successfully
 [GameMode] Disabled
@@ -811,61 +907,6 @@ Executing door: FRONTEND
 [CallersLog] Node4: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 4)
 [Connection] Welcome sequence complete for node 4, waiting for ANSI response
-[HEARTBEAT] Alive, heap: 86MB, rss: 59MB, interval: 60s
-[HEARTBEAT] Alive, heap: 82MB, rss: 140MB, interval: 60s
-[HEARTBEAT] Alive, heap: 82MB, rss: 66MB, interval: 60s
-[Socket.IO Auth] New connection, has token: false, socket id: bB9PCY3PhZdb8SAxAAAN
-[Socket.IO Auth] No token provided, allowing anonymous connection
-Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
-[Connection] Starting welcome sequence for node 5
-[Socket.IO Auth] New connection, has token: false, socket id: PG681kN_g9NiKJuLAAAQ
-[Socket.IO Auth] No token provided, allowing anonymous connection
-Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
-[Connection] Starting welcome sequence for node 6
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: bB9PCY3PhZdb8SAxAAAN (guest)
-[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: bB9PCY3PhZdb8SAxAAAN
-[CHAT DEBUG] registerChatHandlers called for socket: bB9PCY3PhZdb8SAxAAAN
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: bB9PCY3PhZdb8SAxAAAN
-[Operator Chat] Setting up listeners for socket bB9PCY3PhZdb8SAxAAAN, user=anonymous
-Executing: FRONTEND
-[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
-{
-  "type": "TS",
-  "location": "Doors/telnet-front"
-}
-Executing door: FRONTEND
-[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
-[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
-[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
-[DoorDropFile] Created DOOR.SYS for Node5
-[DoorDropFile] Created DORINFO5.DEF for Node5
-[CallersLog] Node5: Door: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 5)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3wsmmz09q =====
-[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
-[executeTypeScriptDoor] Door path: Doors/telnet-front
-[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
-[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535588851 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
 [executeTypeScriptDoor] Door.execute() returned
 [executeTypeScriptDoor] Door completed successfully
 [GameMode] Disabled
@@ -876,43 +917,6 @@ Executing door: FRONTEND
 [CallersLog] Node5: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 5)
 [Connection] Welcome sequence complete for node 5, waiting for ANSI response
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: PG681kN_g9NiKJuLAAAQ (guest)
-[socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: PG681kN_g9NiKJuLAAAQ
-[CHAT DEBUG] registerChatHandlers called for socket: PG681kN_g9NiKJuLAAAQ
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: PG681kN_g9NiKJuLAAAQ
-[Operator Chat] Setting up listeners for socket PG681kN_g9NiKJuLAAAQ, user=anonymous
-Executing: FRONTEND
-[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
-{
-  "type": "TS",
-  "location": "Doors/telnet-front"
-}
-Executing door: FRONTEND
-[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
-[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
-[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
-[DoorDropFile] Created DOOR.SYS for Node6
-[DoorDropFile] Created DORINFO6.DEF for Node6
-[CallersLog] Node6: Door: FRONTEND
-[BBSEventEmitter] Emitted door_activity: Guest (node 6)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3wu9w7kc2 =====
-[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
-[executeTypeScriptDoor] Door path: Doors/telnet-front
-[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
-[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535590980 (cache-busting: enabled)
-[executeTypeScriptDoor] doorModule keys: default, metadata
-[executeTypeScriptDoor] doorModule.default: object
-[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
-[executeTypeScriptDoor] Set inDoorManager=true
-[executeTypeScriptDoor] Sent door:status: running, door-active: true
-[createBBSApi] Created BBSApi, has enableMouseEvents: function
-[executeTypeScriptDoor] Calling door.execute() with SDK context...
-[TELNET-FRONT] Starting display
-[TELNET-FRONT] Display complete
 [executeTypeScriptDoor] Door.execute() returned
 [executeTypeScriptDoor] Door completed successfully
 [GameMode] Disabled
@@ -923,22 +927,13 @@ Executing door: FRONTEND
 [CallersLog] Node6: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 6)
 [Connection] Welcome sequence complete for node 6, waiting for ANSI response
-[HEARTBEAT] Alive, heap: 82MB, rss: 136MB, interval: 60s
-[Socket.IO Auth] New connection, has token: false, socket id: 9TzWwXpNCt0HJsHlAAAT
-[Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
-[Operator Chat] Anonymous socket connected (no session)
-[BBSConfig] Loaded configuration from bbsConfig.info
-[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
-[Connection] Starting welcome sequence for node 7
-Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: 9TzWwXpNCt0HJsHlAAAT (guest)
-[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
+[SessionLogManager] Started tracking session: NUEsaB-qxauE_C6CAAAT (guest)
 [socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: 9TzWwXpNCt0HJsHlAAAT
-[CHAT DEBUG] registerChatHandlers called for socket: 9TzWwXpNCt0HJsHlAAAT
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: 9TzWwXpNCt0HJsHlAAAT
-[Operator Chat] Setting up listeners for socket 9TzWwXpNCt0HJsHlAAAT, user=anonymous
+[SOCKET-DEBUG] Registering command handler for socket: NUEsaB-qxauE_C6CAAAT
+[CHAT DEBUG] registerChatHandlers called for socket: NUEsaB-qxauE_C6CAAAT
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: NUEsaB-qxauE_C6CAAAT
+[Operator Chat] Setting up listeners for socket NUEsaB-qxauE_C6CAAAT, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -953,13 +948,13 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO7.DEF for Node7
 [CallersLog] Node7: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 7)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3xx8t7ods =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn4jjmpk3lj =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535641490 (cache-busting: enabled)
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536650274 (cache-busting: enabled)
 [executeTypeScriptDoor] doorModule keys: default, metadata
 [executeTypeScriptDoor] doorModule.default: object
 [executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
@@ -979,8 +974,7 @@ Executing door: FRONTEND
 [CallersLog] Node7: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 7)
 [Connection] Welcome sequence complete for node 7, waiting for ANSI response
-[HEARTBEAT] Alive, heap: 82MB, rss: 63MB, interval: 60s
-[Socket.IO Auth] New connection, has token: false, socket id: scE0rVhPMWHfVgInAAAW
+[Socket.IO Auth] New connection, has token: false, socket id: 1hyudAwXqNt1y7QSAAAW
 [Socket.IO Auth] No token provided, allowing anonymous connection
 Client connected from 127.0.0.1
 [Operator Chat] Anonymous socket connected (no session)
@@ -988,13 +982,12 @@ Client connected from 127.0.0.1
 [BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
 [Connection] Starting welcome sequence for node 8
 Client connected from 127.0.0.1
-[SessionLogManager] Started tracking session: scE0rVhPMWHfVgInAAAW (guest)
-[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
+[SessionLogManager] Started tracking session: 1hyudAwXqNt1y7QSAAAW (guest)
 [socket-handlers] registerCommandHandler called, registering door:input listener
-[SOCKET-DEBUG] Registering command handler for socket: scE0rVhPMWHfVgInAAAW
-[CHAT DEBUG] registerChatHandlers called for socket: scE0rVhPMWHfVgInAAAW
-[CHAT DEBUG] Registering chat-only-login-submit handler for socket: scE0rVhPMWHfVgInAAAW
-[Operator Chat] Setting up listeners for socket scE0rVhPMWHfVgInAAAW, user=anonymous
+[SOCKET-DEBUG] Registering command handler for socket: 1hyudAwXqNt1y7QSAAAW
+[CHAT DEBUG] registerChatHandlers called for socket: 1hyudAwXqNt1y7QSAAAW
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: 1hyudAwXqNt1y7QSAAAW
+[Operator Chat] Setting up listeners for socket 1hyudAwXqNt1y7QSAAAW, user=anonymous
 Executing: FRONTEND
 [SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
 {
@@ -1009,13 +1002,13 @@ Executing door: FRONTEND
 [DoorDropFile] Created DORINFO8.DEF for Node8
 [CallersLog] Node8: Door: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 8)
-[executeTypeScriptDoor] ===== EXEC ID: mtn3yny2myst =====
+[executeTypeScriptDoor] ===== EXEC ID: mtn4jq40fn5o =====
 [executeTypeScriptDoor] Starting TypeScript door: FRONTEND
 [executeTypeScriptDoor] Door path: Doors/telnet-front
 [executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
 [executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
 [executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
-[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788535676096 (cache-busting: enabled)
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536658675 (cache-busting: enabled)
 [executeTypeScriptDoor] doorModule keys: default, metadata
 [executeTypeScriptDoor] doorModule.default: object
 [executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
@@ -1035,5 +1028,242 @@ Executing door: FRONTEND
 [CallersLog] Node8: Door exit: FRONTEND
 [BBSEventEmitter] Emitted door_activity: Guest (node 8)
 [Connection] Welcome sequence complete for node 8, waiting for ANSI response
-[HEARTBEAT] Alive, heap: 83MB, rss: 32MB, interval: 60s
-[HEARTBEAT] Alive, heap: 83MB, rss: 33MB, interval: 60s
+[HEARTBEAT] Alive, heap: 89MB, rss: 74MB, interval: 60s
+[HEARTBEAT] Alive, heap: 83MB, rss: 133MB, interval: 60s
+[Socket.IO Auth] New connection, has token: false, socket id: L7uBGWoUCbUa-t5cAAAZ
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 9
+[Socket.IO Auth] New connection, has token: false, socket id: _6b9nycH4AZKbTKkAAAc
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 10
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: L7uBGWoUCbUa-t5cAAAZ (guest)
+[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: L7uBGWoUCbUa-t5cAAAZ
+[CHAT DEBUG] registerChatHandlers called for socket: L7uBGWoUCbUa-t5cAAAZ
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: L7uBGWoUCbUa-t5cAAAZ
+[Operator Chat] Setting up listeners for socket L7uBGWoUCbUa-t5cAAAZ, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node9
+[DoorDropFile] Created DORINFO9.DEF for Node9
+[CallersLog] Node9: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 9)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4mllbbt0c =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536792789 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node9
+[DoorDropFile] Deleted DORINFO9.DEF for Node9
+[CallersLog] Node9: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 9)
+[Connection] Welcome sequence complete for node 9, waiting for ANSI response
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: _6b9nycH4AZKbTKkAAAc (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: _6b9nycH4AZKbTKkAAAc
+[CHAT DEBUG] registerChatHandlers called for socket: _6b9nycH4AZKbTKkAAAc
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: _6b9nycH4AZKbTKkAAAc
+[Operator Chat] Setting up listeners for socket _6b9nycH4AZKbTKkAAAc, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node10
+[DoorDropFile] Created DORINFO10.DEF for Node10
+[CallersLog] Node10: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 10)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4mntv3h6r =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536795684 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node10
+[DoorDropFile] Deleted DORINFO10.DEF for Node10
+[CallersLog] Node10: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 10)
+[Connection] Welcome sequence complete for node 10, waiting for ANSI response
+[Socket.IO Auth] New connection, has token: false, socket id: ZpgJ-PwmsaYxN4hSAAAf
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 11
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: ZpgJ-PwmsaYxN4hSAAAf (guest)
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: ZpgJ-PwmsaYxN4hSAAAf
+[CHAT DEBUG] registerChatHandlers called for socket: ZpgJ-PwmsaYxN4hSAAAf
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: ZpgJ-PwmsaYxN4hSAAAf
+[Operator Chat] Setting up listeners for socket ZpgJ-PwmsaYxN4hSAAAf, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node11
+[DoorDropFile] Created DORINFO11.DEF for Node11
+[CallersLog] Node11: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 11)
+[executeTypeScriptDoor] ===== EXEC ID: mtn4n0shff32 =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788536812482 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+(node:48095) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGINT listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48095) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGTERM listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node11
+[DoorDropFile] Deleted DORINFO11.DEF for Node11
+[CallersLog] Node11: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 11)
+[Connection] Welcome sequence complete for node 11, waiting for ANSI response
+[HEARTBEAT] Alive, heap: 84MB, rss: 84MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 117MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 45MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 43MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 41MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 47MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 47MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 48MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 47MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 48MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 42MB, interval: 60s
+[Socket.IO Auth] New connection, has token: false, socket id: -jRFJhs5Pz8PKry2AAAi
+[Socket.IO Auth] No token provided, allowing anonymous connection
+Client connected from 127.0.0.1
+[Operator Chat] Anonymous socket connected (no session)
+[BBSConfig] Loaded configuration from bbsConfig.info
+[BBSConfig] Loaded configuration from bbsConfig.info.txt (newer than the icon)
+[Connection] Starting welcome sequence for node 12
+Client connected from 127.0.0.1
+[SessionLogManager] Started tracking session: -jRFJhs5Pz8PKry2AAAi (guest)
+[BatchScheduler] Loaded 2 EXECUTE_ON_* tooltypes from bbsConfig.info
+[socket-handlers] registerCommandHandler called, registering door:input listener
+[SOCKET-DEBUG] Registering command handler for socket: -jRFJhs5Pz8PKry2AAAi
+[CHAT DEBUG] registerChatHandlers called for socket: -jRFJhs5Pz8PKry2AAAi
+[CHAT DEBUG] Registering chat-only-login-submit handler for socket: -jRFJhs5Pz8PKry2AAAi
+[Operator Chat] Setting up listeners for socket -jRFJhs5Pz8PKry2AAAi, user=anonymous
+Executing: FRONTEND
+[SYSOP DEBUG] COMMAND: Executing TS door: Doors/telnet-front
+{
+  "type": "TS",
+  "location": "Doors/telnet-front"
+}
+Executing door: FRONTEND
+[loadDoorManifestForExecution] Loading manifest for door: FRONTEND, id: frontend, path: Doors/telnet-front
+[loadDoorManifestForExecution] Trying door.path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/package.json
+[loadDoorManifestForExecution] Found manifest via door.path, runtime: not specified
+[DoorDropFile] Created DOOR.SYS for Node12
+[DoorDropFile] Created DORINFO12.DEF for Node12
+[CallersLog] Node12: Door: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 12)
+[executeTypeScriptDoor] ===== EXEC ID: mtn5156dqi79 =====
+[executeTypeScriptDoor] Starting TypeScript door: FRONTEND
+[executeTypeScriptDoor] Door path: Doors/telnet-front
+[executeTypeScriptDoor] Found root index.ts, using source instead of package.json main
+[executeTypeScriptDoor] Resolved path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Actual filesystem path: /Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts
+[executeTypeScriptDoor] Importing: file:///Users/spot/Code/amiexpress-web/Doors/telnet-front/index.ts?t=1788537471357 (cache-busting: enabled)
+[executeTypeScriptDoor] doorModule keys: default, metadata
+[executeTypeScriptDoor] doorModule.default: object
+[executeTypeScriptDoor] SDK v2.0 Door detected, calling execute()
+[executeTypeScriptDoor] Set inDoorManager=true
+[executeTypeScriptDoor] Sent door:status: running, door-active: true
+[createBBSApi] Created BBSApi, has enableMouseEvents: function
+[executeTypeScriptDoor] Calling door.execute() with SDK context...
+[TELNET-FRONT] Starting display
+[TELNET-FRONT] Display complete
+[executeTypeScriptDoor] Door.execute() returned
+[executeTypeScriptDoor] Door completed successfully
+[GameMode] Disabled
+[executeTypeScriptDoor] Cleared inDoorManager, doorInputHandler, mouseEventsEnabled, clientDoorActive, subState
+[executeTypeScriptDoor] Sent door:status: stopped, door-active: false
+[DoorDropFile] Deleted DOOR.SYS for Node12
+[DoorDropFile] Deleted DORINFO12.DEF for Node12
+[CallersLog] Node12: Door exit: FRONTEND
+[BBSEventEmitter] Emitted door_activity: Guest (node 12)
+[Connection] Welcome sequence complete for node 12, waiting for ANSI response
+[HEARTBEAT] Alive, heap: 84MB, rss: 78MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 63MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 51MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 35MB, interval: 60s
+[HEARTBEAT] Alive, heap: 84MB, rss: 40MB, interval: 60s
