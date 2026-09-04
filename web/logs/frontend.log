@@ -1,6 +1,6 @@
 Forced re-optimization of dependencies
 
-  VITE v5.4.21  ready in 810 ms
+  VITE v5.4.21  ready in 956 ms
 
   ➜  Local:   http://localhost:5174/
   ➜  Network: use --host to expose
@@ -30,49 +30,3 @@ Error:   Failed to scan for dependencies from entries:
     at handleRequest (/Users/spot/Code/amiexpress-web/web/frontend/node_modules/esbuild/lib/main.js:647:17)
     at handleIncomingPacket (/Users/spot/Code/amiexpress-web/web/frontend/node_modules/esbuild/lib/main.js:672:7)
     at Socket.readFromStdout (/Users/spot/Code/amiexpress-web/web/frontend/node_modules/esbuild/lib/main.js:600:7)
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:18 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:19 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
-16:29:21 [vite] hmr update /src/pages/TerminalPage.tsx
