@@ -215,3 +215,13 @@ sysop: 	Download Failed..
 04-Sep-26 23:39 Door exit: FRONTEND
 **************************************************************
 04-Sep-26 23:39 [1] sysop (LOCAL) -uP rOUGH!-
+05-Sep-26 00:10 Door: FRONTEND
+05-Sep-26 00:10 Door exit: FRONTEND
+**************************************************************
+05-Sep-26 00:10 [1] sysop (LOCAL) -uP rOUGH!-
+05-Sep-26 00:10 Door: GMASTER
+05-Sep-26 00:10 Door: GMASTER
+05-Sep-26 00:24 Door: FRONTEND
+05-Sep-26 00:24 Door exit: FRONTEND
+**************************************************************
+05-Sep-26 00:24 [1] spot (LOCAL) -[uP rOUGH]-
