@@ -31,9 +31,23 @@ at the level it belonged to:
 - **A CPU battle takes the boards that fit** and miniatures the rest; the
   all-or-nothing rule is for humans only.
 
-Open, and the sysop's to call: the C64 TETRIS ATTACK board is 6x13 (square,
-small). A 12x24 board is possible only by dropping the incoming row from the
-display, which costs sight of the row that is rising.
+**The C64 well is closed on three sides** (2026-09-07). Twelve panels at
+double height are exactly the rows left once the lid takes one, so there was
+nothing under the board for a bottom rule. The sysop chose the trade - "maybe
+we can allow chopping off half the blocks at the bottom to get a border" - and
+the bottom panel row now draws its top half only: board 23 rows, rule on the
+24th, tile still 2x2. `layout.board.clipped` says how many rows were given up,
+and it is 1 ONLY on the C64: at 80 and 132 columns and on a phone there was a
+spare row all along, so they take the floor for free.
+
+Also closed: `sdk/tests/unit/door-themes.test.ts` had been red on main for
+four days. b19f9fd45 moved every border and bar onto the theme's PRIMARY
+colour and shipped its own pin without updating the older role tests. They
+now assert the rule that holds - resting border accent, focused border ink,
+bar accent-on-ground.
+
+Open, and the sysop's to call: the C64 board shows no incoming row; putting it
+back costs the 2x2 tile. TetriNET's Hold box is still dropped at 40 columns.
 
 NOT MINE, ALREADY RED ON MAIN: `sdk/tests/unit/door-themes.test.ts` (8) and
 the backend's `themec-40` 80-column pin - the THEMEC marker changed and its
@@ -41,28 +55,18 @@ fixture was not regenerated.
 
 ## The screen manager (2026-09-02)
 
-LIVE at `380f7b4af`; the record is
+LIVE at `380f7b4af`; record in
 `thoughts/shared/handoffs/2026-09-02_the-screen-manager-and-what-the-board-knows.md`.
-The manager kept reporting things that were not true, each the same shape: a
-check answering a question nobody asked - "read by nothing" meant "is not the
-ONE file the loader picks at level 255", the health check read `/app` while
-the board is at `/app/data/bbs` and OFFERED TO FIX IT, `xpr` where AmiExpress
-writes `Xpr`, `Conf1/Screens` where conference 1 lives in Conf2. **Check a
-claim against the board before believing it.** `/admin/screens` opens on a
-gallery drawn with the editor's own renderer.
+Every false report it made was one shape - a check answering a question nobody
+asked (`/app` where the board is `/app/data/bbs`, `Conf1` where conference 1
+is `Conf2`). **Check a claim against the board before believing it.**
 
 ## Doors and widgets (2026-09-02)
 
-`thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`
-is that session's full record.
-
-**GRANDMASTER's layout fixes LANDED** (`0595d0507`), from a worktree off
-`origin/main`; the shared tree still holds another session's loose grandmaster
-work, which is why a door's pre-commit rebuild may fail on a diff that is not
-yours - check the shared checkout first.
-
-**A deploy failing in under 20s is the host's `git fetch`**, not your
-commit - anonymous HTTPS ref listing breaks under a burst of pushes.
+`thoughts/shared/handoffs/2026-09-02_the-doors-that-could-not-run-and-the-widgets-they-built-themselves.md`.
+A door's pre-commit rebuild may fail on a diff that is not yours - check the
+shared checkout first. **A deploy failing in under 20s is the host's
+`git fetch`**, not your commit.
 
 ## Earlier on 2026-09-02
 
@@ -152,18 +156,11 @@ some of them.
 
 **Full session record:** `thoughts/shared/handoffs/2026-09-04_grandmaster-petscii-tui-screens.md`
 
-**CLOSED this session:**
-- Grandmaster GameScreen compact 40-col layout (isCompactWidth, hide side panels)
-- Font + modem speed cookie persistence
-- TUI console: all 6 theme-token-migrated pages
-- Admin roles page (live permissions via API), admin access-level gating
-- Remember-me checkbox on admin login
-- Sprite manager page (browse/upload/preview/delete sprites)
-- Operator Chat: bot ANSI rendering (typing preview line 23, scroll region line 22), sysop take-over, keystroke transmission, notification permissions, classic mode default, typing speed/typo/think-time sliders
-- Screen revision history (10 revisions, snapshot-on-write, preview + restore)
-- Mailscan: same-messages-new-every-login bug (session pointer sync + validatePointers lowestKey clamp)
-- Message repair endpoint (POST /api/config/messages/repair-headers)
-- Container entrypoint fixes, volume mount discipline
+**CLOSED in that session:** grandmaster's 40-column game screen, the TUI
+console's six theme pages, admin roles and access gating, the sprite
+manager, operator chat (bot ANSI, take-over, sliders), screen revision
+history, the mailscan pointer bug, message header repair, and the
+container entrypoint. Details in the handoff linked above.
 
 **OPEN:** none
 
