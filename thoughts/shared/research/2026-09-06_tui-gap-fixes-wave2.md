@@ -345,3 +345,177 @@ cd dev/console && npm test           # 42 pass, 0 fail
 ```
 
 Both clean at HEAD (`6e35b694d`).
+
+---
+
+## Coordinator review round: two CRITICAL, four Important, three minors — all fixed
+
+The coordinator's review of items 5 and 6 (the two that touched shared
+backend/CrudList surface) found the contract work sound but flagged two
+security/correctness CRITICALs and four Important defects, plus three
+minors. All nine are fixed, six commits:
+
+| Commit | Addresses |
+|---|---|
+| `288f01d0b` | C1 (CRITICAL, security) + I3 + I4 + the timestamp minor |
+| `395cf626a` | C2 (CRITICAL, destructive) |
+| `982deb9d6` | I1 |
+| `a70bdb25a` | I2 |
+| `a898cf1b5` | minor — SessionLogsPage click offset |
+| `ed9afbfda` | minor — ScreenFilesPage repair-all dry-run race |
+
+### C1 (CRITICAL, security) — screen revision arbitrary file read
+
+`saveRevision`, called from `PUT /api/screens/file` for every entry in
+`req.body.targets`, had no containment check of its own — a bare
+`path.resolve(baseDir, relPath)`. A `targets` entry naming
+`../../../../proc/self/environ` walked straight out of the board root, was
+read, and got written into the board's own revisions directory — an
+arbitrary file read gated by nothing but this route's normal level-100
+auth. Separately, `containedScreenPath`'s `path.resolve` treats a backslash
+as an ordinary character, so a backslash variant of the same traversal
+passed containment while `revDirFor`'s slash-and-backslash-to-underscore
+sanitisation mapped it to the identical revision directory the (correctly
+rejected) forward-slash variant would have used — one request string
+bypassed containment, the other was the one that actually wrote there.
+
+Fixed: `screens-routes.ts`'s PUT handler now resolves every target through
+`resolveScreenPath` (the same double containment check every other read in
+that file relies on) before it ever reaches `saveRevision`, passing the
+RESOLVED relative path, never the raw request string. `screen-revisions.ts`
+gained an independent `isContained` guard (`full === root ||
+full.startsWith(root + path.sep)`) inside `saveRevision`, `restoreRevision`,
+and `readRevision` — defense in depth, and it also fixed a real
+sibling-directory-prefix hole in `restoreRevision`'s pre-existing check
+(missing the trailing separator). The three revision routes now reject any
+backslash outright, before `containedScreenPath` ever runs.
+
+**Investigating this also surfaced I3 and I4**, fixed in the same rewrite:
+
+- **I3** — `saveRevision`/`restoreRevision` resolved case-sensitively with a
+  bare `path.resolve` while every other write in the file goes through
+  `amigafs.resolvePath`. Fixed to route through `amigafs` first, closing a
+  silent no-op-on-Linux / wrongly-cased-duplicate-on-restore class of bug.
+- **I4** — `listRevisions` re-read and re-SHA256'd every revision's full
+  content synchronously, twice per save (dedup check, then pruning), on the
+  request thread. The short hash was already embedded in the filename; a
+  new `parseRevisionFilename()` extracts it via regex and uses
+  `fs.statSync` for byte size instead of reading the buffer.
+- **Timestamp minor** — the old positional-index reconstruction of a
+  revision's ISO timestamp could never produce a valid date (`i === 10`
+  could never fire, and the seconds/milliseconds separator became a second
+  colon), so every row fell back to the raw filename. `parseRevisionFilename`
+  reconstructs the exact valid ISO string from the encoding's fixed
+  positions instead.
+
+**Verified:** new `web/backend/tests/api/screens-revisions.test.ts`
+(supertest + tmp dir, matching `tests/api/screens-write.test.ts`'s existing
+harness) covers: a normal PUT creates a revision; a traversal target reads
+neither the outside file's content into a revision nor the file itself; all
+three new routes reject a backslash; a legitimate forward-slash traversal
+is still rejected by the pre-existing guard; restore reverts content and
+creates its own undo revision; a differently-cased request finds the
+canonical-case revision; and a revision's timestamp parses as a valid,
+recent date. This worktree has no `web/backend/node_modules` installed, so
+this suite could not be run here — verified instead by an isolated `tsc
+--noEmit` per changed file with unresolved-import noise filtered out (no
+syntax/type errors surfaced) and by hand against the neighbouring,
+already-passing code in the same files. `dev/console`'s own suite (49/49,
+unaffected — no TUI files in this commit) confirms nothing on the client
+side regressed.
+
+### C2 (CRITICAL, destructive) — Node Configuration deletes/updates the wrong node
+
+`client.ts`'s `getNodeConfigs()` overwrote the backend's real `id`
+(`node-config.service.ts`: `id: nodeNum + 1`, 1-based) with the raw 0-based
+`node_number` field, on the mistaken belief the response had no `id` at all
+— the Zod schema (which validates writable fields) doesn't declare one, but
+the service adds it separately at read time. Every
+`GET/PUT/DELETE /api/config/nodes/:nodeNumber` route treats that URL param
+as the 1-based value — so `[d]` on the row displayed as node 3 sent
+`DELETE .../3`, unlinking `Node2.info` (`nodeIndex = 3 - 1`), the WRONG
+node, with CrudList's generic "Delete row #3" confirmation giving no way to
+notice. Update survived only by accident: the service prefers
+`updates.node_number` (read as a raw 0-based index) over the URL id
+whenever the patch body carries one, and CrudList's edit form always
+resubmits the row's existing (correct, for THAT row) `node_number`.
+
+Fixed: `getNodeConfigs()` now trusts the backend's `id` as-is. Additionally
+— not explicitly required by the review, but directly adjacent to the exact
+danger it described — `NodeConfigPage.tsx`'s `update` wrapper now strips
+`node_number` from every PATCH body (`{ ...patch, node_number: undefined
+}`, dropped by `JSON.stringify`): `node_number` stays editable only because
+`create` needs it, and an EDITED value on an existing row would have
+redirected the write to a different node entirely (via the service's own
+`updates.node_number` preference), independent of which row was selected.
+
+**Verified:** rewrote the node-config client tests around the real
+two-number shape (`id=4, node_number=3` — not aliases), added the exact
+named regression (a row whose `node_number` is 3 must issue
+`DELETE /api/config/nodes/4`, end to end through `getNodeConfigs()` into
+`deleteNodeConfig()`), and a test pinning that `update`'s PATCH body never
+carries `node_number`.
+
+### I1 — CrudList never converts typed numeric fields back to numbers
+
+`editValues` accumulated `'number'` fields as STRINGS while typing
+(`String(v[field.key] ?? '') + input`) — a field seeded at the JS number 0
+became the string `"02"` after one keypress, never coerced back. Every
+backend Zod schema this wave's two new CrudList surfaces feed
+(`FileCheckerErrorSchema`'s `error_number`, `NodeConfigSchema`'s
+`node_number`/`priority`/chat colours) does `z.number()` and rejects a
+string outright — create/update for any required numeric field 400'd every
+time. Pre-existing in CrudList (five other pages share it), surfaced by
+this wave's two new numeric-heavy surfaces.
+
+Fixed with an exported `coerceEditValuesForSubmit(editFields, values)`,
+used by both `saveEdit` and `saveNew` right before the request goes out —
+coerces per each field's own declared type, falls back to 0 for an
+empty/unparseable number field. Exported standalone specifically so it has
+a regression test without needing an Ink render harness (none exists in
+this project).
+
+### I2 — ConfsTab's second delete dialog deleted on Escape/cancel
+
+The typed conference-id gate ran FIRST, then a plain y/n "also delete
+files?" dialog ran second with `onCancel` calling `submitDelete(false)` —
+but `ConfirmDialog`'s plain y/n mode fires `onCancel` on BOTH `n` and
+Escape, so a sysop hitting Escape to back OUT of the delete instead deleted
+the conference anyway (without its files), renumbering every conference
+above it and rewriting every account's access string.
+
+Reordered: the files question now runs FIRST and is deliberately
+non-destructive (both answers just set a pending choice and advance to the
+typed gate — nothing has happened yet, so Escape here is always safe
+regardless of which answer it's conflated with). The typed confirmation now
+runs SECOND and is the ONLY step that can actually delete anything; its
+`onCancel` always fully aborts with zero side effects.
+
+### Minors
+
+- **SessionLogsPage** `ITEMS_START_ROW` was a fixed 8, splitting the
+  difference between two layouts (with/without the stats panel added this
+  wave) that actually need different values. Split into
+  `ITEMS_START_ROW_BASE` (7) and `ITEMS_START_ROW_WITH_STATS` (9), selected
+  reactively off whether `stats` is truthy.
+- **ScreenFilesPage**'s repair-all confirm dialog rendered before the dry
+  run resolved, so a fast confirm could run the real pass after showing
+  "Repair 0 file(s)?". Added an intermediate `'dry-run-loading'` mode; the
+  confirm dialog now renders only once the count is actually known, and the
+  error path resets back to `'idle'` (not doing so would have left the
+  `useInput` guard silently swallowing every keypress, `[R]` retry
+  included).
+
+### Final verification
+
+```
+cd dev/console && npx tsc --noEmit   # clean
+cd dev/console && npm test           # 49 pass, 0 fail
+```
+
+`web/backend` could not be built or tested in this worktree (no
+`node_modules` installed for it) — each changed backend file was checked
+with an isolated `tsc --noEmit` (unresolved-import noise filtered; no
+syntax/type errors) and by hand against neighbouring code, per the
+coordinator's instruction to be correspondingly careful given the lack of a
+compiler.
