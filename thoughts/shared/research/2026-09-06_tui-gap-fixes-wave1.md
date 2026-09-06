@@ -211,7 +211,7 @@ items.
   endpoint the web admin (or, for reservation, the backend route directly) already
   exercises correctly.
 
-## Files touched
+## Files touched (wave 1, initial pass)
 
 - `dev/console/src/api/client.ts`
 - `dev/console/src/api/types.ts`
@@ -222,3 +222,219 @@ items.
 - `dev/console/src/components/tabs/GlobalWallPage.tsx` (deleted)
 - `dev/console/src/pages/registry.ts`
 - `dev/console/src/App.tsx`
+
+---
+
+## Review round: 10 findings addressed, plus a test harness
+
+The coordinator's review of the initial pass verified every endpoint contract
+correct (paths, verbs, body keys, `reserveNode`'s signature, door-identity-by-command)
+but found two CRITICAL and eight Important defects in the TUI-specific behavior
+around those contracts, plus asked for a test harness. All ten are fixed; the harness
+is in place. Commits, in order:
+
+| Commit | Addresses |
+|---|---|
+| `9e67b5179` | #1 (CRITICAL) - shared text-entry lock |
+| `4aea714e2` | #1 cont. (Users) + #8 (Escape swallowed mid-submit) |
+| `40673eda7` | #1 cont. (Security) + #2 (CRITICAL, footer/help) + #3 (dead-flag annotation) + #4 (served/unserved math) + #7 (error never clears) |
+| `cc003802b` | #1 cont. (Nodes) + #5 (stale-index race) + #10c (empty reserve gives no feedback) |
+| `b71cd8ee7` | #6 (click retargets delete / wedge) + #9 (typed confirmation, fuller message) |
+| `f57f8d28d` | #8 cont. (client timeout) + #10a (stale comment) + #10b (raw JSON errors) |
+| `ecd87f018` | test harness |
+
+### #1 (CRITICAL) - free text and arrows collided with global hotkeys and sidebar nav
+
+Root cause: Ink calls every mounted component's `useInput` for every keypress
+regardless of which panel "looks" focused - there's no DOM focus model underneath it.
+`App.tsx`'s `q`/`?` and `Sidebar.tsx`'s up/down/digit handlers fired unconditionally, so
+a password containing "q" quit the console mid-reset, "?" swapped in the help overlay
+over an open form, and - since `focusPanel` defaults to `'sidebar'` before the first
+Tab - up/down inside a page's own form also cycled the sidebar's page selection and
+unmounted the form under it.
+
+Fix: `dev/console/src/state/text-entry-lock.ts` is a module-level flag (not React
+state, for the same reason `Sidebar.tsx` already uses refs - "Ink registers the
+handler once"), read/written through `dev/console/src/hooks/useTextEntryLock.ts`.
+`App.tsx` gates `q`/`?` on it; `Sidebar.tsx` gates its entire input handler (arrows AND
+the digit-driven category jump - both suffer the identical defect, digits especially
+since secLevel/timeLimit fields are typed as digits) on it. Ctrl-Q was added as an
+unconditional quit, independent of the lock, so a future page that fails to release it
+can never make the console unquittable. Wired into all four pages this wave touches:
+
+- UsersTab: locked whenever `mode !== 'list' || searching`.
+- SecurityPage: locked whenever the page is past loading/error with levels present -
+  its OWN idle state uses up/down and left/right, so unlike the other three pages the
+  base "list" mode needs the lock too, not just its sub-modes.
+- NodesTab: locked whenever `mode !== 'list'`.
+- DoorsTab: locked whenever `editing || confirming || confirmingDelete`.
+
+**Not retrofitted:** other existing pages (ConfsTab, LogsTab, the various CrudList-
+based lookup-table pages) likely carry the same latent defect in their own search/edit
+modes - this fix only covers the four pages this wave's scope touches. Flagging for a
+future pass rather than expanding this wave's diff.
+
+### #2 (CRITICAL) - Access Levels footer/help described a page that no longer exists
+
+`registry.ts`'s `security` entry still said `[n]ew [e]dit [d]el [/]search [r]efresh`
+with "Delete the selected row" - stale from the CRUD-table page this replaced. `e` and
+`d` did nothing on the new flag-toggle list, and `[s]ave` - the one key that matters -
+was never mentioned, so a sysop toggling flags with no visible save key would
+reasonably conclude there wasn't one. Fixed to list the keys the page actually has:
+toggle/save/new-level/filter/level-switch/reload.
+
+### #3 (Important) - 19 permissions can't actually be changed through this file
+
+Ported `ACS_NOT_FROM_THIS_FILE` from `web/config-app/src/pages/acs-permission-groups.ts`
+into `dev/console/src/components/tabs/acs-not-from-file.ts` (same 19 keys, same
+wording) and annotate those rows with a dim warning line under the toggle. No shared
+package exists between `dev/console` and `web/config-app` to import this from a single
+source - see the note at the end of this section.
+
+### #4 (Important) - served/unserved level math
+
+`inUse.filter(row => row.servedBy === level)` never excluded `row.level === level`
+(a level always "serves itself"), so viewing level 20 showed "Also serves: level 20"
+and the save confirmation read "for level 20 and level 20". Fixed to
+`row.servedBy === level && row.level !== level`. Also added the case that was never
+surfaced at all - `servedBy === null`, meaning NO ACS file grants that level anything -
+which is the literal incident that got this page rewritten in the first place ("i tried
+to add one for users at 30, it didn't let me pick a number"). Both web
+(`SecurityPage.tsx`'s `inUse` rendering block) and the fixed TUI now show this.
+
+### #5 (Important) - Nodes kick/reserve could act on the wrong node
+
+`useNodes.ts` re-polls every 3s; `selected` was `nodes[selectedIdx]`, re-derived on
+every render. A caller connecting/dropping while a kick or reserve dialog was open
+could shift the array between the keypress that opened it and the confirm that acted -
+kicking or reserving whoever now sits at that index, not who was shown. Fixed by
+capturing `targetNodeId` at the moment `k`/`v` is pressed; the dialog, the prompt, and
+the eventual `kickNode`/`reserveNode` calls all resolve through the captured id.
+Display text (username) is still read live for niceness; only the id is load-bearing.
+
+### #6 (Important) - Doors delete: click retargeting and a wedge
+
+`useGridClick` was gated only on `!confirming` (the reload-all dialog), not
+`!confirmingDelete` - a stray click while the delete confirmation was open could move
+`selectedIdx`, and since the old code derived both the message and the delete target
+from `selected` fresh on every render, the click could retarget which door gets
+deleted. Also: the boolean `confirmingDelete` plus a render condition of
+`confirmingDelete && selected` meant that if `selected` ever stopped resolving while
+the boolean stayed true, the dialog would vanish while `useInput`'s
+`if (confirming || confirmingDelete) return` kept blocking all input - a wedge with
+nothing on screen to interact with. Fixed by replacing the boolean with
+`deleteTarget: DoorInfo | null`, captured by value on `d`; the dialog's render
+condition and the delete call no longer depend on the live selection at all. Click
+gating extended to `!confirming && !confirmingDelete && !editing`.
+
+### #7 (Important) - Access Levels error state had no way back
+
+`error` was set on failure and never cleared on a later success, and `r` was gated on
+`level !== null` - so a failed INITIAL load (before any level was ever set) left a bare
+error line with no key that did anything. `loadLevels`/`loadFlags` now clear `error` at
+the start of each attempt; `r` reloads unconditionally; the error view shows
+`[r] retry`.
+
+### #8 (Important) - a hung backend could trap the Users form permanently
+
+`if (submitting) return` in the password-form/create-form handler sat above the
+Escape check, swallowing it - the only way out of a form waiting on a
+never-responding backend was killing the console. Escape now short-circuits before
+the `submitting` guard. Paired with a root-cause fix at the layer that actually owns
+the network call: `client.ts`'s `request()` now wraps every fetch in a 15s
+`AbortController` timeout, so a hang resolves (with a clear "Request timed out"
+error) even without the Escape fix.
+
+### #9 (Important) - door delete undersold what it does, and a stray 'y' was enough
+
+The confirmation said only "removes its .info registration"; `amigaDoorManager.ts`'s
+delete (`amigaDoorManager.ts:1604-1633`) also removes every alias registration
+pointing at the same directory and the directory itself if nothing else claims it -
+undersold on the single most destructive action in this wave. Message updated.
+`ConfirmDialog.tsx` (the shared component, used elsewhere for plain y/n) gained an
+optional `requireTypedConfirmation` prop mirroring
+`web/config-app/src/components/ui/ConfirmDialog.tsx`'s prop of the same name and same
+exact-match-after-trim semantics; the door-delete dialog now requires typing the door's
+command back rather than a single keypress.
+
+### #10 (Minor) - three small ones
+
+- `client.ts` had a stray "Global wall" mention in a section-header comment, left over
+  from the page removed earlier in this wave. Deleted.
+- HTTP error bodies surfaced as raw response text - `HTTP 400: {"success":false,
+  "message":"..."}` under time pressure. `request()` now extracts `message`/`error`
+  when the body is JSON shaped that way.
+- Enter on an empty reserve-username field in NodesTab did nothing and said nothing,
+  indistinguishable from a hang. It now sets a status line asking for a username.
+
+### Test harness
+
+`dev/console` had no test script and no test files. Added
+`"test": "node --test --import tsx src/**/*.test.ts"` to `package.json` (`tsx` was
+already a devDependency) and `dev/console/src/api/client.test.ts`: `globalThis.fetch`
+is stubbed per test; each test asserts the recorded URL, method, and parsed body for
+`saveAcsLevelFlags`, `createUser`, `updateUser`, `deleteDoor` (including URL-encoding a
+command with a space), and `reserveNode` (both the reserve and the clear/empty-body
+case), plus one test that a JSON `{message}` error body surfaces just the message
+rather than the raw JSON.
+
+Also ports `web/config-app/src/test/security-endpoints.test.ts`'s source-level guard:
+reads `client.ts` as text and asserts it never constructs a `/config/security/${...}`
+call outside the `levels` path - the dead mirror this whole wave started by removing.
+Verified the guard actually catches a regression: temporarily reintroduced a call to
+the dead path, confirmed the new test failed with the expected assertion diff, then
+reverted (`git diff` showed only the 34-line legitimate change afterward).
+
+9 tests, all passing. `npx tsc --noEmit` and `npm test` both clean at HEAD.
+
+### Two things flagged, not fixed here (per coordinator's instruction)
+
+1. **`timeLimit`/`expert` handling copied from the web carries a web bug into a
+   second client.** `createUser`'s payload sends `timeLimit` as whatever the sysop
+   typed in minutes, but `web/backend/src/api/config-routes.ts`'s user-creation
+   default path treats `new_user_time_limit` as minutes and converts to seconds
+   before writing (`(defaults.timeLimit ?? 1440) * 60`) while `users.timelimit` is
+   read everywhere at runtime as SECONDS (`utils/time-tracking.util.ts`) - a value
+   supplied directly by the caller (as both `UsersPage.tsx` and this TUI's create-user
+   form do) bypasses that conversion and is written straight through as if it were
+   already seconds, producing a much shorter limit than intended (typing "60" for "60
+   minutes" gives a 60-SECOND session). `-1` (this project's "unlimited" sentinel,
+   per `database/types.ts`) is also not special-cased anywhere in the create path -
+   nothing stops a sysop from typing it, and nothing confirms it round-trips as
+   "unlimited" rather than being clamped or misread. Separately, `expert` in this
+   TUI's `createUser` call sends a plain boolean (`formValues.expert === 'true'`),
+   but the backend's own default path writes it as `'X'`/`'N'`
+   (`userData.expert === 'X' ? 'X' : (defaults.expert ? 'X' : 'N')`) - the boolean
+   spread through `...userData` bypasses that normalization the same way the web's
+   own form does. All three are pre-existing web behavior this port faithfully
+   copied, not something introduced here; not fixed in this wave per the
+   coordinator's explicit instruction to flag rather than fix.
+2. **The server still mounts the dead `security_level_access` routes**
+   (`/api/config/security/:level`, `/api/config/security`, `/api/config/security/:id`
+   in `web/backend/src/api/config-routes.ts:1182-1251`, backed by
+   `web/backend/src/database/config-repository.ts:1276-1334`). Nothing reaches them
+   from the TUI as of this wave (confirmed by the new source-level guard test), and
+   the web admin already moved off them, but the routes themselves are untouched and
+   remain for some future caller - a new admin surface, a script, a stray curl - to
+   trip over the exact bug this whole wave started by fixing. Also worth noting:
+   `web/config-app/src/test/security-endpoints.test.ts`'s own comment ("The mirror
+   routes stay on the backend - dev/console uses them") is now stale, since this wave
+   moved the TUI off them too - not fixed here since it's a comment in
+   `web/config-app`, outside this worktree's scope.
+
+## Files touched (review round)
+
+- `dev/console/package.json`
+- `dev/console/src/App.tsx`
+- `dev/console/src/api/client.ts`
+- `dev/console/src/api/client.test.ts` (new)
+- `dev/console/src/components/Sidebar.tsx`
+- `dev/console/src/components/shared/ConfirmDialog.tsx`
+- `dev/console/src/components/tabs/DoorsTab.tsx`
+- `dev/console/src/components/tabs/NodesTab.tsx`
+- `dev/console/src/components/tabs/SecurityPage.tsx`
+- `dev/console/src/components/tabs/UsersTab.tsx`
+- `dev/console/src/components/tabs/acs-not-from-file.ts` (new)
+- `dev/console/src/hooks/useTextEntryLock.ts` (new)
+- `dev/console/src/pages/registry.ts`
+- `dev/console/src/state/text-entry-lock.ts` (new)
