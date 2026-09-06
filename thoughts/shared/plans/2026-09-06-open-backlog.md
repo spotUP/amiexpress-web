@@ -240,3 +240,40 @@ content, and neither is read by the mail scan.
 | 11.18 | **The internal `N` (new files) reads an EMPTY MIRROR.** `F`/`FR` read the DIR files on disk (truth); `displayNewFiles` reads SQL `file_entries`, which is only ever INSERTed on a WEB UPLOAD - nothing imports DIR files. Measured: Conf2's three areas hold 0/0/0 rows while `Conf2/Dir1` on disk holds three real archives. So `N` answers "no new files" for a conference that is full. This blocked building an internal NSU, and it is a live bug in its own right. Fix it and NSU becomes a two-line composition of express.e's `confScan` loop (express.e:28066-28114) | from the NSU agent |
 | 11.19 | express.e:4732-4747 lets a registration declare `INTERNAL=<cmd>` + `PASS_PARAMETERS`, so a door's `.info` can BE an internal command with no code. This port PARSES the tooltype (`amiga-command-parser.util.ts:767-775`) and never dispatches it. Unimplemented parity. Note it is unconditional in express.e, so wiring it would take AquaScan from 80-column callers too - decide deliberately | from the NSU agent |
 | 11.20 | GWALL's MISSING MASTHEAD, diagnosed with numbers, sysop wants it fixed. Two faults: (1) `door.handler.ts:829` leaves `autoPauseEnabled` false unless the `.info` declares `PAGINATION=`, and `xim/io.ts:1524` gates the ADAPTED-frame pause on that same flag - no adapted door declares it, so `beginAdaptedPause` never arms; the line-count pause must respect `PAGINATION`, the adapted pause must not, because adaptation makes a frame taller than any door can know. (2) `c64-door-adapter.ts` `unseenRows()` measures `contentEnd - 25` (overflow from the TOP) while `adaptFrame` windows from the BOTTOM. Measured over 25 fixtures: 21 lose painted rows off the top and the counter under-reports every one (gwall 5 lost/1 reported, olm 4/0, b 4/0, ratiorep 4/0, ulist 3/0, six_status 9/10) | sysop: fix it |
+
+---
+
+## VERIFIED 2026-09-07 (session 4a5fad72) - what is actually still open
+
+Re-checked every claim below against the code and the live board rather than
+the ledger. Half of it was stale.
+
+**CLOSED, verified:**
+
+| # | Was | Measured now |
+|---|---|---|
+| 0.1/1.1/1.2 | deploys and CI broken | three deploys landed and verified in the container today |
+| 1.3 | 4 SDK door-theme suites red | fixed, `6383ce1b4`; 179/179 |
+| 1.4 | `compact-40/tetris-attack` red | the whole compact-40 glob is green: 12 suites, 191 tests |
+| 1.5 | `transport-adapter` red | PASS |
+| 0.6 | GRANDMASTER PETSCII broken | fixed and live |
+| 11.8 | "92 of 96 latin1 high-bit bytes map to `?`" | REVERSED: 93 of 96 map. Only `0xA7 0xB6 0xBF` are unmapped |
+| 11.20 | GWALL masthead, two faults | both fixed in source: `pauseSite` is decoupled from `PAGINATION` (`xim/io.ts:1416-1436`, JH_SM/JH_SMPTR pass it explicitly) and `unseenRows()` measures the window (`c64-door-adapter.ts:277`). The SYMPTOM still wants a live look |
+| 11.14 | "Z hotkey = subState clobbered by fall-through" | HYPOTHESIS DISPROVEN. `tests/doors/width-gate-fall-through.test.ts` drives the real dispatch and asserts `ZIPPY_SEARCH_INPUT` survives; 12/12 pass. If the symptom is real it is in the input READER, not the state |
+| 12.2 | Conf1 MailStats 151 vs 318 headers, pointers clamp every login | live conference 1 (`Conf2/MsgBase`): HeaderFile 28,050 bytes = 255 records, MailStats `lowestKey=1 highMsgNum=256 lowestNotDel=2`. Consistent - nothing to clamp |
+| 12.4 | poisoned `recv` on messages 319-321 | that base holds 255 messages; 319-321 do not exist |
+
+**STILL OPEN, verified in the code today:**
+
+| # | Item | Evidence |
+|---|---|---|
+| 12.1 | `countNewMessages` never consults `recv` | `message/message-scan.handler.ts:369-392` filters on pointer, DELETED and file-exists only |
+| 12.3 | The repair button rebuilds the HeaderFile FROM THE DATABASE | `api/config-routes.ts:2412` -> `database.getMessages(...)` then writes `MsgBase/`. Disk is truth here, so it is still a data-loss trap |
+| 11.18 | Internal `N` reads the SQL mirror nothing fills | stated as current fact in `utils/door-min-columns.util.ts:104-118` |
+| 11.15 | OLM denied for the sysop | ACS.255.info on the live board DOES grant `ACS.OLM` (uncommented). So the grant is present and the fault is in the lookup or the account's level - needs the account's level read and `checkSecurity` driven |
+| - | 2 red tests on main | `message-pointers` > "validatePointers clamps to bounds and zeroes on overflow"; `livechat-panel-borders` > "is dim when a panel is not active" |
+
+**UNVERIFIED, needs a capture, not a code read:** 11.5/11.6 (GLC/GWALL config
+landing in the wrong directory - `AmigaDoorSession` already passes the door's
+own directory as `cwd`, so the ledger's stated cause may be stale too), 11.10
+(mail unread symptom), 2.1-2.4 (the PETSCII door re-tests).
