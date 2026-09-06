@@ -80,8 +80,12 @@ positions; fixed by `positionsCursorAbsolutely()`
 (`web/backend/src/utils/ascii-art.util.ts`) - a door that moves the cursor is
 PAINTING and has no lines to wrap.
 
-**Bytes are milliseconds in a 68K door** - ~45ms per 198-byte XIM message,
-measured. Do not send a colour already set, or pad rows on a cleared screen.
+**Bytes are milliseconds in a 68K door** - **9.7 ms** per 198-byte XIM
+message, re-measured 2026-09-07 through the emulator with a C door painting
+full frames (`sdk/c/examples/bench/bench_repaint.c`, slope of 1 frame against
+11, best of three). The ~45 ms this line carried before was five times too
+high. A full 80x24 coloured frame is 4,409 bytes, 22.3 messages, **215 ms**.
+Still: do not send a colour already set, or pad rows on a cleared screen.
 
 **Debug a door's rendering by CAPTURING it** - `XIM_DEBUG=1
 XIM_DEBUG_JSON=1 XIM_DEBUG_AMIGA=1`, never by guessing; the handoff carries
