@@ -7,6 +7,46 @@ status: final
 
 # Open backlog - 2026-09-06
 
+> **VERIFIED 2026-09-06, late.** Sections 0, 1, 2 and 10 were written in the
+> morning and most of their rows have since closed. Everything below marked
+> **[verified closed]** was re-measured against the tree tonight, with the
+> evidence named. Sections 3 to 9 were NOT re-checked and stand as written.
+>
+> - **0.x (six agents in flight)** - stale; that batch finished.
+> - **1.4 / 1.5 red compact-40 suites** - [verified closed] `tests/doors/compact-40`
+>   and `forty-col-sweep` run 220/220 green.
+> - **1.3 SDK door-theme suites** - STILL RED, 8 in `tests/unit/door-themes.test.ts`.
+>   Not a regression: the theme's own source says the change was deliberate
+>   (`tokens.ts` - "its bars are yellow with black text now"), so the PINS are
+>   stale, not the theme. The theme session owns it; it committed there at 16:05.
+> - **1.6 PETSCII cursor never blinks** - superseded: a door that owns the
+>   screen now hides the cursor entirely (`door-active` -> `cursorVisible`).
+> - **1.7 GRANDMASTER PETSCII** - [verified closed] and then some; see the
+>   handoff's top section for the night's work.
+> - **2.1 DOORREPO refuses at 40** - [verified closed] `C64_ADAPT=40` is on its
+>   `.info`, and the real gate expression
+>   (`sessionColumns < resolveDoorMinColumns && !doorOpensForC64`) answers
+>   "opens".
+> - **2.2 `FR` cannot list files** - [verified closed] by the width-gate
+>   fall-through: `F`/`FR`/`N`/`Z` are all in `INTERNAL_COMMAND_NAMES`, so a
+>   40-column caller gets the board's own listing instead of the refusal.
+> - **2.3 BULLETINS will not start** - [verified closed] `B` carries
+>   `C64_ADAPT=40`; the gate answers "opens".
+> - **2.4 DOORS has no animated dashes at 40** - BY DESIGN, not a bug.
+>   Everything that moves is gated on `effectsAllowed()`, which the compact
+>   tier turns off, because a moving effect on a 40-column canvas leaves stray
+>   glyphs (the DOORMAN lesson, 2026-09-02).
+> - **10.1 CRLF files not on main** - [verified closed] `8bd9b0a5c` is an
+>   ancestor of `origin/main`.
+> - **10.2 `Doors/THEMEC` and `Doors/ThemeC` both tracked** - [verified closed]
+>   along with GWall/Gwall: `dev/scripts/check-case-collisions.cjs` reports no
+>   collisions among 17,701 tracked paths, and a pre-commit hook now stops new
+>   ones.
+>
+> What that leaves genuinely open: sections 3 to 9 - transport parity,
+> achievements, the C64 file view, the C SDK, 68K marking, the arcade queue -
+> plus the manual walks in section 9, which only the sysop can tick.
+
 Every open item, including everything parked when the rate limit hit on
 2026-09-03. Ordered by lane, not by priority; the priority call is the
 sysop's. "Parked" = was in flight or next-up before the gap.
