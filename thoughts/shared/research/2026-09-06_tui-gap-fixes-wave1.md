@@ -438,3 +438,87 @@ reverted (`git diff` showed only the 34-line legitimate change afterward).
 - `dev/console/src/hooks/useTextEntryLock.ts` (new)
 - `dev/console/src/pages/registry.ts`
 - `dev/console/src/state/text-entry-lock.ts` (new)
+
+---
+
+## Closing round: CI wiring and the F2 gap
+
+Re-review verified all ten findings above and passed the change as safe to land,
+with two non-blocking items requested closed before push.
+
+### 1. dev/console had no CI coverage at all
+
+`dev/console` appeared in no file under `.github/workflows/`, and the root
+`package.json`'s `test` script only ran `test:sdk`, `test:backend` and `test:doors` -
+so the guard added this wave against a regression back to the `security_level_access`
+mirror (`client.test.ts`'s source-level check) only ran when a human remembered to
+`cd dev/console && npm test`.
+
+Added a `console-tests` job to `.github/workflows/backend-tests.yml`, placed after
+`config-app-typecheck` and mirroring its shape (checkout, `actions/setup-node@v4`
+with `node-version: '20'` and the npm cache keyed on
+`dev/console/package-lock.json`, then `npm ci --no-audit --no-fund`), followed by a
+`Type-check` step (`npx tsc --noEmit`) and a `Test` step. **The exact command CI will
+execute is `npm test`, run with `working-directory: dev/console`; per
+`dev/console/package.json` that resolves to:**
+
+```
+node --test --import tsx src/**/*.test.ts
+```
+
+Also added `"test:console": "cd dev/console && npm test"` to the root
+`package.json` and appended it to the `test` script's chain
+(`test:sdk && test:backend && test:doors && test:console`).
+
+Verified, not assumed:
+- `actionlint .github/workflows/backend-tests.yml` exits 0.
+- Parsed the workflow with `js-yaml` (already in the repo's root `node_modules`) and
+  confirmed `console-tests` appears as a fourth job alongside `backend-tests`,
+  `config-app-typecheck`, `doorrepo-c-tests`, with the exact steps intended.
+- Ran the CI sequence for real, not against the worktree's already-installed
+  `node_modules`: backed up `dev/console/node_modules`, ran a clean
+  `npm ci --no-audit --no-fund` in `dev/console` (succeeded, 119 packages), then
+  `npx tsc --noEmit` (clean) and `npm test` (9/9 passing) against that clean install.
+- Ran `npm run test:console` from the repo root - resolves and passes (9/9).
+
+### 2. F2 still bypassed the lock
+
+`App.tsx`'s raw-stdin listener (a separate code path from Ink's `useInput`, needed
+because Ink cannot see F2 at all - see the comment above it) toggled `showRestart`
+unconditionally. `showRestart` swaps in `RestartDialog` and unmounts the active page
+exactly like `showHelp` does for `'?'`, so F2 pressed mid-password-reset or
+mid-user-creation still discarded the form - the identical failure class closed for
+`q`, `?` and the sidebar's arrows earlier this wave, just reached through a listener
+that isn't part of the `useInput` handler the lock was already wired into.
+
+Fixed with the same guard: `if (isTextEntryActive()) return;` before the toggle.
+Since `showRestart` only ever becomes true after the page holding the lock has
+unmounted (releasing it via `useTextEntryLock`'s cleanup), this can only ever block
+*opening* the dialog while a form is up - never closing an already-open one.
+
+**Not covered by an automated test**, stated plainly rather than claimed: the current
+harness (`client.test.ts`) stubs `globalThis.fetch` for pure client-function contract
+tests and does not render Ink components or simulate stdin at all. Reaching this path
+would require an Ink-rendering integration test (`ink-testing-library` or equivalent,
+not currently a dependency) that mounts `<App>` with a mock stdin stream and asserts
+on rendered output - a materially different and larger kind of test than this wave's
+request/response contract tests, and out of the scope the coordinator drew for this
+round. Verified manually instead: read `App.tsx`'s render branch confirming
+`RestartDialog` unmounts the active page exactly as `HelpOverlay` does, and confirmed
+via `useTextEntryLock`'s unmount cleanup that the lock cannot still be active by the
+time `showRestart` flips true.
+
+### Final verification
+
+```
+cd dev/console && npx tsc --noEmit   # clean
+cd dev/console && npm test           # 9 pass, 0 fail
+```
+
+Both run clean at HEAD (commit `d53c760f3`), after the clean `npm ci` described above.
+
+## Files touched (closing round)
+
+- `.github/workflows/backend-tests.yml`
+- `package.json` (repo root)
+- `dev/console/src/App.tsx`
