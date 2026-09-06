@@ -59,12 +59,24 @@ why one Android user lost the top and others did not - they were on different
 browsers. `visibleTop()` reads it and the handheld fit subtracts it; it is zero
 on every browser that insets, so the phones that already worked cannot move.
 
-**3. GRANDMASTER multiplayer swipe - NOT STARTED, needs a repro.** The control
-layout is chosen by DOOR ID, not by mode, so the pad itself is identical in
-every mode - which means the gap is door-side, in how a particular screen takes
-input. "Multiplayer" spans three screens with different input paths (the
-TETRINET lobby, CPU battle, and versus), and they enable and suspend the input
-handler at different points. Guessing which one is wrong would be guessing.
+**3. GRANDMASTER multiplayer swipe - EXPLAINED, and the cause was not the mode.**
 
-Ask for: which mode exactly, and whether the on-screen pad is visible but dead
-or missing altogether.
+The door was never the problem. Driven headlessly with a REAL InputHandler and
+a real browser key edge, the versus screen moves the piece (x 3 -> 2): it
+registers every action, pumps the handler each frame, and battle royale sets
+the same 'game' screen state single player does. Game mode is re-enabled after
+the lobby too.
+
+What differs is the CLIENT, and not by mode: the control scheme defaulted to
+the BUTTON PAD, and it is stored per browser. So whether a tester got swipes at
+all depended on which browser they opened and whether anyone had ever chosen
+gestures in it - which is also why "one android user had issues while it worked
+for others, different browsers". The mode was a coincidence of when each tester
+happened to try it.
+
+Gestures are the default now. The buttons remain one tap away and the choice is
+still remembered.
+
+Worth noting for whoever picks this up: the existing versus tests pass an
+`inputStub`, so nothing in the suite ever drove a real key edge into a
+multiplayer screen. That is why this could only be answered by driving it.
