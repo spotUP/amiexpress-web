@@ -136,23 +136,22 @@ some of them.
 
 ## Next
 
-**GRANDMASTER TETRIS ATTACK | PETSCII parity | TUI screens** (2026-09-04):
-`.../handoffs/2026-09-04_grandmaster-petscii-tui-screens.md`.
+**Full session record:** `thoughts/shared/handoffs/2026-09-04_grandmaster-petscii-tui-screens.md`
 
-All 20 branches merged to main. Worktrees removed — work directly on `main`.
-TETRIS ATTACK: click-to-swap, cancelKeyboardSwap, 2x faster animations, all
-works in PETSCII. Mail scan loop fixed. MSG_READER_NAV single-char commands.
-PETSCII cursor visibility. GRANDMASTER menu 1:1 with ANSI (all 19 items at
-40 cols, rainbow animated compact boot). TUI console: screen browse/preview/
-delete/repair. Sprite chars PETSCII-safe.
+**CLOSED this session:**
+- Grandmaster GameScreen compact 40-col layout (isCompactWidth, hide side panels)
+- Font + modem speed cookie persistence
+- TUI console: all 6 theme-token-migrated pages
+- Admin roles page (live permissions via API), admin access-level gating
+- Remember-me checkbox on admin login
+- Sprite manager page (browse/upload/preview/delete sprites)
+- Operator Chat: bot ANSI rendering (typing preview line 23, scroll region line 22), sysop take-over, keystroke transmission, notification permissions, classic mode default, typing speed/typo/think-time sliders
+- Screen revision history (10 revisions, snapshot-on-write, preview + restore)
+- Mailscan: same-messages-new-every-login bug (session pointer sync + validatePointers lowestKey clamp)
+- Message repair endpoint (POST /api/config/messages/repair-headers)
+- Container entrypoint fixes, volume mount discipline
 
-**CLOSED: TGM modes black screen at 40 columns** — compact layout branch landed
-at `ef34a6448`. GameScreen now checks `isCompactWidth()`, hides side panels,
-board fills screen width.
-**CLOSED: Font + modem speed persisting across sessions** — written to cookie
-alongside localStorage. Modem speed applied to ModemEmulator before first
-socket event so pre-login banner paces correctly. Cookie falls back when
-localStorage unavailable (private browsing).
+**OPEN:** none
 
 **Doors/GWall vs Doors/Gwall blocks rebases** - two tracked blobs, one file on
 a case-insensitive disk, so one always reads as modified and `git rebase`
@@ -181,3 +180,7 @@ moves background/border. Walk script, detail, what is open:
 - **SDK tests import the built `sdk/dist`** - a source edit is invisible
   until `npm run build:cjs`.
 - **A merged admin screen must keep a redirect** (`src/routes/legacy-routes.ts`).
+- **`set -e` kills the container if ANY entrypoint step fails.** Exec must not be guarded by it.
+- **`session.lastNewReadConf` is NOT automatically synced.** Every DB pointer update must also update the session.
+- **Bot ANSI must write to scroll region, not line 23.** Committed text goes to line 22.
+- **A deploy without the volume mount loses all data.** Use `docker compose up -d` from `/app/amiexpress/`.
