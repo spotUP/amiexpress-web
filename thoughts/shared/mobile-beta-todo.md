@@ -2,7 +2,7 @@
 date: 2026-09-06
 topic: Mobile beta findings - swipe controls and viewport
 tags: [mobile, touch, grandmaster, arkanoid, viewport]
-status: open
+status: in-progress
 ---
 
 # Mobile beta: what real phones found
@@ -41,9 +41,30 @@ viewport/safe-area difference rather than a layout bug -
 insets. Reproduce with the browser's device emulation before changing layout
 maths.
 
-## Order to do these in
+## What has been done
 
-1. Arkanoid 1:1 swipe - it makes a shipped game unplayable, and the fix is
-   small and measurable.
-2. The Android viewport cut-off - it hides content, and it is one CSS unit.
-3. GRANDMASTER multiplayer swipe - it is a missing wiring, not a broken one.
+**1. Arkanoid 1:1 - DONE.** The gain was 2.2: the paddle moved more than twice
+as far as the thumb, which is why nobody could aim it. It is 1 now. The reach
+problem that gearing was added for does not come back, because the mapping is
+still RELATIVE - lift, re-plant, and the stroke continues - so a full traverse
+is two sweeps rather than one long stretch.
+
+**2. The Android cut-off - DONE, needs confirming on the phone.** It was not a
+CSS unit. `visibleHeight()` already sized the terminal to the visual viewport,
+which is why iOS was fixed in August. What nothing accounted for is where that
+visible band BEGINS: a browser that INSETS its chrome leaves offsetTop at 0,
+and one that OVERLAYS it pushes the visible area down instead, so content drawn
+from the top of the layout viewport sits underneath the bar. That is precisely
+why one Android user lost the top and others did not - they were on different
+browsers. `visibleTop()` reads it and the handheld fit subtracts it; it is zero
+on every browser that insets, so the phones that already worked cannot move.
+
+**3. GRANDMASTER multiplayer swipe - NOT STARTED, needs a repro.** The control
+layout is chosen by DOOR ID, not by mode, so the pad itself is identical in
+every mode - which means the gap is door-side, in how a particular screen takes
+input. "Multiplayer" spans three screens with different input paths (the
+TETRINET lobby, CPU battle, and versus), and they enable and suspend the input
+handler at different points. Guessing which one is wrong would be guessing.
+
+Ask for: which mode exactly, and whether the on-screen pad is visible but dead
+or missing altogether.
