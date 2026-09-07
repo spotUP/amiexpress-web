@@ -277,3 +277,31 @@ the ledger. Half of it was stale.
 landing in the wrong directory - `AmigaDoorSession` already passes the door's
 own directory as `cwd`, so the ledger's stated cause may be stale too), 11.10
 (mail unread symptom), 2.1-2.4 (the PETSCII door re-tests).
+
+### CORRECTION, same day: four of those five "still open" were stale too
+
+The first pass above read the SHARED CHECKOUT, which sits behind `origin/main`.
+Re-read against `origin/main`, the picture is:
+
+| # | Claim | On origin/main |
+|---|---|---|
+| 12.3 | repair button rebuilds from SQL | ALREADY FIXED - the route calls `repairConferenceHeaders` (`services/message-header-repair.ts`), disk-first, and consults the database ONLY when the disk holds no headers at all |
+| 12.1 | `countNewMessages` ignores `recv` | ALREADY FIXED - one shared loop produces both the count and the list, and it reads `recv` (`message-scan.handler.ts:380`) |
+| - | `message-pointers` red | PASSES |
+| - | `livechat-panel-borders` red | PASSES |
+| 11.15 | OLM denied to the sysop | MEASURED, not reproducible from the code: the live `Access/ACS.255.info` grants `ACS.OLM`, the real loader against those live files returns `checkSecurity(255, OLM) = true`, the live `sysop` account IS level 255 with no `securityFlags`/`secOverride`, and the door gate (`255 >= ACCESS=020`) passes. `ed8707369` and `150e8dc9a` already removed the invented "Access denied." string this port was sending. Needs a live re-test, not a code change |
+| 11.18 | internal `N` reads the SQL mirror | WAS REAL. FIXED (`ce92f960e`): `N` now walks the conference DIR files through `FileListingHandler.handleNewFileScan`, express.e:27906-28023 - find the first entry at or after the date, then dump the rest of the file. Four regression tests, proved red. The colorized row this port invented for the mirror is gone; `N` and `F` paint the same bytes |
+
+Also fixed while sweeping: `tests/handlers/file/file-commands.test.ts` had been red
+since pooled storage landed - its stub returned a bare array where
+`findFilesInConference` answers `{ files, storageError }` (`b608606c6`).
+
+And a LOCAL-ONLY red worth knowing: `narrow-tables` 5d fails with "Cannot find
+module '@aws-sdk/client-s3'" in any checkout whose `web/backend/node_modules`
+predates that dependency. `npm install` in `web/backend` - it is not a code fault
+and CI never saw it.
+
+**THE LESSON, and it cost this session two wrong reports: verify against
+`origin/main` in a worktree, never against the shared checkout.** The shared tree
+is behind and dirty with other sessions' work, so a "still open" read there is
+worth nothing.
